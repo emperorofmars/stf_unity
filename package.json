@@ -1,0 +1,31 @@
+{
+	"name": "com.squirrelbite.stf_unity",
+	"displayName": "STF 3D Interchange",
+	"version": "0.0.0",
+	"description": "Support for importing STF models.",
+	"unity": "2022.3",
+	"unityRelease": "6f1",
+	"license": "MIT or Apache-2.0",
+	"dependencies": {
+		"com.unity.nuget.newtonsoft-json": "2.0.2"
+	},
+	"keywords": [
+		"stf",
+		"file",
+		"import"
+	],
+	"author": {
+		"name": "Emperor of Mars",
+		"email": "mars@squirrel.pub",
+		"url": "https://github.com/emperorofmars/stf_unity"
+	},
+	"type": "library",
+	"url": "",
+	"gitDependencies": {},
+	"vpmDependencies": {},
+	"legacyFolders": {
+		"Assets\\stf_unity": ""
+	},
+	"legacyFiles": {},
+	"hideInEditor": false
+}

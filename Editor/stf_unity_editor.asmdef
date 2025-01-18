@@ -1,0 +1,16 @@
+{
+    "name": "com.squirrelbite.stf_unity.editor",
+    "rootNamespace": "com.squirrelbite.stf_unity",
+    "references": [
+        "com.squirrelbite.stf_unity.runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
