@@ -6,8 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Buffers;
 using System.Buffers.Binary;
-using UnityEngine.UIElements;
-using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
@@ -29,7 +27,7 @@ namespace com.squirrelbite.stf_unity
 			this.Buffers = Buffers;
 		}
 
-		public STF_File(string ImportPath) : this(File.ReadAllBytes(ImportPath), Path.GetFileNameWithoutExtension(ImportPath)) { }
+		public STF_File(string ImportPath) : this(File.ReadAllBytes(ImportPath), Path.GetFileNameWithoutExtension(ImportPath)) {}
 
 		public STF_File(byte[] ByteArray, string OriginalFileName = null)
 		{

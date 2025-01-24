@@ -1,16 +1,15 @@
 
 #if UNITY_EDITOR
 
-using System.Buffers;
-using System.IO;
 using UnityEngine;
+using UnityEditor.AssetImporters;
 
 namespace com.squirrelbite.stf_unity
 {
-	[UnityEditor.AssetImporters.ScriptedImporter(1, new string[] {"stf"})]
-	public class STFScriptedImporter : UnityEditor.AssetImporters.ScriptedImporter
+	[ScriptedImporter(1, new string[] {"stf"})]
+	public class STFScriptedImporter : ScriptedImporter
 	{
-		public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext ctx)
+		public override void OnImportAsset(AssetImportContext ctx)
 		{
 			var file = new STF_File(ctx.assetPath);
 
