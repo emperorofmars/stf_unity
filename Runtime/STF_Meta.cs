@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
-	public class STF_Meta : ScriptableObject
+	[Serializable]
+	public class STF_Meta
 	{
 		public class AssetInfoProperty {public string Name; public string Value;}
 
@@ -20,6 +22,11 @@ namespace com.squirrelbite.stf_unity
 		public double MetricMultiplier = 1;
 		public List<string> Profiles = new();
 		public List<AssetInfoProperty> AssetInfo = new();
+
+		public void Init(JObject JsonMeta)
+		{
+			Root = (string)JsonMeta["root"];
+		}
 	}
 }
 

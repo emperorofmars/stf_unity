@@ -4,7 +4,7 @@
 using UnityEngine;
 using UnityEditor.AssetImporters;
 
-namespace com.squirrelbite.stf_unity
+namespace com.squirrelbite.stf_unity.tools
 {
 	[ScriptedImporter(1, new string[] {"stf"})]
 	public class STFScriptedImporter : ScriptedImporter
@@ -12,6 +12,10 @@ namespace com.squirrelbite.stf_unity
 		public override void OnImportAsset(AssetImportContext ctx)
 		{
 			var file = new STF_File(ctx.assetPath);
+
+			var definition = ScriptableObject.CreateInstance<STF_Definition>();
+			definition.Init(file);
+			ctx.AddObjectToAsset("main", definition);
 
 			Debug.Log("WOOOO");
 

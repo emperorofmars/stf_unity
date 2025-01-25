@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Buffers;
 using System.Buffers.Binary;
+using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
@@ -18,10 +19,14 @@ namespace com.squirrelbite.stf_unity
 		public uint VersionMajor = 0;
 		public uint VersionMinor = 0;
 		public string Json;
-		public List<byte[]> Buffers = new();
+
+		[HideInInspector, SerializeField]
+		public List<STF_Buffer> Buffers = new();
+		public int BufferCount = 0;
+		public int BufferCountFooo => Buffers.Count;
 		public string OriginalFileName;
 
-		public STF_File(string Json, List<byte[]> Buffers)
+		public STF_File(string Json, List<STF_Buffer> Buffers)
 		{
 			this.Json = Json;
 			this.Buffers = Buffers;
@@ -62,11 +67,13 @@ namespace com.squirrelbite.stf_unity
 			Json = Encoding.UTF8.GetString(ReadBytes(bufferReader, buffer_lengths[0])); bufferReader.Advance((long)buffer_lengths[0]);
 
 			// Read each subsequent buffer
-			var buffers = new List<byte[]>();
+			Buffers = new List<STF_Buffer>();
 			for(uint i = 1; i < bufferCount; i++)
 			{
-				buffers.Add(ReadBytes(bufferReader, buffer_lengths[i]));
+				Buffers.Add(new STF_Buffer {Data=ReadBytes(bufferReader, buffer_lengths[i])});
 			}
+
+			BufferCount = Buffers.Count();
 		}
 
 		private byte[] ReadBytes(SequenceReader<byte> Reader, ulong Length)
@@ -90,18 +97,23 @@ namespace com.squirrelbite.stf_unity
 
 			// Version
 			BinaryPrimitives.WriteUInt32LittleEndian(bufferWriter.GetSpan(4), VersionMajor);
+			bufferWriter.Advance(4);
 			BinaryPrimitives.WriteUInt32LittleEndian(bufferWriter.GetSpan(4), VersionMinor);
+			bufferWriter.Advance(4);
 
 			// Number of all buffers, including the Json definition
 			BinaryPrimitives.WriteUInt32LittleEndian(bufferWriter.GetSpan(4), (uint)(Buffers.Count() + 1));
+			bufferWriter.Advance(4);
 
 			byte[] jsonUtf8 = Encoding.UTF8.GetBytes(this.Json);
 			// Json definition length
 			BinaryPrimitives.WriteUInt64LittleEndian(bufferWriter.GetSpan(8), (ulong)jsonUtf8.LongLength);
+			bufferWriter.Advance(8);
 			// Length of each subsequent buffer
 			foreach(var buffer in Buffers)
 			{
-				BinaryPrimitives.WriteUInt64LittleEndian(bufferWriter.GetSpan(8), (ulong)buffer.LongLength);
+				BinaryPrimitives.WriteUInt64LittleEndian(bufferWriter.GetSpan(8), (ulong)buffer.BufferLength);
+				bufferWriter.Advance(8);
 			}
 
 			// Write the Json definition
@@ -109,7 +121,7 @@ namespace com.squirrelbite.stf_unity
 			// Write each subsequent buffer
 			foreach(var buffer in Buffers)
 			{
-				bufferWriter.Write(buffer);
+				bufferWriter.Write(buffer.Data);
 			}
 
 			return bufferWriter.WrittenMemory;
