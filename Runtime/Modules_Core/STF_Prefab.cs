@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
@@ -12,7 +13,8 @@ namespace com.squirrelbite.stf_unity.modules
 
 	public class STF_Prefab_Module : STF_Module
 	{
-		public string STF_Type => "stf.prefab";
+		public const string _STF_Type = "stf.prefab";
+		public string STF_Type => _STF_Type;
 
 		public string STF_Kind => "data";
 
@@ -26,14 +28,23 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public List<STF_Component> GetComponents(object ApplicationObject) { return ((STF_Prefab)ApplicationObject).Components; }
 
-		public (object ApplicationObject, IImportContext Context) Import(IImportContext Context, object Json, string ID, object ParentApplicationObject)
+		public (object ApplicationObject, IImportContext Context) Import(IImportContext Context, JObject Json, string ID, object ParentApplicationObject)
 		{
-			throw new NotImplementedException();
+			var ret = new GameObject((string)Json.GetValue("name") ?? "STF Prefab");
+			var resourceContext = new ResourceImportContext(Context, ret);
+
+			return (ret, resourceContext);
 		}
 
-		public (object Json, string ID, IExportContext Context) Export(IExportContext Context, object ApplicationObject, object ParentApplicationObject)
+		public (JObject Json, string ID, IExportContext Context) Export(IExportContext Context, object ApplicationObject, object ParentApplicationObject)
 		{
-			throw new NotImplementedException();
+			var PrefabObject = ApplicationObject as GameObject;
+			var ret = new JObject {
+				{"type", _STF_Type},
+			};
+			var resourceContext = new ResourceExportContext(Context, ret);
+
+			return (ret, "", resourceContext);
 		}
 	}
 }

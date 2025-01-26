@@ -12,21 +12,29 @@ namespace com.squirrelbite.stf_unity.tools
 		public override void OnImportAsset(AssetImportContext ctx)
 		{
 			var file = new STF_File(ctx.assetPath);
+			var state = new ImportState(file, STF_Registry.Modules);
+			var rootContext = new RootImportContext(state);
 
-			var definition = ScriptableObject.CreateInstance<STF_Definition>();
-			definition.Init(file);
-			ctx.AddObjectToAsset("main", definition);
+			rootContext.ImportResource(state.RootID);
 
-			Debug.Log("WOOOO");
-
-			/*var unityContext = new RuntimeUnityImportContext();
-			var (asset, _state) = Importer.Parse(unityContext, ctx.assetPath);
-			ctx.AddObjectToAsset("main", asset.gameObject);
-			ctx.SetMainObject(asset.gameObject);
-			foreach(var resource in unityContext.AssetCtxObjects)
+			foreach(var importedObject in state.ImportedObjects)
 			{
-				if(resource != null) ctx.AddObjectToAsset("resource" + resource.GetInstanceID(), resource);
-			}*/
+				if(importedObject.Value is Object @object)
+					ctx.AddObjectToAsset(@object.name, importedObject.Value as Object);
+			}
+
+			var import = ScriptableObject.CreateInstance<STF_Import>();
+			import.Init(state);
+			ctx.AddObjectToAsset("main", import);
+			if(import.Root)
+			{
+				ctx.SetMainObject(import.Root);
+				Debug.Log("STF Import Success!");
+			}
+			else
+			{
+				Debug.Log("STF Import Failed! Check the reports.");
+			}
 		}
 	}
 }

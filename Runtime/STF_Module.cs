@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace com.squirrelbite.stf_unity
 {
@@ -13,8 +14,8 @@ namespace com.squirrelbite.stf_unity
 		List<string> LikeTypes {get;}
 		List<Type> UnderstoodApplicationTypes {get;}
 		int CanHandleApplicationObject(object ApplicationObject);
-		(object ApplicationObject, IImportContext Context) Import(IImportContext Context, object Json, string ID, object ParentApplicationObject);
-		(object Json, string ID, IExportContext Context) Export(IExportContext Context, object ApplicationObject, object ParentApplicationObject);
+		(object ApplicationObject, IImportContext Context) Import(IImportContext Context, JObject Json, string ID, object ParentApplicationObject);
+		(JObject Json, string ID, IExportContext Context) Export(IExportContext Context, object ApplicationObject, object ParentApplicationObject);
 		List<STF_Component> GetComponents(object ApplicationObject);
 	}
 }

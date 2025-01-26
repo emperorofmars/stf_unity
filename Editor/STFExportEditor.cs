@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
@@ -13,7 +14,7 @@ namespace com.squirrelbite.stf_unity.tools
 	public class STFExportEditor : EditorWindow
 	{
 		private Vector2 scrollPos;
-		public STF_Definition exportAsset;
+		public GameObject exportAsset;
 		private bool DebugExport = true;
 
 
@@ -34,9 +35,9 @@ namespace com.squirrelbite.stf_unity.tools
 
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Select Asset", EditorStyles.whiteLargeLabel, GUILayout.ExpandWidth(false));
-			exportAsset = (STF_Definition)EditorGUILayout.ObjectField(
+			exportAsset = (GameObject)EditorGUILayout.ObjectField(
 				exportAsset,
-				typeof(STF_Definition),
+				typeof(GameObject),
 				true,
 				GUILayout.ExpandWidth(true)
 			);
@@ -57,26 +58,28 @@ namespace com.squirrelbite.stf_unity.tools
 				if(GUILayout.Button("Export", GUILayout.ExpandWidth(true))) {
 					var path = EditorUtility.SaveFilePanel("STF Export", "Assets", defaultExportFilaName + ".stf", "stf");
 					if(path != null && path.Length > 0) {
-						// Export
+						// TODO actual Export
+
 						var jsonDefinition = new JObject {
 							{
 								"stf", new JObject {
-									{"version_major", exportAsset.Meta.DefinitionVersionMajor},
+									/*{"version_major", exportAsset.Meta.DefinitionVersionMajor},
 									{"version_minor", exportAsset.Meta.DefinitionVersionMinor},
 									{"generator", exportAsset.Meta.Generator},
 									{"timestamp", exportAsset.Meta.Timestamp},
 									{"metric_multiplier", exportAsset.Meta.MetricMultiplier},
-									{"root", exportAsset.Meta.Root},
+									{"root", exportAsset.Meta.Root},*/
+									{"", ""}
 								}
 							},
 							{
-								"resources", exportAsset.JsonResources
+								"resources", ""//exportAsset.JsonResources
 							},
 							{
-								"buffers", exportAsset.JsonBuffers
+								"buffers", ""//exportAsset.JsonBuffers
 							}
 						};
-						var file = new STF_File(jsonDefinition.ToString(Newtonsoft.Json.Formatting.None), exportAsset.File.Buffers);
+						var file = new STF_File(jsonDefinition.ToString(Newtonsoft.Json.Formatting.None), new List<byte[]> {});
 
 						File.WriteAllBytes(path, file.CreateSTFBinary().ToArray());
 						if(DebugExport) File.WriteAllText(path + ".json", jsonDefinition.ToString(Newtonsoft.Json.Formatting.Indented));

@@ -21,12 +21,12 @@ namespace com.squirrelbite.stf_unity
 		public string Json;
 
 		[HideInInspector, SerializeField]
-		public List<STF_Buffer> Buffers = new();
+		public List<byte[]> Buffers = new();
 		public int BufferCount = 0;
 		public int BufferCountFooo => Buffers.Count;
 		public string OriginalFileName;
 
-		public STF_File(string Json, List<STF_Buffer> Buffers)
+		public STF_File(string Json, List<byte[]> Buffers)
 		{
 			this.Json = Json;
 			this.Buffers = Buffers;
@@ -67,10 +67,10 @@ namespace com.squirrelbite.stf_unity
 			Json = Encoding.UTF8.GetString(ReadBytes(bufferReader, buffer_lengths[0])); bufferReader.Advance((long)buffer_lengths[0]);
 
 			// Read each subsequent buffer
-			Buffers = new List<STF_Buffer>();
+			Buffers = new List<byte[]>();
 			for(uint i = 1; i < bufferCount; i++)
 			{
-				Buffers.Add(new STF_Buffer {Data=ReadBytes(bufferReader, buffer_lengths[i])});
+				Buffers.Add(ReadBytes(bufferReader, buffer_lengths[i]));
 			}
 
 			BufferCount = Buffers.Count();
@@ -112,7 +112,7 @@ namespace com.squirrelbite.stf_unity
 			// Length of each subsequent buffer
 			foreach(var buffer in Buffers)
 			{
-				BinaryPrimitives.WriteUInt64LittleEndian(bufferWriter.GetSpan(8), (ulong)buffer.BufferLength);
+				BinaryPrimitives.WriteUInt64LittleEndian(bufferWriter.GetSpan(8), (ulong)buffer.LongLength);
 				bufferWriter.Advance(8);
 			}
 
@@ -121,7 +121,7 @@ namespace com.squirrelbite.stf_unity
 			// Write each subsequent buffer
 			foreach(var buffer in Buffers)
 			{
-				bufferWriter.Write(buffer.Data);
+				bufferWriter.Write(buffer);
 			}
 
 			return bufferWriter.WrittenMemory;
