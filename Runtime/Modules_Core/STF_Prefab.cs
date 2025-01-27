@@ -11,6 +11,23 @@ namespace com.squirrelbite.stf_unity.modules
 		public List<STF_Component> Components = new();
 	}
 
+	class STF_Prefab_ImportContext : ResourceImportContext
+	{
+		protected JObject Json;
+		public STF_Prefab_ImportContext(IImportContext ParentContext, object Resource, JObject Json) : base(ParentContext, Resource)
+		{
+			this.Json = Json;
+		}
+
+		public override JObject GetJsonResource(string ID)
+		{
+			if(((JObject)Json["nodes"]).ContainsKey(ID))
+				return (JObject)Json["nodes"][ID];
+			else
+				return ParentContext.GetJsonResource(ID);
+		}
+	}
+
 	public class STF_Prefab_Module : STF_Module
 	{
 		public const string _STF_Type = "stf.prefab";
@@ -31,7 +48,21 @@ namespace com.squirrelbite.stf_unity.modules
 		public (object ApplicationObject, IImportContext Context) Import(IImportContext Context, JObject Json, string ID, object ParentApplicationObject)
 		{
 			var ret = new GameObject((string)Json.GetValue("name") ?? "STF Prefab");
-			var resourceContext = new ResourceImportContext(Context, ret);
+			var resourceContext = new STF_Prefab_ImportContext(Context, ret, Json);
+
+			foreach(var nodeID in Json["root_nodes"])
+			{
+				GameObject node = (GameObject)resourceContext.ImportResource((string)nodeID, ret);
+				if(node)
+				{
+					node.transform.SetParent(ret.transform);
+				}
+				else
+				{
+					// TODO report error
+					Debug.LogError("Invalid Node: " + nodeID);
+				}
+			}
 
 			return (ret, resourceContext);
 		}

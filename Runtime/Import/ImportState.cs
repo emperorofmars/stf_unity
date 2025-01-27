@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
@@ -27,21 +28,26 @@ namespace com.squirrelbite.stf_unity
 			JsonBuffers = json["buffers"] as JObject;
 		}
 
-		public (STF_Module Module, JObject JsonResource) DetermineModule(string ID)
+		public JObject GetJsonResource(string ID)
 		{
 			if(JsonResources.GetValue(ID) is JObject jsonResource)
+				return jsonResource;
+			else
+				return null;
+		}
+
+		public STF_Module DetermineModule(JObject JsonResource)
+		{
+			Debug.Log(JsonResource);
+			var type = (string)JsonResource.GetValue("type");
+			foreach(var module in Modules)
 			{
-				var type = (string)jsonResource.GetValue("type");
-				foreach(var module in Modules)
+				if(module.STF_Type == type)
 				{
-					if(module.STF_Type == type)
-					{
-						return (module, jsonResource);
-					}
+					return module;
 				}
 			}
-			// TODO report error
-			return (null, null);
+			return null;
 		}
 
 		public object GetImportedResource(string ID)

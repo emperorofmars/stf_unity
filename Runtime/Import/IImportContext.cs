@@ -1,8 +1,12 @@
 
+using Newtonsoft.Json.Linq;
+
 namespace com.squirrelbite.stf_unity
 {
 	public interface IImportContext
 	{
-		object ImportResource(string ID, object ParentApplicationObject = null);
+		ImportState ImportState {get;}
+		object ImportResource(string ID, object ParentApplicationObject);
+		JObject GetJsonResource(string ID);
 	}
 }
