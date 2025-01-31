@@ -17,7 +17,10 @@ namespace com.squirrelbite.stf_unity
 
 		public readonly Dictionary<string, object> ImportedObjects = new();
 
-		public ImportState(STF_File File, List<STF_Module> Modules)
+		public ImportOptions ImportOptions = new();
+		public readonly List<STFReport> Reports = new();
+
+		public ImportState(STF_File File, List<STF_Module> Modules, ImportOptions ImportOptions = null)
 		{
 			this.File = File;
 			this.Modules = Modules;
@@ -26,6 +29,8 @@ namespace com.squirrelbite.stf_unity
 			Meta = new STF_Meta(json["stf"] as JObject);
 			JsonResources = json["resources"] as JObject;
 			JsonBuffers = json["buffers"] as JObject;
+
+			if(ImportOptions != null) this.ImportOptions = ImportOptions;
 		}
 
 		public JObject GetJsonResource(string ID)
@@ -38,7 +43,6 @@ namespace com.squirrelbite.stf_unity
 
 		public STF_Module DetermineModule(JObject JsonResource)
 		{
-			Debug.Log(JsonResource);
 			var type = (string)JsonResource.GetValue("type");
 			foreach(var module in Modules)
 			{
@@ -61,6 +65,21 @@ namespace com.squirrelbite.stf_unity
 		public void RegisterImportedResource(string ID, object ImportedObject)
 		{
 			ImportedObjects.Add(ID, ImportedObject);
+		}
+
+		public void Report(STFReport Report) {
+			if(Report.Severity == ErrorSeverity.FATAL_ERROR)
+				Debug.LogError(Report.ToString());
+			else if(Report.Severity == ErrorSeverity.ERROR)
+				Debug.LogError(Report.ToString());
+			else if(Report.Severity == ErrorSeverity.WARNING)
+				Debug.LogWarning(Report.ToString());
+			else
+				Debug.Log(Report.ToString());
+
+			if(ImportOptions.AbortOnException && Report.Severity >= ErrorSeverity.ERROR)
+				throw Report.Exception;
+			Reports.Add(Report);
 		}
 	}
 }

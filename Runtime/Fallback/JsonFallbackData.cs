@@ -12,21 +12,12 @@ namespace com.squirrelbite.stf_unity.modules
 		public List<STF_Buffer> ReferencedBuffers = new();
 	}
 
-	public class JsonFallbackRoot_Module : STF_Module
+	public class JsonFallbackRoot_Module : IJsonFallback_Module
 	{
-		public string STF_Type => null;
+		public string _STF_Type = "";
+		public string STF_Type => _STF_Type;
 
 		public string STF_Kind => "data";
-
-		public int Priority => 0;
-
-		public List<string> LikeTypes => new(){};
-
-		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(JsonFallbackRoot)};
-
-		public int CanHandleApplicationObject(object ApplicationObject) { return 0; }
-
-		public List<STF_Component> GetComponents(object ApplicationObject) { return null; }
 
 		public (object ApplicationObject, IImportContext Context) Import(IImportContext Context, JObject Json, string ID, object ParentApplicationObject)
 		{

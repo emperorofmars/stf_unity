@@ -12,7 +12,7 @@ namespace com.squirrelbite.stf_unity
 		public List<STF_Buffer> Buffers = new();
 		public GameObject Root;
 
-		// TODO Reports
+		public List<STFReport> Reports = new();
 
 		public void Init(ImportState State)
 		{
@@ -23,6 +23,7 @@ namespace com.squirrelbite.stf_unity
 			OriginalFileName = State.File.OriginalFileName;
 			if(State.ImportedObjects.GetValueOrDefault(State.RootID) is GameObject @rootObject)
 				Root = @rootObject;
+			Reports = State.Reports;
 			// TODO
 		}
 	}

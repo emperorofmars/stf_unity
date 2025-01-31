@@ -1,6 +1,6 @@
 
+using com.squirrelbite.stf_unity.modules;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
@@ -18,6 +18,11 @@ namespace com.squirrelbite.stf_unity
 		public override JObject GetJsonResource(string ID)
 		{
 			return ParentContext.GetJsonResource(ID);
+		}
+
+		public override object HandleFallback(IImportContext Context, JObject JsonResource, string ID, object ParentApplicationObject = null)
+		{
+			return ParentContext.HandleFallback(Context, JsonResource, ID, ParentApplicationObject);
 		}
 	}
 }

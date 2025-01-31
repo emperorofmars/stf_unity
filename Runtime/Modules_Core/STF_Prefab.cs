@@ -14,6 +14,8 @@ namespace com.squirrelbite.stf_unity.modules
 	class STF_Prefab_ImportContext : ResourceImportContext
 	{
 		protected JObject Json;
+		protected new IJsonFallback_Module FallbackModule = new STF_Node_Fallback_Module();
+
 		public STF_Prefab_ImportContext(IImportContext ParentContext, object Resource, JObject Json) : base(ParentContext, Resource)
 		{
 			this.Json = Json;
@@ -25,6 +27,13 @@ namespace com.squirrelbite.stf_unity.modules
 				return (JObject)Json["nodes"][ID];
 			else
 				return ParentContext.GetJsonResource(ID);
+		}
+
+		public override object HandleFallback(IImportContext Context, JObject JsonResource, string ID, object ParentApplicationObject = null)
+		{
+			(var fallbackObject, _) = FallbackModule.Import(Context, JsonResource, ID, ParentApplicationObject);
+			ImportState.RegisterImportedResource(ID, fallbackObject);
+			return fallbackObject;
 		}
 	}
 
@@ -52,10 +61,9 @@ namespace com.squirrelbite.stf_unity.modules
 
 			foreach(var nodeID in Json["root_nodes"])
 			{
-				GameObject node = (GameObject)resourceContext.ImportResource((string)nodeID, ret);
-				if(node)
+				if(resourceContext.ImportResource((string)nodeID, ret) is GameObject nodeGo)
 				{
-					node.transform.SetParent(ret.transform);
+					nodeGo.transform.SetParent(ret.transform);
 				}
 				else
 				{
@@ -72,6 +80,7 @@ namespace com.squirrelbite.stf_unity.modules
 			var PrefabObject = ApplicationObject as GameObject;
 			var ret = new JObject {
 				{"type", _STF_Type},
+				{"name", PrefabObject.name},
 			};
 			var resourceContext = new ResourceExportContext(Context, ret);
 
