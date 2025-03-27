@@ -14,8 +14,8 @@ namespace com.squirrelbite.stf_unity
 		List<string> LikeTypes {get;}
 		List<Type> UnderstoodApplicationTypes {get;}
 		int CanHandleApplicationObject(object ApplicationObject);
-		(object ApplicationObject, IImportContext Context) Import(IImportContext Context, JObject Json, string ID, object ParentApplicationObject);
-		(JObject Json, string ID, IExportContext Context) Export(IExportContext Context, object ApplicationObject, object ParentApplicationObject);
+		object Import(ImportContext Context, JObject Json, string ID, object ContextObject);
+		(JObject Json, string ID) Export(ExportContext Context, object ApplicationObject, object ContextObject);
 		List<STF_Component> GetComponents(object ApplicationObject);
 	}
 }

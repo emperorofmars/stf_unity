@@ -19,17 +19,17 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public string STF_Kind => "data";
 
-		public (object ApplicationObject, IImportContext Context) Import(IImportContext Context, JObject Json, string ID, object ParentApplicationObject)
+		public object Import(ImportContext Context, JObject Json, string ID, object ParentApplicationObject)
 		{
 			var ret = ScriptableObject.CreateInstance<JsonFallbackRoot>();
 			ret.name = (string)Json.GetValue("name") ?? "STF Fallback";
 			return (ret, Context);
 		}
 
-		public (JObject Json, string ID, IExportContext Context) Export(IExportContext Context, object ApplicationObject, object ParentApplicationObject)
+		public (JObject Json, string ID) Export(ExportContext Context, object ApplicationObject, object ParentApplicationObject)
 		{
 			var FallbackObject = ApplicationObject as JsonFallbackRoot;
-			return (JObject.Parse(FallbackObject.Json), "", Context);
+			return (JObject.Parse(FallbackObject.Json), "");
 		}
 	}
 }

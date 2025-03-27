@@ -8,7 +8,7 @@ namespace com.squirrelbite.stf_unity
 	{
 		public static readonly List<STF_Module> Modules = new() {
 			new STF_Prefab_Module(),
-			new STF_Node_Spatial_Module(),
+			new STF_Node_Module(),
 		};
 
 	}

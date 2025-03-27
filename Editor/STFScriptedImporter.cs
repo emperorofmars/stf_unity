@@ -13,7 +13,7 @@ namespace com.squirrelbite.stf_unity.tools
 		{
 			var file = new STF_File(ctx.assetPath);
 			var state = new ImportState(file, STF_Registry.Modules);
-			var rootContext = new RootImportContext(state);
+			var rootContext = new ImportContext(state);
 
 			rootContext.ImportResource(state.RootID);
 

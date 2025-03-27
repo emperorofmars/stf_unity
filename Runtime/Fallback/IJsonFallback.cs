@@ -9,8 +9,8 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public string STF_Kind {get;}
 
-		public (object ApplicationObject, IImportContext Context) Import(IImportContext Context, JObject Json, string ID, object ParentApplicationObject);
+		public object Import(ImportContext Context, JObject Json, string ID, object ParentApplicationObject);
 
-		public (JObject Json, string ID, IExportContext Context) Export(IExportContext Context, object ApplicationObject, object ParentApplicationObject);
+		public (JObject Json, string ID) Export(ExportContext Context, object ApplicationObject, object ParentApplicationObject);
 	}
 }

@@ -11,16 +11,16 @@ namespace com.squirrelbite.stf_unity.modules
 		public List<STF_Component> Components = new();
 	}
 
-	public class STF_Node_Spatial_Module : STF_Module
+	public class STF_Node_Module : STF_Module
 	{
-		public const string _STF_Type = "stf.node.spatial";
+		public const string _STF_Type = "stf.node";
 		public string STF_Type => _STF_Type;
 
 		public string STF_Kind => "node";
 
 		public int Priority => 0;
 
-		public List<string> LikeTypes => new(){"node.spatial", "node"};
+		public List<string> LikeTypes => new(){"node"};
 
 		public List<Type> UnderstoodApplicationTypes => new(){typeof(STF_Node_Spatial)};
 
@@ -28,25 +28,24 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public List<STF_Component> GetComponents(object ApplicationObject) { return ((STF_Node_Spatial)ApplicationObject).Components; }
 
-		public (object ApplicationObject, IImportContext Context) Import(IImportContext Context, JObject Json, string ID, object ParentApplicationObject)
+		public object Import(ImportContext Context, JObject Json, string ID, object ContextObject)
 		{
 			var ret = new GameObject((string)Json.GetValue("name") ?? "STF Node");
-			var resourceContext = new ResourceImportContext(Context, ret);
 
 			TRSUtil.ParseTRS(ret, Json);
 
 			if(Json.ContainsKey("children")) foreach(var childID in (JArray)Json["children"])
 			{
-				if(resourceContext.ImportResource((string)childID) is GameObject childObject)
+				if(Context.ImportResource((string)childID) is GameObject childObject)
 				{
 					childObject.transform.SetParent(ret.transform);
 				}
 			}
 
-			return (ret, resourceContext);
+			return ret;
 		}
 
-		public (JObject Json, string ID, IExportContext Context) Export(IExportContext Context, object ApplicationObject, object ParentApplicationObject)
+		public (JObject Json, string ID) Export(ExportContext Context, object ApplicationObject, object ContextObject)
 		{
 			var Go = ApplicationObject as GameObject;
 			var ret = new JObject {
@@ -54,9 +53,8 @@ namespace com.squirrelbite.stf_unity.modules
 				{"name", Go.name},
 				{"trs", TRSUtil.SerializeTRS(Go)}
 			};
-			var resourceContext = new ResourceExportContext(Context, ret);
 
-			return (ret, "", resourceContext);
+			return (ret, "");
 		}
 	}
 }

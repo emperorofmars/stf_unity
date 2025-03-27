@@ -18,27 +18,26 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public string STF_Kind => "node";
 
-		public (object ApplicationObject, IImportContext Context) Import(IImportContext Context, JObject Json, string ID, object ParentApplicationObject)
+		public object Import(ImportContext Context, JObject Json, string ID, object ContextObject)
 		{
 			Debug.Log("WOOOOOOOOOOOOOO");
 
 			var ret = new GameObject((string)Json.GetValue("name") ?? "STF Node");
-			var resourceContext = new ResourceImportContext(Context, ret);
 
 			TRSUtil.ParseTRS(ret, Json);
 
 			if(Json.ContainsKey("children")) foreach(var childID in (JArray)Json["children"])
 			{
-				if(resourceContext.ImportResource((string)childID) is GameObject childObject)
+				if(Context.ImportResource((string)childID) is GameObject childObject)
 				{
 					childObject.transform.SetParent(ret.transform);
 				}
 			}
 
-			return (ret, resourceContext);
+			return ret;
 		}
 
-		public (JObject Json, string ID, IExportContext Context) Export(IExportContext Context, object ApplicationObject, object ParentApplicationObject)
+		public (JObject Json, string ID) Export(ExportContext Context, object ApplicationObject, object ContextObject)
 		{
 			var Go = ApplicationObject as GameObject;
 			var ret = new JObject {
@@ -46,9 +45,8 @@ namespace com.squirrelbite.stf_unity.modules
 				{"name", Go.name},
 				{"trs", TRSUtil.SerializeTRS(Go)}
 			};
-			var resourceContext = new ResourceExportContext(Context, ret);
 
-			return (ret, "", resourceContext);
+			return (ret, "");
 		}
 	}
 }
