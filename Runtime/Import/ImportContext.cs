@@ -1,5 +1,3 @@
-
-using com.squirrelbite.stf_unity.modules;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -9,29 +7,25 @@ namespace com.squirrelbite.stf_unity
 	{
 		protected ImportState _ImportState;
 		public ImportState ImportState => _ImportState;
-		public IJsonFallback_Module _FallbackModule = new JsonFallbackRoot_Module();
-		public IJsonFallback_Module FallbackModule => _FallbackModule;
 
-		public ImportContext(ImportState ImportState, IJsonFallback_Module FallbackModule = null)
+		public ImportContext(ImportState ImportState)
 		{
 			this._ImportState = ImportState;
-			if(FallbackModule != null)
-				this._FallbackModule = FallbackModule;
 		}
 
-		public virtual JObject GetJsonResource(string ID)
+		public virtual JObject GetJsonResource(string STF_Id)
 		{
-			return ImportState.GetJsonResource(ID);
+			return ImportState.GetJsonResource(STF_Id);
 		}
 
-		public object ImportResource(string ID, object ContextObject = null)
+		public ISTF_Resource ImportResource(string STF_Id, ISTF_Resource ContextObject = null)
 		{
-			if(ImportState.GetImportedResource(ID) is object @importedObject)
+			if(ImportState.GetImportedResource(STF_Id) is ISTF_Resource @importedObject)
 				return importedObject;
 
-			var jsonResource = GetJsonResource(ID);
+			var jsonResource = GetJsonResource(STF_Id);
 
-			Debug.Log($"Importing ID {ID} - {jsonResource.GetValue("type")}");
+			Debug.Log($"Importing ID {STF_Id} - {jsonResource.GetValue("type")}");
 
 			var module = ImportState.DetermineModule(jsonResource);
 			if(jsonResource == null)
@@ -42,23 +36,24 @@ namespace com.squirrelbite.stf_unity
 			if(module == null)
 			{
 				Report(new STFReport("Unrecognized Resource", ErrorSeverity.WARNING, (string)jsonResource.GetValue("type"), null, null));
-				return HandleFallback(jsonResource, ID, ContextObject);
+				return HandleFallback(jsonResource, STF_Id, ContextObject);
 			}
 
-			var applicationObject = module.Import(this, jsonResource, ID, ContextObject);
-			ImportState.RegisterImportedResource(ID, applicationObject);
+			var applicationObject = module.Import(this, jsonResource, STF_Id, ContextObject);
+			ImportState.RegisterImportedResource(STF_Id, applicationObject);
 
 			// handle components and what not
 
 			return applicationObject;
 		}
 
-		public virtual object HandleFallback(JObject JsonResource, string ID, object ContextObject = null)
+		public virtual ISTF_Resource HandleFallback(JObject JsonResource, string STF_Id, ISTF_Resource ContextObject = null)
 		{
-			var fallbackObject = FallbackModule.Import(this, JsonResource, ID, ContextObject);
-			ImportState.RegisterImportedResource(ID, fallbackObject);
+			/*var fallbackObject = FallbackModule.Import(this, JsonResource, STF_Id, ContextObject);
+			ImportState.RegisterImportedResource(STF_Id, fallbackObject);
 			// handle components and what not
-			return fallbackObject;
+			return fallbackObject;*/
+			return null;
 		}
 
 		public void Report(STFReport Report)

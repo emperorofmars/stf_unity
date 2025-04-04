@@ -7,7 +7,7 @@ namespace com.squirrelbite.stf_unity
 {
 	public class ImportState
 	{
-		public readonly List<STF_Module> Modules = new();
+		public readonly List<ISTF_Module> Modules = new();
 		public STF_File File;
 		public STF_Meta Meta;
 		public JObject JsonResources;
@@ -20,7 +20,7 @@ namespace com.squirrelbite.stf_unity
 		public ImportOptions ImportOptions = new();
 		public readonly List<STFReport> Reports = new();
 
-		public ImportState(STF_File File, List<STF_Module> Modules, ImportOptions ImportOptions = null)
+		public ImportState(STF_File File, List<ISTF_Module> Modules, ImportOptions ImportOptions = null)
 		{
 			this.File = File;
 			this.Modules = Modules;
@@ -41,7 +41,7 @@ namespace com.squirrelbite.stf_unity
 				return null;
 		}
 
-		public STF_Module DetermineModule(JObject JsonResource)
+		public ISTF_Module DetermineModule(JObject JsonResource)
 		{
 			var type = (string)JsonResource.GetValue("type");
 			foreach(var module in Modules)

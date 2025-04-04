@@ -6,12 +6,13 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
-	public class STF_Prefab : MonoBehaviour
+	public class STF_Prefab : STF_PrefabResource
 	{
-		public List<STF_Component> Components = new();
+		public const string STF_TYPE = "stf.prefab";
+		public override string STF_Type => STF_TYPE;
 	}
 
-	public class STF_Prefab_Module : STF_Module
+	public class STF_Prefab_Module : ISTF_Module
 	{
 		public const string _STF_Type = "stf.prefab";
 		public string STF_Type => _STF_Type;
@@ -24,39 +25,42 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public List<Type> UnderstoodApplicationTypes => new(){typeof(STF_Prefab)};
 
-		public int CanHandleApplicationObject(object ApplicationObject) { return 0; }
+		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
-		public List<STF_Component> GetComponents(object ApplicationObject) { return ((STF_Prefab)ApplicationObject).Components; }
+		public List<STF_ComponentResource> GetComponents(ISTF_Resource ApplicationObject) { return ((STF_Prefab)ApplicationObject).Components; }
 
-		public object Import(ImportContext Context, JObject Json, string ID, object ContextObject)
+		public ISTF_Resource Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
-			var ret = new GameObject((string)Json.GetValue("name") ?? "STF Prefab");
+			var go = new GameObject((string)JsonResource.GetValue("name") ?? "STF Prefab");
+			var ret = go.AddComponent<STF_Prefab>();
+			ret.STF_Id = STF_Id;
 
-			foreach(var nodeID in Json["root_nodes"])
+			ret.SetFromJson(JsonResource, STF_Id);
+
+			foreach(var nodeID in JsonResource["root_nodes"])
 			{
-				if(Context.ImportResource((string)nodeID, ret) is GameObject nodeGo)
+				if(Context.ImportResource((string)nodeID, ret) is STF_NodeResource nodeGo)
 				{
-					nodeGo.transform.SetParent(ret.transform);
+					nodeGo.transform.SetParent(go.transform);
 				}
 				else
 				{
-					// TODO report error
-					Debug.LogError("Invalid Node: " + nodeID);
+					Context.Report(new STFReport("Invalid Node: " + nodeID, ErrorSeverity.FATAL_ERROR, STF_Type, go, null));
 				}
 			}
 
 			return ret;
 		}
 
-		public (JObject Json, string ID) Export(ExportContext Context, object ApplicationObject, object ContextObject)
+		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
 		{
-			var PrefabObject = ApplicationObject as GameObject;
+			var PrefabObject = ApplicationObject as STF_Prefab;
 			var ret = new JObject {
 				{"type", _STF_Type},
-				{"name", PrefabObject.name},
+				{"name", PrefabObject.STF_Name},
 			};
 
-			return (ret, "");
+			return (ret, PrefabObject.STF_Id);
 		}
 	}
 }

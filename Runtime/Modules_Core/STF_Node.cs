@@ -6,12 +6,13 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
-	public class STF_Node_Spatial : MonoBehaviour
+	public class STF_Node : STF_NodeResource
 	{
-		public List<STF_Component> Components = new();
+		public const string STF_TYPE = "stf.node";
+		public override string STF_Type => STF_TYPE;
 	}
 
-	public class STF_Node_Module : STF_Module
+	public class STF_Node_Module : ISTF_Module
 	{
 		public const string _STF_Type = "stf.node";
 		public string STF_Type => _STF_Type;
@@ -22,39 +23,45 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public List<string> LikeTypes => new(){"node"};
 
-		public List<Type> UnderstoodApplicationTypes => new(){typeof(STF_Node_Spatial)};
+		public List<Type> UnderstoodApplicationTypes => new(){typeof(STF_Node)};
 
-		public int CanHandleApplicationObject(object ApplicationObject) { return 0; }
+		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 1; }
 
-		public List<STF_Component> GetComponents(object ApplicationObject) { return ((STF_Node_Spatial)ApplicationObject).Components; }
+		public List<STF_ComponentResource> GetComponents(ISTF_Resource ApplicationObject) { return ((STF_Node)ApplicationObject).Components; }
 
-		public object Import(ImportContext Context, JObject Json, string ID, object ContextObject)
+		public ISTF_Resource Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
-			var ret = new GameObject((string)Json.GetValue("name") ?? "STF Node");
+			var go = new GameObject((string)JsonResource.GetValue("name") ?? "STF Node");
+			var ret = go.AddComponent<STF_NodeResource>();
+			ret.SetFromJson(JsonResource, STF_Id);
 
-			TRSUtil.ParseTRS(ret, Json);
+			TRSUtil.ParseTRS(ret.transform, JsonResource);
 
-			if(Json.ContainsKey("children")) foreach(var childID in (JArray)Json["children"])
+			if(JsonResource.ContainsKey("children")) foreach(var childID in (JArray)JsonResource["children"])
 			{
-				if(Context.ImportResource((string)childID) is GameObject childObject)
+				if(Context.ImportResource((string)childID) is STF_Node childObject)
 				{
 					childObject.transform.SetParent(ret.transform);
 				}
 			}
 
+			// TODO instance
+
 			return ret;
 		}
 
-		public (JObject Json, string ID) Export(ExportContext Context, object ApplicationObject, object ContextObject)
+		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
 		{
-			var Go = ApplicationObject as GameObject;
+			var node = ApplicationObject as STF_Node;
 			var ret = new JObject {
 				{"type", _STF_Type},
-				{"name", Go.name},
-				{"trs", TRSUtil.SerializeTRS(Go)}
+				{"name", node.STF_Name},
+				{"trs", TRSUtil.SerializeTRS(node.transform)}
 			};
 
-			return (ret, "");
+			// TODO stuff
+
+			return (ret, node.STF_Id);
 		}
 	}
 }
