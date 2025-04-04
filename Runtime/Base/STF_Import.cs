@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using com.squirrelbite.stf_unity.modules;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
@@ -21,8 +22,8 @@ namespace com.squirrelbite.stf_unity
 			BinaryVersionMinor = State.File.VersionMinor;
 			Meta = State.Meta;
 			OriginalFileName = State.File.OriginalFileName;
-			if(State.ImportedObjects.GetValueOrDefault(State.RootID) is GameObject @rootObject)
-				Root = @rootObject;
+			if(State.ImportedObjects.GetValueOrDefault(State.RootID) is STF_Prefab @rootObject)
+				Root = @rootObject.gameObject;
 			Reports = State.Reports;
 			// TODO
 		}

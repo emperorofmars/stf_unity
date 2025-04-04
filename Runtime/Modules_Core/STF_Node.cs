@@ -14,8 +14,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 	public class STF_Node_Module : ISTF_Module
 	{
-		public const string _STF_Type = "stf.node";
-		public string STF_Type => _STF_Type;
+		public string STF_Type => STF_Node.STF_TYPE;
 
 		public string STF_Kind => "node";
 
@@ -32,7 +31,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public ISTF_Resource Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
 			var go = new GameObject((string)JsonResource.GetValue("name") ?? "STF Node");
-			var ret = go.AddComponent<STF_NodeResource>();
+			var ret = go.AddComponent<STF_Node>();
 			ret.SetFromJson(JsonResource, STF_Id);
 
 			TRSUtil.ParseTRS(ret.transform, JsonResource);
@@ -45,7 +44,10 @@ namespace com.squirrelbite.stf_unity.modules
 				}
 			}
 
-			// TODO instance
+			if(JsonResource.ContainsKey("instance"))
+			{
+				Context.ImportResource((string)JsonResource["instance"], ret);
+			}
 
 			return ret;
 		}
@@ -54,7 +56,7 @@ namespace com.squirrelbite.stf_unity.modules
 		{
 			var node = ApplicationObject as STF_Node;
 			var ret = new JObject {
-				{"type", _STF_Type},
+				{"type", STF_Type},
 				{"name", node.STF_Name},
 				{"trs", TRSUtil.SerializeTRS(node.transform)}
 			};

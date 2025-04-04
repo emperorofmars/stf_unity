@@ -9,6 +9,7 @@ namespace com.squirrelbite.stf_unity
 		public static readonly List<ISTF_Module> Modules = new() {
 			new STF_Prefab_Module(),
 			new STF_Node_Module(),
+			new STF_Instance_Armature_Module(),
 		};
 
 	}

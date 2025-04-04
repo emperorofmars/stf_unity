@@ -28,6 +28,7 @@ namespace com.squirrelbite.stf_unity.tools
 			ctx.AddObjectToAsset("main", import);
 			if(import.Root)
 			{
+				ctx.AddObjectToAsset("main", import.Root);
 				ctx.SetMainObject(import.Root);
 				Debug.Log("STF Import Success!");
 			}

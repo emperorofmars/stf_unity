@@ -11,13 +11,13 @@ namespace com.squirrelbite.stf_unity
 		public abstract string STF_Type {get;}
 		public abstract string STF_Kind {get;}
 
-		private string _STF_Id;
+		public string _STF_Id;
 		public string STF_Id {get => _STF_Id; set => _STF_Id = value;}
 
-		private string _STF_Name;
+		public string _STF_Name;
 		public string STF_Name {get => _STF_Name; set => _STF_Name = value;}
 
-		private bool _Degraded = false;
+		public bool _Degraded = false;
 		public bool Degraded {get => _Degraded; set => _Degraded = value;}
 
 		public virtual void SetFromJson(JObject JsonResource, string STF_Id)

@@ -14,8 +14,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 	public class STF_Prefab_Module : ISTF_Module
 	{
-		public const string _STF_Type = "stf.prefab";
-		public string STF_Type => _STF_Type;
+		public string STF_Type => STF_Prefab.STF_TYPE;
 
 		public string STF_Kind => "data";
 
@@ -33,8 +32,6 @@ namespace com.squirrelbite.stf_unity.modules
 		{
 			var go = new GameObject((string)JsonResource.GetValue("name") ?? "STF Prefab");
 			var ret = go.AddComponent<STF_Prefab>();
-			ret.STF_Id = STF_Id;
-
 			ret.SetFromJson(JsonResource, STF_Id);
 
 			foreach(var nodeID in JsonResource["root_nodes"])
@@ -56,7 +53,7 @@ namespace com.squirrelbite.stf_unity.modules
 		{
 			var PrefabObject = ApplicationObject as STF_Prefab;
 			var ret = new JObject {
-				{"type", _STF_Type},
+				{"type", STF_Type},
 				{"name", PrefabObject.STF_Name},
 			};
 
