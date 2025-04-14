@@ -20,10 +20,10 @@ namespace com.squirrelbite.stf_unity
 		public bool _Degraded = false;
 		public bool Degraded {get => _Degraded; set => _Degraded = value;}
 
-		public virtual void SetFromJson(JObject JsonResource, string STF_Id)
+		public virtual void SetFromJson(JObject JsonResource, string STF_Id, string DefaultName = "STF Prefab")
 		{
 			this.STF_Id = STF_Id;
-			this.STF_Name = (string)JsonResource.GetValue("name") ?? "STF Prefab";
+			this.STF_Name = JsonResource.ContainsKey("name") ? (string)JsonResource["name"] : null;
 			this.Degraded = (bool)(JsonResource.GetValue("degraded") ?? false);
 		}
 	}

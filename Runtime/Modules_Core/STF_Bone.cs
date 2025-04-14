@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace com.squirrelbite.stf_unity.modules
 {
@@ -10,6 +11,9 @@ namespace com.squirrelbite.stf_unity.modules
 	{
 		public const string STF_TYPE = "stf.bone";
 		public override string STF_Type => STF_TYPE;
+
+		public bool Connected = false;
+		public float Length = 0;
 	}
 
 	public class STF_Bone_Module : ISTF_Module
@@ -30,11 +34,16 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public (ISTF_Resource STFResource, object ApplicationObject) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
-			var go = new GameObject((string)JsonResource.GetValue("name") ?? "STF Node");
+			var go = new GameObject(STFUtil.DetermineName(JsonResource, "STF Bone"));
 			var ret = go.AddComponent<STF_Bone>();
 			ret.SetFromJson(JsonResource, STF_Id);
 
-			//TRSUtil.ParseTRS(ret.transform, JsonResource);
+			ret.Connected = JsonResource.ContainsKey("connected") && (bool)JsonResource["connected"];
+			ret.Length = (float)JsonResource["length"];
+
+			go.transform.position = TRSUtil.ParseLocation((JArray)JsonResource["translation"]);
+			go.transform.rotation = TRSUtil.ParseRotation((JArray)JsonResource["rotation"]);
+			go.transform.Rotate(Vector3.right, -90);
 
 			if(JsonResource.ContainsKey("children")) foreach(var childID in (JArray)JsonResource["children"])
 			{

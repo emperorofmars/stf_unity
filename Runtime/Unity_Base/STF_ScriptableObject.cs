@@ -20,8 +20,8 @@ namespace com.squirrelbite.stf_unity
 		public virtual void SetFromJson(JObject JsonResource, string STF_Id, string DefaultName = "STF ScriptableObject")
 		{
 			this.STF_Id = STF_Id;
-			this.STF_Name = STFUtil.DetermineName(JsonResource, DefaultName);
-			this.name = STF_Name;
+			this.STF_Name = JsonResource.ContainsKey("name") ? (string)JsonResource["name"] : null;
+			this.name = STFUtil.DetermineName(JsonResource, DefaultName);
 			this.Degraded = (bool)(JsonResource.GetValue("degraded") ?? false);
 		}
 	}

@@ -12,11 +12,11 @@ namespace com.squirrelbite.stf_unity
 
 		public List<STF_ComponentResource> Components = new();
 
-		public override void SetFromJson(JObject JsonResource, string STF_Id)
+		public override void SetFromJson(JObject JsonResource, string STF_Id, string DefaultName = "STF Node")
 		{
 			this.STF_Id = STF_Id;
-			this.STF_Name = (string)JsonResource.GetValue("name") ?? "STF Prefab";
-			this.name = STF_Name;
+			this.STF_Name = JsonResource.ContainsKey("name") ? (string)JsonResource["name"] : null;
+			this.name = STFUtil.DetermineName(JsonResource, DefaultName);
 			this.Degraded = (bool)(JsonResource.GetValue("degraded") ?? false);
 		}
 	}

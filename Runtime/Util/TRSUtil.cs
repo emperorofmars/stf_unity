@@ -17,6 +17,10 @@ namespace com.squirrelbite.stf_unity
 		{
 			return new Quaternion((float)Json["trs"][1][0], -(float)Json["trs"][1][1], -(float)Json["trs"][1][2], (float)Json["trs"][1][3]); // Flipping the X-axis with quats is funny
 		}
+		public static Quaternion ParseRotation(JArray Json)
+		{
+			return new Quaternion((float)Json[0], -(float)Json[1], -(float)Json[2], (float)Json[3]); // Flipping the X-axis with quats is funny
+		}
 		public static Vector3 ParseScale(JObject Json)
 		{
 			return new Vector3((float)Json["trs"][2][0], (float)Json["trs"][2][1], (float)Json["trs"][2][2]);
