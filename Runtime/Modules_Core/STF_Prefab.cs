@@ -28,7 +28,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public List<STF_ComponentResource> GetComponents(ISTF_Resource ApplicationObject) { return ((STF_Prefab)ApplicationObject).Components; }
 
-		public ISTF_Resource Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
+		public (ISTF_Resource STFResource, object ApplicationObject) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
 			var go = new GameObject((string)JsonResource.GetValue("name") ?? "STF Prefab");
 			var ret = go.AddComponent<STF_Prefab>();
@@ -46,7 +46,7 @@ namespace com.squirrelbite.stf_unity.modules
 				}
 			}
 
-			return ret;
+			return (ret, go);
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)

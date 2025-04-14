@@ -10,6 +10,8 @@ namespace com.squirrelbite.stf_unity
 			new STF_Prefab_Module(),
 			new STF_Node_Module(),
 			new STF_Instance_Armature_Module(),
+			new STF_Armature_Module(),
+			new STF_Bone_Module(),
 		};
 
 	}

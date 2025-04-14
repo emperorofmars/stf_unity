@@ -1,6 +1,3 @@
-
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -20,10 +17,10 @@ namespace com.squirrelbite.stf_unity
 		public bool _Degraded = false;
 		public bool Degraded {get => _Degraded; set => _Degraded = value;}
 
-		public virtual void SetFromJson(JObject JsonResource, string STF_Id)
+		public virtual void SetFromJson(JObject JsonResource, string STF_Id, string DefaultName = "STF ScriptableObject")
 		{
 			this.STF_Id = STF_Id;
-			this.STF_Name = (string)JsonResource.GetValue("name") ?? "STF Prefab";
+			this.STF_Name = STFUtil.DetermineName(JsonResource, DefaultName);
 			this.name = STF_Name;
 			this.Degraded = (bool)(JsonResource.GetValue("degraded") ?? false);
 		}

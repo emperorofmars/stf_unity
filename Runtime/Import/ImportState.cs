@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -15,10 +16,14 @@ namespace com.squirrelbite.stf_unity
 
 		public string RootID => Meta.Root;
 
-		public readonly Dictionary<string, object> ImportedObjects = new();
+		public readonly Dictionary<string, ISTF_Resource> ImportedObjects = new();
+		public readonly HashSet<Object> ObjectToRegister = new();
 
 		public ImportOptions ImportOptions = new();
 		public readonly List<STFReport> Reports = new();
+
+		public List<Task> Tasks = new();
+		public readonly List<Transform> Trash = new();
 
 		public ImportState(STF_File File, List<ISTF_Module> Modules, ImportOptions ImportOptions = null)
 		{
@@ -62,9 +67,11 @@ namespace com.squirrelbite.stf_unity
 				return null;
 		}
 
-		public void RegisterImportedResource(string ID, object ImportedObject)
+		public void RegisterImportedResource(string ID, ISTF_Resource ImportedObject, object ApplicationObject)
 		{
 			ImportedObjects.Add(ID, ImportedObject);
+			if(ApplicationObject is Object @object)
+				ObjectToRegister.Add(@object);
 		}
 
 		public void Report(STFReport Report) {
@@ -80,6 +87,63 @@ namespace com.squirrelbite.stf_unity
 			if(ImportOptions.AbortOnException && Report.Severity >= ErrorSeverity.ERROR)
 				throw Report.Exception;
 			Reports.Add(Report);
+		}
+
+		public void AddTrash(Transform Trash) { this.Trash.Add(Trash); }
+		public void AddTrash(IEnumerable<Transform> Trash) { this.Trash.AddRange(Trash); }
+
+
+		public void FinalizeImport()
+		{
+			// Run any Tasks added to the State during the processor execution
+			var maxDepth = 100;
+			while(Tasks.Count > 0)
+			{
+				var taskset = Tasks;
+				Tasks = new List<Task>();
+				foreach(var task in taskset)
+				{
+					task.RunSynchronously();
+					if(task.Exception != null)
+					{
+						HandleTaskException(task.Exception);
+					}
+				}
+
+				maxDepth--;
+				if(maxDepth <= 0)
+				{
+					Debug.LogWarning("Maximum recursion depth reached!");
+					break;
+				}
+			}
+
+			foreach(var t in Trash)
+			{
+				if(t)
+				{
+					#if UNITY_EDITOR
+					Object.DestroyImmediate(t.gameObject);
+					#else
+					Object.Destroy(t);
+					#endif
+				}
+			}
+		}
+
+		private void HandleTaskException(System.AggregateException Exception)
+		{
+			foreach(var e in Exception.InnerExceptions)
+			{
+				if(e is STFException stfError)
+				{
+					Report(stfError.Report);
+				}
+				else
+				{
+					Report(new STFReport(e.Message, ErrorSeverity.FATAL_ERROR, null, null, e));
+				}
+			}
 		}
 	}
 }
