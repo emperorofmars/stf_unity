@@ -135,47 +135,48 @@ namespace com.squirrelbite.stf_unity.modules
 			var ret = ScriptableObject.CreateInstance<STF_Mesh>();
 			ret.SetFromJson(JsonResource, STF_Id, "STF Mesh");
 
-			ret.vertex_count = (ulong)JsonResource.GetValue("vertex_count");
-			ret.vertex_width = (uint)JsonResource.GetValue("vertex_width");
-			ret.vertex_indices_width = (uint)JsonResource.GetValue("vertex_indices_width");
-			ret.vertices = Context.ImportBuffer((string)JsonResource["vertices"]);
+
+			ret.vertex_count = JsonResource.Value<ulong>("vertex_count");
+			ret.vertex_width = JsonResource.Value<uint>("vertex_width");
+			ret.vertex_indices_width = JsonResource.Value<uint>("vertex_indices_width");
+			ret.vertices = Context.ImportBuffer(JsonResource.Value<string>("vertices"));
 			if(JsonResource.ContainsKey("colors")) foreach(var color in JsonResource["colors"])
-				ret.colors.Add(Context.ImportBuffer((string)color));
+				ret.colors.Add(Context.ImportBuffer(color.Value<string>()));
 
-			ret.split_count = (ulong)JsonResource["split_count"];
-			ret.split_indices_width = (uint)JsonResource["split_indices_width"];
-			ret.split_normal_width = (uint)JsonResource["split_normal_width"];
-			ret.split_tangent_width = (uint)JsonResource["split_tangent_width"];
-			ret.split_color_width = (uint)JsonResource["split_color_width"];
-			ret.split_uv_width = (uint)JsonResource["split_uv_width"];
-			ret.splits = Context.ImportBuffer((string)JsonResource["splits"]);
-			ret.split_normals = Context.ImportBuffer((string)JsonResource["split_normals"]);
-			ret.split_tangents = Context.ImportBuffer((string)JsonResource["split_tangents"]);
+			ret.split_count = JsonResource.Value<ulong>("split_count");
+			ret.split_indices_width = JsonResource.Value<uint>("split_indices_width");
+			ret.split_normal_width = JsonResource.Value<uint>("split_normal_width");
+			ret.split_tangent_width = JsonResource.Value<uint>("split_tangent_width");
+			ret.split_color_width = JsonResource.Value<uint>("split_color_width");
+			ret.split_uv_width = JsonResource.Value<uint>("split_uv_width");
+			if(JsonResource.ContainsKey("splits")) ret.splits = Context.ImportBuffer(JsonResource.Value<string>("splits"));
+			if(JsonResource.ContainsKey("split_normals")) ret.split_normals = Context.ImportBuffer(JsonResource.Value<string>("split_normals"));
+			if(JsonResource.ContainsKey("split_tangents")) ret.split_tangents = Context.ImportBuffer(JsonResource.Value<string>("split_tangents"));
 			if(JsonResource.ContainsKey("uvs")) foreach(JObject uv in (JArray)JsonResource["uvs"])
-				ret.uvs.Add(new () {name = (string)uv["name"], uv = Context.ImportBuffer((string)uv["uv"])});
+				ret.uvs.Add(new () {name = uv.Value<string>("name"), uv = Context.ImportBuffer(uv.Value<string>("uv"))});
 			if(JsonResource.ContainsKey("split_colors")) foreach(var color in JsonResource["split_colors"])
-				ret.split_colors.Add(Context.ImportBuffer((string)color));
+				ret.split_colors.Add(Context.ImportBuffer(color.Value<string>()));
 
-			ret.tris_count = (ulong)JsonResource["tris_count"];
-			ret.face_count = (ulong)JsonResource["face_count"];
-			ret.face_indices_width = (uint)JsonResource["face_indices_width"];
-			ret.tris = Context.ImportBuffer((string)JsonResource["tris"]);
-			ret.faces = Context.ImportBuffer((string)JsonResource["faces"]);
-			ret.material_indices_width = (uint)JsonResource["material_indices_width"];
-			ret.material_indices = Context.ImportBuffer((string)JsonResource["material_indices"]);
+			ret.tris_count = JsonResource.Value<ulong>("tris_count");
+			ret.face_count = JsonResource.Value<ulong>("face_count");
+			ret.face_indices_width = JsonResource.Value<uint>("face_indices_width");
+			if(JsonResource.ContainsKey("tris")) ret.tris = Context.ImportBuffer(JsonResource.Value<string>("tris"));
+			if(JsonResource.ContainsKey("faces")) ret.faces = Context.ImportBuffer(JsonResource.Value<string>("faces"));
+			ret.material_indices_width = JsonResource.Value<uint>("material_indices_width");
+			if(JsonResource.ContainsKey("material_indices")) ret.material_indices = Context.ImportBuffer(JsonResource.Value<string>("material_indices"));
 
-			ret.lines_len = (ulong)JsonResource["lines_len"];
-			ret.lines = Context.ImportBuffer((string)JsonResource["lines"]);
+			ret.lines_len = JsonResource.Value<ulong>("lines_len");
+			if(JsonResource.ContainsKey("lines")) ret.lines = Context.ImportBuffer(JsonResource.Value<string>("lines"));
 
-			ret.sharp_edges_len = (ulong)JsonResource["sharp_edges_len"];
-			ret.sharp_edges = Context.ImportBuffer((string)JsonResource["sharp_edges"]);
+			ret.sharp_edges_len = JsonResource.Value<ulong>("sharp_edges_len");
+			if(JsonResource.ContainsKey("sharp_edges")) ret.sharp_edges = Context.ImportBuffer(JsonResource.Value<string>("sharp_edges"));
 
 			if(JsonResource.ContainsKey("armature"))
-				ret.armature = (STF_Armature)Context.ImportResource((string)JsonResource["armature"]);
+				ret.armature = (STF_Armature)Context.ImportResource(JsonResource.Value<string>("armature"));
 
-			foreach(var bone in JsonResource["bones"])
-				ret.bones.Add((string)bone);
-			ret.bone_weight_width = (uint)JsonResource["bone_weight_width"];
+				foreach(var bone in JsonResource["bones"])
+					ret.bones.Add(bone.Value<string>());
+				ret.bone_weight_width = JsonResource.Value<uint>("bone_weight_width");
 
 			return (ret, new(){ret});
 		}
