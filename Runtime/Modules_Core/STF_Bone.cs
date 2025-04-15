@@ -32,7 +32,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public List<STF_ComponentResource> GetComponents(ISTF_Resource ApplicationObject) { return ((STF_Bone)ApplicationObject).Components; }
 
-		public (ISTF_Resource STFResource, object ApplicationObject) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
+		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
 			var go = new GameObject(STFUtil.DetermineName(JsonResource, "STF Bone"));
 			var ret = go.AddComponent<STF_Bone>();

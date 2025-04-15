@@ -41,8 +41,8 @@ namespace com.squirrelbite.stf_unity
 				return HandleFallback(jsonResource, STF_Id, ContextObject);
 			}
 
-			(ISTF_Resource STFResource, object ApplicationObject) = module.Import(this, jsonResource, STF_Id, ContextObject);
-			ImportState.RegisterImportedResource(STF_Id, STFResource, ApplicationObject);
+			(ISTF_Resource STFResource, List<object> ApplicationObjects) = module.Import(this, jsonResource, STF_Id, ContextObject);
+			ImportState.RegisterImportedResource(STF_Id, STFResource, ApplicationObjects);
 
 			// handle components and what not
 

@@ -27,12 +27,12 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public List<STF_ComponentResource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
 
-		public (ISTF_Resource STFResource, object ApplicationObject) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
+		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
 			var ret = ScriptableObject.CreateInstance<STF_Mesh>();
 			ret.SetFromJson(JsonResource, STF_Id, "STF Mesh");
 
-			return (ret, ret);
+			return (ret, new(){ret});
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)

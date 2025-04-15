@@ -67,11 +67,17 @@ namespace com.squirrelbite.stf_unity
 				return null;
 		}
 
-		public void RegisterImportedResource(string ID, ISTF_Resource ImportedObject, object ApplicationObject)
+		public void RegisterImportedResource(string ID, ISTF_Resource ImportedObject, List<object> ApplicationObjects)
 		{
 			ImportedObjects.Add(ID, ImportedObject);
-			if(ApplicationObject is Object @object)
-				ObjectToRegister.Add(@object);
+			if(ApplicationObjects != null && ApplicationObjects.Count > 0)
+			{
+				foreach(var ApplicationObject in ApplicationObjects)
+				{
+					if(ApplicationObject is Object @object)
+						ObjectToRegister.Add(@object);
+				}
+			}
 		}
 
 		public void Report(STFReport Report) {
