@@ -12,6 +12,15 @@ namespace com.squirrelbite.stf_unity.modules
 		public STF_Armature Armature;
 
 		// TODO pose & mods
+		[System.Serializable]
+		public class Pose
+		{
+			public string TargetId;
+			public Vector3 Translation = Vector3.zero;
+			public Quaternion Rotation = Quaternion.identity;
+			public Vector3 Scale = Vector3.one;
+		}
+		public List<Pose> Poses = new();
 	}
 
 	public class STF_Instance_Armature_Module : ISTF_Module
@@ -39,11 +48,22 @@ namespace com.squirrelbite.stf_unity.modules
 
 			ret.Armature = (STF_Armature)Context.ImportResource((string)JsonResource["armature"]);
 
+			if(JsonResource.ContainsKey("pose"))
+			{
+				foreach((string id, var pose) in (JObject)JsonResource["pose"])
+				{
+					ret.Poses.Add(new STF_Instance_Armature.Pose {TargetId = id, Translation = TRSUtil.ParseLocation((JArray)pose[0]), Rotation = TRSUtil.ParseRotation((JArray)pose[1]), Scale = TRSUtil.ParseScale((JArray)pose[2])});
+				}
+			}
+
 			var instance = Object.Instantiate(ret.Armature.gameObject, go.transform);
 			for(var child_count = instance.transform.childCount; child_count > 0; child_count--)
 			{
 				instance.transform.GetChild(child_count - 1).SetParent(go.transform);
 			}
+
+			// TODO also handle component mods and stuff
+
 			#if UNITY_EDITOR
 			Object.DestroyImmediate(instance);
 			#else

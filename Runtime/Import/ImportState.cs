@@ -76,7 +76,7 @@ namespace com.squirrelbite.stf_unity
 
 		public void Report(STFReport Report) {
 			if(Report.Severity == ErrorSeverity.FATAL_ERROR)
-				Debug.LogError(Report.ToString());
+				throw Report.Exception;
 			else if(Report.Severity == ErrorSeverity.ERROR)
 				Debug.LogError(Report.ToString());
 			else if(Report.Severity == ErrorSeverity.WARNING)

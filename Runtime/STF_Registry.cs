@@ -12,6 +12,8 @@ namespace com.squirrelbite.stf_unity
 			new STF_Instance_Armature_Module(),
 			new STF_Armature_Module(),
 			new STF_Bone_Module(),
+			new STF_Instance_Mesh_Module(),
+			new STF_Mesh_Module(),
 		};
 
 	}

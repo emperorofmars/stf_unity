@@ -56,7 +56,8 @@ namespace com.squirrelbite.stf_unity.modules
 			{
 				Context.AddTask(new Task(() => {
 					var binding = JsonResource["parent_binding"].ToObject<List<string>>();
-					Debug.Log(binding.Aggregate((a, b) => a + " : " + b));
+					//Debug.Log(binding.Aggregate((a, b) => a + " : " + b));
+					// TODO
 				}));
 			}
 

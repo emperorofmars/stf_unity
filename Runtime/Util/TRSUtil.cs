@@ -25,6 +25,10 @@ namespace com.squirrelbite.stf_unity
 		{
 			return new Vector3((float)Json["trs"][2][0], (float)Json["trs"][2][1], (float)Json["trs"][2][2]);
 		}
+		public static Vector3 ParseScale(JArray Json)
+		{
+			return new Vector3((float)Json[0], (float)Json[1], (float)Json[2]);
+		}
 		public static void ParseTRS(Transform Target, JObject Json)
 		{
 			Target.localPosition = TRSUtil.ParseLocation(Json);
