@@ -68,7 +68,6 @@ namespace com.squirrelbite.stf_unity
 			ImportState.Report(Report);
 		}
 
-
 		public void AddTask(Task Task) { ImportState.Tasks.Add(Task); }
 		public void AddTrash(Transform Trash) { ImportState.Trash.Add(Trash); }
 		public void AddTrash(IEnumerable<Transform> Trash) { ImportState.Trash.AddRange(Trash); }

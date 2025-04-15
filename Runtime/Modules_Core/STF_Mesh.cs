@@ -9,6 +9,8 @@ namespace com.squirrelbite.stf_unity.modules
 		public const string STF_TYPE = "stf.mesh";
 		public override string STF_Type => STF_TYPE;
 
+		public Mesh ProcessedUnityMesh;
+
 		[System.Serializable]
 		public class NamedBuffer
 		{
@@ -52,49 +54,52 @@ namespace com.squirrelbite.stf_unity.modules
 		[Space]
 		[Header("Vertices")]
 		public ulong vertex_count;
-		public uint vertex_width;
-		public uint vertex_indices_width;
+		public uint vertex_width = 4;
+		public uint vertex_indices_width = 4;
 		public STF_Buffer vertices;
-		public uint vertex_color_width;
-		public List<STF_Buffer> colors;
+		public uint vertex_color_width = 4;
+		public List<STF_Buffer> colors = new();
 
 		[Space]
 		[Header("Splits")]
 		public ulong split_count;
-		public uint split_indices_width;
-		public uint split_normal_width;
-		public uint split_tangent_width;
-		public uint split_color_width;
-		public uint split_uv_width;
+		public uint split_indices_width = 4;
+		public uint split_normal_width = 4;
+		public uint split_tangent_width = 4;
+		public uint split_color_width = 4;
+		public uint split_uv_width = 4;
 		public STF_Buffer splits;
 		public STF_Buffer split_normals;
 		public STF_Buffer split_tangents;
-		public List<NamedBuffer> uvs;
-		public List<STF_Buffer> split_colors;
+		public List<NamedBuffer> uvs = new();
+		public List<STF_Buffer> split_colors = new();
 
 		[Space]
 		[Header("Topology")]
 		public ulong tris_count;
 		public ulong face_count;
-		public uint face_indices_width;
+		public uint face_indices_width = 4;
 		public STF_Buffer tris;
 		public STF_Buffer faces;
-		public uint material_indices_width;
+		public ulong lines_len;
+		public STF_Buffer lines;
+		public uint material_indices_width = 4;
 		public STF_Buffer material_indices;
+		public List<string> material_slots = new();
 
 		[Space]
 		[Header("Rigging")]
 		public STF_Armature armature;
-		public List<string> bones;
-		public uint bone_weight_width;
-		public List<WeightChannel> weights;
+		public List<string> bones = new();
+		public uint bone_weight_width = 4;
+		public List<WeightChannel> weights = new();
 
 		[Space]
 		[Header("Blendshapes")]
-		public uint blendshape_pos_width;
-		public uint blendshape_normal_width;
-		public uint blendshape_tangent_width;
-		public List<Blendshape> blendshapes;
+		public uint blendshape_pos_width = 4;
+		public uint blendshape_normal_width = 4;
+		public uint blendshape_tangent_width = 4;
+		public List<Blendshape> blendshapes = new();
 
 		[Space]
 		[Header("Additional Mesh Properies")]
@@ -102,14 +107,11 @@ namespace com.squirrelbite.stf_unity.modules
 		public STF_Buffer sharp_face_indices;
 		public ulong sharp_edges_len;
 		public STF_Buffer sharp_edges;
-		public ulong lines_len;
-		public STF_Buffer lines;
 
 		[Space]
 		[Header("Vertex Groups")]
-		public uint vertex_weight_width;
-		public List<VertexGroup> vertex_groups;
-
+		public uint vertex_weight_width = 4;
+		public List<VertexGroup> vertex_groups = new();
 	}
 
 	public class STF_Mesh_Module : ISTF_Module
@@ -137,6 +139,43 @@ namespace com.squirrelbite.stf_unity.modules
 			ret.vertex_width = (uint)JsonResource.GetValue("vertex_width");
 			ret.vertex_indices_width = (uint)JsonResource.GetValue("vertex_indices_width");
 			ret.vertices = Context.ImportBuffer((string)JsonResource["vertices"]);
+			if(JsonResource.ContainsKey("colors")) foreach(var color in JsonResource["colors"])
+				ret.colors.Add(Context.ImportBuffer((string)color));
+
+			ret.split_count = (ulong)JsonResource["split_count"];
+			ret.split_indices_width = (uint)JsonResource["split_indices_width"];
+			ret.split_normal_width = (uint)JsonResource["split_normal_width"];
+			ret.split_tangent_width = (uint)JsonResource["split_tangent_width"];
+			ret.split_color_width = (uint)JsonResource["split_color_width"];
+			ret.split_uv_width = (uint)JsonResource["split_uv_width"];
+			ret.splits = Context.ImportBuffer((string)JsonResource["splits"]);
+			ret.split_normals = Context.ImportBuffer((string)JsonResource["split_normals"]);
+			ret.split_tangents = Context.ImportBuffer((string)JsonResource["split_tangents"]);
+			if(JsonResource.ContainsKey("uvs")) foreach(JObject uv in (JArray)JsonResource["uvs"])
+				ret.uvs.Add(new () {name = (string)uv["name"], uv = Context.ImportBuffer((string)uv["uv"])});
+			if(JsonResource.ContainsKey("split_colors")) foreach(var color in JsonResource["split_colors"])
+				ret.split_colors.Add(Context.ImportBuffer((string)color));
+
+			ret.tris_count = (ulong)JsonResource["tris_count"];
+			ret.face_count = (ulong)JsonResource["face_count"];
+			ret.face_indices_width = (uint)JsonResource["face_indices_width"];
+			ret.tris = Context.ImportBuffer((string)JsonResource["tris"]);
+			ret.faces = Context.ImportBuffer((string)JsonResource["faces"]);
+			ret.material_indices_width = (uint)JsonResource["material_indices_width"];
+			ret.material_indices = Context.ImportBuffer((string)JsonResource["material_indices"]);
+
+			ret.lines_len = (ulong)JsonResource["lines_len"];
+			ret.lines = Context.ImportBuffer((string)JsonResource["lines"]);
+
+			ret.sharp_edges_len = (ulong)JsonResource["sharp_edges_len"];
+			ret.sharp_edges = Context.ImportBuffer((string)JsonResource["sharp_edges"]);
+
+			if(JsonResource.ContainsKey("armature"))
+				ret.armature = (STF_Armature)Context.ImportResource((string)JsonResource["armature"]);
+
+			foreach(var bone in JsonResource["bones"])
+				ret.bones.Add((string)bone);
+			ret.bone_weight_width = (uint)JsonResource["bone_weight_width"];
 
 			return (ret, new(){ret});
 		}

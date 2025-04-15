@@ -13,6 +13,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public const string STF_TYPE = "stf.node";
 		public override string STF_Type => STF_TYPE;
 		public STF_InstanceResource Instance;
+		public List<string> ParentBinding = new();
 	}
 
 	public class STF_Node_Module : ISTF_Module
@@ -56,6 +57,7 @@ namespace com.squirrelbite.stf_unity.modules
 			{
 				Context.AddTask(new Task(() => {
 					var binding = JsonResource["parent_binding"].ToObject<List<string>>();
+					ret.ParentBinding = binding;
 					//Debug.Log(binding.Aggregate((a, b) => a + " : " + b));
 					// TODO
 				}));
