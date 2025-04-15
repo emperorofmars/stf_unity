@@ -1,6 +1,5 @@
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
 
@@ -19,7 +18,6 @@ namespace com.squirrelbite.stf_unity
 		public string Generator = _Generator;
 		public string Root;
 		public double MetricMultiplier = 1;
-		public List<string> Profiles = new();
 		public AssetInfo STFAssetInfo = new();
 
 
@@ -33,7 +31,6 @@ namespace com.squirrelbite.stf_unity
 			Generator = (string)JsonMeta.GetValue("generator");
 			Root = (string)JsonMeta.GetValue("root");
 			MetricMultiplier = (double)JsonMeta.GetValue("metric_multiplier");
-			Profiles = JsonMeta.GetValue("profiles").ToObject<List<string>>();
 
 			if(JsonMeta.GetValue("asset_info") is JObject assetInfo)
 				STFAssetInfo = new AssetInfo(assetInfo);
@@ -48,7 +45,6 @@ namespace com.squirrelbite.stf_unity
 				{"generator", _Generator},
 				{"root", Root},
 				{"metric_multiplier", MetricMultiplier},
-				{"profiles", new JArray(Profiles)},
 				{"asset_info", STFAssetInfo.ToJson()},
 			};
 

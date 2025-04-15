@@ -6,7 +6,7 @@ namespace com.squirrelbite.stf_unity
 	[Serializable]
 	public class STF_Buffer
 	{
-		public string STF_ID;
+		public string STF_Id;
 
 		[HideInInspector]
 		public byte[] Data;

@@ -25,7 +25,8 @@ namespace com.squirrelbite.stf_unity
 			if(State.ImportedObjects.GetValueOrDefault(State.RootID) is STF_Prefab @rootObject)
 				Root = @rootObject.gameObject;
 			Reports = State.Reports;
-			// TODO
+			foreach(var buffer in State.ImportedBuffers)
+				Buffers.Add(buffer.Value);
 		}
 	}
 }

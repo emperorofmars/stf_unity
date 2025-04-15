@@ -20,8 +20,13 @@ namespace com.squirrelbite.stf_unity.tools
 
 			foreach(var importedObject in state.ObjectToRegister)
 			{
-				ctx.AddObjectToAsset(@importedObject.name, importedObject);
+				ctx.AddObjectToAsset(importedObject.name, importedObject);
 			}
+
+			/*foreach(var importedObject in state.ImportedBuffers)
+			{
+				ctx.AddObjectToAsset("Buffer: " + importedObject.Key, importedObject.Value);
+			}*/
 
 			var import = ScriptableObject.CreateInstance<STF_Import>();
 			import.Init(state);

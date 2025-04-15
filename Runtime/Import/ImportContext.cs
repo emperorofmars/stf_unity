@@ -49,6 +49,11 @@ namespace com.squirrelbite.stf_unity
 			return STFResource;
 		}
 
+		public STF_Buffer ImportBuffer(string STF_Id)
+		{
+			return ImportState.ImportBuffer(STF_Id);
+		}
+
 		public virtual ISTF_Resource HandleFallback(JObject JsonResource, string STF_Id, ISTF_Resource ContextObject = null)
 		{
 			/*var fallbackObject = FallbackModule.Import(this, JsonResource, STF_Id, ContextObject);

@@ -19,6 +19,8 @@ namespace com.squirrelbite.stf_unity
 		public readonly Dictionary<string, ISTF_Resource> ImportedObjects = new();
 		public readonly HashSet<Object> ObjectToRegister = new();
 
+		public readonly Dictionary<string, STF_Buffer> ImportedBuffers = new();
+
 		public ImportOptions ImportOptions = new();
 		public readonly List<STFReport> Reports = new();
 
@@ -80,9 +82,32 @@ namespace com.squirrelbite.stf_unity
 			}
 		}
 
+		public STF_Buffer ImportBuffer(string STF_Id)
+		{
+			if(ImportedBuffers.ContainsKey(STF_Id))
+				Report(new STFReport($"Buffer with ID \"{STF_Id}\" imported twice", ErrorSeverity.FATAL_ERROR));
+
+			if(!JsonBuffers.ContainsKey(STF_Id))
+				Report(new STFReport($"Buffer with ID \"{STF_Id}\" doesn't exist", ErrorSeverity.FATAL_ERROR));
+
+			var jsonBuffer = (JObject)JsonBuffers[STF_Id];
+			if(!jsonBuffer.ContainsKey("type") || (string)jsonBuffer["type"] != "stf.buffer.included")
+				Report(new STFReport($"Buffer with ID \"{STF_Id}\" is of not supported type \"{(string)jsonBuffer["type"]}\"" + STF_Id, ErrorSeverity.FATAL_ERROR));
+
+			var bytes = File.Buffers[(int)jsonBuffer["index"]];
+			/*var ret = ScriptableObject.CreateInstance<STF_Buffer>();
+			ret.Data = bytes;
+			ret.STF_Id = STF_Id;
+			ret.name = "Buffer: " + STF_Id;*/
+			var ret = new STF_Buffer{Data = bytes, STF_Id = STF_Id};
+			ImportedBuffers.Add(STF_Id, ret);
+
+			return ret;
+		}
+
 		public void Report(STFReport Report) {
 			if(Report.Severity == ErrorSeverity.FATAL_ERROR)
-				throw Report.Exception;
+				throw new STFException(Report);
 			else if(Report.Severity == ErrorSeverity.ERROR)
 				Debug.LogError(Report.ToString());
 			else if(Report.Severity == ErrorSeverity.WARNING)
