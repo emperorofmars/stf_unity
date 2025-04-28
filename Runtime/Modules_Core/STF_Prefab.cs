@@ -32,7 +32,7 @@ namespace com.squirrelbite.stf_unity.modules
 		{
 			var go = new GameObject((string)JsonResource.GetValue("name") ?? "STF Prefab");
 			var ret = go.AddComponent<STF_Prefab>();
-			ret.SetFromJson(JsonResource, STF_Id);
+			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STF Prefab");
 
 			foreach(var nodeID in JsonResource["root_nodes"])
 			{

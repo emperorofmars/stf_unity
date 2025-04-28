@@ -36,7 +36,7 @@ namespace com.squirrelbite.stf_unity.modules
 		{
 			var go = new GameObject(STFUtil.DetermineName(JsonResource, "STF Bone"));
 			var ret = go.AddComponent<STF_Bone>();
-			ret.SetFromJson(JsonResource, STF_Id);
+			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STF Bone");
 
 			ret.Connected = JsonResource.ContainsKey("connected") && (bool)JsonResource["connected"];
 			ret.Length = (float)JsonResource["length"];

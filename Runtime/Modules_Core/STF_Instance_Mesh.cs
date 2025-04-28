@@ -33,9 +33,10 @@ namespace com.squirrelbite.stf_unity.modules
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
 			var go = (STF_Node)ContextObject;
-			var ret = ScriptableObject.CreateInstance<STF_Instance_Mesh>();
+			var ret = go.gameObject.AddComponent<STF_Instance_Mesh>();
+			//var ret = ScriptableObject.CreateInstance<STF_Instance_Mesh>();
 			go.Instance = ret;
-			ret.SetFromJson(JsonResource, STF_Id, "STF Instance Mesh");
+			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STF Instance Mesh");
 
 			Context.AddTask(new Task(() => {
 				if(JsonResource.ContainsKey("armature_instance"))
@@ -48,9 +49,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 			// TODO material slots & blendshape values
 
-			// TODO create unity mesh
-
-			return (ret, new(){ret});
+			return (ret, null);
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)

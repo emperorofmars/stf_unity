@@ -32,7 +32,7 @@ namespace com.squirrelbite.stf_unity.modules
 		{
 			var go = new GameObject((string)JsonResource.GetValue("name") ?? "STF Armature");
 			var ret = go.gameObject.AddComponent<STF_Armature>();
-			ret.SetFromJson(JsonResource, STF_Id);
+			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STF Armature");
 
 			foreach(var nodeID in JsonResource["root_bones"])
 			{

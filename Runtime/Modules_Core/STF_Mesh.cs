@@ -172,11 +172,46 @@ namespace com.squirrelbite.stf_unity.modules
 			if(JsonResource.ContainsKey("sharp_edges")) ret.sharp_edges = Context.ImportBuffer(JsonResource.Value<string>("sharp_edges"));
 
 			if(JsonResource.ContainsKey("armature"))
+			{
 				ret.armature = (STF_Armature)Context.ImportResource(JsonResource.Value<string>("armature"));
 
 				foreach(var bone in JsonResource["bones"])
 					ret.bones.Add(bone.Value<string>());
 				ret.bone_weight_width = JsonResource.Value<uint>("bone_weight_width");
+
+				foreach(var weightChannel in JsonResource["weights"])
+					ret.weights.Add(new STF_Mesh.WeightChannel {
+						buffer = Context.ImportBuffer(weightChannel.Value<string>("buffer")),
+						count = weightChannel.Value<ulong>("count"),
+						indexed = weightChannel.Value<bool>("indexed")
+					});
+			}
+
+			if(JsonResource.ContainsKey("blendshapes"))
+			{
+				ret.blendshape_pos_width = JsonResource.Value<uint>("blendshape_pos_width");
+				ret.blendshape_normal_width = JsonResource.Value<uint>("blendshape_normal_width");
+				ret.blendshape_tangent_width = JsonResource.Value<uint>("blendshape_tangent_width");
+
+				foreach(var jsonBlendshape in JsonResource["blendshapes"])
+				{
+					var blendshape = new STF_Mesh.Blendshape {
+						count = jsonBlendshape.Value<ulong>("count"),
+						indexed = jsonBlendshape.Value<bool>("indexed"),
+						default_value = jsonBlendshape.Value<float>("default_value"),
+						limit_lower = jsonBlendshape.Value<float>("limit_lower"),
+						limit_upper = jsonBlendshape.Value<float>("limit_upper"),
+						name = jsonBlendshape.Value<string>("name"),
+						position_offsets = Context.ImportBuffer(jsonBlendshape.Value<string>("position_offsets")),
+						normal_offsets = Context.ImportBuffer(jsonBlendshape.Value<string>("normal_offsets")),
+					};
+					if(blendshape.indexed) blendshape.indices = Context.ImportBuffer(jsonBlendshape.Value<string>("indices"));
+					ret.blendshapes.Add(blendshape);
+				}
+			}
+
+			// TODO additional mesh properties & vertex groups
+
 
 			return (ret, new(){ret});
 		}

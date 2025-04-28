@@ -20,11 +20,14 @@ namespace com.squirrelbite.stf_unity
 		public bool _Degraded = false;
 		public bool Degraded {get => _Degraded; set => _Degraded = value;}
 
-		public virtual void SetFromJson(JObject JsonResource, string STF_Id, string DefaultName = "STF Prefab")
+		public GameObject STF_Owner;
+
+		public virtual void SetFromJson(JObject JsonResource, string STF_Id, ISTF_Resource ContextObject, string DefaultName = "STF Prefab")
 		{
 			this.STF_Id = STF_Id;
 			this.STF_Name = JsonResource.ContainsKey("name") ? (string)JsonResource["name"] : null;
 			this.Degraded = (bool)(JsonResource.GetValue("degraded") ?? false);
+			if(ContextObject is STF_MonoBehaviour) this.STF_Owner = (ContextObject as STF_MonoBehaviour).gameObject;
 		}
 	}
 }

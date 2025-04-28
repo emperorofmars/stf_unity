@@ -42,9 +42,9 @@ namespace com.squirrelbite.stf_unity.modules
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
 			var go = (STF_Node)ContextObject;
-			var ret = ScriptableObject.CreateInstance<STF_Instance_Armature>();
+			var ret = go.gameObject.AddComponent<STF_Instance_Armature>();
 			go.Instance = ret;
-			ret.SetFromJson(JsonResource, STF_Id, "STF Armature Instance");
+			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STF Armature Instance");
 
 			ret.Armature = (STF_Armature)Context.ImportResource((string)JsonResource["armature"]);
 
@@ -70,7 +70,7 @@ namespace com.squirrelbite.stf_unity.modules
 			Object.Destroy(instance);
 			#endif
 
-			return (ret, new(){ret});
+			return (ret, null);
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)

@@ -36,7 +36,7 @@ namespace com.squirrelbite.stf_unity.modules
 		{
 			var go = new GameObject((string)JsonResource.GetValue("name") ?? "STF Node");
 			var ret = go.AddComponent<STF_Node>();
-			ret.SetFromJson(JsonResource, STF_Id);
+			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STF Node");
 
 			TRSUtil.ParseTRS(ret.transform, JsonResource);
 
