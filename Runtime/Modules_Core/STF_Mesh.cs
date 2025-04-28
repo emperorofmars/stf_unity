@@ -107,6 +107,8 @@ namespace com.squirrelbite.stf_unity.modules
 		public STF_Buffer sharp_face_indices;
 		public ulong sharp_edges_len;
 		public STF_Buffer sharp_edges;
+		public ulong sharp_vertices_len;
+		public STF_Buffer sharp_vertices;
 
 		[Space]
 		[Header("Vertex Groups")]
@@ -168,22 +170,20 @@ namespace com.squirrelbite.stf_unity.modules
 			ret.lines_len = JsonResource.Value<ulong>("lines_len");
 			if(JsonResource.ContainsKey("lines")) ret.lines = Context.ImportBuffer(JsonResource.Value<string>("lines"));
 
-			ret.sharp_edges_len = JsonResource.Value<ulong>("sharp_edges_len");
-			if(JsonResource.ContainsKey("sharp_edges")) ret.sharp_edges = Context.ImportBuffer(JsonResource.Value<string>("sharp_edges"));
-
 			if(JsonResource.ContainsKey("armature"))
-			{
 				ret.armature = (STF_Armature)Context.ImportResource(JsonResource.Value<string>("armature"));
 
+			if(JsonResource.ContainsKey("bones") && JsonResource.ContainsKey("weights"))
+			{
 				foreach(var bone in JsonResource["bones"])
 					ret.bones.Add(bone.Value<string>());
 				ret.bone_weight_width = JsonResource.Value<uint>("bone_weight_width");
 
-				foreach(var weightChannel in JsonResource["weights"])
+				foreach(var JsonWeightChannel in JsonResource["weights"])
 					ret.weights.Add(new STF_Mesh.WeightChannel {
-						buffer = Context.ImportBuffer(weightChannel.Value<string>("buffer")),
-						count = weightChannel.Value<ulong>("count"),
-						indexed = weightChannel.Value<bool>("indexed")
+						buffer = Context.ImportBuffer(JsonWeightChannel.Value<string>("buffer")),
+						count = JsonWeightChannel.Value<ulong>("count"),
+						indexed = JsonWeightChannel.Value<bool>("indexed")
 					});
 			}
 
@@ -210,7 +210,35 @@ namespace com.squirrelbite.stf_unity.modules
 				}
 			}
 
-			// TODO additional mesh properties & vertex groups
+			if(JsonResource.ContainsKey("sharp_face_indices"))
+			{
+				ret.sharp_face_indices_len = JsonResource.Value<ulong>("sharp_face_indices_len");
+				ret.sharp_face_indices = Context.ImportBuffer(JsonResource.Value<string>("sharp_face_indices"));
+			}
+
+			if(JsonResource.ContainsKey("sharp_edges"))
+			{
+				ret.sharp_edges_len = JsonResource.Value<ulong>("sharp_edges_len");
+				ret.sharp_edges = Context.ImportBuffer(JsonResource.Value<string>("sharp_edges"));
+			}
+
+			if(JsonResource.ContainsKey("sharp_vertices"))
+			{
+				ret.sharp_vertices_len = JsonResource.Value<ulong>("sharp_vertices_len");
+				ret.sharp_vertices = Context.ImportBuffer(JsonResource.Value<string>("sharp_vertices"));
+			}
+
+			if(JsonResource.ContainsKey("vertex_groups"))
+			{
+				ret.vertex_weight_width = JsonResource.Value<uint>("vertex_weight_width");
+				foreach(var JsonVertexgroup in JsonResource["vertex_groups"])
+					ret.vertex_groups.Add(new STF_Mesh.VertexGroup {
+						count = JsonVertexgroup.Value<ulong>("count"),
+						indexed = JsonVertexgroup.Value<bool>("indexed"),
+						name = JsonVertexgroup.Value<string>("name"),
+						buffer = Context.ImportBuffer(JsonVertexgroup.Value<string>("buffer"))
+					});
+			}
 
 
 			return (ret, new(){ret});
