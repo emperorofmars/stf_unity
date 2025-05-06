@@ -1,121 +1,12 @@
+using System;
+using System.Buffers;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
-	public class STF_Mesh : STF_DataResource
-	{
-		public const string STF_TYPE = "stf.mesh";
-		public override string STF_Type => STF_TYPE;
-
-		public Mesh ProcessedUnityMesh;
-
-		[System.Serializable]
-		public class NamedBuffer
-		{
-			public string name;
-			public STF_Buffer uv;
-		}
-
-		[System.Serializable]
-		public class WeightChannel
-		{
-			public bool indexed;
-			public ulong count;
-			public STF_Buffer buffer;
-		}
-
-		[System.Serializable]
-		public class VertexGroup
-		{
-			public string name;
-			public bool indexed;
-			public ulong count;
-			public STF_Buffer buffer;
-		}
-
-		[System.Serializable]
-		public class Blendshape
-		{
-			public string name;
-			public bool indexed;
-			public ulong count;
-			public float default_value;
-			public float limit_upper;
-			public float limit_lower;
-			public STF_Buffer indices;
-			public STF_Buffer position_offsets;
-			public STF_Buffer normal_offsets;
-		}
-
-		// TODO material slots
-
-		[Space]
-		[Header("Vertices")]
-		public ulong vertex_count;
-		public uint vertex_width = 4;
-		public uint vertex_indices_width = 4;
-		public STF_Buffer vertices;
-		public uint vertex_color_width = 4;
-		public List<STF_Buffer> colors = new();
-
-		[Space]
-		[Header("Splits")]
-		public ulong split_count;
-		public uint split_indices_width = 4;
-		public uint split_normal_width = 4;
-		public uint split_tangent_width = 4;
-		public uint split_color_width = 4;
-		public uint split_uv_width = 4;
-		public STF_Buffer splits;
-		public STF_Buffer split_normals;
-		public STF_Buffer split_tangents;
-		public List<NamedBuffer> uvs = new();
-		public List<STF_Buffer> split_colors = new();
-
-		[Space]
-		[Header("Topology")]
-		public ulong tris_count;
-		public ulong face_count;
-		public uint face_indices_width = 4;
-		public STF_Buffer tris;
-		public STF_Buffer faces;
-		public ulong lines_len;
-		public STF_Buffer lines;
-		public uint material_indices_width = 4;
-		public STF_Buffer material_indices;
-		public List<string> material_slots = new();
-
-		[Space]
-		[Header("Rigging")]
-		public STF_Armature armature;
-		public List<string> bones = new();
-		public uint bone_weight_width = 4;
-		public List<WeightChannel> weights = new();
-
-		[Space]
-		[Header("Blendshapes")]
-		public uint blendshape_pos_width = 4;
-		public uint blendshape_normal_width = 4;
-		public uint blendshape_tangent_width = 4;
-		public List<Blendshape> blendshapes = new();
-
-		[Space]
-		[Header("Additional Mesh Properies")]
-		public ulong sharp_face_indices_len;
-		public STF_Buffer sharp_face_indices;
-		public ulong sharp_edges_len;
-		public STF_Buffer sharp_edges;
-		public ulong sharp_vertices_len;
-		public STF_Buffer sharp_vertices;
-
-		[Space]
-		[Header("Vertex Groups")]
-		public uint vertex_weight_width = 4;
-		public List<VertexGroup> vertex_groups = new();
-	}
-
 	public class STF_Mesh_Module : ISTF_Module
 	{
 		public string STF_Type => STF_Mesh.STF_TYPE;
@@ -241,7 +132,11 @@ namespace com.squirrelbite.stf_unity.modules
 			}
 
 
-			return (ret, new(){ret});
+			var unityMesh = ConvertToUnityMesh(ret);
+			ret.ProcessedUnityMesh = unityMesh;
+
+
+			return (ret, new(){ret, unityMesh});
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
@@ -253,6 +148,111 @@ namespace com.squirrelbite.stf_unity.modules
 			};
 
 			return (ret, MeshObject.STF_Id);
+		}
+
+		protected Mesh ConvertToUnityMesh(STF_Mesh STFMesh)
+		{
+			var ret = new Mesh();
+			ret.name = "Processed " + STFMesh._STF_Name;
+
+			// Whenever VRChat bothers to update to a Unity version that supports new enough C# for this to work -.-
+			/*var vertices = new Vector3[STFMesh.vertex_count];
+			{
+				var bufferReader = new SequenceReader<byte>(new ReadOnlySequence<byte>(STFMesh.vertices.Data));
+				for(long i = 0; i < (long)STFMesh.vertex_count; i++)
+				{
+					BinaryPrimitives.ReadSingleLittleEndian(bufferReader.UnreadSpan);
+					---
+				}
+			}*/
+
+			static float readFloat(byte[] Bytes, ulong Position)
+			{
+				var @byte = new byte[4];
+				for(uint i = 0; i < 4; i++)
+				{
+					@byte[i] = Bytes[Position * 4 + i];
+				}
+				return BitConverter.ToSingle(@byte, 0);
+			}
+
+			static uint readUInt(byte[] Bytes, ulong Position)
+			{
+				var @byte = new byte[4];
+				for(uint i = 0; i < 4; i++)
+				{
+					@byte[i] = Bytes[Position * 4 + i];
+				}
+				return BitConverter.ToUInt32(@byte, 0);
+			}
+
+			static ulong readULong(byte[] Bytes, ulong Position)
+			{
+				var @byte = new byte[8];
+				for(uint i = 0; i < 8; i++)
+				{
+					@byte[i] = Bytes[Position * 8 + i];
+				}
+				return BitConverter.ToUInt64(@byte, 0);
+			}
+
+
+			// TODO make the binary shuffeling its own util
+			var vertices = new Vector3[STFMesh.vertex_count];
+			for(ulong i = 0; i < STFMesh.vertex_count; i++)
+			{
+				vertices[i].Set(
+					-readFloat(STFMesh.vertices.Data, i * 3),
+					readFloat(STFMesh.vertices.Data, i * 3 + 1),
+					readFloat(STFMesh.vertices.Data, i * 3 + 2)
+				);
+			}
+
+			var splits = new ulong[STFMesh.split_count];
+			for(ulong i = 0; i < STFMesh.split_count; i++)
+			{
+				splits[i] = STFMesh.split_indices_width switch
+				{
+					4 => readUInt(STFMesh.splits.Data, i),
+					8 => readULong(STFMesh.splits.Data, i),
+					_ => throw new STFException("Invalid Split width", ErrorSeverity.FATAL_ERROR, STF_Type, null, null),
+				};
+			}
+
+			// normals, tangents, uvs, ...
+
+			// minimize splits
+
+			// tris
+
+			// faces
+
+			// face material indices
+
+
+			ret.SetVertices(vertices);
+
+
+			// convert finally to unity submeshes
+			ret.subMeshCount = STFMesh.material_slots.Count;
+			for(int subMeshIdx = 0; subMeshIdx < STFMesh.material_slots.Count; subMeshIdx++)
+			{
+
+
+				/*var primitive = STFMesh.material_slots[subMeshIdx];
+				var indicesPos = (int)primitive["indices_pos"];
+				var indicesLen = (int)primitive["indices_len"];
+
+				var indexBuffer = new int[indicesLen];
+				Buffer.BlockCopy(arrayBuffer, indicesPosCounted * sizeof(int) + vertexCount * bufferWidth * sizeof(float), indexBuffer, 0, indicesLen * sizeof(int));
+
+				ret.SetIndices(indexBuffer, MeshTopology.Triangles, subMeshIdx);
+
+				indicesPosCounted += indicesLen;*/
+			}
+
+
+			return ret;
 		}
 	}
 }
