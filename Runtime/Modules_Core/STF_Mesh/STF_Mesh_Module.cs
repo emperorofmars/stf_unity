@@ -1,7 +1,7 @@
 using System;
-using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -57,6 +57,10 @@ namespace com.squirrelbite.stf_unity.modules
 			if(JsonResource.ContainsKey("faces")) ret.faces = Context.ImportBuffer(JsonResource.Value<string>("faces"));
 			ret.material_indices_width = JsonResource.Value<uint>("material_indices_width");
 			if(JsonResource.ContainsKey("material_indices")) ret.material_indices = Context.ImportBuffer(JsonResource.Value<string>("material_indices"));
+
+			if(JsonResource.ContainsKey("material_slots"))
+				foreach(var slot in JsonResource["material_slots"])
+					ret.material_slots.Add((STF_DataResource)Context.ImportResource(slot.Value<string>()));
 
 			ret.lines_len = JsonResource.Value<ulong>("lines_len");
 			if(JsonResource.ContainsKey("lines")) ret.lines = Context.ImportBuffer(JsonResource.Value<string>("lines"));
@@ -155,102 +159,174 @@ namespace com.squirrelbite.stf_unity.modules
 			var ret = new Mesh();
 			ret.name = "Processed " + STFMesh._STF_Name;
 
-			// Whenever VRChat bothers to update to a Unity version that supports new enough C# for this to work -.-
-			/*var vertices = new Vector3[STFMesh.vertex_count];
-			{
-				var bufferReader = new SequenceReader<byte>(new ReadOnlySequence<byte>(STFMesh.vertices.Data));
-				for(long i = 0; i < (long)STFMesh.vertex_count; i++)
-				{
-					BinaryPrimitives.ReadSingleLittleEndian(bufferReader.UnreadSpan);
-					---
-				}
-			}*/
+			// TODO use BinaryPrimitives whenever thats supported for floats and stuff
 
-			static float readFloat(byte[] Bytes, ulong Position)
-			{
-				var @byte = new byte[4];
-				for(uint i = 0; i < 4; i++)
-				{
-					@byte[i] = Bytes[Position * 4 + i];
-				}
-				return BitConverter.ToSingle(@byte, 0);
-			}
-
-			static uint readUInt(byte[] Bytes, ulong Position)
-			{
-				var @byte = new byte[4];
-				for(uint i = 0; i < 4; i++)
-				{
-					@byte[i] = Bytes[Position * 4 + i];
-				}
-				return BitConverter.ToUInt32(@byte, 0);
-			}
-
-			static ulong readULong(byte[] Bytes, ulong Position)
-			{
-				var @byte = new byte[8];
-				for(uint i = 0; i < 8; i++)
-				{
-					@byte[i] = Bytes[Position * 8 + i];
-				}
-				return BitConverter.ToUInt64(@byte, 0);
-			}
-
-
-			// TODO make the binary shuffeling its own util
 			var vertices = new Vector3[STFMesh.vertex_count];
 			for(ulong i = 0; i < STFMesh.vertex_count; i++)
 			{
 				vertices[i].Set(
-					-readFloat(STFMesh.vertices.Data, i * 3),
-					readFloat(STFMesh.vertices.Data, i * 3 + 1),
-					readFloat(STFMesh.vertices.Data, i * 3 + 2)
+					-BitConverter.ToSingle(STFMesh.vertices.Data, (int)i * 4 * 3),
+					BitConverter.ToSingle(STFMesh.vertices.Data, (int)i * 4 * 3 + 4),
+					BitConverter.ToSingle(STFMesh.vertices.Data, (int)i * 4 * 3 + 8)
 				);
 			}
 
-			var splits = new ulong[STFMesh.split_count];
+			var splits = new uint[STFMesh.split_count];
+			for(int i = 0; i < (int)STFMesh.split_count; i++)
+			{
+				splits[i] = BitConverter.ToUInt32(STFMesh.splits.Data, i * 4);
+			}
+
+			var normals = new Vector3[STFMesh.split_count];
 			for(ulong i = 0; i < STFMesh.split_count; i++)
 			{
-				splits[i] = STFMesh.split_indices_width switch
-				{
-					4 => readUInt(STFMesh.splits.Data, i),
-					8 => readULong(STFMesh.splits.Data, i),
-					_ => throw new STFException("Invalid Split width", ErrorSeverity.FATAL_ERROR, STF_Type, null, null),
-				};
+				normals[i].Set(
+					-BitConverter.ToSingle(STFMesh.split_normals.Data, (int)i * 4 * 3),
+					BitConverter.ToSingle(STFMesh.split_normals.Data, (int)i * 4 * 3 + 4),
+					BitConverter.ToSingle(STFMesh.split_normals.Data, (int)i * 4 * 3 + 8)
+				);
 			}
 
-			// normals, tangents, uvs, ...
-
-			// minimize splits
-
-			// tris
-
-			// faces
-
-			// face material indices
-
-
-			ret.SetVertices(vertices);
-
-
-			// convert finally to unity submeshes
-			ret.subMeshCount = STFMesh.material_slots.Count;
-			for(int subMeshIdx = 0; subMeshIdx < STFMesh.material_slots.Count; subMeshIdx++)
+			var tangents = new Vector3[STFMesh.split_count];
+			for(int i = 0; i < (int)STFMesh.split_count; i++)
 			{
-
-
-				/*var primitive = STFMesh.material_slots[subMeshIdx];
-				var indicesPos = (int)primitive["indices_pos"];
-				var indicesLen = (int)primitive["indices_len"];
-
-				var indexBuffer = new int[indicesLen];
-				Buffer.BlockCopy(arrayBuffer, indicesPosCounted * sizeof(int) + vertexCount * bufferWidth * sizeof(float), indexBuffer, 0, indicesLen * sizeof(int));
-
-				ret.SetIndices(indexBuffer, MeshTopology.Triangles, subMeshIdx);
-
-				indicesPosCounted += indicesLen;*/
+				tangents[i].Set(
+					-BitConverter.ToSingle(STFMesh.split_tangents.Data, i * 4 * 3),
+					BitConverter.ToSingle(STFMesh.split_tangents.Data, i * 4 * 3 + 4),
+					BitConverter.ToSingle(STFMesh.split_tangents.Data, i * 4 * 3 + 8)
+				);
 			}
 
+			var uvs = new List<Vector2[]>();
+			foreach(var uvBuffer in STFMesh.uvs)
+			{
+				var uv = new Vector2[STFMesh.split_count];
+				for(int i = 0; i < (int)STFMesh.split_count; i++)
+				{
+					uv[i].Set(
+						BitConverter.ToSingle(uvBuffer.uv.Data, i * 4),
+						BitConverter.ToSingle(uvBuffer.uv.Data, i * 4 + 4)
+					);
+				}
+				uvs.Add(uv);
+			}
+
+			bool compareUVs(int a, int b)
+			{
+				foreach(var uv in uvs)
+				{
+					if((uv[a] - uv[b]).magnitude > 0.0001) return false;
+				}
+				return true;
+			}
+
+			// TODO colors
+
+
+			var woo = 0;
+
+			var verts_to_split = new Dictionary<int, List<int>>();
+			var deduped_splits = new List<int>();
+			var split_to_deduped = new Dictionary<int, int>();
+			var split_to_deduped_split = new Dictionary<int, int>();
+			for(int splitIndex = 0; splitIndex < (int)STFMesh.split_count; splitIndex++)
+			{
+				var vertexIndex = (int)splits[splitIndex];
+				if(!verts_to_split.ContainsKey(vertexIndex))
+				{
+					verts_to_split.Add(vertexIndex, new List<int> {splitIndex});
+					deduped_splits.Add(vertexIndex);
+					split_to_deduped.Add(splitIndex, deduped_splits.Count - 1);
+					split_to_deduped_split.Add(splitIndex, splitIndex);
+				}
+				else
+				{
+					var success = false;
+					for(int candidateIndex = 0; candidateIndex < verts_to_split[vertexIndex].Count; candidateIndex++)
+					{
+						var splitCandidate = verts_to_split[vertexIndex][candidateIndex];
+						if(
+							(normals[splitIndex] - normals[splitCandidate]).magnitude < 0.0001
+							&& (tangents[splitIndex] - tangents[splitCandidate]).magnitude < 0.0001
+							&& compareUVs(splitIndex, splitCandidate)
+							// TODO colors
+						)
+						{
+							split_to_deduped_split.Add(splitIndex, splitCandidate);
+							success = true;
+
+							woo++;
+							break;
+						}
+					}
+					if(!success)
+					{
+						verts_to_split[vertexIndex].Add(splitIndex);
+						deduped_splits.Add(vertexIndex);
+						split_to_deduped.Add(splitIndex, deduped_splits.Count - 1);
+						split_to_deduped_split.Add(splitIndex, splitIndex);
+					}
+				}
+			}
+
+			Debug.Log($"Woo: {woo}");
+
+
+			var unity_vertices = new List<Vector3>();
+			var unity_normals = new List<Vector3>();
+			foreach(var split in deduped_splits)
+			{
+				unity_vertices.Add(vertices[split]);
+				unity_normals.Add(normals[split]);
+			}
+
+			var tris = new int[STFMesh.tris_count * 3];
+			for(int i = 0; i < (int)STFMesh.tris_count * 3; i++)
+			{
+				tris[i] = (int)BitConverter.ToUInt32(STFMesh.tris.Data, i * 4);
+			}
+
+			var faceLengths = new uint[STFMesh.face_count];
+			var faceMaterialIndices = new uint[STFMesh.face_count];
+			for(int i = 0; i < (int)STFMesh.face_count; i++)
+			{
+				faceLengths[i] = BitConverter.ToUInt32(STFMesh.faces.Data, i * 4);
+				faceMaterialIndices[i] = BitConverter.ToUInt32(STFMesh.material_indices.Data, i * 4);
+			}
+
+			var subMeshIndices = new List<List<int>>();
+			var trisIndex = 0;
+			for(int faceIndex = 0; faceIndex < (int)STFMesh.face_count; faceIndex++)
+			{
+				var matIndex = (int)faceMaterialIndices[faceIndex];
+				for(uint faceLen = 0; faceLen < faceLengths[faceIndex]; faceLen++)
+				{
+					while(subMeshIndices.Count <= matIndex)
+						subMeshIndices.Add(new List<int>());
+					/*subMeshIndices[matIndex].Add(tris[trisIndex * 3]);
+					subMeshIndices[matIndex].Add(tris[trisIndex * 3 + 1]);
+					subMeshIndices[matIndex].Add(tris[trisIndex * 3 + 2]);*/
+
+					subMeshIndices[matIndex].Add(split_to_deduped[split_to_deduped_split[tris[trisIndex * 3]]]);
+					subMeshIndices[matIndex].Add(split_to_deduped[split_to_deduped_split[tris[trisIndex * 3 + 1]]]);
+					subMeshIndices[matIndex].Add(split_to_deduped[split_to_deduped_split[tris[trisIndex * 3 + 2]]]);
+
+					trisIndex++;
+				}
+			}
+
+
+			ret.SetVertices(unity_vertices);
+			ret.SetNormals(unity_normals);
+
+			ret.subMeshCount = subMeshIndices.Count;
+			for(int subMeshIdx = 0; subMeshIdx < subMeshIndices.Count; subMeshIdx++)
+			{
+				ret.SetIndices(subMeshIndices[subMeshIdx], MeshTopology.Triangles, subMeshIdx);
+			}
+
+			ret.UploadMeshData(false);
+			ret.RecalculateBounds();
 
 			return ret;
 		}

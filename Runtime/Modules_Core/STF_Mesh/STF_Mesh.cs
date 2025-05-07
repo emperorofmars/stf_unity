@@ -85,7 +85,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public STF_Buffer lines;
 		public uint material_indices_width = 4;
 		public STF_Buffer material_indices;
-		public List<string> material_slots = new();
+		public List<STF_DataResource> material_slots = new();
 
 		[Space]
 		[Header("Rigging")]

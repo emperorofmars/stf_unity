@@ -70,7 +70,7 @@ namespace com.squirrelbite.stf_unity
 			Buffers = new List<byte[]>();
 			for(uint i = 1; i < bufferCount; i++)
 			{
-				Buffers.Add(ReadBytes(bufferReader, buffer_lengths[i]));
+				Buffers.Add(ReadBytes(bufferReader, buffer_lengths[i])); bufferReader.Advance((long)buffer_lengths[i]);
 			}
 
 			BufferCount = Buffers.Count();
