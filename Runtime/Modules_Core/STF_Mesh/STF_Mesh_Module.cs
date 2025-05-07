@@ -329,7 +329,7 @@ namespace com.squirrelbite.stf_unity.modules
 			}
 
 
-			ret.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+			ret.indexFormat = unity_vertices.Count > ushort.MaxValue ? UnityEngine.Rendering.IndexFormat.UInt32 : UnityEngine.Rendering.IndexFormat.UInt16;
 			ret.subMeshCount = subMeshIndices.Count;
 			for(int subMeshIdx = 0; subMeshIdx < subMeshIndices.Count; subMeshIdx++)
 			{
