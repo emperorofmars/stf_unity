@@ -12,6 +12,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public STF_Mesh Mesh;
 		public GameObject ArmatureInstance;
+		public Renderer UnityMeshInstance;
 	}
 
 	public class STF_Instance_Mesh_Module : ISTF_Module
@@ -45,6 +46,15 @@ namespace com.squirrelbite.stf_unity.modules
 				}
 
 				ret.Mesh = (STF_Mesh)Context.ImportResource((string)JsonResource["mesh"]);
+
+				if(ret.Mesh.ProcessedUnityMesh)
+				{
+					// TODO check whether mesh is skinned or not
+					var smr = go.gameObject.AddComponent<SkinnedMeshRenderer>();
+					smr.sharedMesh = ret.Mesh.ProcessedUnityMesh;
+
+					ret.UnityMeshInstance = smr;
+				}
 			}));
 
 			// TODO material slots & blendshape values
