@@ -171,10 +171,10 @@ namespace com.squirrelbite.stf_unity.modules
 				);
 			}
 
-			var splits = new uint[STFMesh.split_count];
+			var splits = new int[STFMesh.split_count];
 			for(int i = 0; i < (int)STFMesh.split_count; i++)
 			{
-				splits[i] = BitConverter.ToUInt32(STFMesh.splits.Data, i * 4);
+				splits[i] = (int)BitConverter.ToUInt32(STFMesh.splits.Data, i * 4);
 			}
 
 			var normals = new Vector3[STFMesh.split_count];
@@ -280,10 +280,14 @@ namespace com.squirrelbite.stf_unity.modules
 				unity_normals.Add(normals[split]);
 			}
 
-			var tris = new int[STFMesh.tris_count * 3];
-			for(int i = 0; i < (int)STFMesh.tris_count * 3; i++)
+			var tris = new Vector3Int[STFMesh.tris_count];
+			for(int i = 0; i < (int)STFMesh.tris_count; i++)
 			{
-				tris[i] = (int)BitConverter.ToUInt32(STFMesh.tris.Data, i * 4);
+				tris[i].Set(
+					(int)BitConverter.ToUInt32(STFMesh.tris.Data, i * 3 * 4),
+					(int)BitConverter.ToUInt32(STFMesh.tris.Data, i * 3 * 4 + 4),
+					(int)BitConverter.ToUInt32(STFMesh.tris.Data, i * 3 * 4 + 8)
+				);
 			}
 
 			var faceLengths = new uint[STFMesh.face_count];
@@ -301,15 +305,11 @@ namespace com.squirrelbite.stf_unity.modules
 				var matIndex = (int)faceMaterialIndices[faceIndex];
 				for(uint faceLen = 0; faceLen < faceLengths[faceIndex]; faceLen++)
 				{
-					while(subMeshIndices.Count <= matIndex)
-						subMeshIndices.Add(new List<int>());
-					/*subMeshIndices[matIndex].Add(tris[trisIndex * 3]);
-					subMeshIndices[matIndex].Add(tris[trisIndex * 3 + 1]);
-					subMeshIndices[matIndex].Add(tris[trisIndex * 3 + 2]);*/
+					while(subMeshIndices.Count <= matIndex) subMeshIndices.Add(new List<int>());
 
-					subMeshIndices[matIndex].Add(split_to_deduped[split_to_deduped_split[tris[trisIndex * 3]]]);
-					subMeshIndices[matIndex].Add(split_to_deduped[split_to_deduped_split[tris[trisIndex * 3 + 1]]]);
-					subMeshIndices[matIndex].Add(split_to_deduped[split_to_deduped_split[tris[trisIndex * 3 + 2]]]);
+					subMeshIndices[matIndex].Add(split_to_deduped[split_to_deduped_split[tris[trisIndex].x]]);
+					subMeshIndices[matIndex].Add(split_to_deduped[split_to_deduped_split[tris[trisIndex].y]]);
+					subMeshIndices[matIndex].Add(split_to_deduped[split_to_deduped_split[tris[trisIndex].z]]);
 
 					trisIndex++;
 				}
@@ -317,8 +317,9 @@ namespace com.squirrelbite.stf_unity.modules
 
 
 			ret.SetVertices(unity_vertices);
-			ret.SetNormals(unity_normals);
+			//ret.SetNormals(unity_normals);
 
+			ret.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 			ret.subMeshCount = subMeshIndices.Count;
 			for(int subMeshIdx = 0; subMeshIdx < subMeshIndices.Count; subMeshIdx++)
 			{
