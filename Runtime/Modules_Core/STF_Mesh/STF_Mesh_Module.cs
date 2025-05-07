@@ -162,12 +162,12 @@ namespace com.squirrelbite.stf_unity.modules
 			// TODO use BinaryPrimitives whenever thats supported for floats and stuff
 
 			var vertices = new Vector3[STFMesh.vertex_count];
-			for(ulong i = 0; i < STFMesh.vertex_count; i++)
+			for(int i = 0; i < (int)STFMesh.vertex_count; i++)
 			{
 				vertices[i].Set(
-					-BitConverter.ToSingle(STFMesh.vertices.Data, (int)i * 4 * 3),
-					BitConverter.ToSingle(STFMesh.vertices.Data, (int)i * 4 * 3 + 4),
-					BitConverter.ToSingle(STFMesh.vertices.Data, (int)i * 4 * 3 + 8)
+					-BitConverter.ToSingle(STFMesh.vertices.Data, i * 4 * 3),
+					BitConverter.ToSingle(STFMesh.vertices.Data, i * 4 * 3 + 4),
+					BitConverter.ToSingle(STFMesh.vertices.Data, i * 4 * 3 + 8)
 				);
 			}
 
@@ -178,12 +178,12 @@ namespace com.squirrelbite.stf_unity.modules
 			}
 
 			var normals = new Vector3[STFMesh.split_count];
-			for(ulong i = 0; i < STFMesh.split_count; i++)
+			for(int i = 0; i < (int)STFMesh.split_count; i++)
 			{
 				normals[i].Set(
-					-BitConverter.ToSingle(STFMesh.split_normals.Data, (int)i * 4 * 3),
-					BitConverter.ToSingle(STFMesh.split_normals.Data, (int)i * 4 * 3 + 4),
-					BitConverter.ToSingle(STFMesh.split_normals.Data, (int)i * 4 * 3 + 8)
+					-BitConverter.ToSingle(STFMesh.split_normals.Data, i * 4 * 3),
+					BitConverter.ToSingle(STFMesh.split_normals.Data, i * 4 * 3 + 4),
+					BitConverter.ToSingle(STFMesh.split_normals.Data, i * 4 * 3 + 8)
 				);
 			}
 
@@ -204,12 +204,13 @@ namespace com.squirrelbite.stf_unity.modules
 				for(int i = 0; i < (int)STFMesh.split_count; i++)
 				{
 					uv[i].Set(
-						BitConverter.ToSingle(uvBuffer.uv.Data, i * 4),
-						BitConverter.ToSingle(uvBuffer.uv.Data, i * 4 + 4)
+						BitConverter.ToSingle(uvBuffer.uv.Data, i * 8),
+						BitConverter.ToSingle(uvBuffer.uv.Data, i * 8 + 4)
 					);
 				}
 				uvs.Add(uv);
 			}
+
 
 			bool compareUVs(int a, int b)
 			{
@@ -223,7 +224,6 @@ namespace com.squirrelbite.stf_unity.modules
 			// TODO colors
 
 
-			var woo = 0;
 
 			var verts_to_split = new Dictionary<int, List<int>>();
 			var deduped_splits = new List<int>();
@@ -254,8 +254,6 @@ namespace com.squirrelbite.stf_unity.modules
 						{
 							split_to_deduped_split.Add(splitIndex, splitCandidate);
 							success = true;
-
-							woo++;
 							break;
 						}
 					}
@@ -269,15 +267,22 @@ namespace com.squirrelbite.stf_unity.modules
 				}
 			}
 
-			Debug.Log($"Woo: {woo}");
-
 
 			var unity_vertices = new List<Vector3>();
 			var unity_normals = new List<Vector3>();
+			var unity_uvs = new List<List<Vector2>>();
+			for(int uvIndex = 0; uvIndex < uvs.Count; uvIndex++)
+			{
+				unity_uvs.Add(new());
+			}
 			foreach(var split in deduped_splits)
 			{
 				unity_vertices.Add(vertices[split]);
 				unity_normals.Add(normals[split]);
+				for(int uvIndex = 0; uvIndex < uvs.Count; uvIndex++)
+				{
+					unity_uvs[uvIndex].Add(uvs[uvIndex][split]);
+				}
 			}
 
 			var tris = new Vector3Int[STFMesh.tris_count];
@@ -317,7 +322,12 @@ namespace com.squirrelbite.stf_unity.modules
 
 
 			ret.SetVertices(unity_vertices);
-			//ret.SetNormals(unity_normals);
+			ret.SetNormals(unity_normals);
+			for(int uvIndex = 0; uvIndex < unity_uvs.Count; uvIndex++)
+			{
+				ret.SetUVs(uvIndex, unity_uvs[uvIndex]);
+			}
+
 
 			ret.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 			ret.subMeshCount = subMeshIndices.Count;
