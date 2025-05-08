@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -53,6 +54,26 @@ namespace com.squirrelbite.stf_unity.modules
 					var smr = go.gameObject.AddComponent<SkinnedMeshRenderer>();
 					smr.sharedMesh = ret.Mesh.ProcessedUnityMesh;
 					smr.materials = new Material[ret.Mesh.material_slots.Count];
+					if(ret.ArmatureInstance)
+					{
+						var instance = ret.ArmatureInstance.GetComponent<STF_Instance_Armature>();
+						smr.rootBone = ret.ArmatureInstance.transform;
+						var bones = new Transform[instance.Armature.BindOrder.Count];
+						/*for(int i = 0; i < instance.Armature.BindOrder.Count; i++)
+						{
+							var id = instance.Armature.BindOrder[i];
+							var bone = ret.ArmatureInstance.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(bone => bone.STF_Id == id && bone.STF_Owner == instance.gameObject);
+							bones[i] = bone ? bone.transform : instance.transform;
+							Debug.Log(bones[i]);
+						}*/
+						for(int i = 0; i < ret.Mesh.bones.Count; i++)
+						{
+							var id = ret.Mesh.bones[i];
+							var bone = ret.ArmatureInstance.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(bone => bone.STF_Id == id && bone.STF_Owner == instance.gameObject);
+							bones[i] = bone ? bone.transform : instance.transform;
+						}
+						smr.bones = bones;
+					}
 
 					ret.UnityMeshInstance = smr;
 				}

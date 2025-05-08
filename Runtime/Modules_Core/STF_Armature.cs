@@ -10,6 +10,8 @@ namespace com.squirrelbite.stf_unity.modules
 	{
 		public const string STF_TYPE = "stf.armature";
 		public override string STF_Type => STF_TYPE;
+		public List<Matrix4x4> Bindposes = new();
+		public List<string> BindOrder = new();
 	}
 
 	public class STF_Armature_Module : ISTF_Module
@@ -44,6 +46,12 @@ namespace com.squirrelbite.stf_unity.modules
 				{
 					Context.Report(new STFReport("Invalid Node: " + nodeID, ErrorSeverity.FATAL_ERROR, STF_Type, go, null));
 				}
+			}
+
+			foreach(var bone in go.GetComponentsInChildren<STF_Bone>())
+			{
+				ret.BindOrder.Add(bone.STF_Id);
+				ret.Bindposes.Add(bone.transform.worldToLocalMatrix);
 			}
 
 			return (ret, new(){go});

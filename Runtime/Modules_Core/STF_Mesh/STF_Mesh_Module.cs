@@ -2,7 +2,9 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using Unity.Collections;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
@@ -29,9 +31,10 @@ namespace com.squirrelbite.stf_unity.modules
 			ret.SetFromJson(JsonResource, STF_Id, "STF Mesh");
 
 
-			ret.float_width = JsonResource.Value<uint>("float_width");
-			ret.indices_width = JsonResource.Value<uint>("indices_width");
-			ret.material_indices_width = JsonResource.Value<uint>("material_indices_width");
+			ret.float_width = JsonResource.Value<int>("float_width");
+			ret.indices_width = JsonResource.Value<int>("indices_width");
+			ret.material_indices_width = JsonResource.Value<int>("material_indices_width");
+			ret.bone_indices_width = JsonResource.Value<int>("bone_indices_width");
 
 			ret.vertices = Context.ImportBuffer(JsonResource.Value<string>("vertices"));
 			if(JsonResource.ContainsKey("colors"))
@@ -114,7 +117,7 @@ namespace com.squirrelbite.stf_unity.modules
 			}
 
 
-			var unityMesh = ConvertToUnityMesh(ret);
+			var unityMesh = ConvertToUnityMesh(Context, ret);
 			ret.ProcessedUnityMesh = unityMesh;
 
 
@@ -134,7 +137,7 @@ namespace com.squirrelbite.stf_unity.modules
 		}
 
 
-		protected Mesh ConvertToUnityMesh(STF_Mesh STFMesh)
+		protected Mesh ConvertToUnityMesh(ImportContext Context, STF_Mesh STFMesh)
 		{
 			var ret = new Mesh { name = "Processed " + STFMesh._STF_Name };
 
@@ -146,24 +149,24 @@ namespace com.squirrelbite.stf_unity.modules
 			var face_count = STFMesh.faces.BufferLength / STFMesh.indices_width;
 
 
-			float parseFloat(byte[] Buffer, int Index, int Width, int Offset = 0)
+			float parseFloat(byte[] Buffer, int IndexBytes, int Width, int OffsetBytes = 0)
 			{
 				return Width switch
 				{
-					4 => BitConverter.ToSingle(Buffer, Index * Width + Offset * Width),
-					8 => (float)BitConverter.ToDouble(Buffer, Index * Width + Offset * Width),
+					4 => BitConverter.ToSingle(Buffer, IndexBytes + OffsetBytes),
+					8 => (float)BitConverter.ToDouble(Buffer, IndexBytes + OffsetBytes),
 					_ => throw new NotImplementedException()
 				};
 			}
 
-			int parseInt(byte[] Buffer, int Index, int Width, int Offset = 0)
+			int parseInt(byte[] Buffer, int IndexBytes, int Width, int OffsetBytes = 0)
 			{
 				return Width switch
 				{
-					1 => Buffer[Index + Offset],
-					2 => BitConverter.ToUInt16(Buffer, Index * Width + Offset * Width),
-					4 => (int)BitConverter.ToUInt32(Buffer, Index * Width + Offset * Width),
-					8 => (int)BitConverter.ToUInt64(Buffer, Index * Width + Offset * Width),
+					1 => Buffer[IndexBytes + OffsetBytes],
+					2 => BitConverter.ToUInt16(Buffer, IndexBytes + OffsetBytes),
+					4 => (int)BitConverter.ToUInt32(Buffer, IndexBytes + OffsetBytes),
+					8 => (int)BitConverter.ToUInt64(Buffer, IndexBytes + OffsetBytes),
 					_ => throw new NotImplementedException()
 				};
 			}
@@ -172,23 +175,23 @@ namespace com.squirrelbite.stf_unity.modules
 			for(int i = 0; i < vertex_count; i++)
 			{
 				vertices[i].Set(
-					-parseFloat(STFMesh.vertices.Data, i * 3, (int)STFMesh.float_width),
-					parseFloat(STFMesh.vertices.Data, i * 3, (int)STFMesh.float_width, 1),
-					parseFloat(STFMesh.vertices.Data, i * 3, (int)STFMesh.float_width, 2)
+					-parseFloat(STFMesh.vertices.Data, i * STFMesh.float_width * 3, STFMesh.float_width),
+					parseFloat(STFMesh.vertices.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width),
+					parseFloat(STFMesh.vertices.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2)
 				);
 			}
 
 			var splits = new int[split_count];
 			for(int i = 0; i < split_count; i++)
-				splits[i] = parseInt(STFMesh.splits.Data, i, (int)STFMesh.indices_width);
+				splits[i] = parseInt(STFMesh.splits.Data, i * STFMesh.indices_width, STFMesh.indices_width);
 
 			var normals = new Vector3[split_count];
 			for(int i = 0; i < split_count; i++)
 			{
 				normals[i].Set(
-					-parseFloat(STFMesh.split_normals.Data, i * 3, (int)STFMesh.float_width),
-					parseFloat(STFMesh.split_normals.Data, i * 3, (int)STFMesh.float_width, 1),
-					parseFloat(STFMesh.split_normals.Data, i * 3, (int)STFMesh.float_width, 2)
+					-parseFloat(STFMesh.split_normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width),
+					parseFloat(STFMesh.split_normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width),
+					parseFloat(STFMesh.split_normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2)
 				);
 				normals[i].Normalize();
 			}
@@ -197,9 +200,9 @@ namespace com.squirrelbite.stf_unity.modules
 			for(int i = 0; i < split_count; i++)
 			{
 				tangents[i].Set(
-					-parseFloat(STFMesh.split_tangents.Data, i * 3, (int)STFMesh.float_width),
-					parseFloat(STFMesh.split_tangents.Data, i * 3, (int)STFMesh.float_width, 1),
-					parseFloat(STFMesh.split_tangents.Data, i * 3, (int)STFMesh.float_width, 2),
+					-parseFloat(STFMesh.split_tangents.Data, i * STFMesh.float_width * 3, STFMesh.float_width),
+					parseFloat(STFMesh.split_tangents.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width),
+					parseFloat(STFMesh.split_tangents.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2),
 					1
 				);
 				tangents[i].Normalize();
@@ -212,8 +215,8 @@ namespace com.squirrelbite.stf_unity.modules
 				for(int i = 0; i < split_count; i++)
 				{
 					uv[i].Set(
-						parseFloat(uvBuffer.uv.Data, i * 2, (int)STFMesh.float_width),
-						1 - parseFloat(uvBuffer.uv.Data, i * 2, (int)STFMesh.float_width, 1)
+						parseFloat(uvBuffer.uv.Data, i * STFMesh.float_width * 2, STFMesh.float_width),
+						1 - parseFloat(uvBuffer.uv.Data, i * STFMesh.float_width * 2, STFMesh.float_width, STFMesh.float_width)
 					);
 				}
 				uvs.Add(uv);
@@ -290,13 +293,14 @@ namespace com.squirrelbite.stf_unity.modules
 				}
 			}
 
+
 			var tris = new Vector3Int[tris_count];
 			for(int i = 0; i < tris_count; i++)
 			{
 				tris[i].Set(
-					parseInt(STFMesh.tris.Data, i * 3, (int)STFMesh.indices_width, 2),
-					parseInt(STFMesh.tris.Data, i * 3, (int)STFMesh.indices_width, 1),
-					parseInt(STFMesh.tris.Data, i * 3, (int)STFMesh.indices_width)
+					parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width, STFMesh.indices_width * 2),
+					parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width, STFMesh.indices_width),
+					parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width)
 				);
 			}
 
@@ -304,8 +308,8 @@ namespace com.squirrelbite.stf_unity.modules
 			var faceMaterialIndices = new int[face_count];
 			for(int i = 0; i < face_count; i++)
 			{
-				faceLengths[i] = parseInt(STFMesh.faces.Data, i, (int)STFMesh.indices_width);
-				faceMaterialIndices[i] = parseInt(STFMesh.material_indices.Data, i, (int)STFMesh.material_indices_width);
+				faceLengths[i] = parseInt(STFMesh.faces.Data, i * STFMesh.indices_width, STFMesh.indices_width);
+				faceMaterialIndices[i] = parseInt(STFMesh.material_indices.Data, i * STFMesh.material_indices_width, STFMesh.material_indices_width);
 			}
 
 			var subMeshIndices = new List<List<int>>();
@@ -347,6 +351,90 @@ namespace com.squirrelbite.stf_unity.modules
 			for(int subMeshIdx = 0; subMeshIdx < subMeshIndices.Count; subMeshIdx++)
 			{
 				ret.SetIndices(subMeshIndices[subMeshIdx], MeshTopology.Triangles, subMeshIdx);
+			}
+
+
+			if(STFMesh.armature != null && STFMesh.bones != null && STFMesh.weights != null)
+			{
+				const int MAX_BONES_PER_VERTEX = 8;
+
+				var weights = new List<BoneWeight1>[vertex_count];
+				for(int i = 0; i < vertex_count; i++) weights[i] = new List<BoneWeight1>();
+
+				for(int weightChannel = 0; weightChannel < STFMesh.weights.Count; weightChannel++)
+				{
+					if(!STFMesh.weights[weightChannel].indexed)
+					{
+						for(int weightIndex = 0; weightIndex < vertex_count; weightIndex++)
+						{
+							var width = STFMesh.float_width + STFMesh.bone_indices_width;
+							var offset = weightIndex * width;
+
+							var boneIndex = parseInt(STFMesh.weights[weightChannel].buffer.Data, offset, STFMesh.bone_indices_width, 0);
+							var weight = parseFloat(STFMesh.weights[weightChannel].buffer.Data, offset, STFMesh.float_width, STFMesh.bone_indices_width);
+							if(boneIndex >= 0 && weight != 0)
+							{
+								weights[weightIndex].Add(new BoneWeight1 {boneIndex = boneIndex, weight = weight});
+							}
+						}
+					}
+					else
+					{
+						for(int weightIndex = 0; weightIndex < (int)STFMesh.weights[weightChannel].count; weightIndex++)
+						{
+							var width = STFMesh.indices_width + STFMesh.float_width + STFMesh.bone_indices_width;
+							var offset = weightIndex * width;
+
+							var vertIndex = parseInt(STFMesh.weights[weightChannel].buffer.Data, offset, STFMesh.indices_width, 0);
+							var boneIndex = parseInt(STFMesh.weights[weightChannel].buffer.Data, offset, STFMesh.bone_indices_width, STFMesh.indices_width);
+							var weight = parseFloat(STFMesh.weights[weightChannel].buffer.Data, offset, STFMesh.float_width, STFMesh.indices_width + STFMesh.bone_indices_width);
+
+							weights[vertIndex].Add(new BoneWeight1 {boneIndex = boneIndex, weight = weight});
+						}
+					}
+				}
+
+				var unity_weights = new List<BoneWeight1>();
+				var bonesPerVertex = new byte[deduped_split_indices.Count];
+				for(int i = 0; i < deduped_split_indices.Count; i++)
+				{
+					var boneWeights = weights[splits[deduped_split_indices[i]]].OrderByDescending(b => b.weight).ToList();
+
+					if(boneWeights.Count > 0)
+					{
+						bonesPerVertex[i] = (byte)Math.Min(boneWeights.Count, MAX_BONES_PER_VERTEX);
+
+						var sum_weights = .0;
+						/*foreach(var weight in boneWeights)
+							sum_weights += weight.weight;*/
+						for(int weightIndex = 0; weightIndex < boneWeights.Count && weightIndex < MAX_BONES_PER_VERTEX; weightIndex++)
+							sum_weights += boneWeights[weightIndex].weight;
+						sum_weights /= boneWeights.Count;
+
+						/*foreach(var weight in boneWeights.OrderByDescending(b => b.weight))
+							unity_weights.Add(new BoneWeight1 {boneIndex = weight.boneIndex, weight = (float)(weight.weight / sum_weights)});*/
+						for(int weightIndex = 0; weightIndex < boneWeights.Count && weightIndex < MAX_BONES_PER_VERTEX; weightIndex++)
+							unity_weights.Add(new BoneWeight1 {boneIndex = boneWeights[weightIndex].boneIndex, weight = (float)(boneWeights[weightIndex].weight / sum_weights)});
+
+
+						if(i < 10) {
+							var s = "";
+							foreach(var weight in boneWeights.OrderByDescending(b => b.weight))
+								s += weight.weight + ", ";
+							Debug.Log(s);
+						}
+					}
+					else
+					{
+						bonesPerVertex[i] = 1;
+						unity_weights.Add(new BoneWeight1 {boneIndex = 0, weight = 1});
+					}
+				}
+
+				Debug.Log(STFMesh.STF_Name);
+
+				ret.SetBoneWeights(new NativeArray<byte>(bonesPerVertex, Allocator.Temp), new NativeArray<BoneWeight1>(unity_weights.ToArray(), Allocator.Temp));
+				ret.bindposes = STFMesh.armature.Bindposes.ToArray();
 			}
 
 

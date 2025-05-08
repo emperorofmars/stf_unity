@@ -52,9 +52,8 @@ namespace com.squirrelbite.stf_unity.modules
 		// TODO material slots
 
 		[Header("Meta")]
-		public uint float_width = 4;
-		public uint indices_width = 4;
-		public uint material_indices_width = 1;
+		public int float_width = 4;
+		public int indices_width = 4;
 
 
 		[Space]
@@ -75,6 +74,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public STF_Buffer tris;
 		public STF_Buffer faces;
 		public STF_Buffer lines;
+		public int material_indices_width = 1;
 		public STF_Buffer material_indices;
 		public List<STF_DataResource> material_slots = new();
 
@@ -82,6 +82,7 @@ namespace com.squirrelbite.stf_unity.modules
 		[Header("Rigging")]
 		public STF_Armature armature;
 		public List<string> bones = new();
+		public int bone_indices_width = 1;
 		public List<WeightChannel> weights = new();
 
 		[Space]

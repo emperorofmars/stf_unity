@@ -56,17 +56,15 @@ namespace com.squirrelbite.stf_unity.modules
 			if(JsonResource.ContainsKey("parent_binding"))
 			{
 				Context.AddTask(new Task(() => {
-					var binding = JsonResource["parent_binding"].ToObject<List<string>>();
-					ret.ParentBinding = binding;
+					ret.ParentBinding = JsonResource["parent_binding"].ToObject<List<string>>();
 
-					Debug.Log(binding.Aggregate((a, b) => a + " : " + b));
+					//Debug.Log(ret.ParentBinding.Aggregate((a, b) => a + " : " + b));
 
 					// TODO make more legit
 					var parent = ret.transform.parent.gameObject.GetComponent<STF_Node>();
-
 					foreach(var bone in parent.gameObject.GetComponentsInChildren<STF_Bone>())
 					{
-						if(bone.STF_Id == binding[2] && bone.STF_Owner == parent.gameObject)
+						if(bone.STF_Id == ret.ParentBinding[2] && bone.STF_Owner == parent.gameObject)
 						{
 							ret.transform.SetParent(bone.transform, false);
 							break;
