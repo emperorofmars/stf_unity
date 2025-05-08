@@ -356,7 +356,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 			if(STFMesh.armature != null && STFMesh.bones != null && STFMesh.weights != null)
 			{
-				const int MAX_BONES_PER_VERTEX = 8;
+				const int MAX_BONES_PER_VERTEX = 4;
 
 				var weights = new List<BoneWeight1>[vertex_count];
 				for(int i = 0; i < vertex_count; i++) weights[i] = new List<BoneWeight1>();
@@ -405,24 +405,11 @@ namespace com.squirrelbite.stf_unity.modules
 						bonesPerVertex[i] = (byte)Math.Min(boneWeights.Count, MAX_BONES_PER_VERTEX);
 
 						var sum_weights = .0;
-						/*foreach(var weight in boneWeights)
-							sum_weights += weight.weight;*/
 						for(int weightIndex = 0; weightIndex < boneWeights.Count && weightIndex < MAX_BONES_PER_VERTEX; weightIndex++)
 							sum_weights += boneWeights[weightIndex].weight;
-						sum_weights /= boneWeights.Count;
 
-						/*foreach(var weight in boneWeights.OrderByDescending(b => b.weight))
-							unity_weights.Add(new BoneWeight1 {boneIndex = weight.boneIndex, weight = (float)(weight.weight / sum_weights)});*/
 						for(int weightIndex = 0; weightIndex < boneWeights.Count && weightIndex < MAX_BONES_PER_VERTEX; weightIndex++)
 							unity_weights.Add(new BoneWeight1 {boneIndex = boneWeights[weightIndex].boneIndex, weight = (float)(boneWeights[weightIndex].weight / sum_weights)});
-
-
-						if(i < 10) {
-							var s = "";
-							foreach(var weight in boneWeights.OrderByDescending(b => b.weight))
-								s += weight.weight + ", ";
-							Debug.Log(s);
-						}
 					}
 					else
 					{

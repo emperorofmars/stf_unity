@@ -58,19 +58,12 @@ namespace com.squirrelbite.stf_unity.modules
 					{
 						var instance = ret.ArmatureInstance.GetComponent<STF_Instance_Armature>();
 						smr.rootBone = ret.ArmatureInstance.transform;
-						var bones = new Transform[instance.Armature.BindOrder.Count];
-						/*for(int i = 0; i < instance.Armature.BindOrder.Count; i++)
-						{
-							var id = instance.Armature.BindOrder[i];
-							var bone = ret.ArmatureInstance.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(bone => bone.STF_Id == id && bone.STF_Owner == instance.gameObject);
-							bones[i] = bone ? bone.transform : instance.transform;
-							Debug.Log(bones[i]);
-						}*/
+						var bones = new Transform[ret.Mesh.bones.Count];
 						for(int i = 0; i < ret.Mesh.bones.Count; i++)
 						{
 							var id = ret.Mesh.bones[i];
 							var bone = ret.ArmatureInstance.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(bone => bone.STF_Id == id && bone.STF_Owner == instance.gameObject);
-							bones[i] = bone ? bone.transform : instance.transform;
+							bones[i] = bone ? bone.transform : null;
 						}
 						smr.bones = bones;
 					}
