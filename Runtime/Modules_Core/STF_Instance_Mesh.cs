@@ -63,7 +63,7 @@ namespace com.squirrelbite.stf_unity.modules
 						{
 							var id = ret.Mesh.bones[i];
 							var bone = ret.ArmatureInstance.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(bone => bone.STF_Id == id && bone.STF_Owner == instance.gameObject);
-							bones[i] = bone ? bone.transform : null;
+							bones[i] = bone ? bone.transform : instance.transform;
 						}
 						smr.bones = bones;
 					}

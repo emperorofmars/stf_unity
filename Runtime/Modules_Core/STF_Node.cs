@@ -67,6 +67,7 @@ namespace com.squirrelbite.stf_unity.modules
 						if(bone.STF_Id == ret.ParentBinding[2] && bone.STF_Owner == parent.gameObject)
 						{
 							ret.transform.SetParent(bone.transform, false);
+							//ret.transform.RotateAround(ret.transform.parent.localToWorldMatrix.GetPosition(), Vector3.right, 90);
 							break;
 						}
 					}

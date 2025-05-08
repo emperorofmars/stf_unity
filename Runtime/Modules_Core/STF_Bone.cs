@@ -53,11 +53,6 @@ namespace com.squirrelbite.stf_unity.modules
 				}
 			}
 
-			if(JsonResource.ContainsKey("instance"))
-			{
-				Context.ImportResource((string)JsonResource["instance"], ret);
-			}
-
 			return (ret, null);
 		}
 

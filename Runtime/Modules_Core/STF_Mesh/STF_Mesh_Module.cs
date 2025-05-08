@@ -337,14 +337,6 @@ namespace com.squirrelbite.stf_unity.modules
 			{
 				ret.SetUVs(uvIndex, unity_uvs[uvIndex]);
 			}
-			ret.SetVertices(unity_vertices);
-			ret.SetNormals(unity_normals);
-			ret.SetTangents(unity_tangents);
-			for(int uvIndex = 0; uvIndex < unity_uvs.Count; uvIndex++)
-			{
-				ret.SetUVs(uvIndex, unity_uvs[uvIndex]);
-			}
-
 
 			ret.indexFormat = unity_vertices.Count > ushort.MaxValue ? UnityEngine.Rendering.IndexFormat.UInt32 : UnityEngine.Rendering.IndexFormat.UInt16;
 			ret.subMeshCount = subMeshIndices.Count;
@@ -421,7 +413,11 @@ namespace com.squirrelbite.stf_unity.modules
 				Debug.Log(STFMesh.STF_Name);
 
 				ret.SetBoneWeights(new NativeArray<byte>(bonesPerVertex, Allocator.Temp), new NativeArray<BoneWeight1>(unity_weights.ToArray(), Allocator.Temp));
-				ret.bindposes = STFMesh.armature.Bindposes.ToArray();
+				//ret.bindposes = STFMesh.armature.Bindposes.ToArray();
+				var bindposes = new List<Matrix4x4>();
+				foreach(var id in STFMesh.bones)
+					bindposes.Add(STFMesh.armature.Bindposes[STFMesh.armature.BindOrder.FindIndex(b => b == id)]);
+				ret.bindposes = bindposes.ToArray();
 			}
 
 

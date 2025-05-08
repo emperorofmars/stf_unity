@@ -31,8 +31,7 @@ namespace com.squirrelbite.stf_unity
 		}
 		public static void ParseTRS(Transform Target, JObject Json)
 		{
-			Target.localPosition = TRSUtil.ParseLocation(Json);
-			Target.localRotation = TRSUtil.ParseRotation(Json);
+			Target.SetLocalPositionAndRotation(TRSUtil.ParseLocation(Json), TRSUtil.ParseRotation(Json));
 			Target.localScale = TRSUtil.ParseScale(Json);
 		}
 		public static void ParseTRS(GameObject Target, JObject Json)
