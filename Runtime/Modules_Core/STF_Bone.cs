@@ -47,7 +47,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 			if(JsonResource.ContainsKey("children")) foreach(var childID in (JArray)JsonResource["children"])
 			{
-				if(Context.ImportResource((string)childID) is STF_Bone childObject)
+				if(Context.ImportResource((string)childID, ContextObject) is STF_Bone childObject)
 				{
 					childObject.transform.SetParent(ret.transform);
 				}

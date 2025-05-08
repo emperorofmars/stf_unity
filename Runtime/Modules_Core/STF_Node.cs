@@ -42,7 +42,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 			if(JsonResource.ContainsKey("children")) foreach(var childID in (JArray)JsonResource["children"])
 			{
-				if(Context.ImportResource((string)childID) is STF_Node childObject)
+				if(Context.ImportResource((string)childID, ContextObject) is STF_Node childObject)
 				{
 					childObject.transform.SetParent(ret.transform);
 				}
@@ -58,8 +58,20 @@ namespace com.squirrelbite.stf_unity.modules
 				Context.AddTask(new Task(() => {
 					var binding = JsonResource["parent_binding"].ToObject<List<string>>();
 					ret.ParentBinding = binding;
-					//Debug.Log(binding.Aggregate((a, b) => a + " : " + b));
-					// TODO
+
+					Debug.Log(binding.Aggregate((a, b) => a + " : " + b));
+
+					// TODO make more legit
+					var parent = ret.transform.parent.gameObject.GetComponent<STF_Node>();
+
+					foreach(var bone in parent.gameObject.GetComponentsInChildren<STF_Bone>())
+					{
+						if(bone.STF_Id == binding[2] && bone.STF_Owner == parent.gameObject)
+						{
+							ret.transform.SetParent(bone.transform, false);
+							break;
+						}
+					}
 				}));
 			}
 

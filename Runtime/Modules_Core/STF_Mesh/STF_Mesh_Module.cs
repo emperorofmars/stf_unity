@@ -29,40 +29,33 @@ namespace com.squirrelbite.stf_unity.modules
 			ret.SetFromJson(JsonResource, STF_Id, "STF Mesh");
 
 
-			ret.vertex_count = JsonResource.Value<ulong>("vertex_count");
-			ret.vertex_width = JsonResource.Value<uint>("vertex_width");
-			ret.vertex_indices_width = JsonResource.Value<uint>("vertex_indices_width");
-			ret.vertices = Context.ImportBuffer(JsonResource.Value<string>("vertices"));
-			if(JsonResource.ContainsKey("colors")) foreach(var color in JsonResource["colors"])
-				ret.colors.Add(Context.ImportBuffer(color.Value<string>()));
+			ret.float_width = JsonResource.Value<uint>("float_width");
+			ret.indices_width = JsonResource.Value<uint>("indices_width");
+			ret.material_indices_width = JsonResource.Value<uint>("material_indices_width");
 
-			ret.split_count = JsonResource.Value<ulong>("split_count");
-			ret.split_indices_width = JsonResource.Value<uint>("split_indices_width");
-			ret.split_normal_width = JsonResource.Value<uint>("split_normal_width");
-			ret.split_tangent_width = JsonResource.Value<uint>("split_tangent_width");
-			ret.split_color_width = JsonResource.Value<uint>("split_color_width");
-			ret.split_uv_width = JsonResource.Value<uint>("split_uv_width");
+			ret.vertices = Context.ImportBuffer(JsonResource.Value<string>("vertices"));
+			if(JsonResource.ContainsKey("colors"))
+				foreach(var color in JsonResource["colors"])
+					ret.colors.Add(Context.ImportBuffer(color.Value<string>()));
+
 			if(JsonResource.ContainsKey("splits")) ret.splits = Context.ImportBuffer(JsonResource.Value<string>("splits"));
 			if(JsonResource.ContainsKey("split_normals")) ret.split_normals = Context.ImportBuffer(JsonResource.Value<string>("split_normals"));
 			if(JsonResource.ContainsKey("split_tangents")) ret.split_tangents = Context.ImportBuffer(JsonResource.Value<string>("split_tangents"));
-			if(JsonResource.ContainsKey("uvs")) foreach(JObject uv in (JArray)JsonResource["uvs"])
-				ret.uvs.Add(new () {name = uv.Value<string>("name"), uv = Context.ImportBuffer(uv.Value<string>("uv"))});
-			if(JsonResource.ContainsKey("split_colors")) foreach(var color in JsonResource["split_colors"])
-				ret.split_colors.Add(Context.ImportBuffer(color.Value<string>()));
+			if(JsonResource.ContainsKey("uvs"))
+				foreach(JObject uv in (JArray)JsonResource["uvs"])
+					ret.uvs.Add(new () {name = uv.Value<string>("name"), uv = Context.ImportBuffer(uv.Value<string>("uv"))});
+			if(JsonResource.ContainsKey("split_colors"))
+				foreach(var color in JsonResource["split_colors"])
+					ret.split_colors.Add(Context.ImportBuffer(color.Value<string>()));
 
-			ret.tris_count = JsonResource.Value<ulong>("tris_count");
-			ret.face_count = JsonResource.Value<ulong>("face_count");
-			ret.face_indices_width = JsonResource.Value<uint>("face_indices_width");
 			if(JsonResource.ContainsKey("tris")) ret.tris = Context.ImportBuffer(JsonResource.Value<string>("tris"));
 			if(JsonResource.ContainsKey("faces")) ret.faces = Context.ImportBuffer(JsonResource.Value<string>("faces"));
-			ret.material_indices_width = JsonResource.Value<uint>("material_indices_width");
 			if(JsonResource.ContainsKey("material_indices")) ret.material_indices = Context.ImportBuffer(JsonResource.Value<string>("material_indices"));
 
 			if(JsonResource.ContainsKey("material_slots"))
 				foreach(var slot in JsonResource["material_slots"])
 					ret.material_slots.Add((STF_DataResource)Context.ImportResource(slot.Value<string>()));
 
-			ret.lines_len = JsonResource.Value<ulong>("lines_len");
 			if(JsonResource.ContainsKey("lines")) ret.lines = Context.ImportBuffer(JsonResource.Value<string>("lines"));
 
 			if(JsonResource.ContainsKey("armature"))
@@ -72,7 +65,6 @@ namespace com.squirrelbite.stf_unity.modules
 			{
 				foreach(var bone in JsonResource["bones"])
 					ret.bones.Add(bone.Value<string>());
-				ret.bone_weight_width = JsonResource.Value<uint>("bone_weight_width");
 
 				foreach(var JsonWeightChannel in JsonResource["weights"])
 					ret.weights.Add(new STF_Mesh.WeightChannel {
@@ -84,10 +76,6 @@ namespace com.squirrelbite.stf_unity.modules
 
 			if(JsonResource.ContainsKey("blendshapes"))
 			{
-				ret.blendshape_pos_width = JsonResource.Value<uint>("blendshape_pos_width");
-				ret.blendshape_normal_width = JsonResource.Value<uint>("blendshape_normal_width");
-				ret.blendshape_tangent_width = JsonResource.Value<uint>("blendshape_tangent_width");
-
 				foreach(var jsonBlendshape in JsonResource["blendshapes"])
 				{
 					var blendshape = new STF_Mesh.Blendshape {
@@ -106,26 +94,16 @@ namespace com.squirrelbite.stf_unity.modules
 			}
 
 			if(JsonResource.ContainsKey("sharp_face_indices"))
-			{
-				ret.sharp_face_indices_len = JsonResource.Value<ulong>("sharp_face_indices_len");
 				ret.sharp_face_indices = Context.ImportBuffer(JsonResource.Value<string>("sharp_face_indices"));
-			}
 
 			if(JsonResource.ContainsKey("sharp_edges"))
-			{
-				ret.sharp_edges_len = JsonResource.Value<ulong>("sharp_edges_len");
 				ret.sharp_edges = Context.ImportBuffer(JsonResource.Value<string>("sharp_edges"));
-			}
 
 			if(JsonResource.ContainsKey("sharp_vertices"))
-			{
-				ret.sharp_vertices_len = JsonResource.Value<ulong>("sharp_vertices_len");
 				ret.sharp_vertices = Context.ImportBuffer(JsonResource.Value<string>("sharp_vertices"));
-			}
 
 			if(JsonResource.ContainsKey("vertex_groups"))
 			{
-				ret.vertex_weight_width = JsonResource.Value<uint>("vertex_weight_width");
 				foreach(var JsonVertexgroup in JsonResource["vertex_groups"])
 					ret.vertex_groups.Add(new STF_Mesh.VertexGroup {
 						count = JsonVertexgroup.Value<ulong>("count"),
@@ -143,6 +121,7 @@ namespace com.squirrelbite.stf_unity.modules
 			return (ret, new(){ret, unityMesh});
 		}
 
+
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
 		{
 			var MeshObject = ApplicationObject as STF_Mesh;
@@ -154,63 +133,91 @@ namespace com.squirrelbite.stf_unity.modules
 			return (ret, MeshObject.STF_Id);
 		}
 
+
 		protected Mesh ConvertToUnityMesh(STF_Mesh STFMesh)
 		{
-			var ret = new Mesh();
-			ret.name = "Processed " + STFMesh._STF_Name;
+			var ret = new Mesh { name = "Processed " + STFMesh._STF_Name };
 
 			// TODO use BinaryPrimitives whenever thats supported for floats and stuff
 
-			var vertices = new Vector3[STFMesh.vertex_count];
-			for(int i = 0; i < (int)STFMesh.vertex_count; i++)
+			var vertex_count = STFMesh.vertices.BufferLength / (STFMesh.float_width * 3);
+			var split_count = STFMesh.splits.BufferLength / STFMesh.indices_width;
+			var tris_count = STFMesh.tris.BufferLength / (STFMesh.indices_width * 3);
+			var face_count = STFMesh.faces.BufferLength / STFMesh.indices_width;
+
+
+			float parseFloat(byte[] Buffer, int Index, int Width, int Offset = 0)
+			{
+				return Width switch
+				{
+					4 => BitConverter.ToSingle(Buffer, Index * Width + Offset * Width),
+					8 => (float)BitConverter.ToDouble(Buffer, Index * Width + Offset * Width),
+					_ => throw new NotImplementedException()
+				};
+			}
+
+			int parseInt(byte[] Buffer, int Index, int Width, int Offset = 0)
+			{
+				return Width switch
+				{
+					1 => Buffer[Index + Offset],
+					2 => BitConverter.ToUInt16(Buffer, Index * Width + Offset * Width),
+					4 => (int)BitConverter.ToUInt32(Buffer, Index * Width + Offset * Width),
+					8 => (int)BitConverter.ToUInt64(Buffer, Index * Width + Offset * Width),
+					_ => throw new NotImplementedException()
+				};
+			}
+
+			var vertices = new Vector3[vertex_count];
+			for(int i = 0; i < vertex_count; i++)
 			{
 				vertices[i].Set(
-					-BitConverter.ToSingle(STFMesh.vertices.Data, i * 4 * 3),
-					BitConverter.ToSingle(STFMesh.vertices.Data, i * 4 * 3 + 4),
-					BitConverter.ToSingle(STFMesh.vertices.Data, i * 4 * 3 + 8)
+					-parseFloat(STFMesh.vertices.Data, i * 3, (int)STFMesh.float_width),
+					parseFloat(STFMesh.vertices.Data, i * 3, (int)STFMesh.float_width, 1),
+					parseFloat(STFMesh.vertices.Data, i * 3, (int)STFMesh.float_width, 2)
 				);
 			}
 
-			var splits = new int[STFMesh.split_count];
-			for(int i = 0; i < (int)STFMesh.split_count; i++)
-			{
-				splits[i] = (int)BitConverter.ToUInt32(STFMesh.splits.Data, i * 4);
-			}
+			var splits = new int[split_count];
+			for(int i = 0; i < split_count; i++)
+				splits[i] = parseInt(STFMesh.splits.Data, i, (int)STFMesh.indices_width);
 
-			var normals = new Vector3[STFMesh.split_count];
-			for(int i = 0; i < (int)STFMesh.split_count; i++)
+			var normals = new Vector3[split_count];
+			for(int i = 0; i < split_count; i++)
 			{
 				normals[i].Set(
-					-BitConverter.ToSingle(STFMesh.split_normals.Data, i * 4 * 3),
-					BitConverter.ToSingle(STFMesh.split_normals.Data, i * 4 * 3 + 4),
-					BitConverter.ToSingle(STFMesh.split_normals.Data, i * 4 * 3 + 8)
+					-parseFloat(STFMesh.split_normals.Data, i * 3, (int)STFMesh.float_width),
+					parseFloat(STFMesh.split_normals.Data, i * 3, (int)STFMesh.float_width, 1),
+					parseFloat(STFMesh.split_normals.Data, i * 3, (int)STFMesh.float_width, 2)
 				);
+				normals[i].Normalize();
 			}
 
-			var tangents = new Vector3[STFMesh.split_count];
-			for(int i = 0; i < (int)STFMesh.split_count; i++)
+			var tangents = new Vector4[split_count];
+			for(int i = 0; i < split_count; i++)
 			{
 				tangents[i].Set(
-					-BitConverter.ToSingle(STFMesh.split_tangents.Data, i * 4 * 3),
-					BitConverter.ToSingle(STFMesh.split_tangents.Data, i * 4 * 3 + 4),
-					BitConverter.ToSingle(STFMesh.split_tangents.Data, i * 4 * 3 + 8)
+					-parseFloat(STFMesh.split_tangents.Data, i * 3, (int)STFMesh.float_width),
+					parseFloat(STFMesh.split_tangents.Data, i * 3, (int)STFMesh.float_width, 1),
+					parseFloat(STFMesh.split_tangents.Data, i * 3, (int)STFMesh.float_width, 2),
+					1
 				);
+				tangents[i].Normalize();
 			}
 
 			var uvs = new List<Vector2[]>();
 			foreach(var uvBuffer in STFMesh.uvs)
 			{
-				var uv = new Vector2[STFMesh.split_count];
-				for(int i = 0; i < (int)STFMesh.split_count; i++)
+				var uv = new Vector2[split_count];
+				for(int i = 0; i < split_count; i++)
 				{
 					uv[i].Set(
-						BitConverter.ToSingle(uvBuffer.uv.Data, i * 8),
-						BitConverter.ToSingle(uvBuffer.uv.Data, i * 8 + 4)
+						parseFloat(uvBuffer.uv.Data, i * 2, (int)STFMesh.float_width),
+						1 - parseFloat(uvBuffer.uv.Data, i * 2, (int)STFMesh.float_width, 1)
 					);
 				}
 				uvs.Add(uv);
 			}
-
 
 			bool compareUVs(int a, int b)
 			{
@@ -224,20 +231,17 @@ namespace com.squirrelbite.stf_unity.modules
 			// TODO colors
 
 
-
 			var verts_to_split = new Dictionary<int, List<int>>();
-			var deduped_splits = new List<int>();
-			var split_to_deduped = new Dictionary<int, int>();
-			var split_to_deduped_split = new Dictionary<int, int>();
-			for(int splitIndex = 0; splitIndex < (int)STFMesh.split_count; splitIndex++)
+			var deduped_split_indices = new List<int>();
+			var split_to_deduped_split_index = new List<int>();
+			for(int splitIndex = 0; splitIndex < split_count; splitIndex++)
 			{
 				var vertexIndex = (int)splits[splitIndex];
 				if(!verts_to_split.ContainsKey(vertexIndex))
 				{
 					verts_to_split.Add(vertexIndex, new List<int> {splitIndex});
-					deduped_splits.Add(vertexIndex);
-					split_to_deduped.Add(splitIndex, deduped_splits.Count - 1);
-					split_to_deduped_split.Add(splitIndex, splitIndex);
+					deduped_split_indices.Add(splitIndex);
+					split_to_deduped_split_index.Add(deduped_split_indices.Count - 1);
 				}
 				else
 				{
@@ -252,7 +256,7 @@ namespace com.squirrelbite.stf_unity.modules
 							// TODO colors
 						)
 						{
-							split_to_deduped_split.Add(splitIndex, splitCandidate);
+							split_to_deduped_split_index.Add(split_to_deduped_split_index[splitCandidate]);
 							success = true;
 							break;
 						}
@@ -260,9 +264,8 @@ namespace com.squirrelbite.stf_unity.modules
 					if(!success)
 					{
 						verts_to_split[vertexIndex].Add(splitIndex);
-						deduped_splits.Add(vertexIndex);
-						split_to_deduped.Add(splitIndex, deduped_splits.Count - 1);
-						split_to_deduped_split.Add(splitIndex, splitIndex);
+						deduped_split_indices.Add(splitIndex);
+						split_to_deduped_split_index.Add(deduped_split_indices.Count - 1);
 					}
 				}
 			}
@@ -270,51 +273,53 @@ namespace com.squirrelbite.stf_unity.modules
 
 			var unity_vertices = new List<Vector3>();
 			var unity_normals = new List<Vector3>();
+			var unity_tangents = new List<Vector4>();
 			var unity_uvs = new List<List<Vector2>>();
 			for(int uvIndex = 0; uvIndex < uvs.Count; uvIndex++)
 			{
 				unity_uvs.Add(new());
 			}
-			foreach(var split in deduped_splits)
+			for(int i = 0; i < deduped_split_indices.Count; i++)
 			{
-				unity_vertices.Add(vertices[split]);
-				unity_normals.Add(normals[split]);
+				unity_vertices.Add(vertices[splits[deduped_split_indices[i]]]);
+				unity_normals.Add(normals[deduped_split_indices[i]]);
+				unity_tangents.Add(tangents[deduped_split_indices[i]]);
 				for(int uvIndex = 0; uvIndex < uvs.Count; uvIndex++)
 				{
-					unity_uvs[uvIndex].Add(uvs[uvIndex][split]);
+					unity_uvs[uvIndex].Add(uvs[uvIndex][deduped_split_indices[i]]);
 				}
 			}
 
-			var tris = new Vector3Int[STFMesh.tris_count];
-			for(int i = 0; i < (int)STFMesh.tris_count; i++)
+			var tris = new Vector3Int[tris_count];
+			for(int i = 0; i < tris_count; i++)
 			{
 				tris[i].Set(
-					(int)BitConverter.ToUInt32(STFMesh.tris.Data, i * 3 * 4),
-					(int)BitConverter.ToUInt32(STFMesh.tris.Data, i * 3 * 4 + 4),
-					(int)BitConverter.ToUInt32(STFMesh.tris.Data, i * 3 * 4 + 8)
+					parseInt(STFMesh.tris.Data, i * 3, (int)STFMesh.indices_width, 2),
+					parseInt(STFMesh.tris.Data, i * 3, (int)STFMesh.indices_width, 1),
+					parseInt(STFMesh.tris.Data, i * 3, (int)STFMesh.indices_width)
 				);
 			}
 
-			var faceLengths = new uint[STFMesh.face_count];
-			var faceMaterialIndices = new uint[STFMesh.face_count];
-			for(int i = 0; i < (int)STFMesh.face_count; i++)
+			var faceLengths = new int[face_count];
+			var faceMaterialIndices = new int[face_count];
+			for(int i = 0; i < face_count; i++)
 			{
-				faceLengths[i] = BitConverter.ToUInt32(STFMesh.faces.Data, i * 4);
-				faceMaterialIndices[i] = BitConverter.ToUInt32(STFMesh.material_indices.Data, i * 4);
+				faceLengths[i] = parseInt(STFMesh.faces.Data, i, (int)STFMesh.indices_width);
+				faceMaterialIndices[i] = parseInt(STFMesh.material_indices.Data, i, (int)STFMesh.material_indices_width);
 			}
 
 			var subMeshIndices = new List<List<int>>();
 			var trisIndex = 0;
-			for(int faceIndex = 0; faceIndex < (int)STFMesh.face_count; faceIndex++)
+			for(int faceIndex = 0; faceIndex < face_count; faceIndex++)
 			{
 				var matIndex = (int)faceMaterialIndices[faceIndex];
 				for(uint faceLen = 0; faceLen < faceLengths[faceIndex]; faceLen++)
 				{
 					while(subMeshIndices.Count <= matIndex) subMeshIndices.Add(new List<int>());
 
-					subMeshIndices[matIndex].Add(split_to_deduped[split_to_deduped_split[tris[trisIndex].x]]);
-					subMeshIndices[matIndex].Add(split_to_deduped[split_to_deduped_split[tris[trisIndex].y]]);
-					subMeshIndices[matIndex].Add(split_to_deduped[split_to_deduped_split[tris[trisIndex].z]]);
+					subMeshIndices[matIndex].Add(split_to_deduped_split_index[tris[trisIndex].x]);
+					subMeshIndices[matIndex].Add(split_to_deduped_split_index[tris[trisIndex].y]);
+					subMeshIndices[matIndex].Add(split_to_deduped_split_index[tris[trisIndex].z]);
 
 					trisIndex++;
 				}
@@ -323,6 +328,14 @@ namespace com.squirrelbite.stf_unity.modules
 
 			ret.SetVertices(unity_vertices);
 			ret.SetNormals(unity_normals);
+			ret.SetTangents(unity_tangents);
+			for(int uvIndex = 0; uvIndex < unity_uvs.Count; uvIndex++)
+			{
+				ret.SetUVs(uvIndex, unity_uvs[uvIndex]);
+			}
+			ret.SetVertices(unity_vertices);
+			ret.SetNormals(unity_normals);
+			ret.SetTangents(unity_tangents);
 			for(int uvIndex = 0; uvIndex < unity_uvs.Count; uvIndex++)
 			{
 				ret.SetUVs(uvIndex, unity_uvs[uvIndex]);
@@ -336,8 +349,9 @@ namespace com.squirrelbite.stf_unity.modules
 				ret.SetIndices(subMeshIndices[subMeshIdx], MeshTopology.Triangles, subMeshIdx);
 			}
 
-			ret.UploadMeshData(false);
+
 			ret.RecalculateBounds();
+			ret.UploadMeshData(false);
 
 			return ret;
 		}

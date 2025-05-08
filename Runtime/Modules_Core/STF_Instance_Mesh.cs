@@ -52,6 +52,7 @@ namespace com.squirrelbite.stf_unity.modules
 					// TODO check whether mesh is skinned or not
 					var smr = go.gameObject.AddComponent<SkinnedMeshRenderer>();
 					smr.sharedMesh = ret.Mesh.ProcessedUnityMesh;
+					smr.materials = new Material[ret.Mesh.material_slots.Count];
 
 					ret.UnityMeshInstance = smr;
 				}

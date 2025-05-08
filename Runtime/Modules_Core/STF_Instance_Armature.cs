@@ -57,9 +57,16 @@ namespace com.squirrelbite.stf_unity.modules
 			}
 
 			var instance = Object.Instantiate(ret.Armature.gameObject, go.transform);
-			for(var child_count = instance.transform.childCount; child_count > 0; child_count--)
+			go.transform.localPosition = Vector3.zero;
+			go.transform.localRotation = Quaternion.identity;
+			go.transform.localScale = Vector3.one;
+			foreach(var bone in instance.GetComponentsInChildren<STF_Bone>())
 			{
-				instance.transform.GetChild(child_count - 1).SetParent(go.transform);
+				bone.STF_Owner = go.gameObject;
+			}
+			for(var child_index = 0; child_index < instance.transform.childCount; child_index++)
+			{
+				instance.transform.GetChild(child_index).SetParent(go.transform, true);
 			}
 
 			// TODO also handle component mods and stuff

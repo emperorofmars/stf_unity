@@ -51,23 +51,19 @@ namespace com.squirrelbite.stf_unity.modules
 
 		// TODO material slots
 
+		[Header("Meta")]
+		public uint float_width = 4;
+		public uint indices_width = 4;
+		public uint material_indices_width = 1;
+
+
 		[Space]
 		[Header("Vertices")]
-		public ulong vertex_count;
-		public uint vertex_width = 4;
-		public uint vertex_indices_width = 4;
 		public STF_Buffer vertices;
-		public uint vertex_color_width = 4;
 		public List<STF_Buffer> colors = new();
 
 		[Space]
 		[Header("Splits")]
-		public ulong split_count;
-		public uint split_indices_width = 4;
-		public uint split_normal_width = 4;
-		public uint split_tangent_width = 4;
-		public uint split_color_width = 4;
-		public uint split_uv_width = 4;
 		public STF_Buffer splits;
 		public STF_Buffer split_normals;
 		public STF_Buffer split_tangents;
@@ -76,14 +72,9 @@ namespace com.squirrelbite.stf_unity.modules
 
 		[Space]
 		[Header("Topology")]
-		public ulong tris_count;
-		public ulong face_count;
-		public uint face_indices_width = 4;
 		public STF_Buffer tris;
 		public STF_Buffer faces;
-		public ulong lines_len;
 		public STF_Buffer lines;
-		public uint material_indices_width = 4;
 		public STF_Buffer material_indices;
 		public List<STF_DataResource> material_slots = new();
 
@@ -91,28 +82,20 @@ namespace com.squirrelbite.stf_unity.modules
 		[Header("Rigging")]
 		public STF_Armature armature;
 		public List<string> bones = new();
-		public uint bone_weight_width = 4;
 		public List<WeightChannel> weights = new();
 
 		[Space]
 		[Header("Blendshapes")]
-		public uint blendshape_pos_width = 4;
-		public uint blendshape_normal_width = 4;
-		public uint blendshape_tangent_width = 4;
 		public List<Blendshape> blendshapes = new();
 
 		[Space]
 		[Header("Additional Mesh Properies")]
-		public ulong sharp_face_indices_len;
 		public STF_Buffer sharp_face_indices;
-		public ulong sharp_edges_len;
 		public STF_Buffer sharp_edges;
-		public ulong sharp_vertices_len;
 		public STF_Buffer sharp_vertices;
 
 		[Space]
 		[Header("Vertex Groups")]
-		public uint vertex_weight_width = 4;
 		public List<VertexGroup> vertex_groups = new();
 	}
 }
