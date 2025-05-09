@@ -58,16 +58,13 @@ namespace com.squirrelbite.stf_unity.modules
 				Context.AddTask(new Task(() => {
 					ret.ParentBinding = JsonResource["parent_binding"].ToObject<List<string>>();
 
-					//Debug.Log(ret.ParentBinding.Aggregate((a, b) => a + " : " + b));
-
 					// TODO make more legit
 					var parent = ret.transform.parent.gameObject.GetComponent<STF_Node>();
 					foreach(var bone in parent.gameObject.GetComponentsInChildren<STF_Bone>())
 					{
 						if(bone.STF_Id == ret.ParentBinding[2] && bone.STF_Owner == parent.gameObject)
 						{
-							ret.transform.SetParent(bone.transform, false);
-							//ret.transform.RotateAround(ret.transform.parent.localToWorldMatrix.GetPosition(), Vector3.right, 90);
+							ret.transform.SetParent(bone.transform);
 							break;
 						}
 					}
