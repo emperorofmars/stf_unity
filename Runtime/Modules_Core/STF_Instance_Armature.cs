@@ -56,7 +56,7 @@ namespace com.squirrelbite.stf_unity.modules
 				}
 			}
 
-			var instance = Object.Instantiate(ret.Armature.gameObject, go.transform, false);
+			var instance = Object.Instantiate(ret.Armature.gameObject);
 			foreach(var bone in instance.GetComponentsInChildren<STF_Bone>())
 			{
 				bone.STF_Owner = go.gameObject;

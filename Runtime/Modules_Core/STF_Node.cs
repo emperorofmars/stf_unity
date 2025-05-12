@@ -44,7 +44,7 @@ namespace com.squirrelbite.stf_unity.modules
 			{
 				if(Context.ImportResource((string)childID, ContextObject) is STF_Node childObject)
 				{
-					childObject.transform.SetParent(ret.transform);
+					childObject.transform.SetParent(ret.transform, false);
 				}
 			}
 
@@ -64,7 +64,7 @@ namespace com.squirrelbite.stf_unity.modules
 					{
 						if(bone.STF_Id == ret.ParentBinding[2] && bone.STF_Owner == parent.gameObject)
 						{
-							ret.transform.SetParent(bone.transform);
+							ret.transform.SetParent(bone.transform, true);
 							break;
 						}
 					}

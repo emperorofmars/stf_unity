@@ -50,25 +50,34 @@ namespace com.squirrelbite.stf_unity.modules
 
 				if(ret.Mesh.ProcessedUnityMesh)
 				{
-					// TODO check whether mesh is skinned or not
-					var smr = go.gameObject.AddComponent<SkinnedMeshRenderer>();
-					smr.sharedMesh = ret.Mesh.ProcessedUnityMesh;
-					smr.materials = new Material[ret.Mesh.material_slots.Count];
-					if(ret.ArmatureInstance)
+					if(ret.Mesh.weights != null && ret.Mesh.weights.Count > 0 || ret.Mesh.blendshapes != null && ret.Mesh.blendshapes.Count > 0)
 					{
-						var instance = ret.ArmatureInstance.GetComponent<STF_Instance_Armature>();
-						smr.rootBone = ret.ArmatureInstance.transform;
-						var bones = new Transform[ret.Mesh.bones.Count];
-						for(int i = 0; i < ret.Mesh.bones.Count; i++)
+						var renderer = go.gameObject.AddComponent<SkinnedMeshRenderer>();
+						renderer.sharedMesh = ret.Mesh.ProcessedUnityMesh;
+						renderer.materials = new Material[ret.Mesh.material_slots.Count];
+						if(ret.ArmatureInstance)
 						{
-							var id = ret.Mesh.bones[i];
-							var bone = ret.ArmatureInstance.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(bone => bone.STF_Id == id && bone.STF_Owner == instance.gameObject);
-							bones[i] = bone ? bone.transform : instance.transform;
+							var instance = ret.ArmatureInstance.GetComponent<STF_Instance_Armature>();
+							renderer.rootBone = ret.ArmatureInstance.transform;
+							var bones = new Transform[ret.Mesh.bones.Count];
+							for(int i = 0; i < ret.Mesh.bones.Count; i++)
+							{
+								var id = ret.Mesh.bones[i];
+								var bone = ret.ArmatureInstance.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(bone => bone.STF_Id == id && bone.STF_Owner == instance.gameObject);
+								bones[i] = bone ? bone.transform : instance.transform;
+							}
+							renderer.bones = bones;
 						}
-						smr.bones = bones;
-					}
 
-					ret.UnityMeshInstance = smr;
+						ret.UnityMeshInstance = renderer;
+					}
+					else
+					{
+						var meshFilter = go.gameObject.AddComponent<MeshFilter>();
+						meshFilter.sharedMesh = ret.Mesh.ProcessedUnityMesh;
+						var renderer = go.gameObject.AddComponent<MeshRenderer>();
+						renderer.materials = new Material[ret.Mesh.material_slots.Count];
+					}
 				}
 			}));
 
