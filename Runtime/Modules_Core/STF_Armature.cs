@@ -40,7 +40,8 @@ namespace com.squirrelbite.stf_unity.modules
 			{
 				if(Context.ImportResource((string)nodeID, ret) is STF_NodeResource nodeGo)
 				{
-					nodeGo.transform.SetParent(go.transform);
+					nodeGo.transform.RotateAround(Vector3.zero, Vector3.right, -90); // Armature space to global space
+					nodeGo.transform.SetParent(go.transform, false);
 				}
 				else
 				{

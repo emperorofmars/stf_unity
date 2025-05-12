@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -48,15 +49,29 @@ namespace com.squirrelbite.stf_unity.modules
 
 			ret.Armature = (STF_Armature)Context.ImportResource((string)JsonResource["armature"]);
 
+			var instance = Object.Instantiate(ret.Armature.gameObject);
+
 			if(JsonResource.ContainsKey("pose"))
 			{
-				foreach((string id, var pose) in (JObject)JsonResource["pose"])
+				foreach((string id, var stfPose) in (JObject)JsonResource["pose"])
 				{
-					ret.Poses.Add(new STF_Instance_Armature.Pose {TargetId = id, Translation = TRSUtil.ParseLocation((JArray)pose[0]), Rotation = TRSUtil.ParseRotation((JArray)pose[1]), Scale = TRSUtil.ParseScale((JArray)pose[2])});
+					var bone = instance.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == id);
+					var pose = new STF_Instance_Armature.Pose {
+						TargetId = id,
+						Translation = TRSUtil.ParseLocation((JArray)stfPose[0]),
+						Rotation = TRSUtil.ParseRotation((JArray)stfPose[1]),
+						Scale = TRSUtil.ParseScale((JArray)stfPose[2])
+					};
+					ret.Poses.Add(pose);
+					bone.transform.SetLocalPositionAndRotation(pose.Translation, pose.Rotation);
+					bone.transform.localScale = pose.Scale;
+					if(bone.transform.parent == instance.transform)
+					{
+						bone.transform.RotateAround(Vector3.zero, Vector3.right, -90); // Armature space to global space
+					}
 				}
 			}
 
-			var instance = Object.Instantiate(ret.Armature.gameObject);
 			foreach(var bone in instance.GetComponentsInChildren<STF_Bone>())
 			{
 				bone.STF_Owner = go.gameObject;

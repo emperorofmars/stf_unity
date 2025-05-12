@@ -43,13 +43,12 @@ namespace com.squirrelbite.stf_unity.modules
 
 			go.transform.position = TRSUtil.ParseLocation((JArray)JsonResource["translation"]);
 			go.transform.rotation = TRSUtil.ParseRotation((JArray)JsonResource["rotation"]);
-			go.transform.Rotate(Vector3.right, -90);
 
 			if(JsonResource.ContainsKey("children")) foreach(var childID in (JArray)JsonResource["children"])
 			{
 				if(Context.ImportResource((string)childID, ContextObject) is STF_Bone childObject)
 				{
-					childObject.transform.SetParent(ret.transform);
+					childObject.transform.SetParent(ret.transform, true);
 				}
 			}
 
