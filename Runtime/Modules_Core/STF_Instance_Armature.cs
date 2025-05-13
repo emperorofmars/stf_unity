@@ -65,12 +65,9 @@ namespace com.squirrelbite.stf_unity.modules
 					ret.Poses.Add(pose);
 					bone.transform.SetLocalPositionAndRotation(pose.Translation, pose.Rotation);
 					bone.transform.localScale = pose.Scale;
-					if(bone.transform.parent == instance.transform)
-					{
-						bone.transform.RotateAround(Vector3.zero, Vector3.right, -90); // Armature space to global space
-					}
 				}
 			}
+
 
 			foreach(var bone in instance.GetComponentsInChildren<STF_Bone>())
 			{
