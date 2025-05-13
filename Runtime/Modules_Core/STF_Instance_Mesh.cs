@@ -30,7 +30,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
-		public List<STF_ComponentResource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
+		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
@@ -43,10 +43,10 @@ namespace com.squirrelbite.stf_unity.modules
 			Context.AddTask(new Task(() => {
 				if(JsonResource.ContainsKey("armature_instance"))
 				{
-					ret.ArmatureInstance = ((STF_MonoBehaviour)Context.ImportResource((string)JsonResource["armature_instance"])).gameObject;
+					ret.ArmatureInstance = ((STF_MonoBehaviour)Context.ImportResource((string)JsonResource["armature_instance"], "instance")).gameObject;
 				}
 
-				ret.Mesh = (STF_Mesh)Context.ImportResource((string)JsonResource["mesh"]);
+				ret.Mesh = (STF_Mesh)Context.ImportResource((string)JsonResource["mesh"], "data");
 
 				if(ret.Mesh.ProcessedUnityMesh)
 				{

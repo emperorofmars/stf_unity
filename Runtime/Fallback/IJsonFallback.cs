@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
@@ -8,7 +9,7 @@ namespace com.squirrelbite.stf_unity.modules
 		abstract string FallbackType {get;}
 		abstract string FallbackJson {get;}
 
-		abstract List<ISTF_Resource> ReferencedResources {get;}
+		abstract List<Object> ReferencedResources {get;}
 		abstract List<STF_Buffer> ReferencedBuffers {get;}
 	}
 

@@ -38,7 +38,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
-		public List<STF_ComponentResource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
+		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
@@ -47,7 +47,7 @@ namespace com.squirrelbite.stf_unity.modules
 			go.Instance = ret;
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STF Armature Instance");
 
-			ret.Armature = (STF_Armature)Context.ImportResource((string)JsonResource["armature"]);
+			ret.Armature = (STF_Armature)Context.ImportResource((string)JsonResource["armature"], "data");
 
 			var instance = Object.Instantiate(ret.Armature.gameObject);
 

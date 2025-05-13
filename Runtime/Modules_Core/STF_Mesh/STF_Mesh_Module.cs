@@ -23,7 +23,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
-		public List<STF_ComponentResource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
+		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
@@ -57,12 +57,12 @@ namespace com.squirrelbite.stf_unity.modules
 
 			if(JsonResource.ContainsKey("material_slots"))
 				foreach(var slot in JsonResource["material_slots"])
-					ret.material_slots.Add((STF_DataResource)Context.ImportResource(slot.Value<string>()));
+					ret.material_slots.Add((STF_DataResource)Context.ImportResource(slot.Value<string>(), "data"));
 
 			if(JsonResource.ContainsKey("lines")) ret.lines = Context.ImportBuffer(JsonResource.Value<string>("lines"));
 
 			if(JsonResource.ContainsKey("armature"))
-				ret.armature = (STF_Armature)Context.ImportResource(JsonResource.Value<string>("armature"));
+				ret.armature = (STF_Armature)Context.ImportResource(JsonResource.Value<string>("armature"), "data");
 
 			if(JsonResource.ContainsKey("bones") && JsonResource.ContainsKey("weights"))
 			{

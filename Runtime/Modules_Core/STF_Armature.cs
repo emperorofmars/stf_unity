@@ -28,7 +28,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
-		public List<STF_ComponentResource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
+		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
@@ -38,7 +38,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 			foreach(var nodeID in JsonResource["root_bones"])
 			{
-				if(Context.ImportResource((string)nodeID, ret) is STF_NodeResource nodeGo)
+				if(Context.ImportResource((string)nodeID, "node", ret) is STF_Bone nodeGo)
 				{
 					nodeGo.transform.SetParent(go.transform);
 				}

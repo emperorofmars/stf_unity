@@ -26,7 +26,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
-		public List<STF_ComponentResource> GetComponents(ISTF_Resource ApplicationObject) { return ((STF_Prefab)ApplicationObject).Components; }
+		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return new List<ISTF_Resource>(((STF_Prefab)ApplicationObject).Components); }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
@@ -36,7 +36,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 			foreach(var nodeID in JsonResource["root_nodes"])
 			{
-				if(Context.ImportResource((string)nodeID, ret) is STF_NodeResource nodeGo)
+				if(Context.ImportResource((string)nodeID, "node", ret) is STF_Node nodeGo)
 				{
 					nodeGo.transform.SetParent(go.transform);
 				}

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using com.squirrelbite.stf_unity.modules;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ namespace com.squirrelbite.stf_unity
 			return ImportState.GetJsonResource(STF_Id);
 		}
 
-		public ISTF_Resource ImportResource(string STF_Id, ISTF_Resource ContextObject = null)
+		public ISTF_Resource ImportResource(string STF_Id, string ExpectedKind, ISTF_Resource ContextObject = null)
 		{
 			if(ImportState.GetImportedResource(STF_Id) is ISTF_Resource @importedObject)
 				return importedObject;
@@ -28,23 +29,53 @@ namespace com.squirrelbite.stf_unity
 			var jsonResource = GetJsonResource(STF_Id);
 
 			//Debug.Log($"Importing ID {STF_Id} - {jsonResource.GetValue("type")}");
-
-			var module = ImportState.DetermineModule(jsonResource);
 			if(jsonResource == null)
-			{
-				Report(new STFReport("Invalid Json Resource", ErrorSeverity.FATAL_ERROR, module?.STF_Type, null, null));
-				return null;
-			}
+				Report(new STFReport("Invalid Json Resource", ErrorSeverity.FATAL_ERROR, (string)jsonResource.GetValue("type"), null, null));
+
+			var module = ImportState.DetermineModule(jsonResource, ExpectedKind);
 			if(module == null)
 			{
 				Report(new STFReport("Unrecognized Resource", ErrorSeverity.WARNING, (string)jsonResource.GetValue("type"), null, null));
-				return HandleFallback(jsonResource, STF_Id, ContextObject);
+				return HandleFallback(jsonResource, STF_Id, ExpectedKind, ContextObject);
 			}
 
 			(ISTF_Resource STFResource, List<object> ApplicationObjects) = module.Import(this, jsonResource, STF_Id, ContextObject);
 			ImportState.RegisterImportedResource(STF_Id, STFResource, ApplicationObjects);
 
 			// handle components and what not
+			if(STFResource is STF_DataResource && jsonResource.ContainsKey("components"))
+			{
+				foreach(var componentId in jsonResource["components"])
+				{
+					var component = ImportResource((string)componentId, "component", STFResource);
+					if(component is STF_ScriptableObject resource)
+						((STF_DataResource)STFResource).Components.Add(resource);
+					else
+						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), null, null));
+				}
+			}
+			else if(STFResource is STF_PrefabResource && jsonResource.ContainsKey("components"))
+			{
+				foreach(var componentId in jsonResource["components"])
+				{
+					var component = ImportResource((string)componentId, "component", STFResource);
+					if(component is STF_MonoBehaviour resource)
+						((STF_PrefabResource)STFResource).Components.Add(resource);
+					else
+						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), null, null));
+				}
+			}
+			else if(STFResource is STF_NodeResource && jsonResource.ContainsKey("components"))
+			{
+				foreach(var componentId in jsonResource["components"])
+				{
+					var component = ImportResource((string)componentId, "component", STFResource);
+					if(component is STF_MonoBehaviour resource)
+						((STF_NodeResource)STFResource).Components.Add(resource);
+					else
+						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), null, null));
+				}
+			}
 
 			return STFResource;
 		}
@@ -54,12 +85,60 @@ namespace com.squirrelbite.stf_unity
 			return ImportState.ImportBuffer(STF_Id);
 		}
 
-		public virtual ISTF_Resource HandleFallback(JObject JsonResource, string STF_Id, ISTF_Resource ContextObject = null)
+		public virtual ISTF_Resource HandleFallback(JObject JsonResource, string STF_Id, string ExpectedKind, ISTF_Resource ContextObject = null)
 		{
-			/*var fallbackObject = FallbackModule.Import(this, JsonResource, STF_Id, ContextObject);
-			ImportState.RegisterImportedResource(STF_Id, fallbackObject);
-			// handle components and what not
-			return fallbackObject;*/
+			if(ExpectedKind == "data")
+			{
+				var fallbackObject = STF_Data_Fallback_Module.Import(this, JsonResource, STF_Id, ContextObject);
+				ImportState.RegisterImportedResource(STF_Id, fallbackObject, new() {fallbackObject});
+
+				if(JsonResource.ContainsKey("components"))
+				{
+					foreach(var componentId in JsonResource["components"])
+					{
+						var component = ImportResource((string)componentId, "component", fallbackObject);
+						if(component is STF_ScriptableObject resource)
+							((STF_DataResource)fallbackObject).Components.Add(resource);
+						else
+							Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)JsonResource.GetValue("type"), null, null));
+					}
+				}
+				return fallbackObject;
+			}
+			else if(ExpectedKind == "node")
+			{
+				var fallbackObject = STF_Node_Fallback_Module.Import(this, JsonResource, STF_Id, ContextObject);
+				ImportState.RegisterImportedResource(STF_Id, fallbackObject, null);
+
+				if(JsonResource.ContainsKey("components"))
+				{
+					foreach(var componentId in JsonResource["components"])
+					{
+						var component = ImportResource((string)componentId, "component", fallbackObject);
+						if(component is STF_MonoBehaviour resource)
+							((STF_NodeResource)fallbackObject).Components.Add(resource);
+						else
+							Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)JsonResource.GetValue("type"), null, null));
+					}
+				}
+				return fallbackObject;
+			}
+			else if(ContextObject is STF_MonoBehaviour && (ExpectedKind == "component" || ExpectedKind == "instance"))
+			{
+				var fallbackObject = STF_Fallback_MonoBehaviour_Module.Import(this, JsonResource, STF_Id, ContextObject);
+				ImportState.RegisterImportedResource(STF_Id, fallbackObject, null);
+				return fallbackObject;
+			}
+			else if(ExpectedKind == "component")
+			{
+				var fallbackObject = STF_Fallback_ScriptableObject_Module.Import(this, JsonResource, STF_Id, ContextObject);
+				ImportState.RegisterImportedResource(STF_Id, fallbackObject, new() {fallbackObject});
+				return fallbackObject;
+			}
+			else
+			{
+				Report(new STFReport("Invalid Json Resource", ErrorSeverity.FATAL_ERROR, (string)JsonResource.GetValue("type"), null, null));
+			}
 			return null;
 		}
 

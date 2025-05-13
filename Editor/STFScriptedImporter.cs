@@ -15,7 +15,7 @@ namespace com.squirrelbite.stf_unity.tools
 			var state = new ImportState(file, STF_Registry.Modules);
 			var rootContext = new ImportContext(state);
 
-			rootContext.ImportResource(state.RootID);
+			rootContext.ImportResource(state.RootID, "data");
 			state.FinalizeImport();
 
 			foreach(var importedObject in state.ObjectToRegister)
@@ -23,16 +23,12 @@ namespace com.squirrelbite.stf_unity.tools
 				ctx.AddObjectToAsset(importedObject.name, importedObject);
 			}
 
-			/*foreach(var importedObject in state.ImportedBuffers)
-			{
-				ctx.AddObjectToAsset("Buffer: " + importedObject.Key, importedObject.Value);
-			}*/
-
 			var import = ScriptableObject.CreateInstance<STF_Import>();
 			import.Init(state);
 			ctx.AddObjectToAsset("main", import);
 			if(import.Root)
 			{
+				import.Root.AddComponent<STF_Meta_Info>().Meta = state.Meta;
 				ctx.SetMainObject(import.Root);
 				Debug.Log("STF Import Success!");
 			}

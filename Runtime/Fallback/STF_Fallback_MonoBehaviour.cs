@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
-	public class STF_Node_Fallback : STF_NodeResource, IJsonFallback
+	public class STF_Fallback_MonoBehaviour : STF_MonoBehaviour, IJsonFallback
 	{
 		public string _FallbackType;
 		public string FallbackType => _FallbackType;
@@ -18,28 +18,20 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public List<STF_Buffer> _ReferencedBuffers = new();
 		public List<STF_Buffer> ReferencedBuffers => _ReferencedBuffers;
+
+		public override string STF_Kind => "fallback";
 	}
 
-	public static class STF_Node_Fallback_Module// : IJsonFallback_Module
+	public static class STF_Fallback_MonoBehaviour_Module// : IJsonFallback_Module
 	{
 
 		public static ISTF_Resource Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
-			var go = new GameObject((string)JsonResource.GetValue("name") ?? "STF Node");
-			var ret = go.AddComponent<STF_Node_Fallback>();
+			var go = (STF_MonoBehaviour)ContextObject;
+			var ret = go.gameObject.AddComponent<STF_Fallback_MonoBehaviour>();
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject);
 			ret._FallbackType = (string)JsonResource.GetValue("type");
 			ret._FallbackJson = JsonResource.ToString();
-
-			TRSUtil.ParseTRS(ret.transform, JsonResource);
-
-			if(JsonResource.ContainsKey("children")) foreach(var childID in (JArray)JsonResource["children"])
-			{
-				if(Context.ImportResource((string)childID, "node") is STF_NodeResource childObject)
-				{
-					childObject.transform.SetParent(ret.transform);
-				}
-			}
 
 			// TODO referenced resources and buffers
 
@@ -48,7 +40,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public static (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
 		{
-			var FallbackObject = ApplicationObject as STF_Node_Fallback;
+			var FallbackObject = ApplicationObject as STF_Fallback_MonoBehaviour;
 			// export buffers and resources
 			return (JObject.Parse(FallbackObject.FallbackJson), FallbackObject.STF_Type);
 		}

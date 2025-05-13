@@ -3,9 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using com.squirrelbite.stf_unity.modules;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEngine;
+using static com.squirrelbite.stf_unity.STF_Meta;
 
 namespace com.squirrelbite.stf_unity.tools
 {
@@ -14,7 +16,7 @@ namespace com.squirrelbite.stf_unity.tools
 	public class STFExportEditor : EditorWindow
 	{
 		private Vector2 scrollPos;
-		public GameObject exportAsset;
+		public STF_Prefab exportAsset;
 		private bool DebugExport = true;
 
 
@@ -35,9 +37,9 @@ namespace com.squirrelbite.stf_unity.tools
 
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Select Asset", EditorStyles.whiteLargeLabel, GUILayout.ExpandWidth(false));
-			exportAsset = (GameObject)EditorGUILayout.ObjectField(
+			exportAsset = (STF_Prefab)EditorGUILayout.ObjectField(
 				exportAsset,
-				typeof(GameObject),
+				typeof(STF_Prefab),
 				true,
 				GUILayout.ExpandWidth(true)
 			);
@@ -49,27 +51,27 @@ namespace com.squirrelbite.stf_unity.tools
 			GUILayout.Space(10);
 			drawHLine();
 
-			string defaultExportFilaName = "new";
 			if(exportAsset)
 			{
-				//var exportSTFAsset = exportAsset.GetComponent<ISTFAsset>();
-				//defaultExportFilaName = exportSTFAsset != null && !string.IsNullOrWhiteSpace(exportSTFAsset.OriginalFileName) ? exportSTFAsset.OriginalFileName : exportAsset.name;
+				var exportMeta = exportAsset.GetComponent<STF_Meta_Info>();
 
 				if(GUILayout.Button("Export", GUILayout.ExpandWidth(true))) {
-					var path = EditorUtility.SaveFilePanel("STF Export", "Assets", defaultExportFilaName + ".stf", "stf");
+					var path = EditorUtility.SaveFilePanel("STF Export", "Assets", exportAsset.name + ".stf", "stf");
 					if(path != null && path.Length > 0) {
 						// TODO actual Export
+
+						var State = new ExportState();
+						var Context = new ExportContext();
 
 						var jsonDefinition = new JObject {
 							{
 								"stf", new JObject {
-									/*{"version_major", exportAsset.Meta.DefinitionVersionMajor},
-									{"version_minor", exportAsset.Meta.DefinitionVersionMinor},
-									{"generator", exportAsset.Meta.Generator},
-									{"timestamp", exportAsset.Meta.Timestamp},
-									{"metric_multiplier", exportAsset.Meta.MetricMultiplier},
-									{"root", exportAsset.Meta.Root},*/
-									{"", ""}
+									{"version_major", 0},
+									{"version_minor", 0},
+									{"generator", "stf_unity"},
+									{"timestamp", DateTime.Now.ToString()},
+									{"metric_multiplier", exportMeta.Meta.MetricMultiplier},
+									{"root", exportAsset.STF_Id},
 								}
 							},
 							{

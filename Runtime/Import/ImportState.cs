@@ -48,7 +48,7 @@ namespace com.squirrelbite.stf_unity
 				return null;
 		}
 
-		public ISTF_Module DetermineModule(JObject JsonResource)
+		public ISTF_Module DetermineModule(JObject JsonResource, string ExpectedKind)
 		{
 			var type = (string)JsonResource.GetValue("type");
 			foreach(var module in Modules)
@@ -61,17 +61,17 @@ namespace com.squirrelbite.stf_unity
 			return null;
 		}
 
-		public object GetImportedResource(string ID)
+		public object GetImportedResource(string STF_Id)
 		{
-			if(ImportedObjects.ContainsKey(ID))
-				return ImportedObjects[ID];
+			if(ImportedObjects.ContainsKey(STF_Id))
+				return ImportedObjects[STF_Id];
 			else
 				return null;
 		}
 
-		public void RegisterImportedResource(string ID, ISTF_Resource ImportedObject, List<object> ApplicationObjects)
+		public void RegisterImportedResource(string STF_Id, ISTF_Resource ImportedObject, List<object> ApplicationObjects)
 		{
-			ImportedObjects.Add(ID, ImportedObject);
+			ImportedObjects.Add(STF_Id, ImportedObject);
 			if(ApplicationObjects != null && ApplicationObjects.Count > 0)
 			{
 				foreach(var ApplicationObject in ApplicationObjects)

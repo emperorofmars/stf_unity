@@ -14,26 +14,29 @@ namespace com.squirrelbite.stf_unity.modules
 		public string _FallbackJson;
 		public string FallbackJson => _FallbackJson;
 
-		public List<ISTF_Resource> _ReferencedResources = new();
-		public List<ISTF_Resource> ReferencedResources => _ReferencedResources;
+		public List<Object> _ReferencedResources = new();
+		public List<Object> ReferencedResources => _ReferencedResources;
 
 		public List<STF_Buffer> _ReferencedBuffers = new();
 		public List<STF_Buffer> ReferencedBuffers => _ReferencedBuffers;
 	}
 
-	public class STF_Data_Fallback_Module : IJsonFallback_Module
+	public static class STF_Data_Fallback_Module// : IJsonFallback_Module
 	{
-		public ISTF_Resource Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
+		public static ISTF_Resource Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
 			var ret = ScriptableObject.CreateInstance<STF_Data_Fallback>();
 			ret._FallbackType = (string)JsonResource.GetValue("type");
 			ret.SetFromJson(JsonResource, STF_Id);
 			ret._FallbackType = (string)JsonResource.GetValue("type");
 			ret._FallbackJson = JsonResource.ToString();
+
+			// TODO referenced resources and buffers
+
 			return ret;
 		}
 
-		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
+		public static (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
 		{
 			var FallbackObject = ApplicationObject as STF_Data_Fallback;
 			// export buffers and resources

@@ -2,6 +2,7 @@
 using System;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {

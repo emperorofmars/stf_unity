@@ -16,7 +16,7 @@ namespace com.squirrelbite.stf_unity
 		int CanHandleApplicationObject(ISTF_Resource ApplicationObject);
 		(ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject);
 		(JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject);
-		List<STF_ComponentResource> GetComponents(ISTF_Resource ApplicationObject);
+		List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject);
 	}
 }
 

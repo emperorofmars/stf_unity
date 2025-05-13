@@ -10,7 +10,7 @@ namespace com.squirrelbite.stf_unity
 	{
 		public override string STF_Kind => "node";
 
-		public List<STF_ComponentResource> Components = new();
+		public List<STF_MonoBehaviour> Components = new();
 
 		public override void SetFromJson(JObject JsonResource, string STF_Id, ISTF_Resource ContextObject, string DefaultName = "STF Node")
 		{
