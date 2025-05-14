@@ -10,6 +10,8 @@ namespace com.squirrelbite.stf_unity.modules
 	{
 		public const string STF_TYPE = "stf.prefab";
 		public override string STF_Type => STF_TYPE;
+
+		public List<STF_Animation> Animations = new();
 	}
 
 	public class STF_Prefab_Module : ISTF_Module
@@ -43,6 +45,14 @@ namespace com.squirrelbite.stf_unity.modules
 				else
 				{
 					Context.Report(new STFReport("Invalid Node: " + nodeID, ErrorSeverity.FATAL_ERROR, STF_Type, go, null));
+				}
+			}
+
+			if(JsonResource.ContainsKey("animations")) foreach(var animationId in JsonResource["animations"])
+			{
+				if(Context.ImportResource((string)animationId, "data", ret) is STF_Animation animation)
+				{
+					ret.Animations.Add(animation);
 				}
 			}
 
