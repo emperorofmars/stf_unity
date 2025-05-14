@@ -19,6 +19,16 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public List<STF_Buffer> _ReferencedBuffers = new();
 		public List<STF_Buffer> ReferencedBuffers => _ReferencedBuffers;
+
+		public override (string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public override List<string> ConvertPropertyPath(string UnityPath)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 
 	public static class STF_Data_Fallback_Module// : IJsonFallback_Module

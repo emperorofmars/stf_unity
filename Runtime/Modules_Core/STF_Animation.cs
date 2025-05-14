@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -12,10 +13,8 @@ namespace com.squirrelbite.stf_unity.modules
 		{
 			public float time;
 			public float value;
-			public float in_tangent_x;
-			public float in_tangent_y;
-			public float out_tangent_x;
-			public float out_tangent_y;
+			public Vector2 in_tangent;
+			public Vector2 out_tangent;
 		}
 
 		[System.Serializable]
@@ -27,10 +26,23 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public const string STF_TYPE = "stf.animation";
 		public override string STF_Type => STF_TYPE;
+		public float fps = 30;
 		public bool loop = false;
 		public float range_start = 0;
 		public float range_end = 1;
 		public List<Track> tracks = new();
+
+		public AnimationClip ProcessedUnityAnimation;
+
+		public override (string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public override List<string> ConvertPropertyPath(string UnityPath)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 
 	public class STF_Animation_Module : ISTF_Module
@@ -54,12 +66,10 @@ namespace com.squirrelbite.stf_unity.modules
 			var ret = ScriptableObject.CreateInstance<STF_Animation>();
 			ret.SetFromJson(JsonResource, STF_Id, "STF Animation");
 
+			ret.fps = JsonResource.Value<float>("fps");
 			ret.loop = JsonResource.Value<bool>("loop");
-			if(JsonResource.ContainsKey("range"))
-			{
-				ret.range_start = (float)JsonResource["range"][0];
-				ret.range_end = (float)JsonResource["range"][1];
-			}
+
+			float lastFrame = 1;
 
 			if(JsonResource.ContainsKey("tracks")) foreach(var trackJson in JsonResource["tracks"])
 			{
@@ -69,16 +79,27 @@ namespace com.squirrelbite.stf_unity.modules
 					track.keyframes.Add(new STF_Animation.Keyframe {
 						time = (float)keyframeJson[0],
 						value = (float)keyframeJson[1],
-						in_tangent_x = (float)keyframeJson[2],
-						in_tangent_y = (float)keyframeJson[3],
-						out_tangent_x = (float)keyframeJson[4],
-						out_tangent_y = (float)keyframeJson[5]
+						in_tangent = new Vector2((float)keyframeJson[2], (float)keyframeJson[3]),
+						out_tangent = new Vector2((float)keyframeJson[4], (float)keyframeJson[5]),
 					});
+					if((float)keyframeJson[1] > lastFrame) lastFrame = (float)keyframeJson[1];
 				}
 				ret.tracks.Add(track);
 			}
+			if(JsonResource.ContainsKey("range"))
+			{
+				ret.range_start = (float)JsonResource["range"][0];
+				ret.range_end = (float)JsonResource["range"][1];
+			}
+			else
+			{
+				ret.range_end = lastFrame;
+			}
 
-			return (ret, new(){ret});
+
+			ret.ProcessedUnityAnimation = ConvertToUnityAnimation(Context, ret, (STF_Prefab)ContextObject);
+
+			return (ret, new(){ret, ret.ProcessedUnityAnimation});
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
@@ -90,6 +111,44 @@ namespace com.squirrelbite.stf_unity.modules
 			};
 
 			return (ret, Animation.STF_Id);
+		}
+
+		public AnimationClip ConvertToUnityAnimation(ImportContext Context, STF_Animation STFAnimation, STF_Prefab ContextObject)
+		{
+			var ret = new AnimationClip {
+				name = STFAnimation.STF_Name,
+				frameRate = STFAnimation.fps,
+				wrapMode = STFAnimation.loop ? WrapMode.Loop : WrapMode.Default
+			};
+
+			// TODO figure out if this is actually how it works
+			var tangentWeightNormalizeFactor = Math.Max(1, STFAnimation.range_end - STFAnimation.range_start);
+
+			foreach(var track in STFAnimation.tracks)
+			{
+				var curve = new AnimationCurve();
+
+				foreach(var stfKeyframe in track.keyframes)
+				{
+					curve.AddKey(new Keyframe {
+						time = stfKeyframe.time,
+						value = stfKeyframe.value,
+						inTangent = stfKeyframe.in_tangent.x < 0 ? -stfKeyframe.in_tangent.y * (1 / -stfKeyframe.in_tangent.x) : 0,
+						inWeight = stfKeyframe.in_tangent.magnitude / tangentWeightNormalizeFactor,
+						outTangent = stfKeyframe.out_tangent.x < 0 ? -stfKeyframe.out_tangent.y * (1 / stfKeyframe.out_tangent.x) : 0,
+						outWeight = stfKeyframe.out_tangent.magnitude / tangentWeightNormalizeFactor,
+					});
+				}
+
+				(string RelativePath, System.Type Type, string PropertyName) = ContextObject.ConvertPropertyPath(track.target);
+
+				//Debug.Log($"Curve: {RelativePath} - {PropertyName} ({Type})");
+
+				if(RelativePath != null && Type != null && PropertyName != null)
+					ret.SetCurve(RelativePath, Type, PropertyName, curve);
+			}
+
+			return ret;
 		}
 	}
 }

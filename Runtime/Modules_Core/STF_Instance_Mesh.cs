@@ -14,6 +14,16 @@ namespace com.squirrelbite.stf_unity.modules
 		public STF_Mesh Mesh;
 		public GameObject ArmatureInstance;
 		public Renderer UnityMeshInstance;
+
+		public override (string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public override List<string> ConvertPropertyPath(string UnityPath)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 
 	public class STF_Instance_Mesh_Module : ISTF_Module
@@ -63,7 +73,7 @@ namespace com.squirrelbite.stf_unity.modules
 							for(int i = 0; i < ret.Mesh.bones.Count; i++)
 							{
 								var id = ret.Mesh.bones[i];
-								var bone = ret.ArmatureInstance.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(bone => bone.STF_Id == id && bone.STF_Owner == instance.gameObject);
+								var bone = ret.ArmatureInstance.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(bone => bone.STF_Id == id && bone.STF_Owner == instance);
 								bones[i] = bone ? bone.transform : instance.transform;
 							}
 							renderer.bones = bones;

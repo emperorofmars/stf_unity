@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -24,5 +25,8 @@ namespace com.squirrelbite.stf_unity
 			this.name = STFUtil.DetermineName(JsonResource, DefaultName);
 			this.Degraded = (bool)(JsonResource.GetValue("degraded") ?? false);
 		}
+
+		public abstract (string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath);
+		public abstract List<string> ConvertPropertyPath(string UnityPath);
 	}
 }

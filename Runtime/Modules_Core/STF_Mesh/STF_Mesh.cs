@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
@@ -98,5 +97,15 @@ namespace com.squirrelbite.stf_unity.modules
 		[Space]
 		[Header("Vertex Groups")]
 		public List<VertexGroup> vertex_groups = new();
+
+		public override (string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public override List<string> ConvertPropertyPath(string UnityPath)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

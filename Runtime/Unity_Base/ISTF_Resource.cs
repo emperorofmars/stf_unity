@@ -1,5 +1,5 @@
 
-using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace com.squirrelbite.stf_unity
 {
@@ -12,5 +12,9 @@ namespace com.squirrelbite.stf_unity
 		string STF_Name {get; set;}
 
 		bool Degraded {get; set;}
+
+
+		(string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath);
+		List<string> ConvertPropertyPath(string UnityPath);
 	}
 }

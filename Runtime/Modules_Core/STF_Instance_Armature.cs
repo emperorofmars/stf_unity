@@ -22,6 +22,29 @@ namespace com.squirrelbite.stf_unity.modules
 			public Vector3 Scale = Vector3.one;
 		}
 		public List<Pose> Poses = new();
+
+
+		public override (string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath)
+		{
+			if(STFPath.Count > 1)
+			{
+				var nodeId = STFPath[0];
+				var target = this.gameObject.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(c => c.STF_Owner == this && c.STF_Id == nodeId);
+				if(target)
+				{
+					var ret = UnityUtil.getPath(this.transform, target.transform, true);
+
+					(string retRelativePath, System.Type retType, string retPropName) = target.ConvertPropertyPath(STFPath.GetRange(1, STFPath.Count - 1));
+					return (string.IsNullOrEmpty(retRelativePath) ? ret : ret + "/" + retRelativePath, retType, retPropName);
+				}
+			}
+			return ("", null, null);
+		}
+
+		public override List<string> ConvertPropertyPath(string UnityPath)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 
 	public class STF_Instance_Armature_Module : ISTF_Module
@@ -68,10 +91,9 @@ namespace com.squirrelbite.stf_unity.modules
 				}
 			}
 
-
 			foreach(var bone in instance.GetComponentsInChildren<STF_Bone>())
 			{
-				bone.STF_Owner = go.gameObject;
+				bone.STF_Owner = ret;
 			}
 			for(var child_index = 0; child_index < instance.transform.childCount; child_index++)
 			{
