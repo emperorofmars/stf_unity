@@ -131,7 +131,7 @@ namespace com.squirrelbite.stf_unity.modules
 				foreach(var stfKeyframe in track.keyframes)
 				{
 					curve.AddKey(new Keyframe {
-						time = stfKeyframe.time,
+						time = stfKeyframe.time / STFAnimation.fps,
 						value = stfKeyframe.value,
 						inTangent = stfKeyframe.in_tangent.x < 0 ? -stfKeyframe.in_tangent.y * (1 / -stfKeyframe.in_tangent.x) : 0,
 						inWeight = stfKeyframe.in_tangent.magnitude / tangentWeightNormalizeFactor,
