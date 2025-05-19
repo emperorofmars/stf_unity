@@ -17,7 +17,16 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public override (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
 		{
-			throw new System.NotImplementedException();
+			var convert = new System.Func<List<float>, List<float>>(Values => {
+				Values[0] *= 100;
+				return Values;
+			});
+
+			if(STFPath.Count == 3 && STFPath[0] == "blendshape" && STFPath[2] == "value")
+			{
+				return ("", typeof(SkinnedMeshRenderer), new() {"blendShape." + STFPath[1]}, convert);
+			}
+			else return ("", null, null, null);
 		}
 
 		public override List<string> ConvertPropertyPath(string UnityPath)
