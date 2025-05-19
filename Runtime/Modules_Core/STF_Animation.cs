@@ -161,8 +161,8 @@ namespace com.squirrelbite.stf_unity.modules
 
 					foreach(var stfKeyframe in track.keyframes)
 					{
-						var originalValues = new List<float>();
-						foreach(var originalValue in stfKeyframe.values) originalValues.Add(originalValue.value);
+						var originalValues = new List<float>(new float[PropertyNames.Count]);
+						for(int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++) originalValues[curveIndex] = stfKeyframe.values[curveIndex] != null ? stfKeyframe.values[curveIndex].value : 0;
 						var values = ConvertValueFunc != null ? ConvertValueFunc(originalValues) : originalValues;
 
 						for(int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
