@@ -167,14 +167,15 @@ namespace com.squirrelbite.stf_unity.modules
 
 						for(int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
 						{
-							curves[curveIndex].AddKey(new Keyframe {
-								time = stfKeyframe.frame / STFAnimation.fps,
-								value = values[curveIndex],
-								inTangent = stfKeyframe.values[curveIndex].in_tangent.x < 0 ? -stfKeyframe.values[curveIndex].in_tangent.y * (1 / -stfKeyframe.values[curveIndex].in_tangent.x) : 0,
-								inWeight = stfKeyframe.values[curveIndex].in_tangent.magnitude / tangentWeightNormalizeFactor,
-								outTangent = stfKeyframe.values[curveIndex].out_tangent.x < 0 ? -stfKeyframe.values[curveIndex].out_tangent.y * (1 / stfKeyframe.values[curveIndex].out_tangent.x) : 0,
-								outWeight = stfKeyframe.values[curveIndex].out_tangent.magnitude / tangentWeightNormalizeFactor,
-							});
+							if(stfKeyframe.values[curveIndex] != null)
+								curves[curveIndex].AddKey(new Keyframe {
+									time = stfKeyframe.frame / STFAnimation.fps,
+									value = values[curveIndex],
+									inTangent = stfKeyframe.values[curveIndex].in_tangent.x < 0 ? -stfKeyframe.values[curveIndex].in_tangent.y * (1 / -stfKeyframe.values[curveIndex].in_tangent.x) : 0,
+									inWeight = stfKeyframe.values[curveIndex].in_tangent.magnitude / tangentWeightNormalizeFactor,
+									outTangent = stfKeyframe.values[curveIndex].out_tangent.x < 0 ? -stfKeyframe.values[curveIndex].out_tangent.y * (1 / stfKeyframe.values[curveIndex].out_tangent.x) : 0,
+									outWeight = stfKeyframe.values[curveIndex].out_tangent.magnitude / tangentWeightNormalizeFactor,
+								});
 						}
 					}
 
