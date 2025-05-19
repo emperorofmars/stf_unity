@@ -26,7 +26,7 @@ namespace com.squirrelbite.stf_unity
 			this.Degraded = (bool)(JsonResource.GetValue("degraded") ?? false);
 		}
 
-		public abstract (string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath);
+		public abstract (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath);
 		public abstract List<string> ConvertPropertyPath(string UnityPath);
 	}
 }

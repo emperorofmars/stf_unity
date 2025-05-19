@@ -1,6 +1,8 @@
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -21,20 +23,34 @@ namespace com.squirrelbite.stf_unity
 			if(ContextObject is STF_MonoBehaviour) this.STF_Owner = ContextObject as STF_MonoBehaviour;
 		}
 
-		public override (string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath)
+		public override (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
 		{
-			if(STFPath.Count > 1)
+			var convert = new System.Func<List<float>, List<float>>(Values => {
+				if(STFPath[0] == "t")
+				{
+					var ret = this.transform.localPosition + new Vector3(-Values[0], Values[1], Values[2]);
+					return new () {ret.x, ret.y, ret.z};
+				}
+				else if(STFPath[0] == "r")
+				{
+					var ret = this.transform.localRotation * new Quaternion(Values[0], -Values[1], -Values[2], Values[3]);
+					return new () {ret.x, ret.y, ret.z, ret.w};
+				}
+				else return Values;
+			});
+
+			if(STFPath.Count > 0)
 			{
-				if(STFPath[0] == "t") return ("", typeof(Transform), "m_LocalPosition." + STFPath[1]);
-				else if(STFPath[0] == "r") return ("", typeof(Transform), "m_LocalRotation." + STFPath[1]);
-				else if(STFPath[0] == "s") return ("", typeof(Transform), "m_LocalScale." + STFPath[1]);
+				if(STFPath[0] == "t") return ("", typeof(Transform), new(){"m_LocalPosition.x", "m_LocalPosition.y", "m_LocalPosition.z"}, convert);
+				else if(STFPath[0] == "r") return ("", typeof(Transform), new(){"m_LocalRotation.x", "m_LocalRotation.y", "m_LocalRotation.z", "m_LocalRotation.w"}, convert);
+				else if(STFPath[0] == "s") return ("", typeof(Transform), new(){"m_LocalScale.x", "m_LocalScale.y", "m_LocalScale.z"}, convert);
 				else if(STFPath[0] == "instance")
 				{
 					var instance = this.gameObject.GetComponent<STF_InstanceResource>();
 					if(instance)
 					{
-						(string retRelativePath, System.Type retType, string retPropName) = instance.ConvertPropertyPath(STFPath.GetRange(1, STFPath.Count - 1));
-						return (retRelativePath, retType, retPropName);
+						(string retRelativePath, System.Type retType, List<string> retPropNames, System.Func<List<float>, List<float>> convertValueFunc) = instance.ConvertPropertyPath(STFPath.GetRange(1, STFPath.Count - 1));
+						return (retRelativePath, retType, retPropNames, convertValueFunc);
 					}
 				}
 				else if(STFPath[0] == "component")
@@ -42,12 +58,12 @@ namespace com.squirrelbite.stf_unity
 					var component = this.gameObject.GetComponents<STF_MonoBehaviour>().FirstOrDefault(c => c.STF_Owner == this && c.STF_Id == STFPath[1]);
 					if(component)
 					{
-						(string retRelativePath, System.Type retType, string retPropName) = component.ConvertPropertyPath(STFPath.GetRange(2, STFPath.Count - 2));
-						return (retRelativePath, retType, retPropName);
+						(string retRelativePath, System.Type retType, List<string> retPropNames, System.Func<List<float>, List<float>> convertValueFunc) = component.ConvertPropertyPath(STFPath.GetRange(2, STFPath.Count - 2));
+						return (retRelativePath, retType, retPropNames, convertValueFunc);
 					}
 				}
 			}
-			return ("", null, null);
+			return ("", null, null, null);
 		}
 
 		public override List<string> ConvertPropertyPath(string UnityPath)

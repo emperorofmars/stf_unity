@@ -30,7 +30,7 @@ namespace com.squirrelbite.stf_unity
 			if(ContextObject is STF_MonoBehaviour) this.STF_Owner = ContextObject as STF_MonoBehaviour;
 		}
 
-		public abstract (string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath);
+		public abstract (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath);
 		public abstract List<string> ConvertPropertyPath(string UnityPath);
 	}
 }

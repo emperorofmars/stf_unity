@@ -9,12 +9,19 @@ namespace com.squirrelbite.stf_unity.modules
 	public class STF_Animation : STF_DataResource
 	{
 		[System.Serializable]
-		public class Keyframe
+		public class KeyframeValue
 		{
-			public float time;
 			public float value;
 			public Vector2 in_tangent;
 			public Vector2 out_tangent;
+		}
+
+		[System.Serializable]
+		public class Keyframe
+		{
+			public float frame;
+			public List<KeyframeValue> values = new();
+
 		}
 
 		[System.Serializable]
@@ -34,7 +41,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public AnimationClip ProcessedUnityAnimation;
 
-		public override (string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath)
+		public override (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
 		{
 			throw new System.NotImplementedException();
 		}
@@ -76,13 +83,27 @@ namespace com.squirrelbite.stf_unity.modules
 				var track = new STF_Animation.Track { target = trackJson["target"].ToObject<List<string>>() };
 				foreach (var keyframeJson in trackJson["keyframes"])
 				{
-					track.keyframes.Add(new STF_Animation.Keyframe {
-						time = (float)keyframeJson[0],
-						value = (float)keyframeJson[1],
-						in_tangent = new Vector2((float)keyframeJson[2], (float)keyframeJson[3]),
-						out_tangent = new Vector2((float)keyframeJson[4], (float)keyframeJson[5]),
-					});
-					if((float)keyframeJson[1] > lastFrame) lastFrame = (float)keyframeJson[1];
+					var keyframe = new STF_Animation.Keyframe {
+						frame = (float)keyframeJson.Value<float>("frame"),
+					};
+					foreach(var keyframeValueJson in keyframeJson["values"])
+					{
+						if(keyframeValueJson != null && keyframeValueJson.Type != JTokenType.Null && keyframeValueJson.Type != JTokenType.None && keyframeValueJson.Type != JTokenType.Undefined)
+						{
+							keyframe.values.Add(new STF_Animation.KeyframeValue {
+								value = (float)keyframeValueJson[0],
+								in_tangent = new Vector2((float)keyframeValueJson[1], (float)keyframeValueJson[2]),
+								out_tangent = new Vector2((float)keyframeValueJson[3], (float)keyframeValueJson[4]),
+							});
+						}
+						else
+						{
+							keyframe.values.Add(null);
+						}
+					}
+
+					track.keyframes.Add(keyframe);
+					if(keyframe.frame > lastFrame) lastFrame = keyframe.frame;
 				}
 				ret.tracks.Add(track);
 			}
@@ -98,8 +119,10 @@ namespace com.squirrelbite.stf_unity.modules
 
 
 			ret.ProcessedUnityAnimation = ConvertToUnityAnimation(Context, ret, (STF_Prefab)ContextObject);
-
-			return (ret, new(){ret, ret.ProcessedUnityAnimation});
+			if(ret.ProcessedUnityAnimation)
+				return (ret, new(){ret, ret.ProcessedUnityAnimation});
+			else
+				return (ret, new(){ret});
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
@@ -126,26 +149,44 @@ namespace com.squirrelbite.stf_unity.modules
 
 			foreach(var track in STFAnimation.tracks)
 			{
-				var curve = new AnimationCurve();
+				(string RelativePath, System.Type CurveType, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) = ContextObject.ConvertPropertyPath(track.target);
 
-				foreach(var stfKeyframe in track.keyframes)
+				if(!string.IsNullOrWhiteSpace(RelativePath) && PropertyNames != null && PropertyNames.Count > 0)
 				{
-					curve.AddKey(new Keyframe {
-						time = stfKeyframe.time / STFAnimation.fps,
-						value = stfKeyframe.value,
-						inTangent = stfKeyframe.in_tangent.x < 0 ? -stfKeyframe.in_tangent.y * (1 / -stfKeyframe.in_tangent.x) : 0,
-						inWeight = stfKeyframe.in_tangent.magnitude / tangentWeightNormalizeFactor,
-						outTangent = stfKeyframe.out_tangent.x < 0 ? -stfKeyframe.out_tangent.y * (1 / stfKeyframe.out_tangent.x) : 0,
-						outWeight = stfKeyframe.out_tangent.magnitude / tangentWeightNormalizeFactor,
-					});
+					var curves = new List<AnimationCurve>();
+					for(int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
+					{
+						curves.Add(new AnimationCurve());
+					}
+
+					foreach(var stfKeyframe in track.keyframes)
+					{
+						var originalValues = new List<float>();
+						foreach(var originalValue in stfKeyframe.values) originalValues.Add(originalValue.value);
+						var values = ConvertValueFunc != null ? ConvertValueFunc(originalValues) : originalValues;
+
+						for(int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
+						{
+							curves[curveIndex].AddKey(new Keyframe {
+								time = stfKeyframe.frame / STFAnimation.fps,
+								value = values[curveIndex],
+								inTangent = stfKeyframe.values[curveIndex].in_tangent.x < 0 ? -stfKeyframe.values[curveIndex].in_tangent.y * (1 / -stfKeyframe.values[curveIndex].in_tangent.x) : 0,
+								inWeight = stfKeyframe.values[curveIndex].in_tangent.magnitude / tangentWeightNormalizeFactor,
+								outTangent = stfKeyframe.values[curveIndex].out_tangent.x < 0 ? -stfKeyframe.values[curveIndex].out_tangent.y * (1 / stfKeyframe.values[curveIndex].out_tangent.x) : 0,
+								outWeight = stfKeyframe.values[curveIndex].out_tangent.magnitude / tangentWeightNormalizeFactor,
+							});
+						}
+					}
+
+					for(int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
+					{
+						//Debug.Log($"Curve: {RelativePath} - {PropertyNames[curveIndex]} ({CurveType})");
+
+						if(RelativePath != null && CurveType != null && PropertyNames != null)
+							ret.SetCurve(RelativePath, CurveType, PropertyNames[curveIndex], curves[curveIndex]);
+					}
 				}
-
-				(string RelativePath, System.Type Type, string PropertyName) = ContextObject.ConvertPropertyPath(track.target);
-
-				//Debug.Log($"Curve: {RelativePath} - {PropertyName} ({Type})");
-
-				if(RelativePath != null && Type != null && PropertyName != null)
-					ret.SetCurve(RelativePath, Type, PropertyName, curve);
+				// Else Warning
 			}
 
 			return ret;

@@ -98,7 +98,7 @@ namespace com.squirrelbite.stf_unity.modules
 		[Header("Vertex Groups")]
 		public List<VertexGroup> vertex_groups = new();
 
-		public override (string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath)
+		public override (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
 		{
 			throw new System.NotImplementedException();
 		}

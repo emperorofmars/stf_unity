@@ -14,7 +14,7 @@ namespace com.squirrelbite.stf_unity
 		bool Degraded {get; set;}
 
 
-		(string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath);
+		(string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath);
 		List<string> ConvertPropertyPath(string UnityPath);
 	}
 }

@@ -24,7 +24,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public List<Pose> Poses = new();
 
 
-		public override (string RelativePath, System.Type Type, string PropertyName) ConvertPropertyPath(List<string> STFPath)
+		public override (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
 		{
 			if(STFPath.Count > 1)
 			{
@@ -34,11 +34,11 @@ namespace com.squirrelbite.stf_unity.modules
 				{
 					var ret = UnityUtil.getPath(this.transform, target.transform, true);
 
-					(string retRelativePath, System.Type retType, string retPropName) = target.ConvertPropertyPath(STFPath.GetRange(1, STFPath.Count - 1));
-					return (string.IsNullOrEmpty(retRelativePath) ? ret : ret + "/" + retRelativePath, retType, retPropName);
+					(string retRelativePath, System.Type retType, List<string> retPropNames, System.Func<List<float>, List<float>> convertValueFunc) = target.ConvertPropertyPath(STFPath.GetRange(1, STFPath.Count - 1));
+					return (string.IsNullOrEmpty(retRelativePath) ? ret : ret + "/" + retRelativePath, retType, retPropNames, convertValueFunc);
 				}
 			}
-			return ("", null, null);
+			return ("", null, null, null);
 		}
 
 		public override List<string> ConvertPropertyPath(string UnityPath)
