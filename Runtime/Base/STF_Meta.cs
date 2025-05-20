@@ -2,7 +2,6 @@
 using System;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
@@ -12,11 +11,13 @@ namespace com.squirrelbite.stf_unity
 		public const uint _DefinitionVersionMajor = 0;
 		public const uint _DefinitionVersionMinor = 0;
 		public const string _Generator = "stf_unity";
+		public const string _GeneratorVersion = "0.0.0";
 
 		public uint DefinitionVersionMajor = _DefinitionVersionMajor;
 		public uint DefinitionVersionMinor = _DefinitionVersionMinor;
 		public string Timestamp = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture.DateTimeFormat.UniversalSortableDateTimePattern);
 		public string Generator = _Generator;
+		public string GeneratorVersion = _GeneratorVersion;
 		public string Root;
 		public double MetricMultiplier = 1;
 		public AssetInfo STFAssetInfo = new();
@@ -30,6 +31,7 @@ namespace com.squirrelbite.stf_unity
 			DefinitionVersionMinor = (uint)JsonMeta.GetValue("version_minor");
 			Timestamp = (string)JsonMeta.GetValue("timestamp");
 			Generator = (string)JsonMeta.GetValue("generator");
+			GeneratorVersion = (string)JsonMeta.GetValue("generator_version");
 			Root = (string)JsonMeta.GetValue("root");
 			MetricMultiplier = (double)JsonMeta.GetValue("metric_multiplier");
 
@@ -44,6 +46,7 @@ namespace com.squirrelbite.stf_unity
 				{"version_minor", _DefinitionVersionMinor},
 				{"timestamp", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture.DateTimeFormat.UniversalSortableDateTimePattern)},
 				{"generator", _Generator},
+				{"generator_version", _GeneratorVersion},
 				{"root", Root},
 				{"metric_multiplier", MetricMultiplier},
 				{"asset_info", STFAssetInfo.ToJson()},
