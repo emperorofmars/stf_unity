@@ -1,7 +1,4 @@
 
-using System;
-using Newtonsoft.Json.Linq;
-
 namespace com.squirrelbite.stf_unity
 {
 	public abstract class STF_NodeComponentResource: STF_MonoBehaviour

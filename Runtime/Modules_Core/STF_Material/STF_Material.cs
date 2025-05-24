@@ -1,8 +1,8 @@
 
 using System;
 using System.Collections.Generic;
+using com.squirrelbite.stf_unity.modules.stf_material;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules

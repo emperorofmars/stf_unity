@@ -7,7 +7,6 @@ using com.squirrelbite.stf_unity.modules;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEngine;
-using static com.squirrelbite.stf_unity.STF_Meta;
 
 namespace com.squirrelbite.stf_unity.tools
 {

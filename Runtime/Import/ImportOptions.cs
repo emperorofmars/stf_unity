@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {

@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace com.squirrelbite.stf_unity.modules
+namespace com.squirrelbite.stf_unity.modules.stf_material
 {
 	[System.Serializable]
 	public class STF_MaterialProperty
