@@ -34,7 +34,9 @@ namespace com.squirrelbite.stf_unity.tools
 			ctx.AddObjectToAsset("main", import);
 			if(import.Root)
 			{
-				import.Root.AddComponent<STF_Meta_Info>().Meta = state.Meta;
+				if(AuthoringImport)
+					import.Root.AddComponent<STF_Meta_Info>().Meta = state.Meta;
+
 				ctx.SetMainObject(import.Root);
 
 				if(!AuthoringImport)
