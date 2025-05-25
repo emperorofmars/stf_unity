@@ -15,6 +15,6 @@ namespace com.squirrelbite.stf_unity
 
 
 		(string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath);
-		List<string> ConvertPropertyPath(string UnityPath);
+		List<string> ConvertPropertyPath(string UnityPath); // TODO improve this
 	}
 }
