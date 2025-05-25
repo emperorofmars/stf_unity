@@ -12,7 +12,7 @@ namespace com.squirrelbite.stf_unity.tools
 		public override void OnImportAsset(AssetImportContext ctx)
 		{
 			var file = new STF_File(ctx.assetPath);
-			var state = new ImportState(file, STF_Registry.Modules);
+			var state = new ImportState(file, STF_Module_Registry.Modules);
 			var rootContext = new ImportContext(state);
 
 			rootContext.ImportResource(state.RootID, "data");

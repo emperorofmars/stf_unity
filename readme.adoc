@@ -18,6 +18,8 @@ Intended for (not only) game development use-cases.
 
 **https://github.com/emperorofmars/stf_documentation[Read the Documentation!]**
 
+Eventually the `AVA` directory should move to its own repository with this one as a dependency.
+
 == License
 All source-code in this repository, except when noted in individual files and/or directories, is licensed under either:
 

@@ -4,7 +4,7 @@ using com.squirrelbite.stf_unity.modules;
 
 namespace com.squirrelbite.stf_unity
 {
-	public static class STF_Registry
+	public static class STF_Module_Registry
 	{
 		public static readonly List<ISTF_Module> DefaultModules = new() {
 			new STF_Prefab_Module(),
