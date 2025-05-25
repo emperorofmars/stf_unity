@@ -8,7 +8,7 @@ namespace com.squirrelbite.stf_unity
 {
 	public class ImportState
 	{
-		public readonly List<ISTF_Module> Modules = new();
+		public readonly Dictionary<string, ISTF_Module> Modules = new();
 		public STF_File File;
 		public STF_Meta Meta;
 		public JObject JsonResources;
@@ -27,7 +27,7 @@ namespace com.squirrelbite.stf_unity
 		public List<Task> Tasks = new();
 		public readonly List<Transform> Trash = new();
 
-		public ImportState(STF_File File, List<ISTF_Module> Modules, ImportOptions ImportOptions = null)
+		public ImportState(STF_File File, Dictionary<string, ISTF_Module> Modules, ImportOptions ImportOptions = null)
 		{
 			this.File = File;
 			this.Modules = Modules;
@@ -51,14 +51,10 @@ namespace com.squirrelbite.stf_unity
 		public ISTF_Module DetermineModule(JObject JsonResource, string ExpectedKind)
 		{
 			var type = (string)JsonResource.GetValue("type");
-			foreach(var module in Modules)
-			{
-				if(module.STF_Type == type)
-				{
-					return module;
-				}
-			}
-			return null;
+			if(Modules.ContainsKey(type))
+				return Modules[type];
+			else
+				return null;
 		}
 
 		public object GetImportedResource(string STF_Id)
