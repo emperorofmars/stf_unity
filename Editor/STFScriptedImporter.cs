@@ -9,6 +9,9 @@ namespace com.squirrelbite.stf_unity.tools
 	[ScriptedImporter(1, new string[] {"stf"})]
 	public class STFScriptedImporter : ScriptedImporter
 	{
+		public bool AuthoringImport = false;
+		public string SelectedApplication;
+
 		public override void OnImportAsset(AssetImportContext ctx)
 		{
 			var file = new STF_File(ctx.assetPath);

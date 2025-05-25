@@ -13,6 +13,36 @@ namespace com.squirrelbite.stf_unity.tools
 		{
 			var importer = (STFScriptedImporter)target;
 
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.PrefixLabel("Authoring Import");
+			var authoringImport = EditorGUILayout.Toggle(importer.AuthoringImport);
+			EditorGUILayout.EndHorizontal();
+			if(authoringImport != importer.AuthoringImport)
+			{
+				importer.AuthoringImport = authoringImport;
+				EditorUtility.SetDirty(importer);
+			}
+
+			if(!importer.AuthoringImport)
+			{
+				var availableContexts = STF_Processor_Registry.GetAvaliableContexts();
+
+				int selectedIndex = availableContexts.FindIndex(c => c == importer.SelectedApplication);
+
+				EditorGUILayout.BeginHorizontal();
+				EditorGUILayout.PrefixLabel("Select Import Context");
+				var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableContexts.ToArray());
+				EditorGUILayout.EndHorizontal();
+
+				if(newSelectedIndex != selectedIndex && newSelectedIndex >= 0 && newSelectedIndex < availableContexts.Count)
+				{
+					importer.SelectedApplication = availableContexts[newSelectedIndex];
+					EditorUtility.SetDirty(importer);
+				}
+			}
+
+			drawHLine();
+
 			if(AssetDatabase.LoadAssetAtPath<STF_Import>(importer.assetPath) is var stfImport)
 			{
 				renderAsset(stfImport);
