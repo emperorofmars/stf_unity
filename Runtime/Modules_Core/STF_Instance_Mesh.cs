@@ -59,6 +59,11 @@ namespace com.squirrelbite.stf_unity.modules
 			go.Instance = ret;
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STF Instance Mesh");
 
+			if(JsonResource.ContainsKey("material_slots"))
+			{
+				// TODO
+			}
+
 			Context.AddTask(new Task(() => {
 				if(JsonResource.ContainsKey("armature_instance"))
 				{

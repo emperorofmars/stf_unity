@@ -24,6 +24,8 @@ namespace com.squirrelbite.stf_unity.modules
 		public List<ShaderTarget> ShaderTargets = new();
 		public List<STF_MaterialProperty> Properties = new();
 
+		public Material ProcessedUnityMaterial;
+
 		public override (string RelativePath, Type Type, List<string> PropertyNames, Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
 		{
 			throw new NotImplementedException();
@@ -112,7 +114,12 @@ namespace com.squirrelbite.stf_unity.modules
 				ret.Properties.Add(prop);
 			}
 
-			return (ret, new(){ret});
+			(var ConvertedMaterial, var GeneratedObjects) = ConvertToUnityMaterial(Context, ret);
+			ret.ProcessedUnityMaterial = ConvertedMaterial;
+			var ApplicationObjects = new List<object>() {ret, ConvertedMaterial};
+			if(GeneratedObjects != null) ApplicationObjects.AddRange(GeneratedObjects);
+
+			return (ret, ApplicationObjects);
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
@@ -124,6 +131,12 @@ namespace com.squirrelbite.stf_unity.modules
 			};
 
 			return (ret, MaterialObject.STF_Id);
+		}
+
+		private (Material ConvertedMaterial, List<UnityEngine.Object> GeneratedObjects) ConvertToUnityMaterial(ImportContext Context, STF_Material STFMaterial)
+		{
+			return STF_Material_Converter_Registry.Converters["Standard"].ConvertToUnityMaterial(STFMaterial);
+			//return (null, null);
 		}
 	}
 }
