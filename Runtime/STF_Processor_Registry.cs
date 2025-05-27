@@ -7,7 +7,19 @@ namespace com.squirrelbite.stf_unity
 {
 	public static class STF_Processor_Registry
 	{
-		public static readonly Dictionary<string, Dictionary<System.Type, ISTF_Processor>> DefaultProcessors = new();
+		public static readonly Dictionary<string, string> ContextDisplayNames = new()
+		{
+			{"default", "Unity Default"},
+		};
+
+		public static readonly Dictionary<string, Dictionary<System.Type, ISTF_Processor>> DefaultProcessors = new()
+		{
+			{
+				"default", new ()
+				{
+				}
+			},
+		};
 
 		private static readonly Dictionary<string, Dictionary<System.Type, ISTF_Processor>> RegisteredProcessors = new();
 
@@ -23,13 +35,9 @@ namespace com.squirrelbite.stf_unity
 		{
 			var ret = new Dictionary<System.Type, ISTF_Processor>(RegisteredProcessors.ContainsKey(Context) ? RegisteredProcessors[Context] : null);
 			if(DefaultProcessors.ContainsKey(Context))
-			{
 				foreach(var processor in DefaultProcessors[Context])
-				{
 					if(!ret.ContainsKey(processor.Key))
 						ret.Add(processor.Key, processor.Value);
-				}
-			}
 			return ret;
 		}
 
@@ -43,6 +51,23 @@ namespace com.squirrelbite.stf_unity
 				if(!ret.Contains(entry.Key))
 					ret.Add(entry.Key);
 			return ret.ToList();
+		}
+
+		public static List<(string, string)> GetAvaliableContextDisplayNames()
+		{
+			var contexts = new HashSet<string>();
+			foreach(var entry in RegisteredProcessors)
+				if(!contexts.Contains(entry.Key))
+					contexts.Add(entry.Key);
+			foreach(var entry in DefaultProcessors)
+				if(!contexts.Contains(entry.Key))
+					contexts.Add(entry.Key);
+
+			var ret = new List<(string, string)>();
+			foreach (var context in contexts)
+				ret.Add((context, ContextDisplayNames.ContainsKey(context) ? ContextDisplayNames[context] : context));
+
+			return ret;
 		}
 	}
 }

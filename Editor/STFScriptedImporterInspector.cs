@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,18 +26,18 @@ namespace com.squirrelbite.stf_unity.tools
 
 			if(!importer.AuthoringImport)
 			{
-				var availableContexts = STF_Processor_Registry.GetAvaliableContexts();
+				var availableContexts = STF_Processor_Registry.GetAvaliableContextDisplayNames();
 
-				int selectedIndex = availableContexts.FindIndex(c => c == importer.SelectedApplication);
+				int selectedIndex = availableContexts.FindIndex(c => c.Item1 == importer.SelectedApplication);
 
 				EditorGUILayout.BeginHorizontal();
 				EditorGUILayout.PrefixLabel("Select Import Context");
-				var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableContexts.ToArray());
+				var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableContexts.Select(p => p.Item2).ToArray());
 				EditorGUILayout.EndHorizontal();
 
-				if(newSelectedIndex != selectedIndex && newSelectedIndex >= 0 && newSelectedIndex < availableContexts.Count)
+				if (newSelectedIndex != selectedIndex && newSelectedIndex >= 0 && newSelectedIndex < availableContexts.Count)
 				{
-					importer.SelectedApplication = availableContexts[newSelectedIndex];
+					importer.SelectedApplication = availableContexts[newSelectedIndex].Item1;
 					EditorUtility.SetDirty(importer);
 				}
 			}
