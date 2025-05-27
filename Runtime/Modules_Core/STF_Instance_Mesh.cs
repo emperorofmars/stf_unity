@@ -14,6 +14,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public STF_Mesh Mesh;
 		public List<STF_Material> Materials = new();
+		public List<(bool, float)> BlendshapeValues = new();
 		public GameObject ArmatureInstance;
 		public Renderer UnityMeshInstance;
 
@@ -73,6 +74,12 @@ namespace com.squirrelbite.stf_unity.modules
 					}
 				}
 			}
+			if (JsonResource.ContainsKey("blendshape_values"))
+				foreach (var value in JsonResource["blendshape_values"])
+					if (value.Type != JTokenType.Null)
+						ret.BlendshapeValues.Add((true, (float)value));
+					else
+						ret.BlendshapeValues.Add((false, 0));
 
 			Context.AddTask(new Task(() => {
 				if(JsonResource.ContainsKey("armature_instance"))
@@ -105,6 +112,12 @@ namespace com.squirrelbite.stf_unity.modules
 							smr.bones = bones;
 						}
 
+						for (int blenshapeIdx = 0; blenshapeIdx < ret.Mesh.blendshapes.Count; blenshapeIdx++)
+						{
+							smr.SetBlendShapeWeight(blenshapeIdx, ret.Mesh.blendshapes[blenshapeIdx].default_value);
+							if(ret.BlendshapeValues[blenshapeIdx].Item1) smr.SetBlendShapeWeight(blenshapeIdx, ret.BlendshapeValues[blenshapeIdx].Item2);
+						}
+
 						ret.UnityMeshInstance = smr;
 					}
 					else
@@ -130,8 +143,6 @@ namespace com.squirrelbite.stf_unity.modules
 					renderer.materials = rendererMaterials;
 				}
 			}));
-
-			// TODO blendshape values
 
 			return (ret, null);
 		}
