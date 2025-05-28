@@ -67,7 +67,7 @@ namespace com.squirrelbite.stf_unity.modules.stf_material.util
 					var input = new TextureInput();
 					if(channelSource.Source is ImageValue value)
 					{
-						input.texture = value.Image.ProcessedUnityTexture;
+						input.texture = STFUtil.GetProcessed<Texture2D>(value.Image);
 						input.SetChannelInput(ChannelIdxToEnum(i), new TextureChannelInput {
 							enabled = true,
 							invert = channelSource.Invert,

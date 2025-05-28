@@ -14,8 +14,6 @@ namespace com.squirrelbite.stf_unity.modules
 		public string format;
 		public STF_Buffer buffer;
 
-		public Texture2D ProcessedUnityTexture;
-
 		public override (string RelativePath, Type Type, List<string> PropertyNames, Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
 		{
 			throw new NotImplementedException();
@@ -52,9 +50,7 @@ namespace com.squirrelbite.stf_unity.modules
 			if(JsonResource.ContainsKey("buffer"))
 				ret.buffer = Context.ImportBuffer(JsonResource.Value<string>("buffer"));
 
-			ret.ProcessedUnityTexture = ConvertToUnityTexture(ret);
-
-			return (ret, new(){ret, ret.ProcessedUnityTexture});
+			return (ret, new(){ret});
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
@@ -66,15 +62,6 @@ namespace com.squirrelbite.stf_unity.modules
 			};
 
 			return (ret, ImageObject.STF_Id);
-		}
-
-		private Texture2D ConvertToUnityTexture(STF_Image Image)
-		{
-			// TODO vastly improve this, use information from an STF_Texture component if present on this image
-			var ret = new Texture2D(8, 8);
-			ret.name = "Processed " + Image.STF_Name;
-			ret.LoadImage(Image.buffer.Data);
-			return ret;
 		}
 	}
 }

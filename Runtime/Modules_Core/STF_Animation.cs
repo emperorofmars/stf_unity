@@ -39,6 +39,8 @@ namespace com.squirrelbite.stf_unity.modules
 		public float range_end = 1;
 		public List<Track> tracks = new();
 
+		public STF_Prefab AnimationRoot;
+
 		public AnimationClip ProcessedUnityAnimation;
 
 		public override (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
@@ -75,6 +77,8 @@ namespace com.squirrelbite.stf_unity.modules
 
 			ret.fps = JsonResource.Value<float>("fps");
 			ret.loop = JsonResource.Value<bool>("loop");
+
+			ret.AnimationRoot = ContextObject is STF_Prefab ? ContextObject as STF_Prefab : null;
 
 			float lastFrame = 1;
 
@@ -117,12 +121,7 @@ namespace com.squirrelbite.stf_unity.modules
 				ret.range_end = lastFrame;
 			}
 
-
-			ret.ProcessedUnityAnimation = ConvertToUnityAnimation(Context, ret, (STF_Prefab)ContextObject);
-			if(ret.ProcessedUnityAnimation)
-				return (ret, new(){ret, ret.ProcessedUnityAnimation});
-			else
-				return (ret, new(){ret});
+			return (ret, new() { ret });
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
@@ -134,63 +133,6 @@ namespace com.squirrelbite.stf_unity.modules
 			};
 
 			return (ret, Animation.STF_Id);
-		}
-
-		public AnimationClip ConvertToUnityAnimation(ImportContext Context, STF_Animation STFAnimation, STF_Prefab ContextObject)
-		{
-			var ret = new AnimationClip {
-				name = STFAnimation.STF_Name,
-				frameRate = STFAnimation.fps,
-				wrapMode = STFAnimation.loop ? WrapMode.Loop : WrapMode.Default
-			};
-
-			// TODO figure out if this is actually how it works
-			var tangentWeightNormalizeFactor = Math.Max(1, STFAnimation.range_end - STFAnimation.range_start);
-
-			foreach(var track in STFAnimation.tracks)
-			{
-				(string RelativePath, System.Type CurveType, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) = ContextObject.ConvertPropertyPath(track.target);
-
-				if(!string.IsNullOrWhiteSpace(RelativePath) && PropertyNames != null && PropertyNames.Count > 0)
-				{
-					var curves = new List<AnimationCurve>();
-					for(int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
-					{
-						curves.Add(new AnimationCurve());
-					}
-
-					foreach(var stfKeyframe in track.keyframes)
-					{
-						var originalValues = new List<float>(new float[PropertyNames.Count]);
-						for(int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++) originalValues[curveIndex] = stfKeyframe.values[curveIndex] != null ? stfKeyframe.values[curveIndex].value : 0;
-						var values = ConvertValueFunc != null ? ConvertValueFunc(originalValues) : originalValues;
-
-						for(int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
-						{
-							if(stfKeyframe.values[curveIndex] != null)
-								curves[curveIndex].AddKey(new Keyframe {
-									time = stfKeyframe.frame / STFAnimation.fps,
-									value = values[curveIndex],
-									inTangent = stfKeyframe.values[curveIndex].in_tangent.x < 0 ? -stfKeyframe.values[curveIndex].in_tangent.y * (1 / -stfKeyframe.values[curveIndex].in_tangent.x) : 0,
-									inWeight = stfKeyframe.values[curveIndex].in_tangent.magnitude / tangentWeightNormalizeFactor,
-									outTangent = stfKeyframe.values[curveIndex].out_tangent.x < 0 ? -stfKeyframe.values[curveIndex].out_tangent.y * (1 / stfKeyframe.values[curveIndex].out_tangent.x) : 0,
-									outWeight = stfKeyframe.values[curveIndex].out_tangent.magnitude / tangentWeightNormalizeFactor,
-								});
-						}
-					}
-
-					for(int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
-					{
-						//Debug.Log($"Curve: {RelativePath} - {PropertyNames[curveIndex]} ({CurveType})");
-
-						if(RelativePath != null && CurveType != null && PropertyNames != null)
-							ret.SetCurve(RelativePath, CurveType, PropertyNames[curveIndex], curves[curveIndex]);
-					}
-				}
-				// Else Warning
-			}
-
-			return ret;
 		}
 	}
 }

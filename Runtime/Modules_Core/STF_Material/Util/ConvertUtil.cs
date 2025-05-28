@@ -30,9 +30,9 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 		public static bool SetTextureProperty(STF_Material STFMaterial, Material UnityMaterial, string PropertyType, int Index, string UnityPropertyName)
 		{
 			var value = FindPropertyValue(STFMaterial, PropertyType, Index, "image");
-			if(value != null && ((ImageValue)value).Image != null && ((ImageValue)value).Image.ProcessedUnityTexture != null)
+			if(value != null && ((ImageValue)value).Image != null && STFUtil.GetProcessed<Texture2D>(((ImageValue)value).Image) != null)
 			{
-				UnityMaterial.SetTexture(UnityPropertyName, ((ImageValue)value).Image.ProcessedUnityTexture);
+				UnityMaterial.SetTexture(UnityPropertyName, STFUtil.GetProcessed<Texture2D>(((ImageValue)value).Image));
 				return true;
 			}
 			return false;
