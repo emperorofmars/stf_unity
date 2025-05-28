@@ -28,9 +28,9 @@ namespace com.squirrelbite.stf_unity
 		public static void RegisterProcessor(string Context, ISTF_Processor Processor)
 		{
 			if(!RegisteredProcessors.ContainsKey(Context))
-				RegisteredProcessors[Context].Add(Processor.TargetType, Processor);
-			else if(!RegisteredProcessors[Context].ContainsKey(Processor.TargetType) || RegisteredProcessors[Context][Processor.TargetType].Priority <= Processor.Priority)
 				RegisteredProcessors.Add(Context, new Dictionary<System.Type, ISTF_Processor> {{Processor.TargetType, Processor}});
+			else if(!RegisteredProcessors[Context].ContainsKey(Processor.TargetType) || RegisteredProcessors[Context][Processor.TargetType].Priority <= Processor.Priority)
+				RegisteredProcessors[Context].Add(Processor.TargetType, Processor);
 		}
 
 		public static Dictionary<System.Type, ISTF_Processor> GetProcessors(string Context)

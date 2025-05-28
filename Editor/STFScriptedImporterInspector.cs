@@ -25,22 +25,19 @@ namespace com.squirrelbite.stf_unity.tools
 				EditorUtility.SetDirty(importer);
 			}
 
-			if(!importer.ImportConfig.AuthoringImport)
+			var availableContexts = STF_Processor_Registry.GetAvaliableContextDisplayNames();
+
+			int selectedIndex = availableContexts.FindIndex(c => c.Item1 == importer.ImportConfig.SelectedApplication);
+
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.PrefixLabel("Select Import Context");
+			var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableContexts.Select(p => p.Item2).ToArray());
+			EditorGUILayout.EndHorizontal();
+
+			if (newSelectedIndex != selectedIndex && newSelectedIndex >= 0 && newSelectedIndex < availableContexts.Count)
 			{
-				var availableContexts = STF_Processor_Registry.GetAvaliableContextDisplayNames();
-
-				int selectedIndex = availableContexts.FindIndex(c => c.Item1 == importer.ImportConfig.SelectedApplication);
-
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.PrefixLabel("Select Import Context");
-				var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableContexts.Select(p => p.Item2).ToArray());
-				EditorGUILayout.EndHorizontal();
-
-				if (newSelectedIndex != selectedIndex && newSelectedIndex >= 0 && newSelectedIndex < availableContexts.Count)
-				{
-					importer.ImportConfig.SelectedApplication = availableContexts[newSelectedIndex].Item1;
-					EditorUtility.SetDirty(importer);
-				}
+				importer.ImportConfig.SelectedApplication = availableContexts[newSelectedIndex].Item1;
+				EditorUtility.SetDirty(importer);
 			}
 
 			drawImportConfig(importer);

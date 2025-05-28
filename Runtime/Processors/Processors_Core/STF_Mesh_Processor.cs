@@ -16,8 +16,6 @@ namespace com.squirrelbite.stf_unity.processors
 
 		public List<UnityEngine.Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
 		{
-			Debug.Log("WOOOOOOOOO");
-
 			var STFMesh = STFResource as STF_Mesh;
 			var ret = new Mesh { name = "Processed " + STFMesh._STF_Name };
 

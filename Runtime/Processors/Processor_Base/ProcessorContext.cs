@@ -16,8 +16,6 @@ namespace com.squirrelbite.stf_unity.processors
 			this.State = State;
 			Run();
 		}
-		
-		
 
 		public ImportOptions ImportConfig => State.State.ImportConfig;
 
@@ -25,6 +23,8 @@ namespace com.squirrelbite.stf_unity.processors
 		{
 			State.Report(Report);
 		}
+
+		public GameObject Root => State.Root;
 
 		public void AddTask(Task Task) { State.Tasks.Add(Task); }
 		public void AddTrash(Transform Trash) { State.Trash.Add(Trash); }
@@ -58,11 +58,10 @@ namespace com.squirrelbite.stf_unity.processors
 					}));
 				}
 			}
-			Debug.Log("Running");
+			
 			//Execute processor tasks in their defined order
 			foreach (var (order, taskList) in State.ProcessOrderMap.OrderBy(e => e.Key))
 			{
-				Debug.Log(order);
 				foreach (var task in taskList)
 				{
 					task.RunSynchronously();

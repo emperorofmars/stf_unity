@@ -1,0 +1,19 @@
+{
+    "name": "stf_ava_vrchat",
+    "rootNamespace": "namespace com.squirrelbite.stf_unity.ava.vrchat",
+    "references": [
+        "GUID:8a88ca90357a74942a1113aeb6ad32c6",
+        "GUID:3b9f661eb63cdd24eac0fa805a1e17aa",
+        "GUID:915b0571b66d8f545801d82ff1007498",
+        "GUID:5718fb738711cd34ea54e9553040911d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
