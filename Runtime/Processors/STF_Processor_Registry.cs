@@ -29,7 +29,7 @@ namespace com.squirrelbite.stf_unity
 		{
 			if(!RegisteredProcessors.ContainsKey(Context))
 				RegisteredProcessors[Context].Add(Processor.TargetType, Processor);
-			else
+			else if(!RegisteredProcessors[Context].ContainsKey(Processor.TargetType) || RegisteredProcessors[Context][Processor.TargetType].Priority <= Processor.Priority)
 				RegisteredProcessors.Add(Context, new Dictionary<System.Type, ISTF_Processor> {{Processor.TargetType, Processor}});
 		}
 
@@ -41,11 +41,6 @@ namespace com.squirrelbite.stf_unity
 					if(!ret.ContainsKey(processor.TargetType))
 						ret.Add(processor.TargetType, processor);
 			return ret;
-		}
-
-		public static HashSet<System.Type> GetIgnoreList(string Context)
-		{
-			return new HashSet<System.Type>(); // TODO
 		}
 
 		public static List<string> GetAvaliableContexts()

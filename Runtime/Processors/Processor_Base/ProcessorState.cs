@@ -8,7 +8,6 @@ namespace com.squirrelbite.stf_unity.processors
 	{
 		public readonly ImportState State;
 		public readonly Dictionary<System.Type, ISTF_Processor> Processors;
-		public readonly HashSet<System.Type> IgnoreList;
 		public readonly GameObject Root;
 
 		public readonly Dictionary<string, string> OverriddenResources = new();
@@ -28,7 +27,6 @@ namespace com.squirrelbite.stf_unity.processors
 			this.State = State;
 			this.Root = Root;
 			this.Processors = Processors ?? STF_Processor_Registry.GetProcessors(State.ImportConfig.SelectedApplication);
-			this.IgnoreList = IgnoreList ?? STF_Processor_Registry.GetIgnoreList(State.ImportConfig.SelectedApplication);
 		}
 
 		public ISTF_Processor GetProcessor(ISTF_Resource Resource)
@@ -52,7 +50,6 @@ namespace com.squirrelbite.stf_unity.processors
 		}
 
 		public bool IsOverridden(string Id) { return OverriddenResources.ContainsKey(Id); }
-		public bool IsIgnored(System.Type Type) { return IgnoreList.Contains(Type); }
 
 		public void AddProcessorTask(uint Order, Task Task)
 		{
