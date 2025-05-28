@@ -10,6 +10,7 @@ namespace com.squirrelbite.stf_unity
 	{
 		public bool AbortOnException = false;
 		public bool AuthoringImport = false;
+		public string SelectedApplication = "default";
 
 		[System.Serializable]
 		public class MaterialMapping

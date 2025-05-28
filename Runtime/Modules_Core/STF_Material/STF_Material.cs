@@ -24,8 +24,6 @@ namespace com.squirrelbite.stf_unity.modules
 		public List<ShaderTarget> ShaderTargets = new();
 		public List<STF_MaterialProperty> Properties = new();
 
-		public Material ProcessedUnityMaterial;
-
 		public override (string RelativePath, Type Type, List<string> PropertyNames, Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
 		{
 			throw new NotImplementedException();
@@ -114,12 +112,7 @@ namespace com.squirrelbite.stf_unity.modules
 				ret.Properties.Add(prop);
 			}
 
-			(var ConvertedMaterial, var GeneratedObjects) = ConvertToUnityMaterial(Context, ret);
-			ret.ProcessedUnityMaterial = ConvertedMaterial;
-			var ApplicationObjects = new List<object>() {ret, ConvertedMaterial};
-			if(GeneratedObjects != null) ApplicationObjects.AddRange(GeneratedObjects);
-
-			return (ret, ApplicationObjects);
+			return (ret, new() {ret});
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
@@ -131,28 +124,6 @@ namespace com.squirrelbite.stf_unity.modules
 			};
 
 			return (ret, MaterialObject.STF_Id);
-		}
-
-		private (Material ConvertedMaterial, List<UnityEngine.Object> GeneratedObjects) ConvertToUnityMaterial(ImportContext Context, STF_Material STFMaterial)
-		{
-			var materialMapping = "Standard";
-
-			if (Context.ImportConfig.MaterialMappings.Find(m => m.ID == STFMaterial.STF_Id) is var mapping && mapping != null && !string.IsNullOrWhiteSpace(mapping.TargetShader) && STF_Material_Converter_Registry.Converters.ContainsKey(mapping.TargetShader))
-			{
-				materialMapping = mapping.TargetShader;
-			}
-			else
-			{
-				Context.ImportConfig.MaterialMappings.Add(new()
-				{
-					ID = STFMaterial.STF_Id,
-					MaterialName = STFMaterial.STF_Name,
-					TargetShader = "Standard",
-				});
-			}
-
-			return STF_Material_Converter_Registry.Converters[materialMapping].ConvertToUnityMaterial(STFMaterial);
-			//return (null, null);
 		}
 	}
 }

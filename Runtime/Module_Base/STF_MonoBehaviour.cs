@@ -19,6 +19,9 @@ namespace com.squirrelbite.stf_unity
 		public bool _Degraded = false;
 		public bool Degraded {get => _Degraded; set => _Degraded = value;}
 
+		public readonly List<object> _ProcessedObjects = new();
+		public List<object> ProcessedObjects => _ProcessedObjects;
+
 		public STF_MonoBehaviour STF_Owner;
 
 		public virtual void SetFromJson(JObject JsonResource, string STF_Id, ISTF_Resource ContextObject, string DefaultName = "STF Prefab")

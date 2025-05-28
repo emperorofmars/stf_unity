@@ -9,5 +9,13 @@ namespace com.squirrelbite.stf_unity
 		{
 			return JsonResource.ContainsKey("name") && !string.IsNullOrWhiteSpace((string)JsonResource["name"]) ? (string)JsonResource["name"] : DefaultName;
 		}
+
+		public static T GetProcessed<T>(ISTF_Resource Resource, int Index = 0)
+		{
+			if (Resource?.ProcessedObjects != null && Resource.ProcessedObjects.Count > Index && Resource.ProcessedObjects[Index] is T)
+				return (T)Resource.ProcessedObjects[Index];
+			else
+				return default;
+		}
 	}
 }

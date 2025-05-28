@@ -8,7 +8,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public const string STF_TYPE = "stf.mesh";
 		public override string STF_Type => STF_TYPE;
 
-		public Mesh ProcessedUnityMesh;
+		//public Mesh ProcessedUnityMesh;
 
 		[System.Serializable]
 		public class NamedBuffer

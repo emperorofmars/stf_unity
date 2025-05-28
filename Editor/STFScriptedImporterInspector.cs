@@ -29,7 +29,7 @@ namespace com.squirrelbite.stf_unity.tools
 			{
 				var availableContexts = STF_Processor_Registry.GetAvaliableContextDisplayNames();
 
-				int selectedIndex = availableContexts.FindIndex(c => c.Item1 == importer.SelectedApplication);
+				int selectedIndex = availableContexts.FindIndex(c => c.Item1 == importer.ImportConfig.SelectedApplication);
 
 				EditorGUILayout.BeginHorizontal();
 				EditorGUILayout.PrefixLabel("Select Import Context");
@@ -38,7 +38,7 @@ namespace com.squirrelbite.stf_unity.tools
 
 				if (newSelectedIndex != selectedIndex && newSelectedIndex >= 0 && newSelectedIndex < availableContexts.Count)
 				{
-					importer.SelectedApplication = availableContexts[newSelectedIndex].Item1;
+					importer.ImportConfig.SelectedApplication = availableContexts[newSelectedIndex].Item1;
 					EditorUtility.SetDirty(importer);
 				}
 			}

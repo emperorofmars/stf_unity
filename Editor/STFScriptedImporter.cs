@@ -3,25 +3,18 @@
 
 using UnityEngine;
 using UnityEditor.AssetImporters;
+using com.squirrelbite.stf_unity.processors;
 
 namespace com.squirrelbite.stf_unity.tools
 {
 	[ScriptedImporter(1, new string[] {"stf"})]
 	public class STFScriptedImporter : ScriptedImporter
 	{
-		//public bool AuthoringImport = false;
-		public string SelectedApplication = "default";
-
 		public ImportOptions ImportConfig = new();
 
 		public override void OnImportAsset(AssetImportContext ctx)
 		{
 			var file = new STF_File(ctx.assetPath);
-			/*var importOptions = new ImportOptions
-			{
-				AuthoringImport = ImportConfig.AuthoringImport
-			};
-			importOptions.Parse(userData);*/
 
 			var state = new ImportState(file, STF_Module_Registry.Modules, ImportConfig);
 			var rootContext = new ImportContext(state);
@@ -29,7 +22,13 @@ namespace com.squirrelbite.stf_unity.tools
 			rootContext.ImportResource(state.RootID, "data");
 			state.FinalizeImport();
 
-			//userData = importOptions.Serialize();
+			var import = ScriptableObject.CreateInstance<STF_Import>();
+			import.Init(state);
+			ctx.AddObjectToAsset("main", import);
+
+			var processorState = new ProcessorState(state, import.Root);
+			var processorContext = new ProcessorContext(processorState);
+
 
 			if (ImportConfig.AuthoringImport)
 				foreach (var importedObject in state.ObjectToRegister)
@@ -39,9 +38,6 @@ namespace com.squirrelbite.stf_unity.tools
 					if (importedObject is not ISTF_Resource)
 						ctx.AddObjectToAsset(importedObject.name, importedObject);
 
-			var import = ScriptableObject.CreateInstance<STF_Import>();
-			import.Init(state);
-			ctx.AddObjectToAsset("main", import);
 			if (import.Root)
 			{
 				if (ImportConfig.AuthoringImport)

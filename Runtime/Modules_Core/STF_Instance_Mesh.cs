@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +15,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public List<STF_Material> Materials = new();
 		public List<(bool, float)> BlendshapeValues = new();
 		public GameObject ArmatureInstance;
-		public Renderer UnityMeshInstance;
+		//public Renderer UnityMeshInstance;
 
 		public override (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
 		{
@@ -88,60 +87,6 @@ namespace com.squirrelbite.stf_unity.modules
 				}
 
 				ret.Mesh = (STF_Mesh)Context.ImportResource((string)JsonResource["mesh"], "data");
-
-				if (ret.Mesh.ProcessedUnityMesh)
-				{
-					Renderer renderer;
-					if (ret.Mesh.weights != null && ret.Mesh.weights.Count > 0 || ret.Mesh.blendshapes != null && ret.Mesh.blendshapes.Count > 0)
-					{
-						var smr = go.gameObject.AddComponent<SkinnedMeshRenderer>();
-						renderer = smr;
-						smr.sharedMesh = ret.Mesh.ProcessedUnityMesh;
-						smr.materials = new Material[ret.Mesh.material_slots.Count];
-						if (ret.ArmatureInstance)
-						{
-							var instance = ret.ArmatureInstance.GetComponent<STF_Instance_Armature>();
-							smr.rootBone = ret.ArmatureInstance.transform;
-							var bones = new Transform[ret.Mesh.bones.Count];
-							for (int i = 0; i < ret.Mesh.bones.Count; i++)
-							{
-								var id = ret.Mesh.bones[i];
-								var bone = ret.ArmatureInstance.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(bone => bone.STF_Id == id && bone.STF_Owner == instance);
-								bones[i] = bone ? bone.transform : instance.transform;
-							}
-							smr.bones = bones;
-						}
-
-						for (int blenshapeIdx = 0; blenshapeIdx < ret.Mesh.blendshapes.Count; blenshapeIdx++)
-						{
-							smr.SetBlendShapeWeight(blenshapeIdx, ret.Mesh.blendshapes[blenshapeIdx].default_value);
-							if(ret.BlendshapeValues[blenshapeIdx].Item1) smr.SetBlendShapeWeight(blenshapeIdx, ret.BlendshapeValues[blenshapeIdx].Item2);
-						}
-
-						ret.UnityMeshInstance = smr;
-					}
-					else
-					{
-						var meshFilter = go.gameObject.AddComponent<MeshFilter>();
-						meshFilter.sharedMesh = ret.Mesh.ProcessedUnityMesh;
-						renderer = go.gameObject.AddComponent<MeshRenderer>();
-						renderer.materials = new Material[ret.Mesh.material_slots.Count];
-					}
-
-					var rendererMaterials = new Material[Math.Max(ret.Mesh.material_slots.Count, ret.Materials.Count)];
-					for (int matIdx = 0; matIdx < rendererMaterials.Length; matIdx++)
-					{
-						if (matIdx < ret.Materials.Count && ret.Materials[matIdx] != null)
-						{
-							rendererMaterials[matIdx] = ret.Materials[matIdx].ProcessedUnityMaterial;
-						}
-						else if (matIdx < ret.Mesh.material_slots.Count && ret.Mesh.material_slots[matIdx] != null)
-						{
-							rendererMaterials[matIdx] = (ret.Mesh.material_slots[matIdx] as STF_Material).ProcessedUnityMaterial;
-						}
-					}
-					renderer.materials = rendererMaterials;
-				}
 			}));
 
 			return (ret, null);
