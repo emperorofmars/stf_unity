@@ -134,29 +134,29 @@ namespace com.squirrelbite.stf_unity.tools
 				{
 					EditorGUI.indentLevel++;
 
-					EditorGUILayout.LabelField(mapping.MaterialName + " (" + mapping.ID + ")");
+					//EditorGUILayout.LabelField(mapping.MaterialName + " (" + mapping.ID + ")");
 
-					EditorGUI.indentLevel++;
+					//EditorGUI.indentLevel++;
 
 					int selectedIndex = availableConverters.FindIndex(c => c == mapping.TargetShader);
 					if (selectedIndex < 0)
 					{
 						selectedIndex = 0; // Standard Shader
 
-						EditorGUILayout.BeginHorizontal();
+						/*EditorGUILayout.BeginHorizontal();
 						EditorGUILayout.PrefixLabel("Unsupported Target Shader");
 						EditorGUILayout.LabelField(mapping.TargetShader);
-						EditorGUILayout.EndHorizontal();
+						EditorGUILayout.EndHorizontal();*/
 					}
 
 					EditorGUILayout.BeginHorizontal();
-					EditorGUILayout.PrefixLabel("Select Target Shader");
+					EditorGUILayout.PrefixLabel(mapping.MaterialName);
 					var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableConverters.ToArray());
 					EditorGUILayout.EndHorizontal();
 
 					if(newSelectedIndex != selectedIndex) mapping.TargetShader = availableConverters[newSelectedIndex];
 
-					EditorGUI.indentLevel--;
+					//EditorGUI.indentLevel--;
 					EditorGUI.indentLevel--;
 				}
 			}
