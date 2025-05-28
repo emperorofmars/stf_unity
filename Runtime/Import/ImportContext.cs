@@ -43,35 +43,35 @@ namespace com.squirrelbite.stf_unity
 			ImportState.RegisterImportedResource(STF_Id, STFResource, ApplicationObjects);
 
 			// handle components and what not
-			if(STFResource is STF_DataResource && jsonResource.ContainsKey("components"))
+			if(STFResource is STF_DataResource dataResource && jsonResource.ContainsKey("components"))
 			{
 				foreach(var componentId in jsonResource["components"])
 				{
 					var component = ImportResource((string)componentId, "component", STFResource);
 					if(component is STF_ScriptableObject resource)
-						((STF_DataResource)STFResource).Components.Add(resource);
+						dataResource.Components.Add(resource);
 					else
 						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), null, null));
 				}
 			}
-			else if(STFResource is STF_PrefabResource && jsonResource.ContainsKey("components"))
+			else if(STFResource is STF_PrefabResource prefabResource && jsonResource.ContainsKey("components"))
 			{
 				foreach(var componentId in jsonResource["components"])
 				{
 					var component = ImportResource((string)componentId, "component", STFResource);
 					if(component is STF_MonoBehaviour resource)
-						((STF_PrefabResource)STFResource).Components.Add(resource);
+						prefabResource.Components.Add(resource);
 					else
 						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), null, null));
 				}
 			}
-			else if(STFResource is STF_NodeResource && jsonResource.ContainsKey("components"))
+			else if(STFResource is STF_NodeResource nodeResource && jsonResource.ContainsKey("components"))
 			{
 				foreach(var componentId in jsonResource["components"])
 				{
 					var component = ImportResource((string)componentId, "component", STFResource);
 					if(component is STF_MonoBehaviour resource)
-						((STF_NodeResource)STFResource).Components.Add(resource);
+						nodeResource.Components.Add(resource);
 					else
 						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), null, null));
 				}
@@ -141,6 +141,8 @@ namespace com.squirrelbite.stf_unity
 			}
 			return null;
 		}
+
+		public ImportOptions ImportConfig => ImportState.ImportConfig;
 
 		public void Report(STFReport Report)
 		{

@@ -135,7 +135,23 @@ namespace com.squirrelbite.stf_unity.modules
 
 		private (Material ConvertedMaterial, List<UnityEngine.Object> GeneratedObjects) ConvertToUnityMaterial(ImportContext Context, STF_Material STFMaterial)
 		{
-			return STF_Material_Converter_Registry.Converters["Standard"].ConvertToUnityMaterial(STFMaterial);
+			var materialMapping = "Standard";
+
+			if (Context.ImportConfig.MaterialMappings.Find(m => m.ID == STFMaterial.STF_Id) is var mapping && mapping != null && !string.IsNullOrWhiteSpace(mapping.TargetShader) && STF_Material_Converter_Registry.Converters.ContainsKey(mapping.TargetShader))
+			{
+				materialMapping = mapping.TargetShader;
+			}
+			else
+			{
+				Context.ImportConfig.MaterialMappings.Add(new()
+				{
+					ID = STFMaterial.STF_Id,
+					MaterialName = STFMaterial.STF_Name,
+					TargetShader = "Standard",
+				});
+			}
+
+			return STF_Material_Converter_Registry.Converters[materialMapping].ConvertToUnityMaterial(STFMaterial);
 			//return (null, null);
 		}
 	}

@@ -1,0 +1,16 @@
+{
+    "name": "stf_unity_material_converters_runtime",
+    "rootNamespace": "com.squirrelbite.stf_unity.modules.stf_material",
+    "references": [
+        "GUID:8a88ca90357a74942a1113aeb6ad32c6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

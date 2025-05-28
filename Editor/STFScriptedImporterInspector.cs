@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 
 using System.Linq;
+using com.squirrelbite.stf_unity.modules.stf_material;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,15 +17,15 @@ namespace com.squirrelbite.stf_unity.tools
 
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.PrefixLabel("Authoring Import");
-			var authoringImport = EditorGUILayout.Toggle(importer.AuthoringImport);
+			var authoringImport = EditorGUILayout.Toggle(importer.ImportConfig.AuthoringImport);
 			EditorGUILayout.EndHorizontal();
-			if(authoringImport != importer.AuthoringImport)
+			if(authoringImport != importer.ImportConfig.AuthoringImport)
 			{
-				importer.AuthoringImport = authoringImport;
+				importer.ImportConfig.AuthoringImport = authoringImport;
 				EditorUtility.SetDirty(importer);
 			}
 
-			if(!importer.AuthoringImport)
+			if(!importer.ImportConfig.AuthoringImport)
 			{
 				var availableContexts = STF_Processor_Registry.GetAvaliableContextDisplayNames();
 
@@ -41,6 +42,8 @@ namespace com.squirrelbite.stf_unity.tools
 					EditorUtility.SetDirty(importer);
 				}
 			}
+
+			drawImportConfig(importer);
 
 			drawHLine();
 
@@ -118,7 +121,49 @@ namespace com.squirrelbite.stf_unity.tools
 			}
 		}
 
-		private void drawHLine() {
+		private void drawImportConfig(STFScriptedImporter Importer)
+		{
+			var availableConverters = STF_Material_Converter_Registry.Converters.Select(c => c.Key).ToList();
+
+			if (Importer.ImportConfig.MaterialMappings.Count > 0)
+			{
+				drawHLine();
+
+				EditorGUILayout.LabelField("Material Mappings");
+				foreach (var mapping in Importer.ImportConfig.MaterialMappings)
+				{
+					EditorGUI.indentLevel++;
+
+					EditorGUILayout.LabelField(mapping.MaterialName + " (" + mapping.ID + ")");
+
+					EditorGUI.indentLevel++;
+
+					int selectedIndex = availableConverters.FindIndex(c => c == mapping.TargetShader);
+					if (selectedIndex < 0)
+					{
+						selectedIndex = 0; // Standard Shader
+
+						EditorGUILayout.BeginHorizontal();
+						EditorGUILayout.PrefixLabel("Unsupported Target Shader");
+						EditorGUILayout.LabelField(mapping.TargetShader);
+						EditorGUILayout.EndHorizontal();
+					}
+
+					EditorGUILayout.BeginHorizontal();
+					EditorGUILayout.PrefixLabel("Select Target Shader");
+					var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableConverters.ToArray());
+					EditorGUILayout.EndHorizontal();
+
+					if(newSelectedIndex != selectedIndex) mapping.TargetShader = availableConverters[newSelectedIndex];
+
+					EditorGUI.indentLevel--;
+					EditorGUI.indentLevel--;
+				}
+			}
+		}
+
+		private void drawHLine()
+		{
 			GUILayout.Space(10);
 			EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 2), Color.gray);
 			GUILayout.Space(10);

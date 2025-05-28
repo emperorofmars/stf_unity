@@ -21,13 +21,13 @@ namespace com.squirrelbite.stf_unity
 
 		public readonly Dictionary<string, STF_Buffer> ImportedBuffers = new();
 
-		public ImportOptions ImportOptions = new();
+		public ImportOptions ImportConfig = new();
 		public readonly List<STFReport> Reports = new();
 
 		public List<Task> Tasks = new();
 		public readonly List<Transform> Trash = new();
 
-		public ImportState(STF_File File, Dictionary<string, ISTF_Module> Modules, ImportOptions ImportOptions = null)
+		public ImportState(STF_File File, Dictionary<string, ISTF_Module> Modules, ImportOptions ImportConfig = null)
 		{
 			this.File = File;
 			this.Modules = Modules;
@@ -37,7 +37,7 @@ namespace com.squirrelbite.stf_unity
 			JsonResources = json["resources"] as JObject;
 			JsonBuffers = json["buffers"] as JObject;
 
-			if(ImportOptions != null) this.ImportOptions = ImportOptions;
+			if (ImportConfig != null) this.ImportConfig = ImportConfig;
 		}
 
 		public JObject GetJsonResource(string ID)
@@ -111,7 +111,7 @@ namespace com.squirrelbite.stf_unity
 			else
 				Debug.Log(Report.ToString());
 
-			if(ImportOptions.AbortOnException && Report.Severity >= ErrorSeverity.ERROR)
+			if(ImportConfig.AbortOnException && Report.Severity >= ErrorSeverity.ERROR)
 				throw Report.Exception;
 			Reports.Add(Report);
 		}
@@ -124,36 +124,36 @@ namespace com.squirrelbite.stf_unity
 		{
 			// Run any Tasks added to the State during the processor execution
 			var maxDepth = 100;
-			while(Tasks.Count > 0)
+			while (Tasks.Count > 0)
 			{
 				var taskset = Tasks;
 				Tasks = new List<Task>();
-				foreach(var task in taskset)
+				foreach (var task in taskset)
 				{
 					task.RunSynchronously();
-					if(task.Exception != null)
+					if (task.Exception != null)
 					{
 						HandleTaskException(task.Exception);
 					}
 				}
 
 				maxDepth--;
-				if(maxDepth <= 0)
+				if (maxDepth <= 0)
 				{
 					Debug.LogWarning("Maximum recursion depth reached!");
 					break;
 				}
 			}
 
-			foreach(var t in Trash)
+			foreach (var t in Trash)
 			{
-				if(t)
+				if (t)
 				{
-					#if UNITY_EDITOR
+#if UNITY_EDITOR
 					Object.DestroyImmediate(t.gameObject);
-					#else
+#else
 					Object.Destroy(t);
-					#endif
+#endif
 				}
 			}
 		}
