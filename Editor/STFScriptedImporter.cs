@@ -4,10 +4,11 @@
 using UnityEngine;
 using UnityEditor.AssetImporters;
 using com.squirrelbite.stf_unity.processors;
+using com.squirrelbite.stf_unity.modules;
 
 namespace com.squirrelbite.stf_unity.tools
 {
-	[ScriptedImporter(1, new string[] {"stf"})]
+	[ScriptedImporter(1, new string[] { "stf" })]
 	public class STFScriptedImporter : ScriptedImporter
 	{
 		public ImportOptions ImportConfig = new();
@@ -30,14 +31,14 @@ namespace com.squirrelbite.stf_unity.tools
 			var processorContext = new ProcessorContext(processorState);
 
 			foreach (var mapping in ImportConfig.MaterialMappings)
-					if (state.GetImportedResource(mapping.ID) == null)
-						ImportConfig.MaterialMappings.Remove(mapping);
+				if (state.GetImportedResource(mapping.ID) == null)
+					ImportConfig.MaterialMappings.Remove(mapping);
 
 			state.Cleanup();
 
 			foreach (var importedObject in state.ObjectToRegister)
 				if (importedObject != null && (importedObject is not ISTF_Resource || ImportConfig.AuthoringImport))
-					ctx.AddObjectToAsset(importedObject.name, importedObject);
+					ctx.AddObjectToAsset(DetermineImportAssetName(importedObject), importedObject);
 
 			if (import.Root)
 			{
@@ -60,6 +61,20 @@ namespace com.squirrelbite.stf_unity.tools
 			{
 				Debug.Log("STF Import Failed! Check the reports.");
 			}
+		}
+
+		private string DetermineImportAssetName(Object Resource)
+		{
+			if (Resource is Material) return "material" + Resource.name;
+			if (Resource is STF_Material) return "stfmaterial" + Resource.name;
+			if (Resource is Mesh) return "mesh" + Resource.name;
+			if (Resource is STF_Mesh) return "stfmesh" + Resource.name;
+			if (Resource is Texture2D) return "texture" + Resource.name;
+			if (Resource is STF_Image) return "stfimage" + Resource.name;
+			if (Resource is Avatar) return "avatar" + Resource.name;
+			if (Resource is AnimationClip) return "anim" + Resource.name;
+			if (Resource is STF_Animation) return "stfanim" + Resource.name;
+			return Resource.name;
 		}
 	}
 }
