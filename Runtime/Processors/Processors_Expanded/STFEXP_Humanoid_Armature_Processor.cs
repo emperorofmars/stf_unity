@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.stfexp;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

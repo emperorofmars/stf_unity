@@ -9,7 +9,6 @@ using com.squirrelbite.stf_unity;
 using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.ava;
-using VRC.Core;
 
 namespace nna.ava.vrchat
 {
@@ -24,6 +23,7 @@ namespace nna.ava.vrchat
 		public List<UnityEngine.Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
 		{
 			var avaAvatar = STFResource as AVA_Avatar;
+			Context.Root.AddComponent<VRC.Core.PipelineManager>();
 			var avatar = Context.Root.AddComponent<VRCAvatarDescriptor>();
 
 			if (!Context.Root.TryGetComponent<Animator>(out var animator))
@@ -38,7 +38,7 @@ namespace nna.ava.vrchat
 			if(!Context.ImportConfig.AuthoringImport)
 				Context.AddTrash(avaAvatar.Viewport.transform);
 
-			return new() { };
+			return null;
 		}
 	}
 
