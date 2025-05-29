@@ -15,6 +15,8 @@ namespace com.squirrelbite.stf_unity.tools
 		{
 			var importer = (STFScriptedImporter)target;
 
+			EditorGUI.BeginChangeCheck();
+
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.PrefixLabel("Authoring Import");
 			var authoringImport = EditorGUILayout.Toggle(importer.ImportConfig.AuthoringImport);
@@ -43,22 +45,38 @@ namespace com.squirrelbite.stf_unity.tools
 			drawImportConfig(importer);
 
 			drawHLine();
+			
+			if (EditorGUI.EndChangeCheck())
+			{
+				EditorUtility.SetDirty(importer);
+			}
 
-			if(AssetDatabase.LoadAssetAtPath<STF_Import>(importer.assetPath) is var stfImport)
+			if (EditorUtility.IsDirty(importer))
+			{
+				if (GUILayout.Button("Reimport to apply changes!"))
+				{
+					GUILayout.Space(10);
+					importer.SaveAndReimport();
+				}
+			}
+			else
+			{
+				if (GUILayout.Button("Reimport"))
+				{
+					EditorUtility.SetDirty(importer);
+					importer.SaveAndReimport();
+				}
+			}
+
+			drawHLine();
+
+			if (AssetDatabase.LoadAssetAtPath<STF_Import>(importer.assetPath) is var stfImport)
 			{
 				renderAsset(stfImport);
 			}
 			else
 			{
 				EditorGUILayout.LabelField("Import Failed");
-			}
-
-			drawHLine();
-
-			if(GUILayout.Button("Reimport"))
-			{
-				EditorUtility.SetDirty(importer);
-				importer.SaveAndReimport();
 			}
 		}
 
