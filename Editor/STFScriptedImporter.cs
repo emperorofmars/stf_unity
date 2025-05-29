@@ -28,25 +28,31 @@ namespace com.squirrelbite.stf_unity.tools
 
 			var processorState = new ProcessorState(state, import.Root);
 			var processorContext = new ProcessorContext(processorState);
-			state.DeleteTrash();
-
+			state.Cleanup();
 
 			if (ImportConfig.AuthoringImport)
+			{
 				foreach (var importedObject in state.ObjectToRegister)
-					ctx.AddObjectToAsset(importedObject.name, importedObject);
-			else
-				foreach (var importedObject in state.ObjectToRegister)
-					if (importedObject is not ISTF_Resource)
+					if (importedObject != null)
 						ctx.AddObjectToAsset(importedObject.name, importedObject);
+			}
+			else
+			{
+				foreach (var importedObject in state.ObjectToRegister)
+					if (importedObject != null && importedObject is not ISTF_Resource)
+						ctx.AddObjectToAsset(importedObject.name, importedObject);
+			}
 
 			foreach (var mapping in ImportConfig.MaterialMappings)
-				if (state.GetImportedResource(mapping.ID) == null)
-					ImportConfig.MaterialMappings.Remove(mapping);
+					if (state.GetImportedResource(mapping.ID) == null)
+						ImportConfig.MaterialMappings.Remove(mapping);
 
 			if (import.Root)
 			{
 				if (ImportConfig.AuthoringImport)
 					import.Root.AddComponent<STF_Meta_Info>().Meta = state.Meta;
+
+				
 
 				ctx.SetMainObject(import.Root);
 

@@ -150,6 +150,7 @@ namespace com.squirrelbite.stf_unity
 		}
 
 		public void AddTask(Task Task) { ImportState.Tasks.Add(Task); }
+		public void AddDeleteNonAuthoring(Object AuthoringResource) { ImportState.DeleteOnNonAuthoring.Add(AuthoringResource); }
 		public void AddTrash(Transform Trash) { ImportState.Trash.Add(Trash); }
 		public void AddTrash(IEnumerable<Transform> Trash) { ImportState.Trash.AddRange(Trash); }
 	}

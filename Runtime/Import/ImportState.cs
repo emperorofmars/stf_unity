@@ -26,6 +26,7 @@ namespace com.squirrelbite.stf_unity
 
 		public List<Task> Tasks = new();
 		public readonly List<Object> Trash = new();
+		public readonly List<Object> DeleteOnNonAuthoring = new();
 
 		public ImportState(STF_File File, Dictionary<string, ISTF_Module> Modules, ImportOptions ImportConfig = null)
 		{
@@ -116,6 +117,7 @@ namespace com.squirrelbite.stf_unity
 			Reports.Add(Report);
 		}
 
+		public void AddDeleteNonAuthoring(Object AuthoringResource) { this.DeleteOnNonAuthoring.Add(AuthoringResource); }
 		public void AddTrash(Object Trash) { this.Trash.Add(Trash); }
 		public void AddTrash(IEnumerable<Object> Trash) { this.Trash.AddRange(Trash); }
 
@@ -159,6 +161,26 @@ namespace com.squirrelbite.stf_unity
 #else
 					Object.Destroy(t);
 #endif
+				}
+			}
+		}
+
+		public void Cleanup()
+		{
+			DeleteTrash();
+
+			if (!ImportConfig.AuthoringImport)
+			{
+				foreach (var t in DeleteOnNonAuthoring)
+				{
+					if (t)
+					{
+#if UNITY_EDITOR
+						Object.DestroyImmediate(t);
+#else
+						Object.Destroy(t);
+#endif
+					}
 				}
 			}
 		}

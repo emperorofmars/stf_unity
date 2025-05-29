@@ -54,7 +54,8 @@ namespace com.squirrelbite.stf_unity.modules
 				ret.Bindposes.Add(bone.transform.worldToLocalMatrix);
 			}
 
-			return (ret, new(){go});
+			Context.AddDeleteNonAuthoring(go);
+			return (ret, new() { go });
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
