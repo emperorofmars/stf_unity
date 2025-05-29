@@ -66,14 +66,11 @@ namespace com.squirrelbite.stf_unity.tools
 		private string DetermineImportAssetName(Object Resource)
 		{
 			if (Resource is Material) return "material" + Resource.name;
-			if (Resource is STF_Material) return "stfmaterial" + Resource.name;
 			if (Resource is Mesh) return "mesh" + Resource.name;
-			if (Resource is STF_Mesh) return "stfmesh" + Resource.name;
 			if (Resource is Texture2D) return "texture" + Resource.name;
-			if (Resource is STF_Image) return "stfimage" + Resource.name;
 			if (Resource is Avatar) return "avatar" + Resource.name;
 			if (Resource is AnimationClip) return "anim" + Resource.name;
-			if (Resource is STF_Animation) return "stfanim" + Resource.name;
+			if (Resource is ISTF_Resource stfResource) return stfResource.STF_Id;
 			return Resource.name;
 		}
 	}
