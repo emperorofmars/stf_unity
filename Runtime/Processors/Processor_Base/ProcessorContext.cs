@@ -35,7 +35,7 @@ namespace com.squirrelbite.stf_unity.processors
 			var registeredResources = new HashSet<ISTF_Resource>();
 			foreach (var objectToRegister in State.State.ObjectToRegister)
 			{
-				if (objectToRegister is ISTF_Resource resource && State.GetProcessor(resource) is var processor && processor != null)
+				if (objectToRegister is ISTF_Resource resource && !registeredResources.Contains(resource) && State.GetProcessor(resource) is var processor && processor != null)
 				{
 					registeredResources.Add(resource);
 					State.AddProcessorTask(processor.Order, new Task(() =>
@@ -45,17 +45,20 @@ namespace com.squirrelbite.stf_unity.processors
 						State.RegisterResult(results);
 					}));
 				}
-			}
-			foreach (var resource in State.Root.GetComponentsInChildren<ISTF_Resource>())
-			{
-				if (!registeredResources.Contains(resource) && State.GetProcessor(resource) is var processor && processor != null)
+				else if (objectToRegister is GameObject go)
 				{
-					State.AddProcessorTask(processor.Order, new Task(() =>
+					foreach (var resourceOnObject in go.GetComponentsInChildren<ISTF_Resource>())
 					{
-						var results = processor.Process(this, resource);
-						if (results != null) resource.ProcessedObjects.AddRange(results);
-						State.RegisterResult(results);
-					}));
+						if (!registeredResources.Contains(resourceOnObject) && State.GetProcessor(resourceOnObject) is var processorOnObject && processorOnObject != null)
+						{
+							State.AddProcessorTask(processorOnObject.Order, new Task(() =>
+							{
+								var results = processorOnObject.Process(this, resourceOnObject);
+								if (results != null) resourceOnObject.ProcessedObjects.AddRange(results);
+								State.RegisterResult(results);
+							}));
+						}
+					}
 				}
 			}
 			

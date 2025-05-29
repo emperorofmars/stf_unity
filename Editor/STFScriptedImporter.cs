@@ -38,23 +38,27 @@ namespace com.squirrelbite.stf_unity.tools
 					if (importedObject is not ISTF_Resource)
 						ctx.AddObjectToAsset(importedObject.name, importedObject);
 
+			foreach (var mapping in ImportConfig.MaterialMappings)
+				if (state.GetImportedResource(mapping.ID) == null)
+					ImportConfig.MaterialMappings.Remove(mapping);
+
 			if (import.Root)
-			{
-				if (ImportConfig.AuthoringImport)
-					import.Root.AddComponent<STF_Meta_Info>().Meta = state.Meta;
+				{
+					if (ImportConfig.AuthoringImport)
+						import.Root.AddComponent<STF_Meta_Info>().Meta = state.Meta;
 
-				ctx.SetMainObject(import.Root);
+					ctx.SetMainObject(import.Root);
 
-				if (!ImportConfig.AuthoringImport)
-					foreach (var stfResource in import.Root.GetComponentsInChildren<ISTF_Resource>())
-						DestroyImmediate(stfResource as UnityEngine.Object);
+					if (!ImportConfig.AuthoringImport)
+						foreach (var stfResource in import.Root.GetComponentsInChildren<ISTF_Resource>())
+							DestroyImmediate(stfResource as UnityEngine.Object);
 
-				Debug.Log("STF Import Success!");
-			}
-			else
-			{
-				Debug.Log("STF Import Failed! Check the reports.");
-			}
+					Debug.Log("STF Import Success!");
+				}
+				else
+				{
+					Debug.Log("STF Import Failed! Check the reports.");
+				}
 		}
 	}
 }

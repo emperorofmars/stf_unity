@@ -4,18 +4,17 @@ using Newtonsoft.Json.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
-using UnityEngine;
 #endif
 
-namespace com.squirrelbite.stf_unity.ava
+namespace com.squirrelbite.stf_unity.stfexp
 {
-	public class AVA_Avatar : STF_NodeComponentResource
+	public class STFEXP_Humanoid_Armature : STF_NodeComponentResource
 	{
-		public const string _STF_Type = "ava.avatar";
+		public const string _STF_Type = "stfexp.armature.humanoid";
 		public override string STF_Type => _STF_Type;
 
-		public GameObject Viewport;
-		public GameObject PrimaryArmatureInstance;
+		public string locomotion_type = "planti";
+		public bool no_jaw = false;
 
 		public override (string RelativePath, Type Type, List<string> PropertyNames, Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
 		{
@@ -28,17 +27,17 @@ namespace com.squirrelbite.stf_unity.ava
 		}
 	}
 
-	public class AVA_Avatar_Module : ISTF_Module
+	public class STFEXP_Humanoid_Armature_Module : ISTF_Module
 	{
-		public string STF_Type => AVA_Avatar._STF_Type;
+		public string STF_Type => STFEXP_Humanoid_Armature._STF_Type;
 
 		public string STF_Kind => "component";
 
 		public int Priority => 1;
 
-		public List<string> LikeTypes => new(){"avatar"};
+		public List<string> LikeTypes => new(){"humanoid"};
 
-		public List<Type> UnderstoodApplicationTypes => new(){typeof(AVA_Avatar)};
+		public List<Type> UnderstoodApplicationTypes => new(){typeof(STFEXP_Humanoid_Armature)};
 
 		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
 
@@ -47,13 +46,11 @@ namespace com.squirrelbite.stf_unity.ava
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
 			var go = ContextObject as STF_MonoBehaviour;
-			var ret = go.gameObject.AddComponent<AVA_Avatar>();
-			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "AVA Avatar");
+			var ret = go.gameObject.AddComponent<STFEXP_Humanoid_Armature>();
+			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STFEXP Humanoid Armature");
 
-			if (JsonResource.ContainsKey("viewport") && Context.ImportResource((string)JsonResource["viewport"], "node") is STF_MonoBehaviour viewport && viewport != null)
-				ret.Viewport = viewport.gameObject;
-			if (JsonResource.ContainsKey("primary_armature_instance") && Context.ImportResource((string)JsonResource["primary_armature_instance"], "node") is STF_MonoBehaviour primary_armature_instance && primary_armature_instance != null)
-				ret.PrimaryArmatureInstance = primary_armature_instance.gameObject;
+			ret.locomotion_type = JsonResource.Value<string>("locomotion_type");
+			ret.no_jaw = JsonResource.Value<bool>("no_jaw");
 
 			return (ret, null);
 		}
@@ -66,11 +63,11 @@ namespace com.squirrelbite.stf_unity.ava
 
 #if UNITY_EDITOR
 	[InitializeOnLoad]
-	class Register_AVA_Avatar_Module
+	class Register_STFEXP_Humanoid_Armature
 	{
-		static Register_AVA_Avatar_Module()
+		static Register_STFEXP_Humanoid_Armature()
 		{
-			STF_Module_Registry.RegisterModule(new AVA_Avatar_Module());
+			STF_Module_Registry.RegisterModule(new STFEXP_Humanoid_Armature_Module());
 		}
 	}
 #endif

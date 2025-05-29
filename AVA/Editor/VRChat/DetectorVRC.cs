@@ -6,6 +6,7 @@ using UnityEngine;
 using nna.util;
 using UnityEditor.Compilation;
 using com.squirrelbite.stf_unity;
+using com.squirrelbite.stf_unity.processors.stfexp;
 
 namespace nna.ava.vrchat
 {
@@ -31,6 +32,8 @@ namespace nna.ava.vrchat
 					STF_Processor_Registry.ContextDisplayNames.Add(STF_VRC_AVATAR_CONTEXT, "VRChat Avatar");
 					foreach (var processor in STF_Processor_Registry.DefaultProcessors["default"])
 						STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, processor);
+					
+					STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, new STFEXP_Humanoid_Armature_Processor());
 				}
 			}
 			else

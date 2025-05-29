@@ -3,15 +3,13 @@
 
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
-using System.Linq;
 using UnityEditor;
-using Newtonsoft.Json.Linq;
-using System.Text.RegularExpressions;
 using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity;
 using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.ava;
+using VRC.Core;
 
 namespace nna.ava.vrchat
 {
@@ -27,7 +25,8 @@ namespace nna.ava.vrchat
 		{
 			var avaAvatar = STFResource as AVA_Avatar;
 			var avatar = Context.Root.AddComponent<VRCAvatarDescriptor>();
-			if(!Context.Root.TryGetComponent<Animator>(out var animator))
+
+			if (!Context.Root.TryGetComponent<Animator>(out var animator))
 			{
 				animator = Context.Root.AddComponent<Animator>();
 			}
@@ -39,7 +38,7 @@ namespace nna.ava.vrchat
 			if(!Context.ImportConfig.AuthoringImport)
 				Context.AddTrash(avaAvatar.Viewport.transform);
 
-			return new() { avatar };
+			return new() { };
 		}
 	}
 
@@ -49,7 +48,6 @@ namespace nna.ava.vrchat
 		static Register_AVA_Avatar_VRC()
 		{
 			STF_Processor_Registry.RegisterProcessor(DetectorVRC.STF_VRC_AVATAR_CONTEXT, new AVA_Avatar_VRC_Processor());
-
 		}
 	}
 }
