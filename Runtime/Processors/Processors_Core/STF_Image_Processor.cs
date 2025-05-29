@@ -15,7 +15,7 @@ namespace com.squirrelbite.stf_unity.processors
 			var Image = STFResource as STF_Image;
 			// TODO vastly improve this, use information from an STF_Texture component if present on this image
 			var ret = new Texture2D(8, 8);
-			ret.name = "Processed " + Image.STF_Name;
+			ret.name = Image.STF_Name;
 			ret.LoadImage(Image.buffer.Data);
 			return new() { ret };
 		}

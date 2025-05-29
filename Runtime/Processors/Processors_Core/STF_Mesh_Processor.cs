@@ -17,7 +17,7 @@ namespace com.squirrelbite.stf_unity.processors
 		public List<UnityEngine.Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
 		{
 			var STFMesh = STFResource as STF_Mesh;
-			var ret = new Mesh { name = "Processed " + STFMesh._STF_Name };
+			var ret = new Mesh { name = STFMesh._STF_Name };
 
 			// TODO use BinaryPrimitives whenever thats supported for floats and stuff
 

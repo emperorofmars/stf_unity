@@ -22,7 +22,7 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 		public (Material ConvertedMaterial, List<Object> GeneratedObjects) ConvertToUnityMaterial(STF_Material STFMaterial)
 		{
 			var ret = new Material(Shader.Find(ShaderName));
-			ret.name = "Converted " + STFMaterial.STF_Name;
+			ret.name = STFMaterial.STF_Name;
 
 			var generatedObjects = new List<Object>();
 
