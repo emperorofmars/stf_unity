@@ -25,7 +25,7 @@ namespace com.squirrelbite.stf_unity
 		public readonly List<STFReport> Reports = new();
 
 		public List<Task> Tasks = new();
-		public readonly List<Transform> Trash = new();
+		public readonly List<Object> Trash = new();
 
 		public ImportState(STF_File File, Dictionary<string, ISTF_Module> Modules, ImportOptions ImportConfig = null)
 		{
@@ -116,8 +116,8 @@ namespace com.squirrelbite.stf_unity
 			Reports.Add(Report);
 		}
 
-		public void AddTrash(Transform Trash) { this.Trash.Add(Trash); }
-		public void AddTrash(IEnumerable<Transform> Trash) { this.Trash.AddRange(Trash); }
+		public void AddTrash(Object Trash) { this.Trash.Add(Trash); }
+		public void AddTrash(IEnumerable<Object> Trash) { this.Trash.AddRange(Trash); }
 
 
 		public void FinalizeImport()
@@ -145,12 +145,17 @@ namespace com.squirrelbite.stf_unity
 				}
 			}
 
+			DeleteTrash();
+		}
+
+		public void DeleteTrash()
+		{
 			foreach (var t in Trash)
 			{
 				if (t)
 				{
 #if UNITY_EDITOR
-					Object.DestroyImmediate(t.gameObject);
+					Object.DestroyImmediate(t);
 #else
 					Object.Destroy(t);
 #endif
@@ -160,9 +165,9 @@ namespace com.squirrelbite.stf_unity
 
 		private void HandleTaskException(System.AggregateException Exception)
 		{
-			foreach(var e in Exception.InnerExceptions)
+			foreach (var e in Exception.InnerExceptions)
 			{
-				if(e is STFException stfError)
+				if (e is STFException stfError)
 				{
 					Report(stfError.Report);
 				}

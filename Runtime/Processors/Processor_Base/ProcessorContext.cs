@@ -27,8 +27,8 @@ namespace com.squirrelbite.stf_unity.processors
 		public GameObject Root => State.Root;
 
 		public void AddTask(Task Task) { State.Tasks.Add(Task); }
-		public void AddTrash(Transform Trash) { State.Trash.Add(Trash); }
-		public void AddTrash(IEnumerable<Transform> Trash) { State.Trash.AddRange(Trash); }
+		public void AddTrash(Object Trash) { State.AddTrash(Trash); }
+		public void AddTrash(IEnumerable<Object> Trash) { State.AddTrash(Trash); }
 
 		private void Run()
 		{

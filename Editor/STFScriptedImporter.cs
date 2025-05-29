@@ -28,6 +28,7 @@ namespace com.squirrelbite.stf_unity.tools
 
 			var processorState = new ProcessorState(state, import.Root);
 			var processorContext = new ProcessorContext(processorState);
+			state.DeleteTrash();
 
 
 			if (ImportConfig.AuthoringImport)
@@ -43,22 +44,26 @@ namespace com.squirrelbite.stf_unity.tools
 					ImportConfig.MaterialMappings.Remove(mapping);
 
 			if (import.Root)
-				{
-					if (ImportConfig.AuthoringImport)
-						import.Root.AddComponent<STF_Meta_Info>().Meta = state.Meta;
+			{
+				if (ImportConfig.AuthoringImport)
+					import.Root.AddComponent<STF_Meta_Info>().Meta = state.Meta;
 
-					ctx.SetMainObject(import.Root);
+				ctx.SetMainObject(import.Root);
 
-					if (!ImportConfig.AuthoringImport)
-						foreach (var stfResource in import.Root.GetComponentsInChildren<ISTF_Resource>())
-							DestroyImmediate(stfResource as UnityEngine.Object);
+				if (!ImportConfig.AuthoringImport)
+					foreach (var stfResource in import.Root.GetComponentsInChildren<ISTF_Resource>())
+#if UNITY_EDITOR
+						DestroyImmediate(stfResource as UnityEngine.Object);
+#else
+						Destroy(stfResource as UnityEngine.Object);
+#endif
 
-					Debug.Log("STF Import Success!");
-				}
-				else
-				{
-					Debug.Log("STF Import Failed! Check the reports.");
-				}
+				Debug.Log("STF Import Success!");
+			}
+			else
+			{
+				Debug.Log("STF Import Failed! Check the reports.");
+			}
 		}
 	}
 }

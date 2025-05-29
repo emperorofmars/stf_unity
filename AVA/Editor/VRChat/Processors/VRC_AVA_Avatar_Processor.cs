@@ -36,7 +36,7 @@ namespace nna.ava.vrchat
 
 			if(avaAvatar.Viewport) avatar.ViewPosition = avaAvatar.Viewport.transform.position - Context.Root.transform.position;
 			if(!Context.ImportConfig.AuthoringImport)
-				Context.AddTrash(avaAvatar.Viewport.transform);
+				Context.AddTrash(avaAvatar.Viewport);
 
 			return null;
 		}

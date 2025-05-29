@@ -58,7 +58,7 @@ namespace com.squirrelbite.stf_unity.processors
 		}
 
 		public void Report(STFReport Report) { State.Report(Report); }
-		public void AddTrash(Transform Trash) { State.AddTrash(Trash); }
-		public void AddTrash(IEnumerable<Transform> Trash) { State.AddTrash(Trash); }
+		public void AddTrash(Object Trash) { State.AddTrash(Trash); }
+		public void AddTrash(IEnumerable<Object> Trash) { State.AddTrash(Trash); }
 	}
 }

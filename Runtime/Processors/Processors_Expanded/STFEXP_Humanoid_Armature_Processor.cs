@@ -21,8 +21,6 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 		{
 			var humanoid = STFResource as STFEXP_Humanoid_Armature;
 
-			Debug.Log("WOOOOOOOOOOOOOOOOOOOOOOO");
-
 			var avatar = UnityHumanoidMappingUtil.GenerateAvatar(Context, humanoid.transform, humanoid.locomotion_type, humanoid.no_jaw);
 
 			avatar.name = "Unity Avatar";
@@ -34,8 +32,6 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			animator.updateMode = AnimatorUpdateMode.Normal;
 			animator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
 			animator.avatar = avatar;
-
-			Debug.Log(avatar);
 
 			return new() { avatar };
 		}
