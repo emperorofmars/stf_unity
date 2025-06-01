@@ -14,8 +14,12 @@ namespace com.squirrelbite.stf_unity
 		public static readonly Dictionary<string, List<ISTF_Processor>> DefaultProcessors = new() {
 			{
 				"default", new () {
+					new STF_Prefab_Processor(),
+					new STF_Node_Processor(),
+					new STF_Bone_Processor(),
 					new STF_Mesh_Processor(),
 					new STF_Instance_Mesh_Processor(),
+					new STF_Instance_Armature_Processor(),
 					new STF_Material_Processor(),
 					new STF_Image_Processor(),
 					new STF_Animation_Processor(),

@@ -7,6 +7,24 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors
 {
+	public class STF_Instance_Mesh_Converter : ISTF_PropertyConverter
+	{
+		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource STFResource, List<string> STFPath)
+		{
+			var convert = new System.Func<List<float>, List<float>>(Values =>
+			{
+				Values[0] *= 100;
+				return Values;
+			});
+
+			if (STFPath.Count == 3 && STFPath[0] == "blendshape" && STFPath[2] == "value")
+			{
+				return ("", typeof(SkinnedMeshRenderer), new() { "blendShape." + STFPath[1] }, convert);
+			}
+			else return ("", null, null, null);
+		}
+	}
+
 	public class STF_Instance_Mesh_Processor : ISTF_Processor
 	{
 		public Type TargetType => typeof(STF_Instance_Mesh);
@@ -16,6 +34,8 @@ namespace com.squirrelbite.stf_unity.processors
 		public List<UnityEngine.Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
 		{
 			var meshInstance = STFResource as STF_Instance_Mesh;
+			meshInstance.PropertyConverter = new STF_Instance_Mesh_Converter();
+			
 			var processedUnityMesh = (Mesh)(meshInstance.Mesh.ProcessedObjects != null && meshInstance.Mesh.ProcessedObjects.Count == 1 ? meshInstance.Mesh.ProcessedObjects[0] : null);
 			if (processedUnityMesh != null)
 			{

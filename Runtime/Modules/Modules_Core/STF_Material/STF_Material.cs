@@ -23,16 +23,6 @@ namespace com.squirrelbite.stf_unity.modules
 		public List<string> StyleHints = new();
 		public List<ShaderTarget> ShaderTargets = new();
 		public List<STF_MaterialProperty> Properties = new();
-
-		public override (string RelativePath, Type Type, List<string> PropertyNames, Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override List<string> ConvertPropertyPath(string UnityPath)
-		{
-			throw new NotImplementedException();
-		}
 	}
 
 	public class STF_Material_Module : ISTF_Module

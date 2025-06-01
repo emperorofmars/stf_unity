@@ -13,16 +13,6 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public string format;
 		public STF_Buffer buffer;
-
-		public override (string RelativePath, Type Type, List<string> PropertyNames, Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override List<string> ConvertPropertyPath(string UnityPath)
-		{
-			throw new NotImplementedException();
-		}
 	}
 
 	public class STF_Image_Module : ISTF_Module

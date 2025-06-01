@@ -15,27 +15,6 @@ namespace com.squirrelbite.stf_unity.modules
 		public List<STF_Material> Materials = new();
 		public List<(bool, float)> BlendshapeValues = new();
 		public GameObject ArmatureInstance;
-		//public Renderer UnityMeshInstance;
-
-		public override (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
-		{
-			var convert = new System.Func<List<float>, List<float>>(Values =>
-			{
-				Values[0] *= 100;
-				return Values;
-			});
-
-			if (STFPath.Count == 3 && STFPath[0] == "blendshape" && STFPath[2] == "value")
-			{
-				return ("", typeof(SkinnedMeshRenderer), new() { "blendShape." + STFPath[1] }, convert);
-			}
-			else return ("", null, null, null);
-		}
-
-		public override List<string> ConvertPropertyPath(string UnityPath)
-		{
-			throw new System.NotImplementedException();
-		}
 	}
 
 	public class STF_Instance_Mesh_Module : ISTF_Module
@@ -46,9 +25,9 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public int Priority => 0;
 
-		public List<string> LikeTypes => new(){"instance.mesh", "instance"};
+		public List<string> LikeTypes => new() { "instance.mesh", "instance" };
 
-		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(STF_Instance_Mesh)};
+		public List<System.Type> UnderstoodApplicationTypes => new() { typeof(STF_Instance_Mesh) };
 
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
@@ -80,8 +59,9 @@ namespace com.squirrelbite.stf_unity.modules
 					else
 						ret.BlendshapeValues.Add((false, 0));
 
-			Context.AddTask(new Task(() => {
-				if(JsonResource.ContainsKey("armature_instance"))
+			Context.AddTask(new Task(() =>
+			{
+				if (JsonResource.ContainsKey("armature_instance"))
 				{
 					ret.ArmatureInstance = ((STF_MonoBehaviour)Context.ImportResource((string)JsonResource["armature_instance"], "instance")).gameObject;
 				}

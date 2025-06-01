@@ -1,11 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
-using System.Threading.Tasks;
-using System.Linq;
-
-
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -20,16 +15,6 @@ namespace com.squirrelbite.stf_unity.stfexp
 
 		public float Weight = 0.5f;
 		public List<string> Target = new();
-
-		public override (string RelativePath, Type Type, List<string> PropertyNames, Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override List<string> ConvertPropertyPath(string UnityPath)
-		{
-			throw new NotImplementedException();
-		}
 	}
 
 	public class STFEXP_Constraint_Twist_Module : ISTF_Module

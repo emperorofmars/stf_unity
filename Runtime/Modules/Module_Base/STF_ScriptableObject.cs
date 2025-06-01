@@ -21,6 +21,9 @@ namespace com.squirrelbite.stf_unity
 		public readonly List<object> _ProcessedObjects = new();
 		public List<object> ProcessedObjects => _ProcessedObjects;
 
+		public ISTF_PropertyConverter _PropertyConverter;
+		public ISTF_PropertyConverter PropertyConverter { get { return _PropertyConverter; } set { _PropertyConverter = value; } }
+
 		public virtual void SetFromJson(JObject JsonResource, string STF_Id, string DefaultName = "STF ScriptableObject")
 		{
 			this.STF_Id = STF_Id;
@@ -28,8 +31,5 @@ namespace com.squirrelbite.stf_unity
 			this.name = STFUtil.DetermineName(JsonResource, DefaultName);
 			this.Degraded = (bool)(JsonResource.GetValue("degraded") ?? false);
 		}
-
-		public abstract (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath);
-		public abstract List<string> ConvertPropertyPath(string UnityPath);
 	}
 }

@@ -15,8 +15,6 @@ namespace com.squirrelbite.stf_unity
 
 		abstract List<object> ProcessedObjects {get;}
 
-
-		(string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath);
-		List<string> ConvertPropertyPath(string UnityPath); // TODO improve this
+		abstract ISTF_PropertyConverter PropertyConverter {get; set;}
 	}
 }

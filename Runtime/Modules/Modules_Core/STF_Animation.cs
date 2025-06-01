@@ -42,16 +42,6 @@ namespace com.squirrelbite.stf_unity.modules
 		public STF_Prefab AnimationRoot;
 
 		public AnimationClip ProcessedUnityAnimation;
-
-		public override (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override List<string> ConvertPropertyPath(string UnityPath)
-		{
-			throw new System.NotImplementedException();
-		}
 	}
 
 	public class STF_Animation_Module : ISTF_Module

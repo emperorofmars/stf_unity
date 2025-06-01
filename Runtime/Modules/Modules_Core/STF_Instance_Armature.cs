@@ -22,30 +22,6 @@ namespace com.squirrelbite.stf_unity.modules
 			public Vector3 Scale = Vector3.one;
 		}
 		public List<Pose> Poses = new();
-
-
-		public override (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
-		{
-			if(STFPath.Count > 1)
-			{
-				var nodeId = STFPath[0];
-				var target = this.Armature.GetComponentsInChildren<STF_Bone>().FirstOrDefault(c => c.STF_Id == nodeId);
-				//var target = this.gameObject.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(c => c.STF_Owner == this && c.STF_Id == nodeId);
-				if(target)
-				{
-					var ret = UnityUtil.getPath(this.Armature.transform, target.transform, true);
-
-					(string retRelativePath, System.Type retType, List<string> retPropNames, System.Func<List<float>, List<float>> convertValueFunc) = target.ConvertPropertyPath(STFPath.GetRange(1, STFPath.Count - 1));
-					return (string.IsNullOrEmpty(retRelativePath) ? ret : ret + "/" + retRelativePath, retType, retPropNames, convertValueFunc);
-				}
-			}
-			return ("", null, null, null);
-		}
-
-		public override List<string> ConvertPropertyPath(string UnityPath)
-		{
-			throw new System.NotImplementedException();
-		}
 	}
 
 	public class STF_Instance_Armature_Module : ISTF_Module

@@ -24,15 +24,15 @@ namespace com.squirrelbite.stf_unity
 
 		public STF_MonoBehaviour STF_Owner;
 
+		public ISTF_PropertyConverter _PropertyConverter;
+		public ISTF_PropertyConverter PropertyConverter { get { return _PropertyConverter; } set { _PropertyConverter = value; } }
+
 		public virtual void SetFromJson(JObject JsonResource, string STF_Id, ISTF_Resource ContextObject, string DefaultName = "STF Prefab")
 		{
 			this.STF_Id = STF_Id;
 			this.STF_Name = JsonResource.ContainsKey("name") ? (string)JsonResource["name"] : null;
 			this.Degraded = (bool)(JsonResource.GetValue("degraded") ?? false);
-			if(ContextObject is STF_MonoBehaviour) this.STF_Owner = ContextObject as STF_MonoBehaviour;
+			if (ContextObject is STF_MonoBehaviour) this.STF_Owner = ContextObject as STF_MonoBehaviour;
 		}
-
-		public abstract (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath);
-		public abstract List<string> ConvertPropertyPath(string UnityPath);
 	}
 }

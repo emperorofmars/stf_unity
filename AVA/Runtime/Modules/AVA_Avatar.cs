@@ -16,16 +16,6 @@ namespace com.squirrelbite.stf_unity.ava
 
 		public GameObject Viewport;
 		public GameObject PrimaryArmatureInstance;
-
-		public override (string RelativePath, Type Type, List<string> PropertyNames, Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override List<string> ConvertPropertyPath(string UnityPath)
-		{
-			throw new NotImplementedException();
-		}
 	}
 
 	public class AVA_Avatar_Module : ISTF_Module
