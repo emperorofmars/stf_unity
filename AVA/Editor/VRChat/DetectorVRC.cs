@@ -34,6 +34,7 @@ namespace nna.ava.vrchat
 						STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, processor);
 					
 					STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, new STFEXP_Humanoid_Armature_Processor());
+					STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, new STFEXP_Constraint_Twist_Processor());
 				}
 			}
 			else

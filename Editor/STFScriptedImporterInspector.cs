@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.tools
 {
-	// A UI for the STFScriptedImporter.
 	[CustomEditor(typeof(STFScriptedImporter))]
 	public class STFScriptedImporterInspector : Editor
 	{
