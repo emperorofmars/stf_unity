@@ -1,0 +1,104 @@
+#if UNITY_EDITOR
+#if STF_AVA_UNIVRM0_FOUND
+
+using UnityEngine;
+using UnityEditor;
+using System;
+using System.Collections.Generic;
+using com.squirrelbite.stf_unity.ava;
+using VRM;
+using System.Linq;
+
+namespace com.squirrelbite.stf_unity.processors.ava.univrm0
+{
+	public class UNIVRM0_AVA_Avatar_Processor : ISTF_Processor
+	{
+		public Type TargetType => typeof(AVA_Avatar);
+
+		public uint Order => 100;
+
+		public int Priority => 1;
+
+		public List<UnityEngine.Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
+		{
+			var avaAvatar = STFResource as AVA_Avatar;
+
+			var vrmMetaComponent = Context.Root.AddComponent<VRMMeta>();
+			var vrmMeta = ScriptableObject.CreateInstance<VRMMetaObject>();
+			vrmMeta.name = "VRM_Meta";
+			vrmMetaComponent.Meta = vrmMeta;
+
+			if (Context.GetMeta() is var meta && meta != null)
+			{
+				vrmMeta.Title = meta.AssetName;
+				vrmMeta.Author = meta.Author;
+				vrmMeta.Version = meta.Version;
+				vrmMeta.ContactInformation = meta.URL;
+				vrmMeta.OtherLicenseUrl = meta.LicenseURL;
+				vrmMeta.Reference = meta.DocumentationURL;
+			}
+			else
+			{
+				vrmMeta.Title = Context.Root.name;
+				vrmMeta.Version = "0.0.1";
+				vrmMeta.Author = "Unknown";
+			}
+
+			var vrmBlendshapeProxy = Context.Root.AddComponent<VRMBlendShapeProxy>();
+			var vrmBlendShapeAvatar = ScriptableObject.CreateInstance<BlendShapeAvatar>();
+			vrmBlendShapeAvatar.name = "VRM_BlendshapeAvatar";
+
+			vrmBlendshapeProxy.BlendShapeAvatar = vrmBlendShapeAvatar;
+
+			var neutralClip = BlendshapeClipUtil.CreateEmpty(BlendShapePreset.Neutral);
+			vrmBlendShapeAvatar.Clips.Add(neutralClip);
+
+			var secondary = new GameObject {name = "VRM_secondary"};
+			secondary.transform.SetParent(Context.Root.transform, false);
+
+
+			if(!Context.Root.TryGetComponent<Animator>(out var animator))
+			{
+				animator = Context.Root.AddComponent<Animator>();
+			}
+			animator.applyRootMotion = true;
+			animator.updateMode = AnimatorUpdateMode.Normal;
+			animator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
+
+
+			if(avaAvatar.Viewport)
+			{
+				var vrmFirstPerson = Context.Root.AddComponent<VRMFirstPerson>();
+				vrmFirstPerson.FirstPersonBone = avaAvatar.Viewport.transform.parent;
+				vrmFirstPerson.FirstPersonOffset = avaAvatar.Viewport.transform.localPosition;
+
+				if(animator && animator.isHuman)
+				{
+					var headHumanoid = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.Head.ToString());
+					if(headHumanoid.boneName != null)
+					{
+						var vrmLookAt = Context.Root.AddComponent<VRMLookAtHead>();
+						vrmLookAt.Head = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == headHumanoid.boneName);
+					}
+				}
+				
+				if (!Context.ImportConfig.AuthoringImport)
+					Context.AddTrash(avaAvatar.Viewport);
+			}
+
+			return new () { vrmMeta, vrmBlendShapeAvatar, neutralClip };
+		}
+	}
+
+	[InitializeOnLoad]
+	public class Register_AVA_Avatar_VRC
+	{
+		static Register_AVA_Avatar_VRC()
+		{
+			STF_Processor_Registry.RegisterProcessor(DetectorUNIVRM0.STF_UNIVRM0_AVATAR_CONTEXT, new UNIVRM0_AVA_Avatar_Processor());
+		}
+	}
+}
+
+#endif
+#endif

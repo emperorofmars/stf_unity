@@ -4,19 +4,18 @@
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
 using UnityEditor;
-using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity;
 using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.ava;
 
-namespace nna.ava.vrchat
+namespace com.squirrelbite.stf_unity.processors.ava.vrchat
 {
 	public class AVA_Avatar_VRC_Processor : ISTF_Processor
 	{
 		public Type TargetType => typeof(AVA_Avatar);
 
-		public uint Order => 100;
+		public const uint _Order = 100;
+		public uint Order => _Order;
 
 		public int Priority => 1;
 

@@ -39,25 +39,44 @@ namespace com.squirrelbite.stf_unity
 			ParseTRS(Target.transform, Json);
 		}
 
+		public static Vector3 ParseVector3(JArray Json)
+		{
+			return new Vector3(-(float)Json[0], (float)Json[1], (float)Json[2]);
+		}
+		public static Quaternion ParseQuat(JArray Json)
+		{
+			return new Quaternion((float)Json[0], -(float)Json[1], -(float)Json[2], (float)Json[3]);
+		}
+
+
 		public static JArray SerializeLocation(Transform T)
 		{
-			return new JArray {-T.localPosition.x, T.localPosition.y, T.localPosition.z}; // Flip the X-axis to convert to the glTF coordinate system
+			return new JArray { -T.localPosition.x, T.localPosition.y, T.localPosition.z }; // Flip the X-axis to convert to the glTF coordinate system
 		}
 		public static JArray SerializeRotation(Transform T)
 		{
-			return new JArray {T.transform.localRotation.x, -T.transform.localRotation.y, -T.transform.localRotation.z, T.transform.localRotation.w}; // Flipping the X-axis with quats is funny
+			return new JArray { T.transform.localRotation.x, -T.transform.localRotation.y, -T.transform.localRotation.z, T.transform.localRotation.w }; // Flipping the X-axis with quats is funny
 		}
 		public static JArray SerializeScale(Transform T)
 		{
-			return new JArray {T.transform.localScale.x, T.transform.localScale.y, T.transform.localScale.z};
+			return new JArray { T.transform.localScale.x, T.transform.localScale.y, T.transform.localScale.z };
 		}
 		public static JArray SerializeTRS(Transform T)
 		{
-			return new JArray {SerializeLocation(T), SerializeRotation(T), SerializeScale(T)};
+			return new JArray { SerializeLocation(T), SerializeRotation(T), SerializeScale(T) };
 		}
 		public static JArray SerializeTRS(GameObject Go)
 		{
 			return SerializeTRS(Go.transform);
+		}
+
+		public static JArray SerializeVector3(Vector3 T)
+		{
+			return new JArray {-T.x, T.y, T.z}; // Flip the X-axis to convert to the glTF coordinate system
+		}
+		public static JArray SerializeQuat(Quaternion T)
+		{
+			return new JArray {T.x, -T.y, -T.z, T.w}; // Flipping the X-axis with quats is funny
 		}
 	}
 }

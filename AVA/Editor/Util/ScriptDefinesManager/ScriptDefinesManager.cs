@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace nna.util
+namespace com.squirrelbite.stf_unity.processors.ava.util
 {
     [InitializeOnLoad]
     public static class ScriptDefinesManager

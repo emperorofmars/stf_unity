@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using com.squirrelbite.stf_unity.modules;
 using Newtonsoft.Json.Linq;
@@ -143,6 +144,15 @@ namespace com.squirrelbite.stf_unity
 		}
 
 		public ImportOptions ImportConfig => ImportState.ImportConfig;
+
+		public AssetInfo GetMeta()
+		{
+			return ImportState.Meta.STFAssetInfo;
+		}
+		public string GetMetaCustomValue(string Key)
+		{
+			return ImportState.Meta.STFAssetInfo.CustomProperties.FirstOrDefault(e => e.Name == Key)?.Value;
+		}
 
 		public void Report(STFReport Report)
 		{

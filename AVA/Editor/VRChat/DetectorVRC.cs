@@ -3,12 +3,11 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-using nna.util;
 using UnityEditor.Compilation;
-using com.squirrelbite.stf_unity;
 using com.squirrelbite.stf_unity.processors.stfexp;
+using com.squirrelbite.stf_unity.processors.ava.util;
 
-namespace nna.ava.vrchat
+namespace com.squirrelbite.stf_unity.processors.ava.vrchat
 {
 	[InitializeOnLoad, ExecuteInEditMode]
 	public class DetectorVRC

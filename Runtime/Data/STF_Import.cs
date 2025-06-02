@@ -10,7 +10,6 @@ namespace com.squirrelbite.stf_unity
 		public uint BinaryVersionMinor;
 		public string OriginalFileName;
 		public STF_Meta Meta;
-		public List<STF_Buffer> Buffers = new();
 		public GameObject Root;
 
 		public List<STFReport> Reports = new();
@@ -25,8 +24,6 @@ namespace com.squirrelbite.stf_unity
 			if(State.ImportedObjects.GetValueOrDefault(State.RootID) is STF_Prefab @rootObject)
 				Root = @rootObject.gameObject;
 			Reports = State.Reports;
-			foreach(var buffer in State.ImportedBuffers)
-				Buffers.Add(buffer.Value);
 		}
 	}
 }

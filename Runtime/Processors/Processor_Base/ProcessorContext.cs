@@ -19,6 +19,15 @@ namespace com.squirrelbite.stf_unity.processors
 
 		public ImportOptions ImportConfig => State.State.ImportConfig;
 
+		public AssetInfo GetMeta()
+		{
+			return State.State.Meta.STFAssetInfo;
+		}
+		public string GetMetaCustomValue(string Key)
+		{
+			return State.State.Meta.STFAssetInfo.CustomProperties.FirstOrDefault(e => e.Name == Key)?.Value;
+		}
+
 		public void Report(STFReport Report)
 		{
 			State.Report(Report);

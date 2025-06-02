@@ -1,11 +1,11 @@
 {
-    "name": "stf_ava_vrchat",
-    "rootNamespace": "com.squirrelbite.stf_unity.processors.ava.vrchat",
+    "name": "stf_ava_univrm0",
+    "rootNamespace": "com.squirrelbite.stf_unity.processors.ava.stf_ava_univrm0",
     "references": [
         "GUID:8a88ca90357a74942a1113aeb6ad32c6",
         "GUID:3b9f661eb63cdd24eac0fa805a1e17aa",
         "GUID:915b0571b66d8f545801d82ff1007498",
-        "GUID:5718fb738711cd34ea54e9553040911d"
+        "GUID:05dd262a0c0a2f841b8252c8c3815582"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
