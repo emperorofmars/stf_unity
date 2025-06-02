@@ -42,9 +42,10 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			else if (stfConstraint.Target.Count == 3)
 			{
 				var ownerGo = Context.Root.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(n => n.STF_Id == stfConstraint.Target[0]);
-				target = ownerGo.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == stfConstraint.Target[3] && b.STF_Owner == ownerGo)?.transform;
+				var armatureInstance = ownerGo.GetComponent<STF_Instance_Armature>();
+				target = ownerGo.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == stfConstraint.Target[2] && b.STF_Owner == armatureInstance)?.transform;
 			}
-			
+
 			if (target)
 				CreateConstraint(stfConstraint.transform, target, stfConstraint.Weight);
 

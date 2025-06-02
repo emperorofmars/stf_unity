@@ -60,6 +60,7 @@ namespace com.squirrelbite.stf_unity.processors
 					{
 						if (!registeredResources.Contains(resourceOnObject) && State.GetProcessor(resourceOnObject) is var processorOnObject && processorOnObject != null)
 						{
+							registeredResources.Add(resourceOnObject);
 							State.AddProcessorTask(processorOnObject.Order, new Task(() =>
 							{
 								var results = processorOnObject.Process(this, resourceOnObject);

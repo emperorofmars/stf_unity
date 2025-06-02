@@ -38,7 +38,7 @@ namespace com.squirrelbite.stf_unity.modules.vrchat
 			var ret = go.gameObject.AddComponent<VRC_AvatarColliders>();
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "VRC AvatarColliders");
 			ret.Json = JsonResource.ToString();
-			return (null, null);
+			return (ret, null);
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
