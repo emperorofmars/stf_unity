@@ -34,7 +34,7 @@ namespace com.squirrelbite.stf_unity.processors
 
 		public List<UnityEngine.Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
 		{
-			STFResource.PropertyConverter = new STF_Instance_Armature_Converter();
+			STFResource.PropertyConverter = new STF_NodeResource_Converter();
 			return null;
 		}
 	}

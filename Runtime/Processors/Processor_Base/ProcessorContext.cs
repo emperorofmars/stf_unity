@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using com.squirrelbite.stf_unity.modules;
+using com.squirrelbite.stf_unity.stfexp;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors
@@ -42,7 +43,7 @@ namespace com.squirrelbite.stf_unity.processors
 		private void Run()
 		{
 			var registeredResources = new HashSet<ISTF_Resource>();
-			foreach (var objectToRegister in State.State.ObjectToRegister)
+			foreach ((var stfId, var objectToRegister) in State.State.ImportedObjects)
 			{
 				if (objectToRegister is ISTF_Resource resource && !registeredResources.Contains(resource) && State.GetProcessor(resource) is var processor && processor != null)
 				{
@@ -54,7 +55,7 @@ namespace com.squirrelbite.stf_unity.processors
 						State.RegisterResult(results);
 					}));
 				}
-				else if (objectToRegister is GameObject go)
+				if (objectToRegister is STF_PrefabResource go)
 				{
 					foreach (var resourceOnObject in go.GetComponentsInChildren<ISTF_Resource>())
 					{
