@@ -16,6 +16,7 @@ namespace com.squirrelbite.stf_unity
 			new STF_Mesh_Module(),
 			new STF_Material_Module(),
 			new STF_Image_Module(),
+			new STF_Texture_Module(),
 			new STF_Animation_Module(),
 		};
 

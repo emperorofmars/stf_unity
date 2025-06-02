@@ -13,10 +13,23 @@ namespace com.squirrelbite.stf_unity.processors
 		public List<Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
 		{
 			var Image = STFResource as STF_Image;
-			// TODO vastly improve this, use information from an STF_Texture component if present on this image
-			var ret = new Texture2D(8, 8);
+			Texture2D ret;
+
+			// TODO make this vastly more legit
+			if (Image.Components.Find(c => c is STF_Texture) is STF_Texture texture)
+			{
+				var textureformat = texture.quality < 0.65 ? TextureFormat.DXT5 : TextureFormat.ARGB32;
+				ret = new Texture2D((int)texture.width, (int)texture.height, textureformat, true);
+				if(texture.quality < 0.65 )
+					ret.Compress(false);
+			}
+			else
+			{
+				ret = new Texture2D(2, 2);
+			}
+
 			ret.name = Image.STF_Name;
-			ret.LoadImage(Image.buffer.Data);
+			ImageConversion.LoadImage(ret, Image.buffer.Data);
 			return new() { ret };
 		}
 	}
