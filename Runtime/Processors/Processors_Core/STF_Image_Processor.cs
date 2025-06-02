@@ -20,16 +20,17 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				var textureformat = texture.quality < 0.65 ? TextureFormat.DXT5 : TextureFormat.ARGB32;
 				ret = new Texture2D((int)texture.width, (int)texture.height, textureformat, true);
-				if(texture.quality < 0.65 )
+				ImageConversion.LoadImage(ret, Image.buffer.Data);
+				if (texture.quality < 0.65)
 					ret.Compress(false);
 			}
 			else
 			{
 				ret = new Texture2D(2, 2);
+				ImageConversion.LoadImage(ret, Image.buffer.Data);
 			}
 
 			ret.name = Image.STF_Name;
-			ImageConversion.LoadImage(ret, Image.buffer.Data);
 			return new() { ret };
 		}
 	}
