@@ -8,7 +8,7 @@ namespace com.squirrelbite.stf_unity.processors
 {
 	public class ProcessorContextBase
 	{
-		public ProcessorState State;
+		protected readonly ProcessorState State;
 
 		public ProcessorContextBase(ProcessorState State)
 		{
@@ -17,6 +17,12 @@ namespace com.squirrelbite.stf_unity.processors
 		}
 
 		public ImportOptions ImportConfig => State.State.ImportConfig;
+
+		public void AddUnityObject(ISTF_Resource STFResource, Object UnityObject)
+		{
+			STFResource.ProcessedObjects.Add(UnityObject);
+			State.State.AddUnityObject(UnityObject);
+		}
 
 		public AssetInfo GetMeta()
 		{
@@ -40,7 +46,6 @@ namespace com.squirrelbite.stf_unity.processors
 
 		protected virtual void Execute()
 		{
-			
 		}
 
 		private void Run()

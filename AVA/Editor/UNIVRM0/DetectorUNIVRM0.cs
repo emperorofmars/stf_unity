@@ -28,6 +28,8 @@ namespace com.squirrelbite.stf_unity.ava.univrm0
 				}
 				else
 				{
+					STF_Processor_Registry.RegisterContextFactory(STF_UNIVRM0_AVATAR_CONTEXT, new AVAContextFactory());
+
 					STF_Processor_Registry.ContextDisplayNames.Add(STF_UNIVRM0_AVATAR_CONTEXT, "VRM 0 Avatar");
 					foreach (var processor in STF_Processor_Registry.DefaultProcessors["default"])
 						STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, processor);

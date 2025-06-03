@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using com.squirrelbite.stf_unity.processors;
 
-namespace com.squirrelbite.stf_unity.ava.vrchat
+namespace com.squirrelbite.stf_unity.ava
 {
 	public class AVAContextFactory : ISTF_ApplicationContextFactory
 	{

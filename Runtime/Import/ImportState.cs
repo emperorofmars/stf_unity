@@ -122,6 +122,7 @@ namespace com.squirrelbite.stf_unity
 			Reports.Add(Report);
 		}
 
+		public void AddUnityObject(Object Resource) { this.ObjectToRegister.Add(Resource); }
 		public void AddDeleteNonAuthoring(Object AuthoringResource) { this.DeleteOnNonAuthoring.Add(AuthoringResource); }
 		public void AddTrash(Object Trash) { this.Trash.Add(Trash); }
 		public void AddTrash(IEnumerable<Object> Trash) { this.Trash.AddRange(Trash); }

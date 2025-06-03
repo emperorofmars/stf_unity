@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using VRM;
 using System.Linq;
 using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity.modules;
 
 namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 {
@@ -86,32 +85,6 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 				if (!Context.ImportConfig.AuthoringImport)
 					Context.AddTrash(avaAvatar.Viewport);
 			}
-
-			if (avaAvatar.PrimaryArmatureInstance && avaAvatar.PrimaryArmatureInstance.Instance is STF_Instance_Armature instance && instance != null && instance.Armature)
-			{
-				if (instance.Armature.Components.Find(c => c is AVA_EyeRotation_Bone) is AVA_EyeRotation_Bone eyeRotation && eyeRotation != null)
-				{
-					var humanEyeL = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.LeftEye.ToString());
-					var humanEyeR = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.RightEye.ToString());
-
-					if (humanEyeL.boneName != null && humanEyeR.boneName != null)
-					{
-						var eyeL = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == humanEyeL.boneName);
-						var eyeR = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == humanEyeR.boneName);
-
-						var vrmLookat = Context.Root.AddComponent<VRMLookAtBoneApplyer>();
-						vrmLookat.LeftEye.Transform = eyeL;
-						vrmLookat.RightEye.Transform = eyeR;
-
-						// This implementation could be wrong. The VRM documentation on this is effectively non existent: https://vrm.dev/en/univrm/lookat/lookat_bone/
-						vrmLookat.VerticalUp.CurveYRangeDegree = eyeRotation.limits_up;
-						vrmLookat.VerticalDown.CurveYRangeDegree = eyeRotation.limits_down;
-						vrmLookat.HorizontalInner.CurveYRangeDegree = eyeRotation.limits_in;
-						vrmLookat.HorizontalOuter.CurveYRangeDegree = eyeRotation.limits_out;
-					}
-				}
-			}
-
 
 			return new() { vrmMeta, vrmBlendShapeAvatar, neutralClip };
 		}

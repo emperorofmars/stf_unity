@@ -9,22 +9,21 @@ namespace com.squirrelbite.stf_unity
 {
 	public class ImportContext
 	{
-		protected ImportState _ImportState;
-		public ImportState ImportState => _ImportState;
+		protected readonly ImportState State;
 
-		public ImportContext(ImportState ImportState)
+		public ImportContext(ImportState State)
 		{
-			this._ImportState = ImportState;
+			this.State = State;
 		}
 
 		public virtual JObject GetJsonResource(string STF_Id)
 		{
-			return ImportState.GetJsonResource(STF_Id);
+			return State.GetJsonResource(STF_Id);
 		}
 
 		public ISTF_Resource ImportResource(string STF_Id, string ExpectedKind, ISTF_Resource ContextObject = null)
 		{
-			if(ImportState.GetImportedResource(STF_Id) is ISTF_Resource @importedObject)
+			if(State.GetImportedResource(STF_Id) is ISTF_Resource @importedObject)
 				return importedObject;
 
 			var jsonResource = GetJsonResource(STF_Id);
@@ -33,7 +32,7 @@ namespace com.squirrelbite.stf_unity
 			if(jsonResource == null)
 				Report(new STFReport("Invalid Json Resource", ErrorSeverity.FATAL_ERROR, (string)jsonResource.GetValue("type"), null, null));
 
-			var module = ImportState.DetermineModule(jsonResource, ExpectedKind);
+			var module = State.DetermineModule(jsonResource, ExpectedKind);
 			if(module == null)
 			{
 				Report(new STFReport("Unrecognized Resource", ErrorSeverity.WARNING, (string)jsonResource.GetValue("type"), null, null));
@@ -41,7 +40,7 @@ namespace com.squirrelbite.stf_unity
 			}
 
 			(ISTF_Resource STFResource, List<object> ApplicationObjects) = module.Import(this, jsonResource, STF_Id, ContextObject);
-			ImportState.RegisterImportedResource(STF_Id, STFResource, ApplicationObjects);
+			State.RegisterImportedResource(STF_Id, STFResource, ApplicationObjects);
 
 			// handle components and what not
 			if(STFResource is STF_DataResource dataResource && jsonResource.ContainsKey("components"))
@@ -83,7 +82,7 @@ namespace com.squirrelbite.stf_unity
 
 		public STF_Buffer ImportBuffer(string STF_Id)
 		{
-			return ImportState.ImportBuffer(STF_Id);
+			return State.ImportBuffer(STF_Id);
 		}
 
 		public virtual ISTF_Resource HandleFallback(JObject JsonResource, string STF_Id, string ExpectedKind, ISTF_Resource ContextObject = null)
@@ -91,7 +90,7 @@ namespace com.squirrelbite.stf_unity
 			if(ExpectedKind == "data")
 			{
 				var fallbackObject = STF_Data_Fallback_Module.Import(this, JsonResource, STF_Id, ContextObject);
-				ImportState.RegisterImportedResource(STF_Id, fallbackObject, new() {fallbackObject});
+				State.RegisterImportedResource(STF_Id, fallbackObject, new() {fallbackObject});
 
 				if(JsonResource.ContainsKey("components"))
 				{
@@ -109,7 +108,7 @@ namespace com.squirrelbite.stf_unity
 			else if(ExpectedKind == "node")
 			{
 				var fallbackObject = STF_Node_Fallback_Module.Import(this, JsonResource, STF_Id, ContextObject);
-				ImportState.RegisterImportedResource(STF_Id, fallbackObject, null);
+				State.RegisterImportedResource(STF_Id, fallbackObject, null);
 
 				if(JsonResource.ContainsKey("components"))
 				{
@@ -127,13 +126,13 @@ namespace com.squirrelbite.stf_unity
 			else if(ContextObject is STF_MonoBehaviour && (ExpectedKind == "component" || ExpectedKind == "instance"))
 			{
 				var fallbackObject = STF_Fallback_MonoBehaviour_Module.Import(this, JsonResource, STF_Id, ContextObject);
-				ImportState.RegisterImportedResource(STF_Id, fallbackObject, null);
+				State.RegisterImportedResource(STF_Id, fallbackObject, null);
 				return fallbackObject;
 			}
 			else if(ExpectedKind == "component")
 			{
 				var fallbackObject = STF_Fallback_ScriptableObject_Module.Import(this, JsonResource, STF_Id, ContextObject);
-				ImportState.RegisterImportedResource(STF_Id, fallbackObject, new() {fallbackObject});
+				State.RegisterImportedResource(STF_Id, fallbackObject, new() {fallbackObject});
 				return fallbackObject;
 			}
 			else
@@ -143,25 +142,27 @@ namespace com.squirrelbite.stf_unity
 			return null;
 		}
 
-		public ImportOptions ImportConfig => ImportState.ImportConfig;
+		public void AddUnityObject(Object Resource) { State.AddUnityObject(Resource); }
+
+		public ImportOptions ImportConfig => State.ImportConfig;
 
 		public AssetInfo GetMeta()
 		{
-			return ImportState.Meta.STFAssetInfo;
+			return State.Meta.STFAssetInfo;
 		}
 		public string GetMetaCustomValue(string Key)
 		{
-			return ImportState.Meta.STFAssetInfo.CustomProperties.FirstOrDefault(e => e.Name == Key)?.Value;
+			return State.Meta.STFAssetInfo.CustomProperties.FirstOrDefault(e => e.Name == Key)?.Value;
 		}
 
 		public void Report(STFReport Report)
 		{
-			ImportState.Report(Report);
+			State.Report(Report);
 		}
 
-		public void AddTask(Task Task) { ImportState.Tasks.Add(Task); }
-		public void AddDeleteNonAuthoring(Object AuthoringResource) { ImportState.DeleteOnNonAuthoring.Add(AuthoringResource); }
-		public void AddTrash(Transform Trash) { ImportState.Trash.Add(Trash); }
-		public void AddTrash(IEnumerable<Transform> Trash) { ImportState.Trash.AddRange(Trash); }
+		public void AddTask(Task Task) { State.Tasks.Add(Task); }
+		public void AddDeleteNonAuthoring(Object AuthoringResource) { State.DeleteOnNonAuthoring.Add(AuthoringResource); }
+		public void AddTrash(Transform Trash) { State.Trash.Add(Trash); }
+		public void AddTrash(IEnumerable<Transform> Trash) { State.Trash.AddRange(Trash); }
 	}
 }
