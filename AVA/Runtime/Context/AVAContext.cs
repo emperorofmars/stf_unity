@@ -6,14 +6,6 @@ using com.squirrelbite.stf_unity.processors;
 
 namespace com.squirrelbite.stf_unity.ava
 {
-	public class AVAContextFactory : ISTF_ApplicationContextFactory
-	{
-		public ProcessorContextBase Create(ProcessorState State)
-		{
-			return new AVAContext(State);
-		}
-	}
-
 	public class AVAContext : ProcessorContextBase
 	{
 		public readonly Dictionary<string, Dictionary<string, Task>> Tasks = new();

@@ -6,9 +6,22 @@ using UnityEngine;
 using UnityEditor.Compilation;
 using com.squirrelbite.stf_unity.processors.stfexp;
 using com.squirrelbite.stf_unity.processors.ava.util;
+using com.squirrelbite.stf_unity.processors;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat
 {
+	public class VRCContextFactory : STF_ApplicationContextDefinition
+	{
+		public string ContextId => DetectorVRC.STF_VRC_AVATAR_CONTEXT;
+
+		public string DisplayName => "VRChat Avatar";
+
+		public ProcessorContextBase Create(ProcessorState State)
+		{
+			return new AVAContext(State);
+		}
+	}
+
 	[InitializeOnLoad, ExecuteInEditMode]
 	public class DetectorVRC
 	{
@@ -28,12 +41,11 @@ namespace com.squirrelbite.stf_unity.ava.vrchat
 				}
 				else
 				{
-					STF_Processor_Registry.RegisterContextFactory(STF_VRC_AVATAR_CONTEXT, new AVAContextFactory());
+					STF_Processor_Registry.RegisterContext(new VRCContextFactory());
 
-					STF_Processor_Registry.ContextDisplayNames.Add(STF_VRC_AVATAR_CONTEXT, "VRChat Avatar");
 					foreach (var processor in STF_Processor_Registry.DefaultProcessors["default"])
 						STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, processor);
-					
+
 					STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, new STFEXP_Humanoid_Armature_Processor());
 					STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, new STFEXP_Constraint_Twist_Processor());
 				}

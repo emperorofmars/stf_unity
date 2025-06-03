@@ -28,7 +28,7 @@ namespace com.squirrelbite.stf_unity.tools
 			ctx.AddObjectToAsset("main", import);
 
 			var processorState = new ProcessorState(state, import.Root);
-			var processorContext = STF_Processor_Registry.GetApplicationContextFactory(ImportConfig.SelectedApplication)?.Create(processorState) ?? new ProcessorContextBase(processorState);
+			var processorContext = STF_Processor_Registry.GetApplicationContextDefinition(ImportConfig.SelectedApplication)?.Create(processorState) ?? new ProcessorContextBase(processorState);
 
 			foreach (var mapping in ImportConfig.MaterialMappings)
 				if (state.GetImportedResource(mapping.ID) == null)

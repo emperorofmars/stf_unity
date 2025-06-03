@@ -14,19 +14,19 @@ namespace com.squirrelbite.stf_unity.processors
 		public List<Task> Tasks = new();
 		public readonly List<Object> Trash = new();
 
-		public ISTF_ApplicationContextFactory ApplicationContextFactory;
+		public STF_ApplicationContextDefinition ApplicationContextFactory;
 
 		public ProcessorState(
 			ImportState State,
 			GameObject Root,
 			Dictionary<System.Type, ISTF_Processor> Processors = null,
-			ISTF_ApplicationContextFactory ApplicationContextFactory = null
+			STF_ApplicationContextDefinition ApplicationContextFactory = null
 		)
 		{
 			this.State = State;
 			this.Root = Root;
 			this.Processors = Processors ?? STF_Processor_Registry.GetProcessors(State.ImportConfig.SelectedApplication);
-			this.ApplicationContextFactory = ApplicationContextFactory ?? STF_Processor_Registry.GetApplicationContextFactory(State.ImportConfig.SelectedApplication);
+			this.ApplicationContextFactory = ApplicationContextFactory ?? STF_Processor_Registry.GetApplicationContextDefinition(State.ImportConfig.SelectedApplication);
 		}
 
 		public ISTF_Processor GetProcessor(ISTF_Resource Resource)

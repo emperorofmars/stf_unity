@@ -8,10 +8,6 @@ namespace com.squirrelbite.stf_unity
 {
 	public static class STF_Processor_Registry
 	{
-		public static readonly Dictionary<string, string> ContextDisplayNames = new() {
-			{"default", "Unity Default"},
-		};
-
 		public static readonly Dictionary<string, List<ISTF_Processor>> DefaultProcessors = new() {
 			{
 				"default", new () {
@@ -29,8 +25,8 @@ namespace com.squirrelbite.stf_unity
 		};
 
 		private static readonly Dictionary<string, Dictionary<System.Type, ISTF_Processor>> RegisteredProcessors = new();
-		
-		private static readonly Dictionary<string, ISTF_ApplicationContextFactory> RegisteredApplicationContexts = new();
+
+		private static readonly Dictionary<string, STF_ApplicationContextDefinition> RegisteredApplicationContexts = new();
 
 		public static void RegisterProcessor(string Context, ISTF_Processor Processor)
 		{
@@ -40,12 +36,12 @@ namespace com.squirrelbite.stf_unity
 				RegisteredProcessors[Context].Add(Processor.TargetType, Processor);
 		}
 
-		public static void RegisterContextFactory(string Context, ISTF_ApplicationContextFactory Factory)
+		public static void RegisterContext(STF_ApplicationContextDefinition ContextDefinition)
 		{
-			if (!RegisteredApplicationContexts.ContainsKey(Context))
-				RegisteredApplicationContexts.Add(Context, Factory);
+			if (!RegisteredApplicationContexts.ContainsKey(ContextDefinition.ContextId))
+				RegisteredApplicationContexts.Add(ContextDefinition.ContextId, ContextDefinition);
 			else
-				RegisteredApplicationContexts[Context] = Factory;
+				RegisteredApplicationContexts[ContextDefinition.ContextId] = ContextDefinition;
 		}
 
 		public static Dictionary<System.Type, ISTF_Processor> GetProcessors(string Context)
@@ -58,7 +54,7 @@ namespace com.squirrelbite.stf_unity
 			return ret;
 		}
 
-		public static ISTF_ApplicationContextFactory GetApplicationContextFactory(string Context)
+		public static STF_ApplicationContextDefinition GetApplicationContextDefinition(string Context)
 		{
 			if (RegisteredApplicationContexts.ContainsKey(Context))
 				return RegisteredApplicationContexts[Context];
@@ -90,7 +86,12 @@ namespace com.squirrelbite.stf_unity
 
 			var ret = new List<(string, string)>();
 			foreach (var context in contexts)
-				ret.Add((context, ContextDisplayNames.ContainsKey(context) ? ContextDisplayNames[context] : context));
+			{
+				if (context == "default")
+					ret.Add((context, "Unity Default"));
+				else
+					ret.Add((context, RegisteredApplicationContexts.ContainsKey(context) ? RegisteredApplicationContexts[context].DisplayName : context));
+			}
 
 			return ret;
 		}

@@ -12,5 +12,4 @@ namespace com.squirrelbite.stf_unity.processors
 
 		List<Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource);
 	}
-
 }

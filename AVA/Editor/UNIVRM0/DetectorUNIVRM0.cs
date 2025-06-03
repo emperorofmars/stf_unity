@@ -6,9 +6,22 @@ using UnityEngine;
 using UnityEditor.Compilation;
 using com.squirrelbite.stf_unity.processors.stfexp;
 using com.squirrelbite.stf_unity.processors.ava.util;
+using com.squirrelbite.stf_unity.processors;
 
 namespace com.squirrelbite.stf_unity.ava.univrm0
 {
+	public class UNIVRM0ContextFactory : STF_ApplicationContextDefinition
+	{
+		public string ContextId => DetectorUNIVRM0.STF_UNIVRM0_AVATAR_CONTEXT;
+
+		public string DisplayName => "VRM 0 Avatar";
+
+		public ProcessorContextBase Create(ProcessorState State)
+		{
+			return new AVAContext(State);
+		}
+	}
+
 	[InitializeOnLoad, ExecuteInEditMode]
 	public class DetectorUNIVRM0
 	{
@@ -28,9 +41,8 @@ namespace com.squirrelbite.stf_unity.ava.univrm0
 				}
 				else
 				{
-					STF_Processor_Registry.RegisterContextFactory(STF_UNIVRM0_AVATAR_CONTEXT, new AVAContextFactory());
+					STF_Processor_Registry.RegisterContext(new UNIVRM0ContextFactory());
 
-					STF_Processor_Registry.ContextDisplayNames.Add(STF_UNIVRM0_AVATAR_CONTEXT, "VRM 0 Avatar");
 					foreach (var processor in STF_Processor_Registry.DefaultProcessors["default"])
 						STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, processor);
 
