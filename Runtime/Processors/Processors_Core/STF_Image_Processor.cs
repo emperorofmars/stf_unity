@@ -10,7 +10,7 @@ namespace com.squirrelbite.stf_unity.processors
 		public uint Order => 0;
 		public int Priority => 1;
 
-		public List<Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
+		public List<Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var Image = STFResource as STF_Image;
 			Texture2D ret;

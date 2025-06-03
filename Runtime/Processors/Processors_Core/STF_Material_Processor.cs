@@ -29,7 +29,7 @@ namespace com.squirrelbite.stf_unity.processors
 		public uint Order => 10;
 		public int Priority => 1;
 
-		public List<Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
+		public List<Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var STFMaterial = STFResource as STF_Material;
 			var materialMapping = "Standard";

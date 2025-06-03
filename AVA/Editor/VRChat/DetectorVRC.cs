@@ -7,7 +7,7 @@ using UnityEditor.Compilation;
 using com.squirrelbite.stf_unity.processors.stfexp;
 using com.squirrelbite.stf_unity.processors.ava.util;
 
-namespace com.squirrelbite.stf_unity.processors.ava.vrchat
+namespace com.squirrelbite.stf_unity.ava.vrchat
 {
 	[InitializeOnLoad, ExecuteInEditMode]
 	public class DetectorVRC
@@ -28,6 +28,8 @@ namespace com.squirrelbite.stf_unity.processors.ava.vrchat
 				}
 				else
 				{
+					STF_Processor_Registry.RegisterContextFactory(STF_VRC_AVATAR_CONTEXT, new AVAContextFactory());
+
 					STF_Processor_Registry.ContextDisplayNames.Add(STF_VRC_AVATAR_CONTEXT, "VRChat Avatar");
 					foreach (var processor in STF_Processor_Registry.DefaultProcessors["default"])
 						STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, processor);

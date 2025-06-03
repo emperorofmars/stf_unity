@@ -29,13 +29,23 @@ namespace com.squirrelbite.stf_unity
 		};
 
 		private static readonly Dictionary<string, Dictionary<System.Type, ISTF_Processor>> RegisteredProcessors = new();
+		
+		private static readonly Dictionary<string, ISTF_ApplicationContextFactory> RegisteredApplicationContexts = new();
 
 		public static void RegisterProcessor(string Context, ISTF_Processor Processor)
 		{
-			if(!RegisteredProcessors.ContainsKey(Context))
-				RegisteredProcessors.Add(Context, new Dictionary<System.Type, ISTF_Processor> {{Processor.TargetType, Processor}});
-			else if(!RegisteredProcessors[Context].ContainsKey(Processor.TargetType) || RegisteredProcessors[Context][Processor.TargetType].Priority <= Processor.Priority)
+			if (!RegisteredProcessors.ContainsKey(Context))
+				RegisteredProcessors.Add(Context, new Dictionary<System.Type, ISTF_Processor> { { Processor.TargetType, Processor } });
+			else if (!RegisteredProcessors[Context].ContainsKey(Processor.TargetType) || RegisteredProcessors[Context][Processor.TargetType].Priority <= Processor.Priority)
 				RegisteredProcessors[Context].Add(Processor.TargetType, Processor);
+		}
+
+		public static void RegisterContextFactory(string Context, ISTF_ApplicationContextFactory Factory)
+		{
+			if (!RegisteredApplicationContexts.ContainsKey(Context))
+				RegisteredApplicationContexts.Add(Context, Factory);
+			else
+				RegisteredApplicationContexts[Context] = Factory;
 		}
 
 		public static Dictionary<System.Type, ISTF_Processor> GetProcessors(string Context)
@@ -46,6 +56,14 @@ namespace com.squirrelbite.stf_unity
 					if(!ret.ContainsKey(processor.TargetType))
 						ret.Add(processor.TargetType, processor);
 			return ret;
+		}
+
+		public static ISTF_ApplicationContextFactory GetApplicationContextFactory(string Context)
+		{
+			if (RegisteredApplicationContexts.ContainsKey(Context))
+				return RegisteredApplicationContexts[Context];
+			else
+				return null;
 		}
 
 		public static List<string> GetAvaliableContexts()

@@ -3,13 +3,14 @@
 
 using System;
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.modules.vrchat;
+using com.squirrelbite.stf_unity.ava.vrchat.modules;
+using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.serialization;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
 using VRC.SDK3.Avatars.Components;
 
-namespace com.squirrelbite.stf_unity.processors.ava.vrchat
+namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
 	public class VRC_AvatarColliders_Processor : ISTF_Processor
 	{
@@ -20,7 +21,7 @@ namespace com.squirrelbite.stf_unity.processors.ava.vrchat
 		public Type TargetType => typeof(VRC_AvatarColliders);
 
 
-		public List<UnityEngine.Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
+		public List<UnityEngine.Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var avatar = Context.Root.GetComponent<VRCAvatarDescriptor>();
 			if (!avatar) Context.Report(new STFReport("No Avatar Component created!", ErrorSeverity.FATAL_ERROR, VRC_AvatarColliders._STF_Type));

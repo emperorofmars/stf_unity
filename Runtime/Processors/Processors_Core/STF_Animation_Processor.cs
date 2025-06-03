@@ -10,7 +10,7 @@ namespace com.squirrelbite.stf_unity.processors
 		public uint Order => 100000000;
 		public int Priority => 1;
 
-		public List<Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
+		public List<Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var STFAnimation = STFResource as STF_Animation;
 

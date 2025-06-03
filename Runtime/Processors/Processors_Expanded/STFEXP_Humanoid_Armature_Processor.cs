@@ -17,7 +17,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 
 		public int Priority => 1;
 
-		public List<UnityEngine.Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
+		public List<UnityEngine.Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var humanoid = STFResource as STFEXP_Humanoid_Armature;
 

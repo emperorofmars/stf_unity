@@ -132,7 +132,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			return mappings;
 		}
 
-		public static Avatar GenerateAvatar(ProcessorContext Context, Transform ArmatureRootNode, string LocomotionType, bool NoJaw)
+		public static Avatar GenerateAvatar(ProcessorContextBase Context, Transform ArmatureRootNode, string LocomotionType, bool NoJaw)
 		{
 			var potentialBoneList = Context.Root.GetComponentsInChildren<Transform>().Where(t => !t.name.StartsWith('$')).ToArray();
 
@@ -187,7 +187,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			return avatar;
 		}
 
-		private static HumanLimit GetHumanLimit(ProcessorContext Context, string BoneName)
+		private static HumanLimit GetHumanLimit(ProcessorContextBase Context, string BoneName)
 		{
 			/*var ret = Context.GetMessage(BoneName + ".hulim");
 			if(ret != null && ret is HumanLimit limit) return limit;

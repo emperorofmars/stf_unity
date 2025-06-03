@@ -31,11 +31,11 @@ namespace com.squirrelbite.stf_unity.processors
 		public uint Order => 100;
 		public int Priority => 1;
 
-		public List<UnityEngine.Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
+		public List<UnityEngine.Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var meshInstance = STFResource as STF_Instance_Mesh;
 			meshInstance.PropertyConverter = new STF_Instance_Mesh_Converter();
-			
+
 			var processedUnityMesh = (Mesh)(meshInstance.Mesh.ProcessedObjects != null && meshInstance.Mesh.ProcessedObjects.Count == 1 ? meshInstance.Mesh.ProcessedObjects[0] : null);
 			if (processedUnityMesh != null)
 			{

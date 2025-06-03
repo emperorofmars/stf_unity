@@ -14,7 +14,7 @@ namespace com.squirrelbite.stf_unity.processors
 		public uint Order => 20;
 		public int Priority => 1;
 
-		public List<UnityEngine.Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
+		public List<UnityEngine.Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var STFMesh = STFResource as STF_Mesh;
 			var ret = new Mesh { name = STFMesh._STF_Name };

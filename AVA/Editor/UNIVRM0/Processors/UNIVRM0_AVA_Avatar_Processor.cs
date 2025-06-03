@@ -5,11 +5,12 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.ava;
 using VRM;
 using System.Linq;
+using com.squirrelbite.stf_unity.processors;
+using com.squirrelbite.stf_unity.modules;
 
-namespace com.squirrelbite.stf_unity.processors.ava.univrm0
+namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 {
 	public class UNIVRM0_AVA_Avatar_Processor : ISTF_Processor
 	{
@@ -19,7 +20,7 @@ namespace com.squirrelbite.stf_unity.processors.ava.univrm0
 
 		public int Priority => 1;
 
-		public List<UnityEngine.Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
+		public List<UnityEngine.Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var avaAvatar = STFResource as AVA_Avatar;
 
@@ -81,19 +82,45 @@ namespace com.squirrelbite.stf_unity.processors.ava.univrm0
 						vrmLookAt.Head = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == headHumanoid.boneName);
 					}
 				}
-				
+
 				if (!Context.ImportConfig.AuthoringImport)
 					Context.AddTrash(avaAvatar.Viewport);
 			}
 
-			return new () { vrmMeta, vrmBlendShapeAvatar, neutralClip };
+			if (avaAvatar.PrimaryArmatureInstance && avaAvatar.PrimaryArmatureInstance.Instance is STF_Instance_Armature instance && instance != null && instance.Armature)
+			{
+				if (instance.Armature.Components.Find(c => c is AVA_EyeRotation_Bone) is AVA_EyeRotation_Bone eyeRotation && eyeRotation != null)
+				{
+					var humanEyeL = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.LeftEye.ToString());
+					var humanEyeR = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.RightEye.ToString());
+
+					if (humanEyeL.boneName != null && humanEyeR.boneName != null)
+					{
+						var eyeL = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == humanEyeL.boneName);
+						var eyeR = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == humanEyeR.boneName);
+
+						var vrmLookat = Context.Root.AddComponent<VRMLookAtBoneApplyer>();
+						vrmLookat.LeftEye.Transform = eyeL;
+						vrmLookat.RightEye.Transform = eyeR;
+
+						// This implementation could be wrong. The VRM documentation on this is effectively non existent: https://vrm.dev/en/univrm/lookat/lookat_bone/
+						vrmLookat.VerticalUp.CurveYRangeDegree = eyeRotation.limits_up;
+						vrmLookat.VerticalDown.CurveYRangeDegree = eyeRotation.limits_down;
+						vrmLookat.HorizontalInner.CurveYRangeDegree = eyeRotation.limits_in;
+						vrmLookat.HorizontalOuter.CurveYRangeDegree = eyeRotation.limits_out;
+					}
+				}
+			}
+
+
+			return new() { vrmMeta, vrmBlendShapeAvatar, neutralClip };
 		}
 	}
 
 	[InitializeOnLoad]
-	public class Register_AVA_Avatar_VRC
+	public class Register_UNIVRM0_AVA_Avatar
 	{
-		static Register_AVA_Avatar_VRC()
+		static Register_UNIVRM0_AVA_Avatar()
 		{
 			STF_Processor_Registry.RegisterProcessor(DetectorUNIVRM0.STF_UNIVRM0_AVATAR_CONTEXT, new UNIVRM0_AVA_Avatar_Processor());
 		}

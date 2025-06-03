@@ -10,23 +10,23 @@ namespace com.squirrelbite.stf_unity.processors
 		public readonly Dictionary<System.Type, ISTF_Processor> Processors;
 		public readonly GameObject Root;
 
-		public readonly Dictionary<string, string> OverriddenResources = new();
-		public readonly Dictionary<string, List<Object>> ResourcesById = new();
-
 		public readonly Dictionary<uint, List<Task>> ProcessOrderMap = new();
 		public List<Task> Tasks = new();
 		public readonly List<Object> Trash = new();
+
+		public ISTF_ApplicationContextFactory ApplicationContextFactory;
 
 		public ProcessorState(
 			ImportState State,
 			GameObject Root,
 			Dictionary<System.Type, ISTF_Processor> Processors = null,
-			HashSet<System.Type> IgnoreList = null
+			ISTF_ApplicationContextFactory ApplicationContextFactory = null
 		)
 		{
 			this.State = State;
 			this.Root = Root;
 			this.Processors = Processors ?? STF_Processor_Registry.GetProcessors(State.ImportConfig.SelectedApplication);
+			this.ApplicationContextFactory = ApplicationContextFactory ?? STF_Processor_Registry.GetApplicationContextFactory(State.ImportConfig.SelectedApplication);
 		}
 
 		public ISTF_Processor GetProcessor(ISTF_Resource Resource)
@@ -49,7 +49,13 @@ namespace com.squirrelbite.stf_unity.processors
 			}
 		}
 
-		public bool IsOverridden(string Id) { return OverriddenResources.ContainsKey(Id); }
+		public object GetImportedResource(string STF_Id)
+		{
+			if(State.ImportedObjects.ContainsKey(STF_Id))
+				return State.ImportedObjects[STF_Id];
+			else
+				return null;
+		}
 
 		public void AddProcessorTask(uint Order, Task Task)
 		{

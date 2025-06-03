@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using com.squirrelbite.stf_unity.modules;
+using System.Threading.Tasks;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -15,7 +17,7 @@ namespace com.squirrelbite.stf_unity.ava
 		public override string STF_Type => _STF_Type;
 
 		public GameObject Viewport;
-		public GameObject PrimaryArmatureInstance;
+		public STF_Node PrimaryArmatureInstance;
 	}
 
 	public class AVA_Avatar_Module : ISTF_Module
@@ -42,8 +44,11 @@ namespace com.squirrelbite.stf_unity.ava
 
 			if (JsonResource.ContainsKey("viewport") && Context.ImportResource((string)JsonResource["viewport"], "node") is STF_MonoBehaviour viewport && viewport != null)
 				ret.Viewport = viewport.gameObject;
-			if (JsonResource.ContainsKey("primary_armature_instance") && Context.ImportResource((string)JsonResource["primary_armature_instance"], "node") is STF_MonoBehaviour primary_armature_instance && primary_armature_instance != null)
-				ret.PrimaryArmatureInstance = primary_armature_instance.gameObject;
+			if (JsonResource.ContainsKey("primary_armature_instance"))
+				Context.AddTask(new Task(() => {
+					if (Context.ImportResource((string)JsonResource["primary_armature_instance"], "node") is STF_Node primary_armature_instance && primary_armature_instance != null)
+						ret.PrimaryArmatureInstance = primary_armature_instance;
+				}));
 
 			return (ret, null);
 		}

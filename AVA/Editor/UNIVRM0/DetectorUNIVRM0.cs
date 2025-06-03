@@ -7,7 +7,7 @@ using UnityEditor.Compilation;
 using com.squirrelbite.stf_unity.processors.stfexp;
 using com.squirrelbite.stf_unity.processors.ava.util;
 
-namespace com.squirrelbite.stf_unity.processors.ava.univrm0
+namespace com.squirrelbite.stf_unity.ava.univrm0
 {
 	[InitializeOnLoad, ExecuteInEditMode]
 	public class DetectorUNIVRM0

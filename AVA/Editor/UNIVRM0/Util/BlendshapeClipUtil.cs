@@ -2,19 +2,20 @@
 #if STF_AVA_UNIVRM0_FOUND
 
 using System.Collections.Generic;
+using com.squirrelbite.stf_unity.processors;
 using UnityEngine;
 using VRM;
 
-namespace com.squirrelbite.stf_unity.processors.ava.univrm0
+namespace com.squirrelbite.stf_unity.ava.univrm0
 {
 	public static class BlendshapeClipUtil
 	{
-		public static BlendShapeBinding CreateBinding(ProcessorContext Context, SkinnedMeshRenderer Renderer, string BlendshapeName, float Weight)
+		public static BlendShapeBinding CreateBinding(ProcessorContextBase Context, SkinnedMeshRenderer Renderer, string BlendshapeName, float Weight)
 		{
 			return new BlendShapeBinding()
 			{
 				Index = Renderer.sharedMesh.GetBlendShapeIndex(BlendshapeName),
-				RelativePath = UnityUtil.getPath(Context.Root.transform, Renderer.transform),
+				RelativePath = UnityUtil.getPath(Context.Root.transform, Renderer.transform, true),
 				Weight = Weight
 			};
 		}
@@ -29,7 +30,7 @@ namespace com.squirrelbite.stf_unity.processors.ava.univrm0
 			return clip;
 		}
 
-		public static BlendShapeClip CreateSimple(ProcessorContext Context, BlendShapePreset BlendshapePreset, SkinnedMeshRenderer Renderer, string BlendshapeName)
+		public static BlendShapeClip CreateSimple(ProcessorContextBase Context, BlendShapePreset BlendshapePreset, SkinnedMeshRenderer Renderer, string BlendshapeName)
 		{
 			var clip = ScriptableObject.CreateInstance<BlendShapeClip>();
 			clip.name = "VRM_Clip_" + BlendshapePreset.ToString();
@@ -42,7 +43,7 @@ namespace com.squirrelbite.stf_unity.processors.ava.univrm0
 			return clip;
 		}
 
-		public static BlendShapeClip Create(ProcessorContext Context, BlendShapePreset BlendshapePreset, string ClipName, List<(SkinnedMeshRenderer Renderer, List<(string Name, float Weight)> Blendshapes)> Blendshapes)
+		public static BlendShapeClip Create(ProcessorContextBase Context, BlendShapePreset BlendshapePreset, string ClipName, List<(SkinnedMeshRenderer Renderer, List<(string Name, float Weight)> Blendshapes)> Blendshapes)
 		{
 			var clip = ScriptableObject.CreateInstance<BlendShapeClip>();
 			clip.name = "VRM_Clip_" + ClipName;

@@ -12,6 +12,8 @@ namespace com.squirrelbite.stf_unity
 		public bool AuthoringImport = false;
 		public string SelectedApplication = "default";
 
+		public bool IsFirstImport = true;
+
 		[System.Serializable]
 		public class MaterialMapping
 		{

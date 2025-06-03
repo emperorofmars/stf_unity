@@ -6,9 +6,9 @@ using VRC.SDK3.Avatars.Components;
 using UnityEditor;
 using System;
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.ava;
+using com.squirrelbite.stf_unity.processors;
 
-namespace com.squirrelbite.stf_unity.processors.ava.vrchat
+namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
 	public class AVA_Avatar_VRC_Processor : ISTF_Processor
 	{
@@ -19,7 +19,7 @@ namespace com.squirrelbite.stf_unity.processors.ava.vrchat
 
 		public int Priority => 1;
 
-		public List<UnityEngine.Object> Process(ProcessorContext Context, ISTF_Resource STFResource)
+		public List<UnityEngine.Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var avaAvatar = STFResource as AVA_Avatar;
 			Context.Root.AddComponent<VRC.Core.PipelineManager>();

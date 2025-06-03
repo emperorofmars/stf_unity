@@ -8,6 +8,7 @@ namespace com.squirrelbite.stf_unity
 	public abstract class STF_PrefabResource : STF_MonoBehaviour
 	{
 		public override string STF_Kind => "data";
+		public ISTF_Resource Fallback;
 
 		public List<STF_MonoBehaviour> Components = new();
 

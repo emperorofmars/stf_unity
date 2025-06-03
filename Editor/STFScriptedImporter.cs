@@ -28,7 +28,7 @@ namespace com.squirrelbite.stf_unity.tools
 			ctx.AddObjectToAsset("main", import);
 
 			var processorState = new ProcessorState(state, import.Root);
-			var processorContext = new ProcessorContext(processorState);
+			var processorContext = STF_Processor_Registry.GetApplicationContextFactory(ImportConfig.SelectedApplication)?.Create(processorState) ?? new ProcessorContextBase(processorState);
 
 			foreach (var mapping in ImportConfig.MaterialMappings)
 				if (state.GetImportedResource(mapping.ID) == null)
@@ -55,6 +55,7 @@ namespace com.squirrelbite.stf_unity.tools
 						Destroy(stfResource as UnityEngine.Object);
 #endif
 
+				ImportConfig.IsFirstImport = false;
 				Debug.Log("STF Import Success!");
 			}
 			else

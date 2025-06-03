@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using com.squirrelbite.stf_unity.modules;
-using com.squirrelbite.stf_unity.stfexp;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors
 {
-	public class ProcessorContext
+	public class ProcessorContextBase
 	{
 		public ProcessorState State;
 
-		public ProcessorContext(ProcessorState State)
+		public ProcessorContextBase(ProcessorState State)
 		{
 			this.State = State;
 			Run();
@@ -40,14 +38,44 @@ namespace com.squirrelbite.stf_unity.processors
 		public void AddTrash(Object Trash) { State.AddTrash(Trash); }
 		public void AddTrash(IEnumerable<Object> Trash) { State.AddTrash(Trash); }
 
+		protected virtual void Execute()
+		{
+			
+		}
+
 		private void Run()
 		{
-			var registeredResources = new HashSet<ISTF_Resource>();
+			var resources = new HashSet<ISTF_Resource>();
+
+			// Find all processable resources
 			foreach ((var stfId, var objectToRegister) in State.State.ImportedObjects)
 			{
-				if (objectToRegister is ISTF_Resource resource && !registeredResources.Contains(resource) && State.GetProcessor(resource) is var processor && processor != null)
+				if (objectToRegister is ISTF_Resource resource && !resources.Contains(resource) && State.GetProcessor(resource) is var processor && processor != null)
+					resources.Add(resource);
+				if (objectToRegister is STF_PrefabResource go)
+					foreach (var resourceOnObject in go.GetComponentsInChildren<ISTF_Resource>())
+						if (!resources.Contains(resourceOnObject) && State.GetProcessor(resourceOnObject) is var processorOnObject && processorOnObject != null)
+							resources.Add(resourceOnObject);
+			}
+
+			// Figure out overrides
+			var overrides = new HashSet<string>();
+			foreach (var resource in resources)
+			{
+				if (resource is STF_DataComponentResource dataComponent)
+					foreach (var o in dataComponent.Overrides)
+						if (!overrides.Contains(o)) overrides.Add(o);
+				if (resource is STF_NodeComponentResource nodeComponent)
+					foreach (var o in nodeComponent.Overrides)
+						if (!overrides.Contains(o)) overrides.Add(o);
+			}
+
+			// Create processing tasks
+			foreach (var resource in resources)
+			{
+				if (!overrides.Contains(resource.STF_Id))
 				{
-					registeredResources.Add(resource);
+					var processor = State.GetProcessor(resource);
 					State.AddProcessorTask(processor.Order, new Task(() =>
 					{
 						var results = processor.Process(this, resource);
@@ -55,24 +83,8 @@ namespace com.squirrelbite.stf_unity.processors
 						State.RegisterResult(results);
 					}));
 				}
-				if (objectToRegister is STF_PrefabResource go)
-				{
-					foreach (var resourceOnObject in go.GetComponentsInChildren<ISTF_Resource>())
-					{
-						if (!registeredResources.Contains(resourceOnObject) && State.GetProcessor(resourceOnObject) is var processorOnObject && processorOnObject != null)
-						{
-							registeredResources.Add(resourceOnObject);
-							State.AddProcessorTask(processorOnObject.Order, new Task(() =>
-							{
-								var results = processorOnObject.Process(this, resourceOnObject);
-								if (results != null) resourceOnObject.ProcessedObjects.AddRange(results);
-								State.RegisterResult(results);
-							}));
-						}
-					}
-				}
 			}
-			
+
 			//Execute processor tasks in their defined order
 			foreach (var (order, taskList) in State.ProcessOrderMap.OrderBy(e => e.Key))
 			{
@@ -85,6 +97,8 @@ namespace com.squirrelbite.stf_unity.processors
 					}
 				}
 			}
+
+			Execute();
 
 			// Run any Tasks added to the State during the processor execution
 			var maxDepth = 100;

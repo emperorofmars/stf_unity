@@ -39,6 +39,11 @@ namespace com.squirrelbite.stf_unity
 			JsonBuffers = json["buffers"] as JObject;
 
 			if (ImportConfig != null) this.ImportConfig = ImportConfig;
+
+			if (ImportConfig.IsFirstImport && Meta.STFAssetInfo.CustomProperties.Find(p => p.Name == "import.context.default") is var defaultContext && defaultContext!= null && !string.IsNullOrWhiteSpace(defaultContext.Value))
+			{
+				ImportConfig.SelectedApplication = defaultContext.Value;
+			}
 		}
 
 		public JObject GetJsonResource(string ID)
