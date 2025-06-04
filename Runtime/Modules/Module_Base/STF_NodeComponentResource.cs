@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace com.squirrelbite.stf_unity
+namespace com.squirrelbite.stf_unity.modules
 {
 	public abstract class STF_NodeComponentResource: STF_MonoBehaviour
 	{

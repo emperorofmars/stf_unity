@@ -17,7 +17,8 @@ namespace com.squirrelbite.stf_unity.ava
 		public override string STF_Type => _STF_Type;
 
 		public GameObject Viewport;
-		public STF_Node PrimaryArmatureInstance;
+		public STF_Instance_Armature PrimaryArmatureInstance;
+		public STF_Instance_Mesh PrimaryMeshInstance;
 	}
 
 	public class AVA_Avatar_Module : ISTF_Module
@@ -47,7 +48,12 @@ namespace com.squirrelbite.stf_unity.ava
 			if (JsonResource.ContainsKey("primary_armature_instance"))
 				Context.AddTask(new Task(() => {
 					if (Context.ImportResource((string)JsonResource["primary_armature_instance"], "node") is STF_Node primary_armature_instance && primary_armature_instance != null)
-						ret.PrimaryArmatureInstance = primary_armature_instance;
+						ret.PrimaryArmatureInstance = primary_armature_instance.Instance as STF_Instance_Armature;
+				}));
+			if (JsonResource.ContainsKey("primary_mesh_instance"))
+				Context.AddTask(new Task(() => {
+					if (Context.ImportResource((string)JsonResource["primary_mesh_instance"], "node") is STF_Node primary_mesh_instance && primary_mesh_instance != null)
+						ret.PrimaryMeshInstance = primary_mesh_instance.Instance as STF_Instance_Mesh;
 				}));
 
 			return (ret, null);

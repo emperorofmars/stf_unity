@@ -1,16 +1,15 @@
 
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.modules;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors
 {
-	public interface ISTF_Processor
+	public interface ISTF_GlobalProcessor
 	{
 		abstract System.Type TargetType { get; }
 		abstract uint Order { get; }
 		abstract int Priority { get; }
 
-		List<Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource);
+		List<Object> Process(ProcessorContextBase Context);
 	}
 }

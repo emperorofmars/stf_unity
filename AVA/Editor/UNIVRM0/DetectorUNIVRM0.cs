@@ -43,11 +43,8 @@ namespace com.squirrelbite.stf_unity.ava.univrm0
 				{
 					STF_Processor_Registry.RegisterContext(new UNIVRM0ContextFactory());
 
-					foreach (var processor in STF_Processor_Registry.DefaultProcessors["default"])
+					foreach ((var _, var processor) in STF_Processor_Registry.GetProcessors("default"))
 						STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, processor);
-
-					STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, new STFEXP_Humanoid_Armature_Processor());
-					STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, new STFEXP_Constraint_Twist_Processor());
 				}
 			}
 			else

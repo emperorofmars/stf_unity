@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.ava.vrchat.modules;
+using com.squirrelbite.stf_unity.modules;
 using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.serialization;
 using Newtonsoft.Json.Linq;

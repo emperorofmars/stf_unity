@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using com.squirrelbite.stf_unity.modules;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors
@@ -8,7 +9,12 @@ namespace com.squirrelbite.stf_unity.processors
 	{
 		public readonly ImportState State;
 		public readonly Dictionary<System.Type, ISTF_Processor> Processors;
+		public readonly Dictionary<System.Type, ISTF_GlobalProcessor> GlobalProcessors;
 		public readonly GameObject Root;
+
+		public readonly List<ISTF_Resource> ResourcesToProcess = new();
+		public readonly List<string> OverriddenResources = new();
+		public readonly Dictionary<System.Type, List<ISTF_Resource>> ResourcesByType = new();
 
 		public readonly Dictionary<uint, List<Task>> ProcessOrderMap = new();
 		public List<Task> Tasks = new();
@@ -20,13 +26,56 @@ namespace com.squirrelbite.stf_unity.processors
 			ImportState State,
 			GameObject Root,
 			Dictionary<System.Type, ISTF_Processor> Processors = null,
+			Dictionary<System.Type, ISTF_GlobalProcessor> GlobalProcessors = null,
 			STF_ApplicationContextDefinition ApplicationContextFactory = null
 		)
 		{
 			this.State = State;
 			this.Root = Root;
 			this.Processors = Processors ?? STF_Processor_Registry.GetProcessors(State.ImportConfig.SelectedApplication);
+			this.GlobalProcessors = GlobalProcessors ?? STF_Processor_Registry.GetGlobalProcessors(State.ImportConfig.SelectedApplication);
 			this.ApplicationContextFactory = ApplicationContextFactory ?? STF_Processor_Registry.GetApplicationContextDefinition(State.ImportConfig.SelectedApplication);
+
+			Init();
+		}
+
+		private void Init()
+		{
+			var tmpResources = new HashSet<ISTF_Resource>();
+
+			// Find all processable resources
+			foreach ((var stfId, var objectToRegister) in State.ImportedObjects)
+			{
+				if (objectToRegister is ISTF_Resource resource && !tmpResources.Contains(resource) && GetProcessor(resource) is var processor && processor != null)
+					tmpResources.Add(resource);
+				/*if (objectToRegister is STF_PrefabResource go)
+					foreach (var resourceOnObject in go.GetComponentsInChildren<ISTF_Resource>())
+						if (!tmpResources.Contains(resourceOnObject) && GetProcessor(resourceOnObject) is var processorOnObject && processorOnObject != null)
+							tmpResources.Add(resourceOnObject);*/
+			}
+
+			foreach ((var stfId, var resource) in State.ImportedObjects)
+			{
+				if(ResourcesByType.ContainsKey(resource.GetType()))
+					ResourcesByType[resource.GetType()].Add(resource);
+				else
+					ResourcesByType.Add(resource.GetType(), new() { resource });
+			}
+
+			// Figure out overrides
+				foreach (var resource in tmpResources)
+				{
+					if (resource is STF_DataComponentResource dataComponent)
+						foreach (var o in dataComponent.Overrides)
+							if (!OverriddenResources.Contains(o)) OverriddenResources.Add(o);
+					if (resource is STF_NodeComponentResource nodeComponent)
+						foreach (var o in nodeComponent.Overrides)
+							if (!OverriddenResources.Contains(o)) OverriddenResources.Add(o);
+				}
+
+			foreach (var resource in tmpResources)
+				if (!OverriddenResources.Contains(resource.STF_Id))
+					ResourcesToProcess.Add(resource);
 		}
 
 		public ISTF_Processor GetProcessor(ISTF_Resource Resource)
@@ -37,11 +86,24 @@ namespace com.squirrelbite.stf_unity.processors
 				return null;
 		}
 
+		public List<ISTF_Resource> GetResourceByType(System.Type Type)
+		{
+			if (ResourcesByType.ContainsKey(Type))
+				return ResourcesByType[Type];
+			else
+				return null;
+		}
+
+		public bool IsOverridden(string STF_Id)
+		{
+			return OverriddenResources.Contains(STF_Id);
+		}
+
 		public void RegisterResult(List<Object> ApplicationObjects)
 		{
-			if(ApplicationObjects != null && ApplicationObjects.Count > 0)
+			if (ApplicationObjects != null && ApplicationObjects.Count > 0)
 			{
-				foreach(var ApplicationObject in ApplicationObjects)
+				foreach (var ApplicationObject in ApplicationObjects)
 				{
 					if (ApplicationObject is Object @object)
 						State.ObjectToRegister.Add(@object);

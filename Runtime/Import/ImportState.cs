@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using com.squirrelbite.stf_unity.modules;
 
 namespace com.squirrelbite.stf_unity
 {
 	public class ImportState
 	{
 		public readonly Dictionary<string, ISTF_Module> Modules = new();
+		public readonly HashSet<string> Ignores = new();
 		public STF_File File;
 		public STF_Meta Meta;
 		public JObject JsonResources;
@@ -28,10 +30,11 @@ namespace com.squirrelbite.stf_unity
 		public readonly List<Object> Trash = new();
 		public readonly List<Object> DeleteOnNonAuthoring = new();
 
-		public ImportState(STF_File File, Dictionary<string, ISTF_Module> Modules, ImportOptions ImportConfig = null)
+		public ImportState(STF_File File, Dictionary<string, ISTF_Module> Modules, HashSet<string> Ignores, ImportOptions ImportConfig = null)
 		{
 			this.File = File;
 			this.Modules = Modules;
+			this.Ignores = Ignores;
 
 			var json = JObject.Parse(File.Json);
 			Meta = new STF_Meta(json["stf"] as JObject);
@@ -57,10 +60,19 @@ namespace com.squirrelbite.stf_unity
 		public ISTF_Module DetermineModule(JObject JsonResource, string ExpectedKind)
 		{
 			var type = (string)JsonResource.GetValue("type");
-			if(Modules.ContainsKey(type))
+
+			foreach (var ignore in Ignores)
+				if (type.StartsWith(ignore)) return null;
+
+			if (Modules.ContainsKey(type))
+			{
 				return Modules[type];
+			}
 			else
+			{
+				Report(new STFReport("Unrecognized Resource", ErrorSeverity.WARNING, (string)JsonResource.GetValue("type"), null, null));
 				return null;
+			}
 		}
 
 		public object GetImportedResource(string STF_Id)

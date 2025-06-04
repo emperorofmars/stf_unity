@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity
+namespace com.squirrelbite.stf_unity.modules
 {
 	public abstract class STF_ScriptableObject : ScriptableObject, ISTF_Resource
 	{

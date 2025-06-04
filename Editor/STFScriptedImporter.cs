@@ -17,7 +17,7 @@ namespace com.squirrelbite.stf_unity.tools
 		{
 			var file = new STF_File(ctx.assetPath);
 
-			var state = new ImportState(file, STF_Module_Registry.Modules, ImportConfig);
+			var state = new ImportState(file, STF_Module_Registry.Modules, STF_Module_Registry.Ignores, ImportConfig);
 			var rootContext = new ImportContext(state);
 
 			rootContext.ImportResource(state.RootID, "data");
@@ -28,7 +28,8 @@ namespace com.squirrelbite.stf_unity.tools
 			ctx.AddObjectToAsset("main", import);
 
 			var processorState = new ProcessorState(state, import.Root);
-			var processorContext = STF_Processor_Registry.GetApplicationContextDefinition(ImportConfig.SelectedApplication)?.Create(processorState) ?? new ProcessorContextBase(processorState);
+			var processorContext = STF_Processor_Registry.CreateApplicationContext(ImportConfig.SelectedApplication, processorState);
+			processorContext.Run();
 
 			foreach (var mapping in ImportConfig.MaterialMappings)
 				if (state.GetImportedResource(mapping.ID) == null)

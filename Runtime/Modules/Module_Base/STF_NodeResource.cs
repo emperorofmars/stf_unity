@@ -1,10 +1,8 @@
 
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
-namespace com.squirrelbite.stf_unity
+namespace com.squirrelbite.stf_unity.modules
 {
 	public abstract class STF_NodeResource : STF_MonoBehaviour
 	{

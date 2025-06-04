@@ -1,10 +1,11 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.stfexp;
 using UnityEngine.Animations;
 using com.squirrelbite.stf_unity.modules;
 using System.Linq;
+using com.squirrelbite.stf_unity.modules.stfexp;
+
 
 
 #if UNITY_EDITOR

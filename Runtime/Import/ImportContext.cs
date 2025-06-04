@@ -35,7 +35,6 @@ namespace com.squirrelbite.stf_unity
 			var module = State.DetermineModule(jsonResource, ExpectedKind);
 			if(module == null)
 			{
-				Report(new STFReport("Unrecognized Resource", ErrorSeverity.WARNING, (string)jsonResource.GetValue("type"), null, null));
 				return HandleFallback(jsonResource, STF_Id, ExpectedKind, ContextObject);
 			}
 
@@ -48,8 +47,13 @@ namespace com.squirrelbite.stf_unity
 				foreach(var componentId in jsonResource["components"])
 				{
 					var component = ImportResource((string)componentId, "component", STFResource);
-					if(component is STF_ScriptableObject resource)
+					if (component is STF_DataComponentResource resource)
+					{
 						dataResource.Components.Add(resource);
+						resource.ParentObject = dataResource;
+					}
+					else if (component is STF_Fallback_ScriptableObject fallbackResource)
+						dataResource.Components.Add(fallbackResource);
 					else
 						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), null, null));
 				}

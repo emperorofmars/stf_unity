@@ -1,7 +1,7 @@
 
 using System.Collections.Generic;
 
-namespace com.squirrelbite.stf_unity
+namespace com.squirrelbite.stf_unity.modules
 {
 	public interface ISTF_Resource
 	{

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using com.squirrelbite.stf_unity.modules;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors
@@ -13,7 +14,6 @@ namespace com.squirrelbite.stf_unity.processors
 		public ProcessorContextBase(ProcessorState State)
 		{
 			this.State = State;
-			Run();
 		}
 
 		public ImportOptions ImportConfig => State.State.ImportConfig;
@@ -22,6 +22,11 @@ namespace com.squirrelbite.stf_unity.processors
 		{
 			STFResource.ProcessedObjects.Add(UnityObject);
 			State.State.AddUnityObject(UnityObject);
+		}
+
+		public List<ISTF_Resource> GetResourceByType(System.Type Type)
+		{
+			return State.GetResourceByType(Type);
 		}
 
 		public AssetInfo GetMeta()
@@ -48,46 +53,26 @@ namespace com.squirrelbite.stf_unity.processors
 		{
 		}
 
-		private void Run()
+		public void Run()
 		{
-			var resources = new HashSet<ISTF_Resource>();
-
-			// Find all processable resources
-			foreach ((var stfId, var objectToRegister) in State.State.ImportedObjects)
-			{
-				if (objectToRegister is ISTF_Resource resource && !resources.Contains(resource) && State.GetProcessor(resource) is var processor && processor != null)
-					resources.Add(resource);
-				if (objectToRegister is STF_PrefabResource go)
-					foreach (var resourceOnObject in go.GetComponentsInChildren<ISTF_Resource>())
-						if (!resources.Contains(resourceOnObject) && State.GetProcessor(resourceOnObject) is var processorOnObject && processorOnObject != null)
-							resources.Add(resourceOnObject);
-			}
-
-			// Figure out overrides
-			var overrides = new HashSet<string>();
-			foreach (var resource in resources)
-			{
-				if (resource is STF_DataComponentResource dataComponent)
-					foreach (var o in dataComponent.Overrides)
-						if (!overrides.Contains(o)) overrides.Add(o);
-				if (resource is STF_NodeComponentResource nodeComponent)
-					foreach (var o in nodeComponent.Overrides)
-						if (!overrides.Contains(o)) overrides.Add(o);
-			}
-
 			// Create processing tasks
-			foreach (var resource in resources)
+			foreach (var resource in State.ResourcesToProcess)
 			{
-				if (!overrides.Contains(resource.STF_Id))
+				var processor = State.GetProcessor(resource);
+				State.AddProcessorTask(processor.Order, new Task(() =>
 				{
-					var processor = State.GetProcessor(resource);
-					State.AddProcessorTask(processor.Order, new Task(() =>
-					{
-						var results = processor.Process(this, resource);
-						if (results != null) resource.ProcessedObjects.AddRange(results);
-						State.RegisterResult(results);
-					}));
-				}
+					var results = processor.Process(this, resource);
+					if (results != null) resource.ProcessedObjects.AddRange(results);
+					State.RegisterResult(results);
+				}));
+			}
+			foreach ((var type, var globalProcessor) in State.GlobalProcessors)
+			{
+				State.AddProcessorTask(globalProcessor.Order, new Task(() =>
+				{
+					var results = globalProcessor.Process(this);
+					State.RegisterResult(results);
+				}));
 			}
 
 			//Execute processor tasks in their defined order

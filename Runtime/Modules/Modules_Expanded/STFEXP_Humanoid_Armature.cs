@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 using UnityEditor;
 #endif
 
-namespace com.squirrelbite.stf_unity.stfexp
+namespace com.squirrelbite.stf_unity.modules.stfexp
 {
 	public class STFEXP_Humanoid_Armature : STF_NodeComponentResource
 	{

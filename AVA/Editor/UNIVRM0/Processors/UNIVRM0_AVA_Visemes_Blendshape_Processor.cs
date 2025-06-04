@@ -8,11 +8,11 @@ using System.Collections.Generic;
 using VRM;
 using com.squirrelbite.stf_unity.modules;
 using com.squirrelbite.stf_unity.processors;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 {
-	public class UNIVRM0_AVA_Visemes_Blendshape_Processor : ISTF_Processor
+	public class UNIVRM0_AVA_Visemes_Blendshape_Processor : ISTF_GlobalProcessor
 	{
 		public Type TargetType => typeof(AVA_Visemes_Blendshape);
 
@@ -20,37 +20,56 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 
 		public int Priority => 1;
 
-		public List<UnityEngine.Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
+		public List<UnityEngine.Object> Process(ProcessorContextBase Context)
 		{
 			var blendshapeProxy = Context.Root.GetComponent<VRMBlendShapeProxy>();
-			if (!blendshapeProxy) Context.Report(new STFReport("No Blendshape Proxy Component created!", ErrorSeverity.FATAL_ERROR, AVA_FaceMesh._STF_Type));
+			if (!blendshapeProxy) Context.Report(new STFReport("No Blendshape Proxy Component created!", ErrorSeverity.FATAL_ERROR, AVA_Visemes_Blendshape._STF_Type));
 
-			var visemesBlendshape = STFResource as AVA_Visemes_Blendshape;
+			var stfMeshInstance = (Context as AVAContext).PrimaryMeshInstance;
+			var smr = stfMeshInstance?.GetComponent<SkinnedMeshRenderer>();
+			var visemesBlendshape = stfMeshInstance?.Mesh.Components.Find(c => c.GetType() == typeof(AVA_Visemes_Blendshape)) as AVA_Visemes_Blendshape;
 
-			foreach (var meshInstance in Context.Root.GetComponentsInChildren<STF_Instance_Mesh>())
+			if (!visemesBlendshape)
 			{
-				if (meshInstance.Mesh.Components.Contains(visemesBlendshape) && meshInstance.GetComponent<SkinnedMeshRenderer>() is var smr && smr != null)
+				var visemesBlendshapeResources = Context.GetResourceByType(typeof(AVA_Visemes_Blendshape));
+				if (visemesBlendshapeResources.Count == 1)
 				{
-					(Context as AVAContext).AddTask("visemes.blendshape", STFResource.STF_Id, new Task(() => {
-						void TryApplyViseme(string Viseme, BlendShapePreset Preset)
-						{
-							if (visemesBlendshape.Mapppings[Array.FindIndex(AVA_Visemes_Blendshape._Visemes15, e => e == Viseme)] is string vis && !string.IsNullOrWhiteSpace(vis))
-							{
-								var clip = BlendshapeClipUtil.CreateSimple(Context, Preset, smr, vis);
-								blendshapeProxy.BlendShapeAvatar.Clips.Add(clip);
-								Context.AddUnityObject(visemesBlendshape, clip);
-							}
-						}
-						TryApplyViseme("aa", BlendShapePreset.A);
-						TryApplyViseme("e", BlendShapePreset.E);
-						TryApplyViseme("ih", BlendShapePreset.I);
-						TryApplyViseme("oh", BlendShapePreset.O);
-						TryApplyViseme("ou", BlendShapePreset.U);
-					}));
+					visemesBlendshape = visemesBlendshapeResources[0] as AVA_Visemes_Blendshape;
 				}
 			}
 
+			if (!smr)
+			{
+				var mesh = visemesBlendshape.ParentObject as STF_Mesh;
+				var meshInstance = Context.Root.GetComponentsInChildren<STF_Instance_Mesh>().FirstOrDefault(e => e.Mesh == mesh);
+				if (meshInstance)
+					smr = meshInstance.GetComponent<SkinnedMeshRenderer>();
+			}
+
+			if (smr && visemesBlendshape)
+			{
+				Setup(Context, blendshapeProxy, visemesBlendshape, smr);
+			}
+
 			return null;
+		}
+
+		private void Setup(ProcessorContextBase Context, VRMBlendShapeProxy blendshapeProxy, AVA_Visemes_Blendshape visemesBlendshape, SkinnedMeshRenderer smr)
+		{
+			void TryApplyViseme(string Viseme, BlendShapePreset Preset)
+			{
+				if (visemesBlendshape.Mapppings[Array.FindIndex(AVA_Visemes_Blendshape._Visemes15, e => e == Viseme)] is string vis && !string.IsNullOrWhiteSpace(vis))
+				{
+					var clip = BlendshapeClipUtil.CreateSimple(Context, Preset, smr, vis);
+					blendshapeProxy.BlendShapeAvatar.Clips.Add(clip);
+					Context.AddUnityObject(visemesBlendshape, clip);
+				}
+			}
+			TryApplyViseme("aa", BlendShapePreset.A);
+			TryApplyViseme("e", BlendShapePreset.E);
+			TryApplyViseme("ih", BlendShapePreset.I);
+			TryApplyViseme("oh", BlendShapePreset.O);
+			TryApplyViseme("ou", BlendShapePreset.U);
 		}
 	}
 
@@ -59,7 +78,7 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 	{
 		static Register_UNIVRM0_AVA_Visemes_Blendshape_Processor()
 		{
-			STF_Processor_Registry.RegisterProcessor(DetectorUNIVRM0.STF_UNIVRM0_AVATAR_CONTEXT, new UNIVRM0_AVA_Visemes_Blendshape_Processor());
+			STF_Processor_Registry.RegisterGlobalProcessor(DetectorUNIVRM0.STF_UNIVRM0_AVATAR_CONTEXT, new UNIVRM0_AVA_Visemes_Blendshape_Processor());
 		}
 	}
 }

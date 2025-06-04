@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using com.squirrelbite.stf_unity.modules;
 using Newtonsoft.Json.Linq;
 
 #if UNITY_EDITOR

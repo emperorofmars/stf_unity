@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using com.squirrelbite.stf_unity.modules;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -44,7 +45,7 @@ namespace com.squirrelbite.stf_unity.ava
 				if (JsonResource.ContainsKey(viseme))
 					ret.Mapppings.Add(JsonResource.Value<string>(viseme));
 				else
-					ret.Mapppings.Add(JsonResource.Value<string>(null));
+					ret.Mapppings.Add(null);
 
 			return (ret, new() { ret });
 		}
