@@ -7,7 +7,7 @@ namespace com.squirrelbite.stf_unity.modules
 	public abstract class STF_DataComponentResource: STF_ScriptableObject
 	{
 		public override string STF_Kind => "component";
-		public readonly List<string> Overrides = new();
+		public List<string> Overrides = new();
 
 		public UnityEngine.Object ParentObject;
 
