@@ -31,9 +31,14 @@ namespace com.squirrelbite.stf_unity.tools
 			var processorContext = STF_Processor_Registry.CreateApplicationContext(ImportConfig.SelectedApplication, processorState);
 			processorContext.Run();
 
-			foreach (var mapping in ImportConfig.MaterialMappings)
-				if (state.GetImportedResource(mapping.ID) == null)
-					ImportConfig.MaterialMappings.Remove(mapping);
+			for (int i = 0; i < ImportConfig.MaterialMappings.Count; i++)
+			{
+				if (state.GetImportedResource(ImportConfig.MaterialMappings[i].ID) == null)
+				{
+					ImportConfig.MaterialMappings.Remove(ImportConfig.MaterialMappings[i]);
+					i--;
+				}
+			}
 
 			state.Cleanup();
 
