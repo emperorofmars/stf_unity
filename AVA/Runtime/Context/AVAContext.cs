@@ -19,7 +19,7 @@ namespace com.squirrelbite.stf_unity.ava
 		public AVAContext(ProcessorState State) : base(State)
 		{
 			var avatars = State.GetResourceByType(typeof(AVA_Avatar));
-			if (avatars.Count == 1)
+			if (avatars != null && avatars.Count == 1)
 			{
 				_AVA_Avatar_Resource = avatars[0] as AVA_Avatar;
 			}
