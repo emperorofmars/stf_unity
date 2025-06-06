@@ -81,7 +81,7 @@ namespace com.squirrelbite.stf_unity.processors
 					-parseFloat(STFMesh.split_tangents.Data, i * STFMesh.float_width * 3, STFMesh.float_width),
 					parseFloat(STFMesh.split_tangents.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width),
 					parseFloat(STFMesh.split_tangents.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2),
-					1
+					1 // TODO this is wrong, figure out which value to use for W
 				);
 				tangents[i].Normalize();
 			}
@@ -210,7 +210,8 @@ namespace com.squirrelbite.stf_unity.processors
 
 			ret.SetVertices(unity_vertices);
 			ret.SetNormals(unity_normals);
-			ret.SetTangents(unity_tangents);
+			//ret.SetTangents(unity_tangents);
+			ret.RecalculateTangents();
 			for (int uvIndex = 0; uvIndex < unity_uvs.Count; uvIndex++)
 			{
 				ret.SetUVs(uvIndex, unity_uvs[uvIndex]);

@@ -22,25 +22,17 @@ namespace com.squirrelbite.stf_unity.processors
 			if (Image.Components.Find(c => c.GetType() == typeof(STF_Texture)) is STF_Texture texture)
 			{
 				ret = new Texture2D(8, 8, TextureFormat.RGBA32, texture.mipmaps, nonColor, true);
-
 				ImageConversion.LoadImage(ret, Image.buffer.Data);
 
 				if (texture.quality <= 0.5)
 					ret.Compress(false);
 				else if (texture.quality <= 0.75)
-					ret.Compress(false);
+					ret.Compress(true);
 			}
 			else
 			{
 				ret = new Texture2D(8, 8, TextureFormat.RGBA32, true, nonColor, true);
-
 				ImageConversion.LoadImage(ret, Image.buffer.Data);
-			}
-
-			//if (Image.data_type == "normal_map")
-			if (Image.data_type == "non_color")
-			{
-				//DealWithNormals(ret);
 			}
 
 			ret.name = Image.STF_Name;
