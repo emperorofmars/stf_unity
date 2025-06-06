@@ -24,7 +24,18 @@ namespace com.squirrelbite.stf_unity.ava
 			}
 			else
 			{
-				Report(new STFReport("Avatar Component on Root required!", ErrorSeverity.FATAL_ERROR));
+				Report(new STFReport("No Avatar Component on Root found!", ErrorSeverity.WARNING));
+
+				_AVA_Avatar_Resource = Root.AddComponent<AVA_Avatar>();
+				
+				var processor = State.GetProcessor(_AVA_Avatar_Resource);
+				State.AddProcessorTask(processor.Order, new Task(() =>
+				{
+					var results = processor.Process(this, _AVA_Avatar_Resource);
+					if (results != null) _AVA_Avatar_Resource.ProcessedObjects.AddRange(results);
+					State.RegisterResult(results);
+				}));
+
 			}
 		}
 
