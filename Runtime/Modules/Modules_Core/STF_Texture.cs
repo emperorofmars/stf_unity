@@ -14,6 +14,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public uint height = 8;
 		public uint downscale_priority = 0;
 		public float quality = 1;
+		public bool mipmaps = true;
 	}
 
 	public class STF_Texture_Module : ISTF_Module
@@ -41,6 +42,7 @@ namespace com.squirrelbite.stf_unity.modules
 			if (JsonResource.ContainsKey("height")) ret.height = JsonResource.Value<uint>("height");
 			if (JsonResource.ContainsKey("downscale_priority")) ret.downscale_priority = JsonResource.Value<uint>("downscale_priority");
 			if (JsonResource.ContainsKey("quality")) ret.quality = JsonResource.Value<float>("quality");
+			if (JsonResource.ContainsKey("mipmaps")) ret.mipmaps = JsonResource.Value<bool>("mipmaps");
 
 			return (ret, new() { ret });
 		}

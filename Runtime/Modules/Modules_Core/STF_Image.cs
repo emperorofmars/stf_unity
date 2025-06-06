@@ -13,6 +13,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public string format;
 		public STF_Buffer buffer;
+		public string data_type;
 	}
 
 	public class STF_Image_Module : ISTF_Module
@@ -39,6 +40,9 @@ namespace com.squirrelbite.stf_unity.modules
 			ret.format = JsonResource.Value<string>("format");
 			if(JsonResource.ContainsKey("buffer"))
 				ret.buffer = Context.ImportBuffer(JsonResource.Value<string>("buffer"));
+
+			if (JsonResource.ContainsKey("data_type"))
+				ret.data_type = JsonResource.Value<string>("data_type");
 
 			return (ret, new(){ret});
 		}

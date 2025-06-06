@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using com.squirrelbite.stf_unity.modules;
 using UnityEngine;
 
@@ -15,19 +16,31 @@ namespace com.squirrelbite.stf_unity.processors
 			var Image = STFResource as STF_Image;
 			Texture2D ret;
 
+			var nonColor = Image.data_type != "color";
+
 			// TODO make this vastly more legit
-			if (Image.Components.Find(c => c is STF_Texture) is STF_Texture texture)
+			if (Image.Components.Find(c => c.GetType() == typeof(STF_Texture)) is STF_Texture texture)
 			{
-				var textureformat = texture.quality < 0.65 ? TextureFormat.DXT5 : TextureFormat.ARGB32;
-				ret = new Texture2D((int)texture.width, (int)texture.height, textureformat, true);
+				ret = new Texture2D(8, 8, TextureFormat.RGBA32, texture.mipmaps, nonColor, true);
+
 				ImageConversion.LoadImage(ret, Image.buffer.Data);
-				if (texture.quality < 0.65)
+
+				if (texture.quality <= 0.5)
+					ret.Compress(false);
+				else if (texture.quality <= 0.75)
 					ret.Compress(false);
 			}
 			else
 			{
-				ret = new Texture2D(2, 2);
+				ret = new Texture2D(8, 8, TextureFormat.RGBA32, true, nonColor, true);
+
 				ImageConversion.LoadImage(ret, Image.buffer.Data);
+			}
+
+			//if (Image.data_type == "normal_map")
+			if (Image.data_type == "non_color")
+			{
+				//DealWithNormals(ret);
 			}
 
 			ret.name = Image.STF_Name;
