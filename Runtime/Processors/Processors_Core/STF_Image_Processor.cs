@@ -24,6 +24,11 @@ namespace com.squirrelbite.stf_unity.processors
 				ret = new Texture2D(8, 8, TextureFormat.RGBA32, texture.mipmaps, nonColor, true);
 				ImageConversion.LoadImage(ret, Image.buffer.Data);
 
+				if (texture.height != ret.height || texture.width != ret.width)
+				{
+					ret = Resize(ret, (int)texture.width, (int)texture.height, TextureFormat.RGBA32, texture.mipmaps, nonColor);
+				}
+
 				if (texture.quality <= 0.5)
 					ret.Compress(false);
 				else if (texture.quality <= 0.75)
@@ -37,6 +42,17 @@ namespace com.squirrelbite.stf_unity.processors
 
 			ret.name = Image.STF_Name;
 			return new() { ret };
+		}
+
+		private Texture2D Resize(Texture2D Texture, int TargetWidth, int TargetHeight, TextureFormat Format, bool Mipmaps = true, bool Linear = false)
+		{
+			var tmp = new RenderTexture(TargetWidth, TargetHeight, Format == TextureFormat.RGBA32 ? 32 : 24);
+			RenderTexture.active = tmp;
+			Graphics.Blit(Texture, tmp);
+			var ret = new Texture2D(TargetWidth, TargetHeight, Format, Mipmaps, Linear);
+			ret.ReadPixels(new Rect(0, 0, TargetWidth, TargetHeight), 0, 0);
+			ret.Apply();
+			return ret;
 		}
 	}
 }
