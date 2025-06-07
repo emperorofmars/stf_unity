@@ -38,32 +38,34 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 				var reflectionValue = MaterialConverterUtil.FindPropertyValue(STFMaterial, "reflection.texture");
 				var specularValue = MaterialConverterUtil.FindPropertyValue(STFMaterial, "specular.texture");
 
-				var channelMetallic = metallicValue != null ? new ImageChannelSetup.ImageChannel(metallicValue, false) : ImageChannelSetup.ImageChannel.Empty();
-
-				var channelSmoothness = ImageChannelSetup.ImageChannel.Empty();
-				if(smoothnessValue != null) channelSmoothness = new ImageChannelSetup.ImageChannel(smoothnessValue, false);
-				else if(roughnessValue != null) channelSmoothness = new ImageChannelSetup.ImageChannel(roughnessValue, true);
-
-				var channelReflection = ImageChannelSetup.ImageChannel.Empty();
-				if(reflectionValue != null) channelReflection = new ImageChannelSetup.ImageChannel(reflectionValue, false);
-				else if(metallicValue != null) channelReflection = new ImageChannelSetup.ImageChannel(metallicValue, false);
-
-				var channelSpecular = ImageChannelSetup.ImageChannel.Empty();
-				if(specularValue != null) channelSpecular = new ImageChannelSetup.ImageChannel(specularValue, false);
-				else if(smoothnessValue != null) channelSpecular = new ImageChannelSetup.ImageChannel(smoothnessValue, false);
-				else if(roughnessValue != null) channelSpecular = new ImageChannelSetup.ImageChannel(roughnessValue, true);
-
-				if (channelMetallic.Source != null || channelSmoothness.Source != null || channelReflection.Source != null || channelSpecular.Source != null)
+				if (metallicValue != null || smoothnessValue != null || roughnessValue != null || reflectionValue != null || specularValue != null)
 				{
+					var channelMetallic = metallicValue != null ? new ImageChannelSetup.ImageChannel(metallicValue, false) : ImageChannelSetup.ImageChannel.Empty();
+
+					var channelSmoothness = ImageChannelSetup.ImageChannel.Empty();
+					if (smoothnessValue != null) channelSmoothness = new ImageChannelSetup.ImageChannel(smoothnessValue, false);
+					else if (roughnessValue != null) channelSmoothness = new ImageChannelSetup.ImageChannel(roughnessValue, true);
+
+					var channelReflection = ImageChannelSetup.ImageChannel.Empty();
+					if (reflectionValue != null) channelReflection = new ImageChannelSetup.ImageChannel(reflectionValue, false);
+					else if (metallicValue != null) channelReflection = new ImageChannelSetup.ImageChannel(metallicValue, false);
+
+					var channelSpecular = ImageChannelSetup.ImageChannel.Empty();
+					if (specularValue != null) channelSpecular = new ImageChannelSetup.ImageChannel(specularValue, false);
+					else if (smoothnessValue != null) channelSpecular = new ImageChannelSetup.ImageChannel(smoothnessValue, false);
+					else if (roughnessValue != null) channelSpecular = new ImageChannelSetup.ImageChannel(roughnessValue, true);
+
 					var imageChannels = new ImageChannelSetup(
 						channelMetallic,
 						channelSmoothness,
 						channelReflection,
 						channelSpecular
 					);
-					MaterialConverterUtil.AssembleTextureChannels(imageChannels, ret, "_MochieMetallicMaps", generatedObjects);
-					ret.SetFloat("_MochieBRDF", 1);
-					ret.SetFloat("_MochieMetallicMultiplier", 1);
+					if (MaterialConverterUtil.AssembleTextureChannels(imageChannels, ret, "_MochieMetallicMaps", generatedObjects))
+					{
+						ret.SetFloat("_MochieBRDF", 1);
+						ret.SetFloat("_MochieMetallicMultiplier", 1);
+					}
 				}
 			}
 			return (ret, generatedObjects);
