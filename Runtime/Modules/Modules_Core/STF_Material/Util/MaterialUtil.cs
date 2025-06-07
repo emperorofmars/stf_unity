@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TexPacker;
 using UnityEngine;
 
@@ -59,20 +60,24 @@ namespace com.squirrelbite.stf_unity.modules.stf_material.util
 		{
 			var packer = new TexturePacker();
 			packer.Initialize();
-			for(int i = 0; i < 4; i++)
+			var resolutions = new Dictionary<int, int>();
+			for (int i = 0; i < 4; i++)
 			{
 				var channelSource = Channels[i];
-				if(channelSource.Source != null)
+				if (channelSource.Source != null)
 				{
 					var input = new TextureInput();
-					if(channelSource.Source is ImageValue value)
+					if (channelSource.Source is ImageValue value)
 					{
 						input.texture = STFUtil.GetProcessed<Texture2D>(value.Image);
-						input.SetChannelInput(ChannelIdxToEnum(i), new TextureChannelInput {
+						input.SetChannelInput(ChannelIdxToEnum(i), new TextureChannelInput
+						{
 							enabled = true,
 							invert = channelSource.Invert,
 							output = ChannelIdxToEnum(i),
 						});
+						if (resolutions.ContainsKey(input.texture.width)) resolutions[input.texture.width]++;
+						else resolutions.Add(input.texture.width, 1);
 					}
 					/*else if(channelSource.Source is ImageChannelValue)
 					{
@@ -91,6 +96,17 @@ namespace com.squirrelbite.stf_unity.modules.stf_material.util
 					packer.Add(input);
 				}
 			}
+			var selectedResolution = 0;
+			var selectedResolutionCount = 0;
+			foreach ((var resolution, var count) in resolutions)
+			{
+				if (count > selectedResolutionCount)
+				{
+					selectedResolution = resolution;
+					selectedResolutionCount = count;
+				}
+			}
+			packer.resolution = selectedResolution;
 			return packer.Create();
 		}
 	}
