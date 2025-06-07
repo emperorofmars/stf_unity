@@ -1,5 +1,3 @@
-
-using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.modules.stf_material.util;
 using UnityEngine;
@@ -73,14 +71,13 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 			// check if these are texture channel property values pointing to the same texture
 			var isSameTexture = true;
 			Texture2D originalTexture = null;
-			/*for(int i = 0; i < 4; i++)
+			for(int i = 0; i < 4; i++)
 			{
 				if(Channels[i].Source == null) { isSameTexture = false; break; }
-				else if(Channels[i].Source.Type != TextureChannelPropertyValue._TYPE) { isSameTexture = false; break; }
-				else if(((TextureChannelPropertyValue)Channels[i].Source).Channel != i) { isSameTexture = false; break; }
+				/*else if(Channels[i].Source != TextureChannelPropertyValue._TYPE) { isSameTexture = false; break; }
 				else if(originalTexture == null) originalTexture = ((TextureChannelPropertyValue)Channels[i].Source).Texture;
-				else if(originalTexture != ((TextureChannelPropertyValue)Channels[i].Source).Texture) { isSameTexture = false; break; }
-			}*/
+				else if(originalTexture != ((TextureChannelPropertyValue)Channels[i].Source).Texture) { isSameTexture = false; break; }*/
+			}
 			if(isSameTexture)
 			{
 				UnityMaterial.SetTexture(UnityPropertyName, originalTexture);

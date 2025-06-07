@@ -40,6 +40,7 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 
 				if(channelMetallic.Source != null || channelSmoothnes.Source != null)
 				{
+					Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 					var imageChannels = new ImageChannelSetup(
 						channelMetallic,
 						ImageChannelSetup.ImageChannel.Empty(),
@@ -48,6 +49,7 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 					);
 					MaterialConverterUtil.AssembleTextureChannels(imageChannels, ret, "_MetallicGlossMap", generatedObjects);
 				}
+					Debug.Log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
 			}
 
 			MaterialConverterUtil.SetFloatProperty(STFMaterial, ret, "specular.value", 0, "_SpecularHighlights");
