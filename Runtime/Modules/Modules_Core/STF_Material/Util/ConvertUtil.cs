@@ -86,7 +86,7 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 			else
 			{
 				var finalTexture = ImageUtil.AssembleTextureChannels(Channels);
-				finalTexture.name = UnityPropertyName;
+				finalTexture.name = UnityMaterial.name + "_" + UnityPropertyName;
 				GeneratedObjects.Add(finalTexture);
 				UnityMaterial.SetTexture(UnityPropertyName, finalTexture);
 				return true;
