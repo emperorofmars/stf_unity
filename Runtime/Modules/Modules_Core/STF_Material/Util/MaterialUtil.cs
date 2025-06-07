@@ -96,7 +96,7 @@ namespace com.squirrelbite.stf_unity.modules.stf_material.util
 					packer.Add(input);
 				}
 			}
-			var selectedResolution = 0;
+			var selectedResolution = 8;
 			var selectedResolutionCount = 0;
 			foreach ((var resolution, var count) in resolutions)
 			{
