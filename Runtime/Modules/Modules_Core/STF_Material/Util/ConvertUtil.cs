@@ -69,28 +69,29 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 		public static bool AssembleTextureChannels(ImageChannelSetup Channels, Material UnityMaterial, string UnityPropertyName, List<UnityEngine.Object> GeneratedObjects)
 		{
 			// check if these are texture channel property values pointing to the same texture
-			var isSameTexture = true;
+			/*var isSameTexture = true;
 			Texture2D originalTexture = null;
 			for(int i = 0; i < 4; i++)
 			{
 				if(Channels[i].Source == null) { isSameTexture = false; break; }
-				/*else if(Channels[i].Source != TextureChannelPropertyValue._TYPE) { isSameTexture = false; break; }
+				else if(Channels[i].Source != TextureChannelPropertyValue._TYPE) { isSameTexture = false; break; }
 				else if(originalTexture == null) originalTexture = ((TextureChannelPropertyValue)Channels[i].Source).Texture;
-				else if(originalTexture != ((TextureChannelPropertyValue)Channels[i].Source).Texture) { isSameTexture = false; break; }*/
+				else if(originalTexture != ((TextureChannelPropertyValue)Channels[i].Source).Texture) { isSameTexture = false; break; }
 			}
 			if(isSameTexture)
 			{
+				Debug.Log("Same Texture " + originalTexture.name);
 				UnityMaterial.SetTexture(UnityPropertyName, originalTexture);
 				return true;
 			}
 			else
-			{
+			{*/
 				var finalTexture = ImageUtil.AssembleTextureChannels(Channels);
 				finalTexture.name = UnityMaterial.name + "_" + UnityPropertyName;
 				GeneratedObjects.Add(finalTexture);
 				UnityMaterial.SetTexture(UnityPropertyName, finalTexture);
 				return true;
-			}
+			//}
 		}
 	}
 }
