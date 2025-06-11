@@ -19,7 +19,7 @@ namespace com.squirrelbite.stf_unity.tools
 		private bool DebugExport = true;
 
 
-		[MenuItem("STF Tools/Export")]
+		[MenuItem("STF Tools/Export (TBD)")]
 		public static void Init()
 		{
 			STFExportEditor window = EditorWindow.GetWindow(typeof(STFExportEditor)) as STFExportEditor;
@@ -29,7 +29,7 @@ namespace com.squirrelbite.stf_unity.tools
 
 		void OnGUI()
 		{
-			GUILayout.Label("Export STF ", EditorStyles.whiteLargeLabel);
+			GUILayout.Label("Export STF (Doesn't work yet)", EditorStyles.whiteLargeLabel);
 			drawHLine();
 			scrollPos = GUILayout.BeginScrollView(scrollPos, GUIStyle.none);
 

@@ -80,7 +80,6 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 			}
 			if(isSameTexture)
 			{
-				Debug.Log("Same Texture " + originalTexture.name);
 				UnityMaterial.SetTexture(UnityPropertyName, originalTexture);
 				return true;
 			}

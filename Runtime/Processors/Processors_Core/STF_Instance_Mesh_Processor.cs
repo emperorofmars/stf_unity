@@ -62,8 +62,8 @@ namespace com.squirrelbite.stf_unity.processors
 
 					for (int blenshapeIdx = 0; blenshapeIdx < meshInstance.Mesh.blendshapes.Count; blenshapeIdx++)
 					{
-						smr.SetBlendShapeWeight(blenshapeIdx, meshInstance.Mesh.blendshapes[blenshapeIdx].default_value);
-						if (meshInstance.BlendshapeValues[blenshapeIdx].Item1) smr.SetBlendShapeWeight(blenshapeIdx, meshInstance.BlendshapeValues[blenshapeIdx].Item2);
+						smr.SetBlendShapeWeight(blenshapeIdx, meshInstance.Mesh.blendshapes[blenshapeIdx].default_value * 100);
+						if (meshInstance.BlendshapeValues[blenshapeIdx].Item1) smr.SetBlendShapeWeight(blenshapeIdx, meshInstance.BlendshapeValues[blenshapeIdx].Item2 * 100);
 					}
 				}
 				else
