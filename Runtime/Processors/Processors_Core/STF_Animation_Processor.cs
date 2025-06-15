@@ -10,7 +10,7 @@ namespace com.squirrelbite.stf_unity.processors
 		public uint Order => 100000000;
 		public int Priority => 1;
 
-		public List<Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
+		public (List<Object>, List<Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var STFAnimation = STFResource as STF_Animation;
 
@@ -28,10 +28,6 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				if (STFAnimation.AnimationRoot.PropertyConverter == null)
 				{
-					/*Debug.Log("AAAAAAAAAAAAAAAAAAAAA");
-					Debug.Log(STFAnimation);
-					Debug.Log(STFAnimation.AnimationRoot);
-					Debug.Log(STFAnimation.AnimationRoot.PropertyConverter);*/
 					continue; // TODO report
 				}
 				(string RelativePath, System.Type CurveType, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) = STFAnimation.AnimationRoot.PropertyConverter.ConvertPropertyPath(STFAnimation.AnimationRoot, track.target);
@@ -73,10 +69,10 @@ namespace com.squirrelbite.stf_unity.processors
 							ret.SetCurve(RelativePath, CurveType, PropertyNames[curveIndex], curves[curveIndex]);
 					}
 				}
-				// Else Warning
+				// TODO Else Warning
 			}
 
-			return new() { ret };
+			return (new() { ret }, new() { ret });
 		}
 	}
 }

@@ -49,6 +49,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 						{left = Quaternion.Euler(0f, -eyeRotation.limits_out, 0f), right = Quaternion.Euler(0f, -eyeRotation.limits_in, 0f), linked = Mathf.Approximately(eyeRotation.limits_out, eyeRotation.limits_in)};
 				avatar.customEyeLookSettings.eyesLookingRight = new VRCAvatarDescriptor.CustomEyeLookSettings.EyeRotations
 						{left = Quaternion.Euler(0f, eyeRotation.limits_in, 0f), right = Quaternion.Euler(0f, eyeRotation.limits_out, 0f), linked = Mathf.Approximately(eyeRotation.limits_out, eyeRotation.limits_in)};
+
+				eyeRotation.ProcessedObjects.Add(avatar);
 			}
 
 			return null;

@@ -50,6 +50,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			if (smr && eyelidBlendshape)
 			{
 				Setup(avatar, eyelidBlendshape, smr);
+				eyelidBlendshape.ProcessedObjects.Add(avatar);
 			}
 
 			return null;

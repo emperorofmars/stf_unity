@@ -20,7 +20,7 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 
 		public int Priority => 1;
 
-		public List<UnityEngine.Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
+		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var avaAvatar = STFResource as AVA_Avatar;
 
@@ -87,7 +87,7 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 					Context.AddTrash(avaAvatar.Viewport);
 			}
 
-			return new() { vrmMeta, vrmBlendShapeAvatar, neutralClip };
+			return (new() { vrmMeta, vrmBlendShapeAvatar, neutralClip }, new() { vrmMeta, vrmBlendShapeAvatar, neutralClip });
 		}
 	}
 

@@ -65,9 +65,9 @@ namespace com.squirrelbite.stf_unity.ava
 			var processor = State.GetProcessor(_AVA_Avatar_Resource);
 			State.AddProcessorTask(processor.Order, new Task(() =>
 			{
-				var results = processor.Process(this, _AVA_Avatar_Resource);
-				if (results != null) _AVA_Avatar_Resource.ProcessedObjects.AddRange(results);
-				State.RegisterResult(results);
+				(var ProcessedObjects, var ObjectsToRegister) = processor.Process(this, _AVA_Avatar_Resource);
+				if (ProcessedObjects != null) _AVA_Avatar_Resource.ProcessedObjects.AddRange(ProcessedObjects);
+				State.RegisterResult(ObjectsToRegister);
 			}));
 
 			foreach (var t in Root.GetComponentsInChildren<Transform>())

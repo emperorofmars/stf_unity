@@ -20,7 +20,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 
 		public int Priority => 1;
 
-		public List<UnityEngine.Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
+		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var avaAvatar = STFResource as AVA_Avatar;
 			Context.Root.AddComponent<VRC.Core.PipelineManager>();
@@ -34,11 +34,11 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			animator.updateMode = AnimatorUpdateMode.Normal;
 			animator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
 
-			if(avaAvatar.Viewport) avatar.ViewPosition = avaAvatar.Viewport.transform.position - Context.Root.transform.position;
-			if(!Context.ImportConfig.AuthoringImport)
+			if (avaAvatar.Viewport) avatar.ViewPosition = avaAvatar.Viewport.transform.position - Context.Root.transform.position;
+			if (!Context.ImportConfig.AuthoringImport)
 				Context.AddTrash(avaAvatar.Viewport);
 
-			return null;
+			return (new() { avatar }, null);
 		}
 	}
 

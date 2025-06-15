@@ -11,7 +11,7 @@ namespace com.squirrelbite.stf_unity.processors
 		public uint Order => 0;
 		public int Priority => 1;
 
-		public List<Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
+		public (List<Object>, List<Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var Image = STFResource as STF_Image;
 			Texture2D ret;
@@ -41,7 +41,7 @@ namespace com.squirrelbite.stf_unity.processors
 			}
 
 			ret.name = Image.STF_Name;
-			return new() { ret };
+			return (new() { ret }, new() { ret });
 		}
 
 		private Texture2D Resize(Texture2D Texture, int TargetWidth, int TargetHeight, TextureFormat Format, bool Mipmaps = true, bool Linear = false)

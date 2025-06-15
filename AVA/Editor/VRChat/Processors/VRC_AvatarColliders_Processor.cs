@@ -22,7 +22,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		public Type TargetType => typeof(VRC_AvatarColliders);
 
 
-		public List<UnityEngine.Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
+		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var avatar = Context.Root.GetComponent<VRCAvatarDescriptor>();
 			if (!avatar) Context.Report(new STFReport("No Avatar Component created!", ErrorSeverity.FATAL_ERROR, VRC_AvatarColliders._STF_Type));
@@ -45,7 +45,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			avatar.collider_fingerLittleL = ParseVRCCollider(Json["fingerLittleL"]);
 			avatar.collider_fingerLittleR = ParseVRCCollider(Json["fingerLittleR"]);
 
-			return null;
+			return (new() { avatar }, null);
 		}
 
 		private static VRCAvatarDescriptor.ColliderConfig ParseVRCCollider(JToken ColliderDef)

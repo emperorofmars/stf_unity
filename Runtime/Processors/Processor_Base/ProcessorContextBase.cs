@@ -61,9 +61,9 @@ namespace com.squirrelbite.stf_unity.processors
 				var processor = State.GetProcessor(resource);
 				State.AddProcessorTask(processor.Order, new Task(() =>
 				{
-					var results = processor.Process(this, resource);
-					if (results != null) resource.ProcessedObjects.AddRange(results);
-					State.RegisterResult(results);
+					(var ProcessedObjects, var ObjectsToRegister) = processor.Process(this, resource);
+					if (ProcessedObjects != null) resource.ProcessedObjects.AddRange(ProcessedObjects);
+					State.RegisterResult(ObjectsToRegister);
 				}));
 			}
 			foreach ((var type, var globalProcessor) in State.GlobalProcessors)

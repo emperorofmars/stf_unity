@@ -63,6 +63,7 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 					var clip = BlendshapeClipUtil.CreateSimple(Context, Preset, smr, vis);
 					blendshapeProxy.BlendShapeAvatar.Clips.Add(clip);
 					Context.AddUnityObject(visemesBlendshape, clip);
+					visemesBlendshape.ProcessedObjects.Add(clip);
 				}
 			}
 			TryApplyViseme("aa", BlendShapePreset.A);

@@ -45,6 +45,8 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 				vrmLookat.VerticalDown.CurveYRangeDegree = eyeRotation.limits_down;
 				vrmLookat.HorizontalInner.CurveYRangeDegree = eyeRotation.limits_in;
 				vrmLookat.HorizontalOuter.CurveYRangeDegree = eyeRotation.limits_out;
+
+				eyeRotation.ProcessedObjects.Add(vrmLookat);
 			}
 
 			return null;

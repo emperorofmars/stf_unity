@@ -11,6 +11,6 @@ namespace com.squirrelbite.stf_unity.processors
 		abstract uint Order { get; }
 		abstract int Priority { get; }
 
-		List<Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource);
+		(List<Object> ProcessedObjects, List<Object> ObjectsToRegister) Process(ProcessorContextBase Context, ISTF_Resource STFResource);
 	}
 }

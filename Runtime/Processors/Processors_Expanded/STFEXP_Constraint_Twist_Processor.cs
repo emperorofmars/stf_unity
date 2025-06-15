@@ -22,7 +22,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 
 		public int Priority => 1;
 
-		public List<UnityEngine.Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
+		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var stfConstraint = STFResource as STFEXP_Constraint_Twist;
 
@@ -48,9 +48,12 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			}
 
 			if (target)
-				CreateConstraint(stfConstraint.transform, target, stfConstraint.Weight);
+			{
+				var ret = CreateConstraint(stfConstraint.transform, target, stfConstraint.Weight);
+				return (new() { ret }, null);
+			}
 
-			return null;
+			return (null, null);
 		}
 
 		public static RotationConstraint CreateConstraint(Transform Node, Transform Source, float Weight)

@@ -1,5 +1,4 @@
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using com.squirrelbite.stf_unity.modules;
@@ -27,11 +26,11 @@ namespace com.squirrelbite.stf_unity.processors
 
 	public class STF_Instance_Mesh_Processor : ISTF_Processor
 	{
-		public Type TargetType => typeof(STF_Instance_Mesh);
+		public System.Type TargetType => typeof(STF_Instance_Mesh);
 		public uint Order => 100;
 		public int Priority => 1;
 
-		public List<UnityEngine.Object> Process(ProcessorContextBase Context, ISTF_Resource STFResource)
+		public (List<Object>, List<Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var meshInstance = STFResource as STF_Instance_Mesh;
 			meshInstance.PropertyConverter = new STF_Instance_Mesh_Converter();
@@ -76,7 +75,7 @@ namespace com.squirrelbite.stf_unity.processors
 
 				meshInstance.ProcessedObjects.Add(renderer);
 
-				var rendererMaterials = new Material[Math.Max(meshInstance.Mesh.material_slots.Count, meshInstance.Materials.Count)];
+				var rendererMaterials = new Material[System.Math.Max(meshInstance.Mesh.material_slots.Count, meshInstance.Materials.Count)];
 				for (int matIdx = 0; matIdx < rendererMaterials.Length; matIdx++)
 				{
 					if (matIdx < meshInstance.Materials.Count && meshInstance.Materials[matIdx] != null)
@@ -89,9 +88,9 @@ namespace com.squirrelbite.stf_unity.processors
 					}
 				}
 				renderer.materials = rendererMaterials;
-				return new List<UnityEngine.Object>() { renderer };
+				return (new List<Object>() { renderer }, null);
 			}
-			return null;
+			return (null, null);
 		}
 	}
 }
