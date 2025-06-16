@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using com.squirrelbite.stf_unity.modules;
 using UnityEngine;
@@ -42,16 +43,29 @@ namespace com.squirrelbite.stf_unity.processors
 		private void Init()
 		{
 			var tmpResources = new HashSet<ISTF_Resource>();
+			var armatureResources = new HashSet<ISTF_Resource>();
 
 			// Find all processable resources
 			foreach ((var stfId, var objectToRegister) in State.ImportedObjects)
 			{
-				if (objectToRegister is ISTF_Resource resource && !tmpResources.Contains(resource) && GetProcessor(resource) is var processor && processor != null)
-					tmpResources.Add(resource);
-				/*if (objectToRegister is STF_PrefabResource go)
+				// Ignore all resources that are children of an armature resource, except for components directly on the armature resource itself
+				if (objectToRegister is STF_Armature armature)
+				{
+					foreach (var resourceOnArmature in armature.GetComponentsInChildren<ISTF_Resource>())
+						if (!armatureResources.Contains(resourceOnArmature)) armatureResources.Add(resourceOnArmature);
+					foreach (var resourceOnArmatureItself in armature.GetComponents<ISTF_Resource>())
+						if (armatureResources.Contains(resourceOnArmatureItself)) armatureResources.Remove(resourceOnArmatureItself);
+				}
+
+				// Register all stf resources
+				if (objectToRegister != null && !tmpResources.Contains(objectToRegister) && GetProcessor(objectToRegister) is var processor && processor != null)
+					tmpResources.Add(objectToRegister);
+
+				// Register all resources that have been instantiated from an armature
+				if (objectToRegister is STF_Prefab go)
 					foreach (var resourceOnObject in go.GetComponentsInChildren<ISTF_Resource>())
 						if (!tmpResources.Contains(resourceOnObject) && GetProcessor(resourceOnObject) is var processorOnObject && processorOnObject != null)
-							tmpResources.Add(resourceOnObject);*/
+							tmpResources.Add(resourceOnObject);
 			}
 
 			foreach ((var stfId, var resource) in State.ImportedObjects)
@@ -74,7 +88,7 @@ namespace com.squirrelbite.stf_unity.processors
 				}
 
 			foreach (var resource in tmpResources)
-				if (!OverriddenResources.Contains(resource.STF_Id))
+				if (!OverriddenResources.Contains(resource.STF_Id) && !armatureResources.Contains(resource))
 					ResourcesToProcess.Add(resource);
 		}
 

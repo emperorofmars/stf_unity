@@ -49,16 +49,16 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 
 			if (target)
 			{
-				var ret = CreateConstraint(stfConstraint.transform, target, stfConstraint.Weight);
+				var ret = CreateConstraint(stfConstraint.gameObject, target, stfConstraint.Weight);
 				return (new() { ret }, null);
 			}
-
-			return (null, null);
+			else
+				return (null, null);
 		}
 
-		public static RotationConstraint CreateConstraint(Transform Node, Transform Source, float Weight)
+		public static RotationConstraint CreateConstraint(GameObject Node, Transform Source, float Weight)
 		{
-			var converted = Node.gameObject.AddComponent<RotationConstraint>();
+			var converted = Node.AddComponent<RotationConstraint>();
 
 			converted.weight = Weight;
 			converted.rotationAxis = Axis.Y;

@@ -56,9 +56,10 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 
 			var secondary = new GameObject {name = "VRM_secondary"};
 			secondary.transform.SetParent(Context.Root.transform, false);
+			(Context as AVAContext).AddMessage("VRM_secondary", secondary);
 
 
-			if(!Context.Root.TryGetComponent<Animator>(out var animator))
+			if (!Context.Root.TryGetComponent<Animator>(out var animator))
 			{
 				animator = Context.Root.AddComponent<Animator>();
 			}

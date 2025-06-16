@@ -1,8 +1,8 @@
 {
 	"name": "com.squirrelbite.stf_unity",
-	"displayName": "STF 3D Interchange",
+	"displayName": "STF - Modular 3D Interchange Format",
 	"version": "0.0.0",
-	"description": "Support for importing STF models.",
+	"description": "Support for importing STF assets.",
 	"unity": "2022.3",
 	"unityRelease": "6f1",
 	"license": "MIT or Apache-2.0",

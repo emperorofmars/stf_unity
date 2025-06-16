@@ -36,7 +36,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			animator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
 			animator.avatar = avatar;
 
-			return (new() { avatar }, null);
+			return (new() { avatar }, new() { avatar });
 		}
 	}
 

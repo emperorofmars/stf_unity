@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor.Compilation;
 using com.squirrelbite.stf_unity.processors.ava.util;
 using com.squirrelbite.stf_unity.processors;
+using com.squirrelbite.stf_unity.processors.stfexp;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat
 {
@@ -44,6 +45,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat
 
 					foreach ((var _, var processor) in STF_Processor_Registry.GetProcessors("default"))
 						STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, processor);
+					STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, new STFEXP_Humanoid_Armature_Processor());
+					STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, new STFEXP_Constraint_Twist_Processor());
 				}
 			}
 			else
