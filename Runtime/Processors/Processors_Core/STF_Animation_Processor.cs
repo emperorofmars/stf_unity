@@ -28,7 +28,7 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				if (STFAnimation.AnimationRoot.PropertyConverter == null)
 				{
-					continue; // TODO report
+					continue; //TODO Report Warning
 				}
 				(string RelativePath, System.Type CurveType, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) = STFAnimation.AnimationRoot.PropertyConverter.ConvertPropertyPath(STFAnimation.AnimationRoot, track.target);
 
@@ -69,7 +69,10 @@ namespace com.squirrelbite.stf_unity.processors
 							ret.SetCurve(RelativePath, CurveType, PropertyNames[curveIndex], curves[curveIndex]);
 					}
 				}
-				// TODO Else Warning
+				else
+				{
+					// TODO Report Warning
+				}
 			}
 
 			return (new() { ret }, new() { ret });

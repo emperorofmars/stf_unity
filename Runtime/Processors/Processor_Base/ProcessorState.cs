@@ -58,8 +58,8 @@ namespace com.squirrelbite.stf_unity.processors
 				}
 
 				// Register all stf resources
-				if (objectToRegister != null && !tmpResources.Contains(objectToRegister) && GetProcessor(objectToRegister) is var processor && processor != null)
-					tmpResources.Add(objectToRegister);
+						if (objectToRegister != null && !tmpResources.Contains(objectToRegister) && GetProcessor(objectToRegister) is var processor && processor != null)
+							tmpResources.Add(objectToRegister);
 
 				// Register all resources that have been instantiated from an armature
 				if (objectToRegister is STF_Prefab go)

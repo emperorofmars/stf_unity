@@ -121,6 +121,7 @@ namespace com.squirrelbite.stf_unity
 					ret.Add((context, RegisteredApplicationContexts.ContainsKey(context) ? RegisteredApplicationContexts[context].DisplayName : context));
 			}
 
+			ret.Sort((a, b) => string.Compare(a.Item2.ToLower(), b.Item2.ToLower()));
 			return ret;
 		}
 	}

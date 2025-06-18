@@ -59,7 +59,7 @@ namespace com.squirrelbite.stf_unity.processors
 		public uint Order => 0;
 		public int Priority => 1;
 
-		public (List<Object> ProcessedObjects, List<Object> ObjectsToRegister) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
+		public (List<Object>, List<Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			STFResource.PropertyConverter = new STF_NodeResource_Converter();
 			return (null, null);
