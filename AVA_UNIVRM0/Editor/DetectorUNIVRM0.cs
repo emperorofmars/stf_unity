@@ -30,7 +30,6 @@ namespace com.squirrelbite.stf_unity.ava.univrm0
 
 		static DetectorUNIVRM0()
 		{
-			//if(AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.StartsWith("VRC.SDK3.Avatars")))
 			if(Directory.GetFiles(Path.GetDirectoryName(Application.dataPath), "IVRMComponent.cs", SearchOption.AllDirectories).Length > 0)
 			{
 				Debug.Log("AVA: Found UNIVRM0 SDK");
