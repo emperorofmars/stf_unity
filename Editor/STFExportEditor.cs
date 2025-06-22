@@ -10,8 +10,6 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.tools
 {
-	// UI to export STF-Unity intermediary scenes into STF. Apart from selecting the main asset, optionally multiple secondary assets can be included into the export.
-
 	public class STFExportEditor : EditorWindow
 	{
 		private Vector2 scrollPos;
@@ -19,7 +17,8 @@ namespace com.squirrelbite.stf_unity.tools
 		private bool DebugExport = true;
 
 
-		[MenuItem("STF Tools/Export (TBD)")]
+		// TODO unsomment when STF export works
+		//[MenuItem("STF Tools/Export (TBD)")]
 		public static void Init()
 		{
 			STFExportEditor window = EditorWindow.GetWindow(typeof(STFExportEditor)) as STFExportEditor;

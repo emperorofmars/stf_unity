@@ -1,21 +1,26 @@
+#if UNITY_EDITOR
+#if STF_AVA_VRCSDK3_FOUND
+
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.modules;
 using com.squirrelbite.stf_unity.modules.stfexp;
+using com.squirrelbite.stf_unity.serialization;
 using Newtonsoft.Json.Linq;
-using UnityEngine.Animations;
+using UnityEditor;
+using VRC.SDK3.Dynamics.Constraint.Components;
 
-namespace com.squirrelbite.stf_unity.serialization
+namespace com.squirrelbite.stf_unity.ava.vrchat.serialization
 {
-	public class NNA_Twist_Serializer : IUnity_Serializer
+	public class VRC_Twist_Serializer : IUnity_Serializer
 	{
-		public static readonly System.Type _Target = typeof(RotationConstraint);
+		public static readonly System.Type _Target = typeof(VRCRotationConstraint);
 		public System.Type Target => _Target;
 
 		public List<SerializerResult> Serialize(UnitySerializerContext Context, UnityEngine.Object UnityObject)
 		{
-			if(UnityObject is RotationConstraint c && c.rotationAxis == Axis.Y && c.sourceCount == 1)
+			if(UnityObject is VRCRotationConstraint c && c.AffectsRotationY == true && c.AffectsRotationX == false && c.AffectsRotationZ == false && c.Sources.Count == 1)
 			{
-				var source = c.GetSource(0).sourceTransform;
+				var source = c.Sources[0].SourceTransform;
 				var targetNode = source.gameObject.GetComponent<STF_NodeResource>();
 				var node = c.gameObject.GetComponent<STF_NodeResource>();
 				var target = new JArray();
@@ -48,7 +53,7 @@ namespace com.squirrelbite.stf_unity.serialization
 
 				var retJson = new JObject {
 					{ "type", STFEXP_Constraint_Twist._STF_Type },
-					{ "weight", c.weight }
+					{ "weight", c.GlobalWeight }
 				};
 
 				if (target.Count > 0)
@@ -67,4 +72,16 @@ namespace com.squirrelbite.stf_unity.serialization
 			else return null;
 		}
 	}
+
+	[InitializeOnLoad]
+	public class Register_VRC_Twist_Serializer
+	{
+		static Register_VRC_Twist_Serializer()
+		{
+			Unity_Serializer_Registry.RegisterSerializer(new VRC_Twist_Serializer());
+		}
+	}
 }
+
+#endif
+#endif
