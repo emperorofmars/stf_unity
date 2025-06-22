@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
@@ -11,19 +10,18 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules.stfexp
 {
-	public class STFEXP_Constraint_Twist : STF_NodeComponentResource
+	public class STFEXP_LightprobeAnchor : STF_NodeComponentResource
 	{
-		public const string _STF_Type = "stfexp.constraint.twist";
+		public const string _STF_Type = "stfexp.lightprobe_anchor";
 		public override string STF_Type => _STF_Type;
 
-		public float Weight = 0.5f;
-		public List<string> Target = new();
+		public List<string> Anchor = new();
 		public GameObject TargetGo;
 	}
 
-	public class STFEXP_Constraint_Twist_Module : ISTF_Module
+	public class STFEXP_LightprobeAnchor_Module : ISTF_Module
 	{
-		public string STF_Type => STFEXP_Constraint_Twist._STF_Type;
+		public string STF_Type => STFEXP_LightprobeAnchor._STF_Type;
 
 		public string STF_Kind => "component";
 
@@ -31,7 +29,7 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 
 		public List<string> LikeTypes => new(){"constraint"};
 
-		public List<Type> UnderstoodApplicationTypes => new(){typeof(STFEXP_Constraint_Twist)};
+		public List<Type> UnderstoodApplicationTypes => new(){typeof(STFEXP_LightprobeAnchor)};
 
 		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
 
@@ -40,17 +38,15 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
 			var go = ContextObject as STF_MonoBehaviour;
-			var ret = go.gameObject.AddComponent<STFEXP_Constraint_Twist>();
+			var ret = go.gameObject.AddComponent<STFEXP_LightprobeAnchor>();
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STFEXP Constraint Twist");
 
-			ret.Weight = JsonResource.Value<float>("weight");
-
-			if (JsonResource.ContainsKey("target"))
-				ret.Target = JsonResource["target"].ToObject<List<string>>();
+			if (JsonResource.ContainsKey("anchor"))
+				ret.Anchor = JsonResource["anchor"].ToObject<List<string>>();
 
 			Context.AddTask(new Task(() => {
-				if (ret.Target.Count > 0)
-					ret.TargetGo = STFUtil.ResolveBinding(Context, ret, ret.Target);
+				if (ret.Anchor.Count > 0)
+					ret.TargetGo = STFUtil.ResolveBinding(Context, ret, ret.Anchor);
 				else
 					ret.TargetGo = ret.transform?.parent?.parent?.gameObject;
 			}));
@@ -66,11 +62,11 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 
 #if UNITY_EDITOR
 	[InitializeOnLoad]
-	class Register_STFEXP_Constraint_Twist
+	class Register_STFEXP_LightprobeAnchor
 	{
-		static Register_STFEXP_Constraint_Twist()
+		static Register_STFEXP_LightprobeAnchor()
 		{
-			STF_Module_Registry.RegisterModule(new STFEXP_Constraint_Twist_Module());
+			STF_Module_Registry.RegisterModule(new STFEXP_LightprobeAnchor_Module());
 		}
 	}
 #endif

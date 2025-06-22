@@ -47,6 +47,7 @@ namespace com.squirrelbite.stf_unity.ava.univrm0
 						STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, processor);
 					STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, new STFEXP_Humanoid_Armature_Processor());
 					STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, new STFEXP_Constraint_Twist_Processor());
+					STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, new STFEXP_LightprobeAnchor_Processor());
 				}
 			}
 			else

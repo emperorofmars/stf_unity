@@ -26,37 +26,16 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 		{
 			var stfConstraint = STFResource as STFEXP_Constraint_Twist;
 
-			Transform target = null;
-			if (stfConstraint.Target == null || stfConstraint.Target.Count == 0)
+			if (stfConstraint.TargetGo)
 			{
-				target = stfConstraint.transform?.parent?.parent;
-			}
-			else if (stfConstraint.Target.Count == 1 && stfConstraint.STF_Owner is STF_Bone)
-			{
-				var ownerGo = (stfConstraint.STF_Owner as STF_Bone).STF_Owner;
-				target = ownerGo.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == stfConstraint.Target[0] && b.STF_Owner == ownerGo)?.transform;
-			}
-			else if (stfConstraint.Target.Count == 1)
-			{
-				target = Context.Root.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(n => n.STF_Id == stfConstraint.Target[0])?.transform;
-			}
-			else if (stfConstraint.Target.Count == 3)
-			{
-				var ownerGo = Context.Root.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(n => n.STF_Id == stfConstraint.Target[0]);
-				var armatureInstance = ownerGo.GetComponent<STF_Instance_Armature>();
-				target = ownerGo.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == stfConstraint.Target[2] && b.STF_Owner == armatureInstance)?.transform;
-			}
-
-			if (target)
-			{
-				var ret = CreateConstraint(stfConstraint.gameObject, target, stfConstraint.Weight);
+				var ret = CreateConstraint(stfConstraint.gameObject, stfConstraint.TargetGo, stfConstraint.Weight);
 				return (new() { ret }, null);
 			}
 			else
 				return (null, null);
 		}
 
-		public static RotationConstraint CreateConstraint(GameObject Node, Transform Source, float Weight)
+		public static RotationConstraint CreateConstraint(GameObject Node, GameObject Source, float Weight)
 		{
 			var converted = Node.AddComponent<RotationConstraint>();
 
@@ -66,7 +45,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			var source = new ConstraintSource
 			{
 				weight = 1,
-				sourceTransform = Source,
+				sourceTransform = Source.transform,
 			};
 			converted.AddSource(source);
 

@@ -27,7 +27,8 @@ namespace com.squirrelbite.stf_unity.processors
 	public class STF_Instance_Mesh_Processor : ISTF_Processor
 	{
 		public System.Type TargetType => typeof(STF_Instance_Mesh);
-		public uint Order => 100;
+		public const uint _Order = 100;
+		public uint Order => _Order;
 		public int Priority => 1;
 
 		public (List<Object>, List<Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)

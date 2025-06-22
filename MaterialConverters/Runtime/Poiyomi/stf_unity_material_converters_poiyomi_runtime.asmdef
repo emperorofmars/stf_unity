@@ -1,11 +1,9 @@
 {
-    "name": "stf_ava_vrchat",
-    "rootNamespace": "com.squirrelbite.stf_unity.processors.ava.vrchat",
+    "name": "stf_unity_material_converters_poiyomi_runtime",
+    "rootNamespace": "",
     "references": [
         "GUID:8a88ca90357a74942a1113aeb6ad32c6",
-        "GUID:3b9f661eb63cdd24eac0fa805a1e17aa",
-        "GUID:915b0571b66d8f545801d82ff1007498",
-        "GUID:5718fb738711cd34ea54e9553040911d"
+        "GUID:4cfc4de7a094d0d4b8fb25e17f04f60a"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

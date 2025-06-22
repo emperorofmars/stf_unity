@@ -47,17 +47,17 @@ namespace com.squirrelbite.stf_unity.serialization
 				}
 
 				var retJson = new JObject {
-					{ "type", STFEXP_Constraint_Twist._STF_Type },
+					{ "type", STFEXP_LightprobeAnchor._STF_Type },
 					{ "weight", c.weight }
 				};
-				
+
 				if (target.Count > 0)
 				{
 					retJson.Add("target", target);
 				}
 
 				return new List<SerializerResult> {new(){
-					STFType = STFEXP_Constraint_Twist._STF_Type,
+					STFType = STFEXP_LightprobeAnchor._STF_Type,
 					Result = retJson,
 					Origin = UnityObject,
 					IsComplete = IsComplete,
