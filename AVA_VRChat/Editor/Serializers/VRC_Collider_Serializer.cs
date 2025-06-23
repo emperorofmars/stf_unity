@@ -24,7 +24,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.serialization
 				var ret = new JObject() {
 					{ "type", AVA_Collider_Sphere._STF_Type},
 					{ "radius", collider.radius },
-					{ "position_offset", TRSUtil.SerializeVector3(collider.position) },
+					{ "offset_position", TRSUtil.SerializeVector3(collider.position) },
 				};
 				return new List<SerializerResult>{new() {
 					STFType = AVA_Collider_Sphere._STF_Type,
@@ -40,8 +40,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.serialization
 					{ "type", AVA_Collider_Capsule._STF_Type},
 					{ "radius", collider.radius },
 					{ "height", collider.height },
-					{ "position_offset", TRSUtil.SerializeVector3(collider.position) },
-					{ "rotation_offset", TRSUtil.SerializeQuat(collider.rotation) },
+					{ "offset_position", TRSUtil.SerializeVector3(collider.position) },
+					{ "offset_rotation", TRSUtil.SerializeQuat(collider.rotation) },
 				};
 				return new List<SerializerResult>{new() {
 					STFType = AVA_Collider_Capsule._STF_Type,
@@ -55,8 +55,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.serialization
 			{
 				var ret = new JObject() {
 					{ "type", AVA_Collider_Plane._STF_Type},
-					{ "position_offset", TRSUtil.SerializeVector3(collider.position) },
-					{ "rotation_offset", TRSUtil.SerializeQuat(collider.rotation) },
+					{ "offset_position", TRSUtil.SerializeVector3(collider.position) },
+					{ "offset_rotation", TRSUtil.SerializeQuat(collider.rotation) },
 				};
 				return new List<SerializerResult>{new() {
 					STFType = AVA_Collider_Plane._STF_Type,
