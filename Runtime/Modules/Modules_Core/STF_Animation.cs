@@ -40,8 +40,6 @@ namespace com.squirrelbite.stf_unity.modules
 		public List<Track> tracks = new();
 
 		public STF_Prefab AnimationRoot;
-
-		public AnimationClip ProcessedUnityAnimation;
 	}
 
 	public class STF_Animation_Module : ISTF_Module
