@@ -7,7 +7,8 @@ namespace com.squirrelbite.stf_unity.processors
 	public class STF_Animation_Processor : ISTF_Processor
 	{
 		public System.Type TargetType => typeof(STF_Animation);
-		public uint Order => 100000000;
+		public const uint _Order = 100000000;
+		public uint Order => _Order;
 		public int Priority => 1;
 
 		public (List<Object>, List<Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
