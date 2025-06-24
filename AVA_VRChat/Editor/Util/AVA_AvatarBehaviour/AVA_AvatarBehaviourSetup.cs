@@ -44,22 +44,25 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 	[InitializeOnLoad]
 	public class AVA_AvatarBehaviourSetup_BuildHook : IVRCSDKPreprocessAvatarCallback
 	{
-		public int callbackOrder => 1;
+		// Run before VRCFury (-10000) and ModularAvatar (-11000)
+		public int callbackOrder => -20000;
 
 		public bool OnPreprocessAvatar(GameObject Root)
 		{
-			var fixComponent = Root.GetComponent<AVA_AvatarBehaviourSetup>();
-			try
+			if (Root.GetComponent<AVA_AvatarBehaviourSetup>() is var avatarBehaviour)
 			{
-				Debug.Log("Wooo");
-				// TODO
-				return true;
+				try
+				{
+					AVA_AvatarBehaviourApplier.Apply(avatarBehaviour);
+					return true;
+				}
+				catch (System.Exception exception)
+				{
+					Debug.LogError(exception);
+					return false;
+				}
 			}
-			catch (System.Exception exception)
-			{
-				Debug.LogError(exception);
-				return false;
-			}
+			return false;
 		}
 	}
 }

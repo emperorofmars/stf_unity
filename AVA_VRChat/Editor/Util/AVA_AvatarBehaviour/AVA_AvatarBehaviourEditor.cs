@@ -10,6 +10,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 	public class AVA_AvatarBehaviourEditor : EditorWindow
 	{
 		private VRC_AvatarDescriptor Selected;
+		private bool WriteAnimatorsToDisk = true;
 		private string ErrorMessage = null;
 		private bool Success = false;
 
@@ -34,6 +35,10 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 				GUILayout.ExpandWidth(true)
 			);
 			GUILayout.EndHorizontal();
+			GUILayout.Space(5);
+			GUILayout.BeginHorizontal();
+			WriteAnimatorsToDisk = GUILayout.Toggle(WriteAnimatorsToDisk, "WriteAnimatorsToDisk");
+			GUILayout.EndHorizontal();
 
 			if(newSelected != Selected && newSelected.GetComponent<AVA_AvatarBehaviourSetup>())
 			{
@@ -44,12 +49,12 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 
 			if(Success)
 			{
-				GUILayout.Space(5);
+				GUILayout.Space(10);
 				GUILayout.Label("Success!", EditorStyles.label, GUILayout.ExpandWidth(false));
 			}
 			if(!string.IsNullOrWhiteSpace(ErrorMessage))
 			{
-				GUILayout.Space(5);
+				GUILayout.Space(10);
 				GUILayout.Label("Error: " + ErrorMessage, EditorStyles.label, GUILayout.ExpandWidth(false));
 			}
 
@@ -57,7 +62,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 
 			if(Selected)
 			{
-				if(GUILayout.Button("Fix"))
+				if(GUILayout.Button("Apply on Copy"))
 				{
 					ErrorMessage = null;
 					Success = false;
@@ -65,7 +70,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 					{
 						var instance = Instantiate(Selected.gameObject);
 						instance.name = Selected.name + "_AvatarBehavoiur_Applied";
-						AVA_AvatarBehaviourApplier.Apply(instance);
+						AVA_AvatarBehaviourApplier.Apply(instance.GetComponent<AVA_AvatarBehaviourSetup>(), WriteAnimatorsToDisk);
 						Success = true;
 					}
 					catch(System.Exception exception)
