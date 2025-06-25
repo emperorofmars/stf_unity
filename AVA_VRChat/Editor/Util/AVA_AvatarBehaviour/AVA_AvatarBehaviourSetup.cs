@@ -9,35 +9,47 @@ using VRC.SDKBase.Editor.BuildPipeline;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.util
 {
+	public enum HandDominance { Left, Right, Explicit };
+	public enum HandGesture { None, Fist, Open, Point, Peace, RockNRoll, Gun, ThumbsUp };
+
 	[System.Serializable]
 	public class AvatarEmote
 	{
-		public string Meaning;
+		public string Emote;
 		public AnimationClip Animation;
-		public bool EyeblinkActive = true;
-		public float BreathingSpeed = 0.5f;
-		public float BreathingIntensity = 0.5f;
 	}
 
 	[System.Serializable]
 	public class AvatarEmoteBinding
 	{
 		public string Emote;
-		public string GuestureLeftHand;
-		public string GuestureRightHand;
+		public HandGesture GuestureLeftHand = HandGesture.None;
+		public HandGesture GuestureRightHand = HandGesture.None;
 		public bool UseTriggerIntensity = true;
 	}
 
+	/// <summary>
+	/// Opinionated base setup for VR avatars.
+	/// </summary>
 	[HelpURL("https://github.com/emperorofmars/stf_unity")]
 	public class AVA_AvatarBehaviourSetup : MonoBehaviour, IEditorOnly
 	{
+		[Header("Emote Control")]
+		public HandDominance HandDominance = HandDominance.Right;
 		public List<AvatarEmote> Emotes = new();
 		public List<AvatarEmoteBinding> EmoteBindings = new();
+
+
+		[Space]
+		[Header("Minsc Settings")]
+		public bool CreateEyeJoystickPuppet = true;
+
+		// TODO Toggles, JoystickPuppets, Other stuff
 
 		public void AddAvatarEmote(AvatarEmote Emote)
 		{
 			Emotes.Add(Emote);
-			EmoteBindings.Add(new AvatarEmoteBinding() { Emote = Emote.Meaning });
+			EmoteBindings.Add(new AvatarEmoteBinding() { Emote = Emote.Emote });
 		}
 	}
 
@@ -60,6 +72,14 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 				{
 					Debug.LogError(exception);
 					return false;
+				}
+				finally
+				{
+#if UNITY_EDITOR
+					Object.DestroyImmediate(avatarBehaviour);
+#else
+					Object.Destroy(avatarBehaviour);
+#endif
 				}
 			}
 			return false;

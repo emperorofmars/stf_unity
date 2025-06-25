@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.modules;
 using com.squirrelbite.stf_unity.ava.vrchat.util;
-using System.Linq;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
@@ -31,11 +30,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				if (emote.animation.ProcessedObjects.Count == 1 && emote.animation.ProcessedObjects[0] is AnimationClip animationClip)
 				{
 					baseSetup.AddAvatarEmote(new AvatarEmote() {
-						Meaning = emote.meaning,
+						Emote = emote.meaning,
 						Animation = animationClip,
-						EyeblinkActive = emote.eyeblink_active,
-						BreathingIntensity = emote.breathing_intensity,
-						BreathingSpeed = emote.breathing_speed
 					});
 				}
 			}

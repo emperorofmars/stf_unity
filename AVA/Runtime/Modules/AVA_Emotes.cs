@@ -22,9 +22,6 @@ namespace com.squirrelbite.stf_unity.ava
 		{
 			public string meaning;
 			public STF_Animation animation;
-			public bool eyeblink_active = true;
-			public float breathing_speed = 0.5f;
-			public float breathing_intensity = 0.5f;
 		}
 
 		public List<Emote> emotes = new();
@@ -59,9 +56,6 @@ namespace com.squirrelbite.stf_unity.ava
 					if (jsonEmote is JObject jsonObjectEmote && jsonObjectEmote.ContainsKey("animation"))
 					{
 						var emote = new AVA_Emotes.Emote() { meaning = meaning, animation = Context.ImportResource((string)jsonObjectEmote["animation"], "data") as STF_Animation };
-						if (jsonObjectEmote.ContainsKey("eyeblink_active")) emote.eyeblink_active = jsonObjectEmote.Value<bool>("eyeblink_active");
-						if (jsonObjectEmote.ContainsKey("breathing_speed")) emote.breathing_speed = jsonObjectEmote.Value<float>("breathing_speed");
-						if (jsonObjectEmote.ContainsKey("breathing_intensity")) emote.breathing_intensity = jsonObjectEmote.Value<float>("breathing_intensity");
 						ret.emotes.Add(emote);
 					}
 				}

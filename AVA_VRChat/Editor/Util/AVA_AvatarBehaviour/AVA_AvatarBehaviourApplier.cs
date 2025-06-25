@@ -3,6 +3,7 @@
 
 using UnityEditor;
 using UnityEditor.Animations;
+using UnityEngine;
 using VRC.SDK3.Avatars.Components;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.util
@@ -14,20 +15,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 		{
 			var avatar = Setup.GetComponent<VRCAvatarDescriptor>();
 
-			var animatorFX = new AnimatorController { name = "FX" };
-			var animatorFXLayer0 = new AnimatorControllerLayer
-			{
-				name = "All Parts",
-				stateMachine = new AnimatorStateMachine()
-			};
-			animatorFX.AddLayer(animatorFXLayer0);
-			var animatorFXLayer1 = new AnimatorControllerLayer
-			{
-				name = "Left Hand",
-				stateMachine = new AnimatorStateMachine()
-			};
-			animatorFXLayer1.stateMachine.AddState("Idle");
-			animatorFX.AddLayer(animatorFXLayer1);
+			var animatorFX = SetupBaseFX();
+			SetupEmotes(Setup, animatorFX);
 
 			avatar.customizeAnimationLayers = true;
 			avatar.baseAnimationLayers = new VRCAvatarDescriptor.CustomAnimLayer[]
@@ -45,6 +34,62 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 			}
 
 			return;
+		}
+
+		private static AnimatorController SetupBaseFX()
+		{
+			var animatorFX = new AnimatorController { name = "FX" };
+			var animatorFXLayer0 = new AnimatorControllerLayer
+			{
+				name = "All Parts",
+				stateMachine = new AnimatorStateMachine()
+			};
+			animatorFX.AddLayer(animatorFXLayer0);
+			animatorFX.AddParameter("GestureLeft", AnimatorControllerParameterType.Int);
+			animatorFX.AddParameter("GestureLeftWeight", AnimatorControllerParameterType.Float);
+			animatorFX.AddParameter("GestureRight", AnimatorControllerParameterType.Int);
+			animatorFX.AddParameter("GestureRightWeight", AnimatorControllerParameterType.Float);
+
+			return animatorFX;
+		}
+
+		private static void SetupEmotes(AVA_AvatarBehaviourSetup Setup, AnimatorController animatorFX)
+		{
+			var layerHandLeft = new AnimatorControllerLayer { name = "Left Hand", stateMachine = new AnimatorStateMachine() };
+			{
+				var stateIdle = new AnimatorState { name = "Idle", writeDefaultValues = true };
+
+				layerHandLeft.stateMachine.AddState(stateIdle, new Vector3(0, 0, 0));
+			}
+
+			var layerHandRight = new AnimatorControllerLayer { name = "Right Hand", stateMachine = new AnimatorStateMachine() };
+			{
+				var stateIdle = new AnimatorState { name = "Idle", writeDefaultValues = true };
+
+				layerHandRight.stateMachine.AddState(stateIdle, new Vector3(0, 0, 0));
+			}
+
+			if (Setup.HandDominance == HandDominance.Right)
+			{
+				animatorFX.AddLayer(layerHandLeft);
+				animatorFX.AddLayer(layerHandRight);
+			}
+			else if (Setup.HandDominance == HandDominance.Left)
+			{
+				animatorFX.AddLayer(layerHandRight);
+				animatorFX.AddLayer(layerHandLeft);
+			}
+
+			if (Setup.HandDominance == HandDominance.Explicit)
+			{
+				var layerHands = new AnimatorControllerLayer { name = "Left Hand", stateMachine = new AnimatorStateMachine() };
+				{
+					var stateIdle = new AnimatorState { name = "Idle", writeDefaultValues = true };
+
+					layerHands.stateMachine.AddState(stateIdle, new Vector3(0, 0, 0));
+				}
+				animatorFX.AddLayer(layerHands);
+			}
 		}
 	}
 

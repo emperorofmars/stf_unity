@@ -1,0 +1,27 @@
+{
+    "name": "stf_unity_ava_vrchat_avatar_optimizer",
+    "rootNamespace": "com.squirrelbite.stf_unity.ava.vrchat",
+    "references": [
+        "GUID:8a88ca90357a74942a1113aeb6ad32c6",
+        "GUID:3b9f661eb63cdd24eac0fa805a1e17aa",
+        "GUID:915b0571b66d8f545801d82ff1007498",
+        "GUID:1c054981eab3d364bb6bcb5ab11251a9",
+        "GUID:d27e65c75de36c247b4b935571b0de4b",
+        "GUID:9d5f5f9c6263d254ab035e4860d28748"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "d4rkpl4y3r.d4rkavataroptimizer",
+            "expression": "",
+            "define": "D4RKPL4Y3R_AVATAROPTIMIZER_FOUND"
+        }
+    ],
+    "noEngineReferences": false
+}

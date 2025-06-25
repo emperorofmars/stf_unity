@@ -10,7 +10,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 	public class AVA_AvatarBehaviourEditor : EditorWindow
 	{
 		private VRC_AvatarDescriptor Selected;
-		private bool WriteAnimatorsToDisk = true;
+		private bool WriteAnimatorsToDisk = false;
 		private string ErrorMessage = null;
 		private bool Success = false;
 
