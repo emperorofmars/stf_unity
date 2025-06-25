@@ -61,7 +61,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 
 		public bool OnPreprocessAvatar(GameObject Root)
 		{
-			if (Root.GetComponent<AVA_AvatarBehaviourSetup>() is var avatarBehaviour)
+			if (Root.GetComponent<AVA_AvatarBehaviourSetup>() is var avatarBehaviour && avatarBehaviour != null)
 			{
 				try
 				{
@@ -82,7 +82,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 #endif
 				}
 			}
-			return false;
+			return true; // Nothing to do
 		}
 	}
 }

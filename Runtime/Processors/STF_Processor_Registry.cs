@@ -33,7 +33,7 @@ namespace com.squirrelbite.stf_unity
 		{
 			if (!RegisteredProcessors.ContainsKey(Context))
 				RegisteredProcessors.Add(Context, new Dictionary<System.Type, ISTF_Processor> { { Processor.TargetType, Processor } });
-			else if (!RegisteredProcessors[Context].ContainsKey(Processor.TargetType) || RegisteredProcessors[Context][Processor.TargetType].Priority <= Processor.Priority)
+			else if (!RegisteredProcessors[Context].ContainsKey(Processor.TargetType) || RegisteredProcessors[Context][Processor.TargetType].Priority < Processor.Priority)
 				RegisteredProcessors[Context].Add(Processor.TargetType, Processor);
 		}
 
@@ -41,7 +41,7 @@ namespace com.squirrelbite.stf_unity
 		{
 			if (!RegisteredGlobalProcessors.ContainsKey(Context))
 				RegisteredGlobalProcessors.Add(Context, new Dictionary<System.Type, ISTF_GlobalProcessor> { { Processor.TargetType, Processor } });
-			else if (!RegisteredGlobalProcessors[Context].ContainsKey(Processor.TargetType) || RegisteredGlobalProcessors[Context][Processor.TargetType].Priority <= Processor.Priority)
+			else if (!RegisteredGlobalProcessors[Context].ContainsKey(Processor.TargetType) || RegisteredGlobalProcessors[Context][Processor.TargetType].Priority < Processor.Priority)
 				RegisteredGlobalProcessors[Context].Add(Processor.TargetType, Processor);
 		}
 
