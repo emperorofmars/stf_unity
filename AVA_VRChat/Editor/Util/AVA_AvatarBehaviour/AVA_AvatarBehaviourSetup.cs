@@ -9,7 +9,8 @@ using VRC.SDKBase.Editor.BuildPipeline;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.util
 {
-	public enum HandDominance { Left, Right, Explicit };
+	public enum TriggerIntensity { None, Left, Right };
+	public enum HandDominance { Explicit, Left, Right };
 	public enum HandGesture { None, Fist, Open, Point, Peace, RockNRoll, Gun, ThumbsUp };
 
 	[System.Serializable]
@@ -25,7 +26,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 		public string Emote;
 		public HandGesture GuestureLeftHand = HandGesture.None;
 		public HandGesture GuestureRightHand = HandGesture.None;
-		public bool UseTriggerIntensity = true;
+		public TriggerIntensity UseTriggerIntensity = TriggerIntensity.None;
 	}
 
 	/// <summary>

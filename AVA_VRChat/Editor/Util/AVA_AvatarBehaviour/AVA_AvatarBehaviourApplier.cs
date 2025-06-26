@@ -126,9 +126,9 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 			{
 				var layerHands = new AnimatorControllerLayer { name = "Hands", stateMachine = new AnimatorStateMachine(), defaultWeight = 1 };
 				{
-					var stateIdle = new AnimatorState { name = "Idle", writeDefaultValues = true };
+					var stateIdle = new AnimatorState { name = "Idle", writeDefaultValues = true, timeParameterActive = true };
 
-					layerHands.stateMachine.AddState(stateIdle, new Vector3(0, 0, 0));
+					layerHands.stateMachine.AddState(stateIdle, new Vector3(300, 0, 0));
 				}
 				animatorFX.AddLayer(layerHands);
 			}
