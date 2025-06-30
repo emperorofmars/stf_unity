@@ -69,17 +69,18 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 
 		private static AnimatorState AddHandGestureState(AVA_AvatarBehaviourSetup Setup, AnimatorControllerLayer Layer, HandGesture Gesture, bool IsLeft, string OverrideGestureName = null)
 		{
-			var state = new AnimatorState { name = string.IsNullOrWhiteSpace(OverrideGestureName) ? Gesture.ToString() : OverrideGestureName, writeDefaultValues = true, timeParameterActive = true, timeParameter = IsLeft ? "GestureLeftWeight" : "GestureRightWeight" };
+			var state = new AnimatorState { name = string.IsNullOrWhiteSpace(OverrideGestureName) ? Gesture.ToString() : OverrideGestureName, writeDefaultValues = true, timeParameterActive = true };
 			Layer.stateMachine.AddState(state, new Vector3(300, 60 * HandGestureToParameterIndex[Gesture], 0));
 			var transitionIdle = Layer.stateMachine.AddAnyStateTransition(state);
 			transitionIdle.AddCondition(AnimatorConditionMode.Equals, HandGestureToParameterIndex[Gesture], IsLeft ? "GestureLeft" : "GestureRight");
 			transitionIdle.hasExitTime = false;
 			
-			if (Setup.EmoteBindings.Find(b => IsLeft ? b.GuestureLeftHand == Gesture : b.GuestureRightHand == Gesture)?.Emote is var emoteBinding && emoteBinding != null)
+			if (Setup.EmoteBindings.Find(b => IsLeft ? b.GuestureLeftHand == Gesture : b.GuestureRightHand == Gesture) is var emoteBinding && emoteBinding != null && !string.IsNullOrWhiteSpace(emoteBinding.Emote))
 			{
-				if (Setup.Emotes.Find(e => e.Emote == emoteBinding) is var emote && emote != null)
+				if (Setup.Emotes.Find(e => e.Emote == emoteBinding.Emote) is var emote && emote != null)
 				{
 					state.motion = emote.Animation;
+					state.timeParameter = emoteBinding.UseTriggerIntensity > 0 ? emoteBinding.UseTriggerIntensity == TriggerIntensity.Left ? "GestureLeftWeight" : "GestureRightWeight" : null;
 				}
 			}
 			return state;

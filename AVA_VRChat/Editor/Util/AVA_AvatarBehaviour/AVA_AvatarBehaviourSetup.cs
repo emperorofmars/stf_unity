@@ -9,7 +9,7 @@ using VRC.SDKBase.Editor.BuildPipeline;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.util
 {
-	public enum TriggerIntensity { None, Left, Right };
+	public enum TriggerIntensity { None = 0, Left = 1, Right = 2 };
 	public enum HandDominance { Explicit, Left, Right };
 	public enum HandGesture { None, Fist, Open, Point, Peace, RockNRoll, Gun, ThumbsUp };
 
@@ -35,14 +35,10 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 	[HelpURL("https://github.com/emperorofmars/stf_unity")]
 	public class AVA_AvatarBehaviourSetup : MonoBehaviour, IEditorOnly
 	{
-		[Header("Emote Control")]
 		public HandDominance HandDominance = HandDominance.Right;
 		public List<AvatarEmote> Emotes = new();
 		public List<AvatarEmoteBinding> EmoteBindings = new();
 
-
-		[Space]
-		[Header("Minsc Settings")]
 		public bool CreateEyeJoystickPuppet = true;
 
 		// TODO Toggles, JoystickPuppets, Other stuff
