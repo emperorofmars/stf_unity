@@ -97,7 +97,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 					{
 						c.EmoteBindings[i].Emote = bindingDropdown[newSelectedIndex];
 					}
-					
+
 					EditorGUI.indentLevel++;
 					EditorGUILayout.BeginHorizontal();
 					EditorGUILayout.PrefixLabel("Left Hand");
