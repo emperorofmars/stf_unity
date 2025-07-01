@@ -64,7 +64,6 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 					var clip = BlendshapeClipUtil.CreateSimple(Context, Preset, smr, vis);
 					blendshapeProxy.BlendShapeAvatar.Clips.Add(clip);
 					Context.AddUnityObject(eyelidsBlendshape, clip);
-					eyelidsBlendshape.ProcessedObjects.Add(clip);
 				}
 			}
 			TryApplyShape("closed", BlendShapePreset.Blink);

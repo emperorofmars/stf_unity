@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using VRM;
 using System.Linq;
 using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity.modules;
-using System.Threading.Tasks;
 
 namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 {
