@@ -41,12 +41,22 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 
 		public bool CreateEyeJoystickPuppet = true;
 
-		// TODO Toggles, JoystickPuppets, Other stuff
+		// TODO Toggles, JoystickPuppets, Other stuff, here or in a set of other components
 
 		public void AddAvatarEmote(AvatarEmote Emote)
 		{
 			Emotes.Add(Emote);
-			EmoteBindings.Add(new AvatarEmoteBinding() { Emote = Emote.Emote });
+
+			// Set default binding
+			// TODO vastly expand this logic
+			switch (Emote.Emote)
+			{
+				case "smile": EmoteBindings.Add(new AvatarEmoteBinding() { Emote = Emote.Emote, GuestureLeftHand = HandGesture.Fist, UseTriggerIntensity = TriggerIntensity.Left }); break;
+				case "blep": EmoteBindings.Add(new AvatarEmoteBinding() { Emote = Emote.Emote, GuestureRightHand = HandGesture.Fist, UseTriggerIntensity = TriggerIntensity.Right }); break;
+				case "sad": EmoteBindings.Add(new AvatarEmoteBinding() { Emote = Emote.Emote, GuestureLeftHand = HandGesture.Gun }); break;
+				case "angry": EmoteBindings.Add(new AvatarEmoteBinding() { Emote = Emote.Emote, GuestureLeftHand = HandGesture.RockNRoll }); break;
+				default: EmoteBindings.Add(new AvatarEmoteBinding() { Emote = Emote.Emote }); break;
+			}
 		}
 	}
 
