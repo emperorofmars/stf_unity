@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.modules;
 using com.squirrelbite.stf_unity.modules.stfexp;
+using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
-using UnityEngine;
 #endif
 
 namespace com.squirrelbite.stf_unity.processors.stfexp
