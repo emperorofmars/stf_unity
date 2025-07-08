@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
-	public abstract class STF_NodeComponentResource: STF_MonoBehaviour
+	public abstract class STF_NodeComponentResource : STF_MonoBehaviour
 	{
 		public override string STF_Kind => "component";
 		public List<string> Overrides = new();
@@ -16,5 +16,12 @@ namespace com.squirrelbite.stf_unity.modules
 			if (JsonResource.ContainsKey("overrides")) foreach (var o in JsonResource["overrides"])
 					Overrides.Add((string)o);
 		}
+
+		public virtual bool CanHandleInstanceMod => false;
+
+		public virtual void HandleInstanceMod(ImportContext Context, JObject JsonResource)
+		{
+		}
+
 	}
 }

@@ -18,6 +18,15 @@ namespace com.squirrelbite.stf_unity.ava
 
 		public float radius = 1;
 		public Vector3 offset_position;
+
+
+		public override bool CanHandleInstanceMod => true;
+
+		public override void HandleInstanceMod(ImportContext Context, JObject JsonResource)
+		{
+			if (JsonResource.ContainsKey("radius")) radius = JsonResource.Value<float>("radius");
+			if (JsonResource.ContainsKey("offset_position")) offset_position = TRSUtil.ParseVector3(JsonResource["offset_position"] as JArray);
+		}
 	}
 
 	public class AVA_Collider_Sphere_Module : ISTF_Module

@@ -75,7 +75,10 @@ namespace com.squirrelbite.stf_unity.modules
 				{
 					if (instance.GetComponentsInChildren<STF_NodeComponentResource>().FirstOrDefault(c => c.STF_Id == componentId) is var component)
 					{
-						Debug.Log(component);
+						if (component.CanHandleInstanceMod)
+						{
+							component.HandleInstanceMod(Context, componentMod as JObject);
+						}
 					}
 				}
 			}
