@@ -74,18 +74,6 @@ namespace com.squirrelbite.stf_unity.processors
 				normals[i].Normalize();
 			}
 
-			var tangents = new Vector4[split_count];
-			for (int i = 0; i < split_count; i++)
-			{
-				tangents[i].Set(
-					-parseFloat(STFMesh.split_tangents.Data, i * STFMesh.float_width * 3, STFMesh.float_width),
-					parseFloat(STFMesh.split_tangents.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width),
-					parseFloat(STFMesh.split_tangents.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2),
-					0 // TODO this is wrong, figure out which value to use for W
-				);
-				tangents[i].Normalize();
-			}
-
 			var uvs = new List<Vector2[]>();
 			foreach (var uvBuffer in STFMesh.uvs)
 			{
@@ -132,7 +120,6 @@ namespace com.squirrelbite.stf_unity.processors
 						var splitCandidate = verts_to_split[vertexIndex][candidateIndex];
 						if (
 							(normals[splitIndex] - normals[splitCandidate]).magnitude < 0.0001
-							&& (tangents[splitIndex] - tangents[splitCandidate]).magnitude < 0.0001
 							&& compareUVs(splitIndex, splitCandidate)
 						// TODO colors
 						)
@@ -164,7 +151,6 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				unity_vertices.Add(vertices[splits[deduped_split_indices[i]]]);
 				unity_normals.Add(normals[deduped_split_indices[i]]);
-				unity_tangents.Add(tangents[deduped_split_indices[i]]);
 				for (int uvIndex = 0; uvIndex < uvs.Count; uvIndex++)
 				{
 					unity_uvs[uvIndex].Add(uvs[uvIndex][deduped_split_indices[i]]);
@@ -210,7 +196,6 @@ namespace com.squirrelbite.stf_unity.processors
 
 			ret.SetVertices(unity_vertices);
 			ret.SetNormals(unity_normals);
-			//ret.SetTangents(unity_tangents);
 			ret.RecalculateTangents();
 			for (int uvIndex = 0; uvIndex < unity_uvs.Count; uvIndex++)
 			{

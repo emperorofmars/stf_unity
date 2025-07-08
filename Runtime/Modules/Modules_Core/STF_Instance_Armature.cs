@@ -77,10 +77,19 @@ namespace com.squirrelbite.stf_unity.modules
 				instance.transform.GetChild(child_index).SetParent(go.transform, false);
 			}
 
-			// TODO also handle component mods and stuff
+			// handle added and modified components
+			if (JsonResource.ContainsKey("added_components"))
+			{
+				
+			}
+
+			if (JsonResource.ContainsKey("modified_components"))
+			{
+				
+			}
 
 			#if UNITY_EDITOR
-			Object.DestroyImmediate(instance);
+				Object.DestroyImmediate(instance);
 			#else
 			Object.Destroy(instance);
 			#endif
