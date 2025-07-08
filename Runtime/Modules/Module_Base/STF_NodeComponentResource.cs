@@ -15,9 +15,6 @@ namespace com.squirrelbite.stf_unity.modules
 			base.SetFromJson(JsonResource, STF_Id, ContextObject, DefaultName);
 			if (JsonResource.ContainsKey("overrides")) foreach (var o in JsonResource["overrides"])
 					Overrides.Add((string)o);
-
-			foreach (var o in Overrides)
-				Debug.Log(o);
 		}
 	}
 }

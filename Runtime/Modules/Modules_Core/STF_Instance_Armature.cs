@@ -68,6 +68,32 @@ namespace com.squirrelbite.stf_unity.modules
 				}
 			}
 
+			// handle added and modified components
+			if (JsonResource.ContainsKey("modified_components"))
+			{
+				foreach ((string componentId, JToken componentMod) in (JObject)JsonResource["modified_components"])
+				{
+					if (instance.GetComponentsInChildren<STF_NodeComponentResource>().FirstOrDefault(c => c.STF_Id == componentId) is var component)
+					{
+						Debug.Log(component);
+					}
+				}
+			}
+			if (JsonResource.ContainsKey("added_components"))
+			{
+				foreach ((string boneId, JToken componentIds) in (JObject)JsonResource["added_components"])
+				{
+					if (instance.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == boneId) is var bone && bone != null)
+					{
+						foreach (string componentId in componentIds)
+						{
+							var component = Context.ImportResource(componentId, "component", bone);
+							(component as STF_NodeComponentResource).STF_Owner = ret;
+						}
+					}
+				}
+			}
+
 			foreach(var bone in instance.GetComponentsInChildren<STF_Bone>())
 			{
 				bone.STF_Owner = ret;
@@ -75,17 +101,6 @@ namespace com.squirrelbite.stf_unity.modules
 			for(var child_index = 0; child_index < instance.transform.childCount; child_index++)
 			{
 				instance.transform.GetChild(child_index).SetParent(go.transform, false);
-			}
-
-			// handle added and modified components
-			if (JsonResource.ContainsKey("added_components"))
-			{
-				
-			}
-
-			if (JsonResource.ContainsKey("modified_components"))
-			{
-				
 			}
 
 			#if UNITY_EDITOR
