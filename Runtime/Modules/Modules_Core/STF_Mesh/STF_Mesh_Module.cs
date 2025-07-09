@@ -25,7 +25,6 @@ namespace com.squirrelbite.stf_unity.modules
 			var ret = ScriptableObject.CreateInstance<STF_Mesh>();
 			ret.SetFromJson(JsonResource, STF_Id, "STF Mesh");
 
-
 			ret.float_width = JsonResource.Value<int>("float_width");
 			ret.indices_width = JsonResource.Value<int>("indices_width");
 			ret.material_indices_width = JsonResource.Value<int>("material_indices_width");
@@ -38,7 +37,6 @@ namespace com.squirrelbite.stf_unity.modules
 
 			if(JsonResource.ContainsKey("splits")) ret.splits = Context.ImportBuffer(JsonResource.Value<string>("splits"));
 			if(JsonResource.ContainsKey("split_normals")) ret.split_normals = Context.ImportBuffer(JsonResource.Value<string>("split_normals"));
-			if(JsonResource.ContainsKey("split_tangents")) ret.split_tangents = Context.ImportBuffer(JsonResource.Value<string>("split_tangents"));
 			if(JsonResource.ContainsKey("uvs"))
 				foreach(JObject uv in (JArray)JsonResource["uvs"])
 					ret.uvs.Add(new () {name = uv.Value<string>("name"), uv = Context.ImportBuffer(uv.Value<string>("uv"))});

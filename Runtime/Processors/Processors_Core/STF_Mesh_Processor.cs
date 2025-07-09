@@ -141,7 +141,6 @@ namespace com.squirrelbite.stf_unity.processors
 
 			var unity_vertices = new List<Vector3>();
 			var unity_normals = new List<Vector3>();
-			var unity_tangents = new List<Vector4>();
 			var unity_uvs = new List<List<Vector2>>();
 			for (int uvIndex = 0; uvIndex < uvs.Count; uvIndex++)
 			{

@@ -64,7 +64,6 @@ namespace com.squirrelbite.stf_unity.modules
 		[Header("Splits")]
 		public STF_Buffer splits;
 		public STF_Buffer split_normals;
-		public STF_Buffer split_tangents;
 		public List<NamedBuffer> uvs = new();
 		public List<STF_Buffer> split_colors = new();
 
