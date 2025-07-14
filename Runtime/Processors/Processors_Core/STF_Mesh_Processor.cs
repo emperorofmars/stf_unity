@@ -212,40 +212,25 @@ namespace com.squirrelbite.stf_unity.processors
 			if (STFMesh.armature != null && STFMesh.bones != null && STFMesh.weights != null)
 			{
 				const int MAX_BONES_PER_VERTEX = 4;
-
 				var weights = new List<BoneWeight1>[vertex_count];
 				for (int i = 0; i < vertex_count; i++) weights[i] = new List<BoneWeight1>();
 
-				for (int weightChannel = 0; weightChannel < STFMesh.weights.Count; weightChannel++)
+				var width = STFMesh.float_width + STFMesh.bone_indices_width;
+				var position = 0;
+				for (int vertexIndex = 0; vertexIndex < vertex_count; vertexIndex++)
 				{
-					if (!STFMesh.weights[weightChannel].indexed)
+					var numWeights = parseInt(STFMesh.weight_lens.Data, vertexIndex * STFMesh.indices_width, STFMesh.indices_width, 0);
+					for (int weightIndex = 0; weightIndex < numWeights; weightIndex++)
 					{
-						for (int weightIndex = 0; weightIndex < vertex_count; weightIndex++)
+						var offset = position * width;
+
+						var boneIndex = parseInt(STFMesh.weights.Data, offset, STFMesh.bone_indices_width, 0);
+						var weight = parseFloat(STFMesh.weights.Data, offset, STFMesh.float_width, STFMesh.bone_indices_width);
+						if (boneIndex >= 0 && weight != 0)
 						{
-							var width = STFMesh.float_width + STFMesh.bone_indices_width;
-							var offset = weightIndex * width;
-
-							var boneIndex = parseInt(STFMesh.weights[weightChannel].buffer.Data, offset, STFMesh.bone_indices_width, 0);
-							var weight = parseFloat(STFMesh.weights[weightChannel].buffer.Data, offset, STFMesh.float_width, STFMesh.bone_indices_width);
-							if (boneIndex >= 0 && weight != 0)
-							{
-								weights[weightIndex].Add(new BoneWeight1 { boneIndex = boneIndex, weight = weight });
-							}
+							weights[vertexIndex].Add(new BoneWeight1 { boneIndex = boneIndex, weight = weight });
 						}
-					}
-					else
-					{
-						for (int weightIndex = 0; weightIndex < (int)STFMesh.weights[weightChannel].count; weightIndex++)
-						{
-							var width = STFMesh.indices_width + STFMesh.float_width + STFMesh.bone_indices_width;
-							var offset = weightIndex * width;
-
-							var vertIndex = parseInt(STFMesh.weights[weightChannel].buffer.Data, offset, STFMesh.indices_width, 0);
-							var boneIndex = parseInt(STFMesh.weights[weightChannel].buffer.Data, offset, STFMesh.bone_indices_width, STFMesh.indices_width);
-							var weight = parseFloat(STFMesh.weights[weightChannel].buffer.Data, offset, STFMesh.float_width, STFMesh.indices_width + STFMesh.bone_indices_width);
-
-							weights[vertIndex].Add(new BoneWeight1 { boneIndex = boneIndex, weight = weight });
-						}
+						position++;
 					}
 				}
 

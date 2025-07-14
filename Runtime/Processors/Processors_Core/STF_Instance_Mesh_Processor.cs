@@ -40,7 +40,7 @@ namespace com.squirrelbite.stf_unity.processors
 			if (processedUnityMesh != null)
 			{
 				Renderer renderer;
-				if (meshInstance.Mesh.weights != null && meshInstance.Mesh.weights.Count > 0 || meshInstance.Mesh.blendshapes != null && meshInstance.Mesh.blendshapes.Count > 0)
+				if (meshInstance.Mesh.weights != null  || meshInstance.Mesh.blendshapes != null && meshInstance.Mesh.blendshapes.Count > 0)
 				{
 					var smr = meshInstance.gameObject.AddComponent<SkinnedMeshRenderer>();
 					renderer = smr;

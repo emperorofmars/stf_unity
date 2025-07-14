@@ -18,14 +18,6 @@ namespace com.squirrelbite.stf_unity.modules
 		}
 
 		[System.Serializable]
-		public class WeightChannel
-		{
-			public bool indexed;
-			public ulong count;
-			public STF_Buffer buffer;
-		}
-
-		[System.Serializable]
 		public class VertexGroup
 		{
 			public string name;
@@ -81,7 +73,8 @@ namespace com.squirrelbite.stf_unity.modules
 		public STF_Armature armature;
 		public List<string> bones = new();
 		public int bone_indices_width = 1;
-		public List<WeightChannel> weights = new();
+		public STF_Buffer weight_lens;
+		public STF_Buffer weights;
 
 		[Space]
 		[Header("Blendshapes")]

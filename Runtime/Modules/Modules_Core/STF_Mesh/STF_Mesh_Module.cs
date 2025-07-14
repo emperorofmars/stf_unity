@@ -62,12 +62,8 @@ namespace com.squirrelbite.stf_unity.modules
 				foreach(var bone in JsonResource["bones"])
 					ret.bones.Add(bone.Value<string>());
 
-				foreach(var JsonWeightChannel in JsonResource["weights"])
-					ret.weights.Add(new STF_Mesh.WeightChannel {
-						buffer = Context.ImportBuffer(JsonWeightChannel.Value<string>("buffer")),
-						count = JsonWeightChannel.Value<ulong>("count"),
-						indexed = JsonWeightChannel.Value<bool>("indexed")
-					});
+				ret.weight_lens = Context.ImportBuffer(JsonResource.Value<string>("weight_lens"));
+				ret.weights = Context.ImportBuffer(JsonResource.Value<string>("weights"));
 			}
 
 			if(JsonResource.ContainsKey("blendshapes"))
