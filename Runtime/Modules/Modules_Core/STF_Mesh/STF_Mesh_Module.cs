@@ -71,8 +71,6 @@ namespace com.squirrelbite.stf_unity.modules
 				foreach(var jsonBlendshape in JsonResource["blendshapes"])
 				{
 					var blendshape = new STF_Mesh.Blendshape {
-						count = jsonBlendshape.Value<ulong>("count"),
-						indexed = jsonBlendshape.Value<bool>("indexed"),
 						default_value = jsonBlendshape.Value<float>("default_value"),
 						limit_lower = jsonBlendshape.Value<float>("limit_lower"),
 						limit_upper = jsonBlendshape.Value<float>("limit_upper"),
@@ -80,7 +78,8 @@ namespace com.squirrelbite.stf_unity.modules
 						position_offsets = Context.ImportBuffer(jsonBlendshape.Value<string>("position_offsets")),
 						normal_offsets = Context.ImportBuffer(jsonBlendshape.Value<string>("normal_offsets")),
 					};
-					if(blendshape.indexed) blendshape.indices = Context.ImportBuffer(jsonBlendshape.Value<string>("indices"));
+					if(jsonBlendshape.Value<string>("indices") is var indicesBufferId && !string.IsNullOrEmpty(indicesBufferId))
+						blendshape.indices = Context.ImportBuffer(indicesBufferId);
 					ret.blendshapes.Add(blendshape);
 				}
 			}
@@ -94,15 +93,18 @@ namespace com.squirrelbite.stf_unity.modules
 			if(JsonResource.ContainsKey("sharp_vertices"))
 				ret.sharp_vertices = Context.ImportBuffer(JsonResource.Value<string>("sharp_vertices"));
 
-			if(JsonResource.ContainsKey("vertex_groups"))
+			if (JsonResource.ContainsKey("vertex_groups"))
 			{
-				foreach(var JsonVertexgroup in JsonResource["vertex_groups"])
-					ret.vertex_groups.Add(new STF_Mesh.VertexGroup {
-						count = JsonVertexgroup.Value<ulong>("count"),
-						indexed = JsonVertexgroup.Value<bool>("indexed"),
+				foreach (var JsonVertexgroup in JsonResource["vertex_groups"])
+				{
+					var vertexGroup = new STF_Mesh.VertexGroup {
 						name = JsonVertexgroup.Value<string>("name"),
-						buffer = Context.ImportBuffer(JsonVertexgroup.Value<string>("buffer"))
-					});
+						weights = Context.ImportBuffer(JsonVertexgroup.Value<string>("weights")),
+					};
+					if (JsonVertexgroup.Value<string>("indices") is var indicesBufferId && !string.IsNullOrWhiteSpace(indicesBufferId))
+						vertexGroup.indices = Context.ImportBuffer(indicesBufferId);
+					ret.vertex_groups.Add(vertexGroup);
+				}
 			}
 
 			return (ret, new(){ret});

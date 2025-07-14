@@ -277,9 +277,9 @@ namespace com.squirrelbite.stf_unity.processors
 					Array.Clear(blendshapeNormals, 0, blendshapeNormals.Length);
 					Array.Clear(blendshapeTangents, 0, blendshapeTangents.Length);
 
-					for (int i = 0; i < (int)stfBlendshape.count; i++)
+					for (int i = 0; i < (int)stfBlendshape.position_offsets.BufferLength / (STFMesh.float_width * 3); i++)
 					{
-						var vertexIndex = stfBlendshape.indexed ? parseInt(stfBlendshape.indices.Data, i * STFMesh.indices_width, STFMesh.indices_width, 0) : i;
+						var vertexIndex = stfBlendshape.indices != null ? parseInt(stfBlendshape.indices.Data, i * STFMesh.indices_width, STFMesh.indices_width, 0) : i;
 
 						var blendshapePosition = new Vector3(
 							-parseFloat(stfBlendshape.position_offsets.Data, i * STFMesh.float_width * 3, STFMesh.float_width, 0),

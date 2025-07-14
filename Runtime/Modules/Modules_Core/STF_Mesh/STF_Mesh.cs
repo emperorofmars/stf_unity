@@ -21,17 +21,14 @@ namespace com.squirrelbite.stf_unity.modules
 		public class VertexGroup
 		{
 			public string name;
-			public bool indexed;
-			public ulong count;
-			public STF_Buffer buffer;
+			public STF_Buffer indices;
+			public STF_Buffer weights;
 		}
 
 		[System.Serializable]
 		public class Blendshape
 		{
 			public string name;
-			public bool indexed;
-			public ulong count;
 			public float default_value;
 			public float limit_upper;
 			public float limit_lower;
