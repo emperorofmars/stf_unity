@@ -76,7 +76,7 @@ namespace com.squirrelbite.stf_unity.modules
 						limit_upper = jsonBlendshape.Value<float>("limit_upper"),
 						name = jsonBlendshape.Value<string>("name"),
 						position_offsets = Context.ImportBuffer(jsonBlendshape.Value<string>("position_offsets")),
-						normal_offsets = Context.ImportBuffer(jsonBlendshape.Value<string>("normal_offsets")),
+						normals = Context.ImportBuffer(jsonBlendshape.Value<string>("normals")),
 					};
 					if(jsonBlendshape.Value<string>("indices") is var indicesBufferId && !string.IsNullOrEmpty(indicesBufferId))
 						blendshape.indices = Context.ImportBuffer(indicesBufferId);

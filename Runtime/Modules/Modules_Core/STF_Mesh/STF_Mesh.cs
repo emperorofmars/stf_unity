@@ -34,7 +34,7 @@ namespace com.squirrelbite.stf_unity.modules
 			public float limit_lower;
 			public STF_Buffer indices;
 			public STF_Buffer position_offsets;
-			public STF_Buffer normal_offsets;
+			public STF_Buffer normals;
 		}
 
 		// TODO material slots

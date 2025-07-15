@@ -289,17 +289,16 @@ namespace com.squirrelbite.stf_unity.processors
 						foreach (var split_index in verts_to_split[vertexIndex])
 							blendshapePositions[split_to_deduped_split_index[split_index]] = blendshapePosition;
 
-						if (stfBlendshape.normal_offsets != null && stfBlendshape.normal_offsets.BufferLength == stfBlendshape.position_offsets.BufferLength)
+						if (stfBlendshape.normals != null && stfBlendshape.normals.BufferLength == stfBlendshape.position_offsets.BufferLength)
 						{
 							var blendshapeNormal = new Vector3(
-								-parseFloat(stfBlendshape.normal_offsets.Data, i * STFMesh.float_width * 3, STFMesh.float_width, 0),
-								parseFloat(stfBlendshape.normal_offsets.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width),
-								parseFloat(stfBlendshape.normal_offsets.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2)
+								-parseFloat(stfBlendshape.normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width, 0),
+								parseFloat(stfBlendshape.normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width),
+								parseFloat(stfBlendshape.normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2)
 							);
 							foreach (var split_index in verts_to_split[vertexIndex])
 								blendshapeNormals[split_to_deduped_split_index[split_index]] = blendshapeNormal;
 						}
-						// TODO tangents
 					}
 
 					ret.AddBlendShapeFrame(stfBlendshape.name, 100, blendshapePositions, blendshapeNormals, blendshapeTangents);
