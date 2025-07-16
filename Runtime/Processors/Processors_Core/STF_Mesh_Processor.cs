@@ -288,16 +288,19 @@ namespace com.squirrelbite.stf_unity.processors
 						);
 						foreach (var split_index in verts_to_split[vertexIndex])
 							blendshapePositions[split_to_deduped_split_index[split_index]] = blendshapePosition;
+					}
 
-						if (stfBlendshape.normal_offsets != null && stfBlendshape.normal_offsets.BufferLength == stfBlendshape.position_offsets.BufferLength)
+					if (stfBlendshape.split_normals != null && stfBlendshape.split_normals.BufferLength == stfBlendshape.position_offsets.BufferLength)
+					{
+						for (int i = 0; i < (int)stfBlendshape.split_normals.BufferLength / (STFMesh.float_width * 3); i++)
 						{
-							var blendshapeNormal = new Vector3(
-								-parseFloat(stfBlendshape.normal_offsets.Data, i * STFMesh.float_width * 3, STFMesh.float_width, 0),
-								parseFloat(stfBlendshape.normal_offsets.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width),
-								parseFloat(stfBlendshape.normal_offsets.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2)
+							var splitIndex = stfBlendshape.split_indices != null ? parseInt(stfBlendshape.split_indices.Data, i * STFMesh.indices_width, STFMesh.indices_width, 0) : i;
+							var blendshapeSplitNormal = new Vector3(
+								-parseFloat(stfBlendshape.split_normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width, 0),
+								parseFloat(stfBlendshape.split_normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width),
+								parseFloat(stfBlendshape.split_normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2)
 							);
-							foreach (var split_index in verts_to_split[vertexIndex])
-								blendshapeNormals[split_to_deduped_split_index[split_index]] = blendshapeNormal;
+							blendshapeTangents[split_to_deduped_split_index[splitIndex]] = blendshapeSplitNormal;
 						}
 					}
 
