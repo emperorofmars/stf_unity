@@ -63,6 +63,7 @@ namespace com.squirrelbite.stf_unity.modules
 					ret.bones.Add(bone.Value<string>());
 
 				ret.weight_lens = Context.ImportBuffer(JsonResource.Value<string>("weight_lens"));
+				ret.bone_indices = Context.ImportBuffer(JsonResource.Value<string>("bone_indices"));
 				ret.weights = Context.ImportBuffer(JsonResource.Value<string>("weights"));
 			}
 

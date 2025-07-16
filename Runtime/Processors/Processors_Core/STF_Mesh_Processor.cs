@@ -215,17 +215,16 @@ namespace com.squirrelbite.stf_unity.processors
 				var weights = new List<BoneWeight1>[vertex_count];
 				for (int i = 0; i < vertex_count; i++) weights[i] = new List<BoneWeight1>();
 
-				var width = STFMesh.float_width + STFMesh.bone_indices_width;
 				var position = 0;
 				for (int vertexIndex = 0; vertexIndex < vertex_count; vertexIndex++)
 				{
 					var numWeights = parseInt(STFMesh.weight_lens.Data, vertexIndex * STFMesh.indices_width, STFMesh.indices_width, 0);
 					for (int weightIndex = 0; weightIndex < numWeights; weightIndex++)
 					{
-						var offset = position * width;
+						var offset = position;
 
-						var boneIndex = parseInt(STFMesh.weights.Data, offset, STFMesh.bone_indices_width, 0);
-						var weight = parseFloat(STFMesh.weights.Data, offset, STFMesh.float_width, STFMesh.bone_indices_width);
+						var boneIndex = parseInt(STFMesh.bone_indices.Data, offset * STFMesh.bone_indices_width, STFMesh.bone_indices_width, 0);
+						var weight = parseFloat(STFMesh.weights.Data, offset * STFMesh.float_width, STFMesh.float_width, 0);
 						if (boneIndex >= 0 && weight != 0)
 						{
 							weights[vertexIndex].Add(new BoneWeight1 { boneIndex = boneIndex, weight = weight });
