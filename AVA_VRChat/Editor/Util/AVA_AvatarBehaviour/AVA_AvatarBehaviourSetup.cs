@@ -47,7 +47,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 		{
 			Emotes.Add(Emote);
 
-			// Set default binding
+			// Set default bindings
 			// TODO vastly expand this logic
 			switch (Emote.Emote)
 			{

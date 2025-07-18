@@ -3,12 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.Animations;
 using UnityEngine;
-using VRC.SDK3.Avatars.Components;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.util
 {
@@ -41,6 +38,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 				{
 					c.Emotes.RemoveAt(i);
 					i--;
+					EditorGUILayout.EndHorizontal();
 					continue;
 				}
 				EditorGUILayout.EndHorizontal();
@@ -71,32 +69,28 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 			}
 			else
 			{
-				var bindingDropdownSet = new HashSet<string>();
-				foreach (var emote in c.Emotes)
-				{
-					if (!bindingDropdownSet.Contains(emote.Emote))
-						bindingDropdownSet.Add(emote.Emote);
-				}
-				var bindingDropdown = bindingDropdownSet.ToList();
+				var bindingDropdown = c.Emotes.Select(e => e.Emote).Distinct().ToList();
 				bindingDropdown.Sort();
 
 				for (int i = 0; i < c.EmoteBindings.Count; i++)
 				{
-					var selectedIndex = Math.Min(bindingDropdown.FindIndex(b => b == c.EmoteBindings[i].Emote), 0);
+					var selectedIndex = Math.Max(bindingDropdown.FindIndex(b => b == c.EmoteBindings[i].Emote), 0);
 					EditorGUILayout.BeginHorizontal();
 					EditorGUILayout.PrefixLabel("Emote");
 					var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, bindingDropdown.ToArray());
+					if (newSelectedIndex != selectedIndex)
+					{
+						c.EmoteBindings[i].Emote = bindingDropdown[newSelectedIndex];
+						EditorUtility.SetDirty(c);
+					}
 					if (GUILayout.Button("X"))
 					{
 						c.EmoteBindings.RemoveAt(i);
 						i--;
+						EditorGUILayout.EndHorizontal();
 						continue;
 					}
 					EditorGUILayout.EndHorizontal();
-					if (newSelectedIndex != selectedIndex)
-					{
-						c.EmoteBindings[i].Emote = bindingDropdown[newSelectedIndex];
-					}
 
 					EditorGUI.indentLevel++;
 					EditorGUILayout.BeginHorizontal();
@@ -121,6 +115,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 								if (c.EmoteBindings[nestedI].GuestureLeftHand == c.EmoteBindings[i].GuestureLeftHand && c.EmoteBindings[nestedI].GuestureRightHand == c.EmoteBindings[i].GuestureRightHand)
 								{
 									EditorGUILayout.LabelField("Duplicate Binding! Please select different mappings.");
+									break;
 								}
 							}
 						}
@@ -160,6 +155,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 
 			if(EditorGUI.EndChangeCheck())
 			{
+				serializedObject.ApplyModifiedProperties();
 				EditorUtility.SetDirty(c);
 			}
 			
