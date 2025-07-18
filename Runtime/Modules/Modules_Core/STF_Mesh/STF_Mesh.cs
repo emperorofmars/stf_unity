@@ -71,6 +71,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public STF_Armature armature;
 		public List<string> bones = new();
 		public int bone_indices_width = 1;
+		public int weight_lens_width = 1;
 		public STF_Buffer weight_lens;
 		public STF_Buffer bone_indices;
 		public STF_Buffer weights;

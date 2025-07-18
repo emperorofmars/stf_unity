@@ -218,7 +218,7 @@ namespace com.squirrelbite.stf_unity.processors
 				var position = 0;
 				for (int vertexIndex = 0; vertexIndex < vertex_count; vertexIndex++)
 				{
-					var numWeights = parseInt(STFMesh.weight_lens.Data, vertexIndex * STFMesh.indices_width, STFMesh.indices_width, 0);
+					var numWeights = parseInt(STFMesh.weight_lens.Data, vertexIndex * STFMesh.weight_lens_width, STFMesh.weight_lens_width, 0);
 					for (int weightIndex = 0; weightIndex < numWeights; weightIndex++)
 					{
 						var offset = position;

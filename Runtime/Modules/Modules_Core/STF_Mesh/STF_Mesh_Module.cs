@@ -29,6 +29,7 @@ namespace com.squirrelbite.stf_unity.modules
 			ret.indices_width = JsonResource.Value<int>("indices_width");
 			ret.material_indices_width = JsonResource.Value<int>("material_indices_width");
 			ret.bone_indices_width = JsonResource.Value<int>("bone_indices_width");
+			ret.weight_lens_width = JsonResource.Value<int>("weight_lens_width");
 
 			ret.vertices = Context.ImportBuffer(JsonResource.Value<string>("vertices"));
 			if(JsonResource.ContainsKey("colors"))
