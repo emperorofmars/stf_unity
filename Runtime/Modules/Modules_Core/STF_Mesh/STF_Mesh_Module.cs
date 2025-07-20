@@ -37,6 +37,7 @@ namespace com.squirrelbite.stf_unity.modules
 					ret.colors.Add(Context.ImportBuffer(color.Value<string>()));
 
 			if(JsonResource.ContainsKey("splits")) ret.splits = Context.ImportBuffer(JsonResource.Value<string>("splits"));
+			if(JsonResource.ContainsKey("deduped_splits")) ret.deduped_splits = Context.ImportBuffer(JsonResource.Value<string>("deduped_splits"));
 			if(JsonResource.ContainsKey("split_normals")) ret.split_normals = Context.ImportBuffer(JsonResource.Value<string>("split_normals"));
 			if(JsonResource.ContainsKey("uvs"))
 				foreach(JObject uv in (JArray)JsonResource["uvs"])

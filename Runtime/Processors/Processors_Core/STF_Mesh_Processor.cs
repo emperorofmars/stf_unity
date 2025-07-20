@@ -63,6 +63,20 @@ namespace com.squirrelbite.stf_unity.processors
 			for (int i = 0; i < split_count; i++)
 				splits[i] = parseInt(STFMesh.splits.Data, i * STFMesh.indices_width, STFMesh.indices_width);
 
+
+			var deduped_splits = STFMesh.deduped_splits != null ? new int[STFMesh.deduped_splits.BufferLength / STFMesh.indices_width] : new int[split_count];
+			if (STFMesh.deduped_splits != null)
+			{
+				for (int i = 0; i < deduped_splits.Length; i++)
+					deduped_splits[i] = parseInt(STFMesh.deduped_splits.Data, i * STFMesh.indices_width, STFMesh.indices_width);
+			}
+			else
+			{
+				for (int i = 0; i < split_count; i++)
+					deduped_splits[i] = i;
+			}
+
+
 			var normals = new Vector3[split_count];
 			for (int i = 0; i < split_count; i++)
 			{
@@ -160,10 +174,15 @@ namespace com.squirrelbite.stf_unity.processors
 			var tris = new Vector3Int[tris_count];
 			for (int i = 0; i < tris_count; i++)
 			{
-				tris[i].Set(
+				/*tris[i].Set(
 					parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width, STFMesh.indices_width * 2),
 					parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width, STFMesh.indices_width),
 					parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width)
+				);*/
+				tris[i].Set(
+					deduped_splits[parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width, STFMesh.indices_width * 2)],
+					deduped_splits[parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width, STFMesh.indices_width)],
+					deduped_splits[parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width)]
 				);
 			}
 
