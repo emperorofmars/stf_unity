@@ -174,11 +174,6 @@ namespace com.squirrelbite.stf_unity.processors
 			var tris = new Vector3Int[tris_count];
 			for (int i = 0; i < tris_count; i++)
 			{
-				/*tris[i].Set(
-					parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width, STFMesh.indices_width * 2),
-					parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width, STFMesh.indices_width),
-					parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width)
-				);*/
 				tris[i].Set(
 					deduped_splits[parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width, STFMesh.indices_width * 2)],
 					deduped_splits[parseInt(STFMesh.tris.Data, i * STFMesh.indices_width * 3, STFMesh.indices_width, STFMesh.indices_width)],
