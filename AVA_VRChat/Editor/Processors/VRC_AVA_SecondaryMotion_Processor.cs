@@ -25,6 +25,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			var physbone = stfSecondaryMotion.gameObject.AddComponent<VRCPhysBone>();
 			physbone.endpointPosition.y = 0.1f; // TODO get bone length from stf.bone if applicable, deal with multiple endbones, ...
 
+			physbone.enabled = stfSecondaryMotion.enabled;
+
 			return (new() { physbone }, null);
 		}
 	}

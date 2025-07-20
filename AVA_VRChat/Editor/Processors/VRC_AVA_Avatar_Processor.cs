@@ -40,6 +40,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			if (!Context.ImportConfig.AuthoringImport)
 				Context.AddTrash(avaAvatar.Viewport);
 
+			avatar.enabled = avaAvatar.enabled;
+
 			return (new() { avatar }, null);
 		}
 	}

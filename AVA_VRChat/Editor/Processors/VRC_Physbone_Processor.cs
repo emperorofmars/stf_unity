@@ -47,6 +47,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				}
 			}
 
+			physbone.enabled = stfPhysbone.enabled;
+
 			return (new() { physbone }, null);
 		}
 	}

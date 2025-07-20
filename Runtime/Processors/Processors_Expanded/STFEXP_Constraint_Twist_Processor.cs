@@ -29,6 +29,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			if (stfConstraint.TargetGo)
 			{
 				var ret = CreateConstraint(stfConstraint.gameObject, stfConstraint.TargetGo, stfConstraint.Weight);
+				ret.enabled = stfConstraint.enabled;
 				return (new() { ret }, null);
 			}
 			else

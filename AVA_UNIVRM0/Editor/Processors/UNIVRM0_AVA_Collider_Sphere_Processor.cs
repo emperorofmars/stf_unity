@@ -31,7 +31,9 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 			collider.Radius = stfCollider.radius;
 			collider.Offset = stfCollider.offset_position;
 
-			return (new(){colliderGroup}, null);
+			colliderGroup.enabled = stfCollider.enabled;
+
+			return (new() { colliderGroup }, null);
 		}
 	}
 

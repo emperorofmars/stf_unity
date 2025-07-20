@@ -54,6 +54,9 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 					ret.TargetGo = ret.transform?.parent?.parent?.gameObject;
 			}));
 
+			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
+				ret.enabled = false;
+
 			return (ret, null);
 		}
 

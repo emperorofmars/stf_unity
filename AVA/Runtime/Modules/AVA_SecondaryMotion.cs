@@ -42,6 +42,9 @@ namespace com.squirrelbite.stf_unity.ava
 
 			if (JsonResource.ContainsKey("intensity")) ret.intensity = JsonResource.Value<float>("intensity");
 
+			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
+				ret.enabled = false;
+
 			return (ret, null);
 		}
 

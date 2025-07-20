@@ -63,17 +63,11 @@ namespace com.squirrelbite.stf_unity.modules
 
 					var target = parent.gameObject.GetComponentsInChildren<STF_Bone>().FirstOrDefault(c => c.STF_Owner == parent && c.STF_Id ==  ret.ParentBinding[2]);
 					if(target) ret.transform.SetParent(target.transform, true);
-
-					/*foreach(var bone in parent.gameObject.GetComponentsInChildren<STF_Bone>())
-					{
-						if(bone.STF_Id == ret.ParentBinding[2] && bone.STF_Owner == parent)
-						{
-							ret.transform.SetParent(bone.transform, true);
-							break;
-						}
-					}*/
 				}));
 			}
+
+			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
+				go.SetActive(false);
 
 			return (ret, null);
 		}

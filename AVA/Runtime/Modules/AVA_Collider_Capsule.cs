@@ -49,6 +49,9 @@ namespace com.squirrelbite.stf_unity.ava
 			if (JsonResource.ContainsKey("offset_position")) ret.offset_position = TRSUtil.ParseVector3(JsonResource["offset_position"] as JArray);
 			if (JsonResource.ContainsKey("offset_rotation")) ret.offset_rotation = TRSUtil.ParseQuat(JsonResource["offset_rotation"] as JArray);
 
+			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
+				ret.enabled = false;
+
 			return (ret, null);
 		}
 

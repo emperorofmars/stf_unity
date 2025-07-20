@@ -54,6 +54,9 @@ namespace com.squirrelbite.stf_unity.ava
 			if (JsonResource.ContainsKey("radius")) ret.radius = JsonResource.Value<float>("radius");
 			if (JsonResource.ContainsKey("offset_position")) ret.offset_position = TRSUtil.ParseVector3(JsonResource["offset_position"] as JArray);
 
+			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
+				ret.enabled = false;
+
 			return (ret, null);
 		}
 

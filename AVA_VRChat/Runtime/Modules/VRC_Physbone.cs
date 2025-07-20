@@ -43,6 +43,10 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.modules
 			ret.Json = JsonResource.GetValue("values").ToString();
 			if (JsonResource.ContainsKey("colliders")) ret.Colliders = JsonResource["colliders"].ToObject<List<string>>();
 			if (JsonResource.ContainsKey("ignores")) ret.Ignores = JsonResource["ignores"].ToObject<List<string>>();
+			
+			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
+				ret.enabled = false;
+
 			return (ret, null);
 		}
 

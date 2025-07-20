@@ -56,6 +56,9 @@ namespace com.squirrelbite.stf_unity.ava
 						ret.PrimaryMeshInstance = primary_mesh_instance.Instance as STF_Instance_Mesh;
 				}));
 
+			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
+				ret.enabled = false;
+
 			return (ret, null);
 		}
 

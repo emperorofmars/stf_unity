@@ -27,6 +27,8 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 			springBone.RootBones.Add(stfSecondaryMotion.transform);
 			springBone.m_comment = !string.IsNullOrWhiteSpace(stfSecondaryMotion.STF_Name) ? stfSecondaryMotion.STF_Name : stfSecondaryMotion.gameObject.name;
 
+			springBone.enabled = stfSecondaryMotion.enabled;
+
 			return (new() { springBone }, null);
 		}
 	}

@@ -67,19 +67,20 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 			animator.updateMode = AnimatorUpdateMode.Normal;
 			animator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
 
-
-			if(avaAvatar.Viewport)
+			VRMFirstPerson vrmFirstPerson = null;
+			VRMLookAtHead vrmLookAt = null;
+			if (avaAvatar.Viewport)
 			{
-				var vrmFirstPerson = Context.Root.AddComponent<VRMFirstPerson>();
+				vrmFirstPerson = Context.Root.AddComponent<VRMFirstPerson>();
 				vrmFirstPerson.FirstPersonBone = avaAvatar.Viewport.transform.parent;
 				vrmFirstPerson.FirstPersonOffset = avaAvatar.Viewport.transform.localPosition;
 
-				if(animator && animator.isHuman)
+				if (animator && animator.isHuman)
 				{
 					var headHumanoid = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.Head.ToString());
-					if(headHumanoid.boneName != null)
+					if (headHumanoid.boneName != null)
 					{
-						var vrmLookAt = Context.Root.AddComponent<VRMLookAtHead>();
+						vrmLookAt = Context.Root.AddComponent<VRMLookAtHead>();
 						vrmLookAt.Head = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == headHumanoid.boneName);
 					}
 				}
@@ -88,7 +89,12 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 					Context.AddTrash(avaAvatar.Viewport);
 			}
 
-			return (new() { vrmMeta, vrmBlendShapeAvatar, neutralClip }, new() { vrmMeta, vrmBlendShapeAvatar, neutralClip });
+			vrmMetaComponent.enabled = avaAvatar.enabled;
+			vrmBlendshapeProxy.enabled = avaAvatar.enabled;
+			vrmFirstPerson.enabled = avaAvatar.enabled;
+			vrmLookAt.enabled = avaAvatar.enabled;
+
+			return (new() { vrmMetaComponent, vrmBlendshapeProxy, vrmFirstPerson, vrmLookAt, vrmMeta, vrmBlendShapeAvatar, neutralClip }, new() { vrmMeta, vrmBlendShapeAvatar, neutralClip });
 		}
 	}
 

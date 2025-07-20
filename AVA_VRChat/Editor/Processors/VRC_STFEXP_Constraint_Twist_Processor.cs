@@ -49,6 +49,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			if (target)
 			{
 				var ret = CreateConstraint(stfConstraint.gameObject, target, stfConstraint.Weight);
+				ret.enabled = stfConstraint.enabled;
 				return (new() { ret }, null);
 			}
 			else

@@ -26,7 +26,10 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			collider.shapeType = VRC.Dynamics.VRCPhysBoneColliderBase.ShapeType.Sphere;
 			collider.radius = stfCollider.radius;
 			collider.position = stfCollider.offset_position;
-			return (new(){collider}, null);
+
+			collider.enabled = stfCollider.enabled;
+
+			return (new() { collider }, null);
 		}
 	}
 

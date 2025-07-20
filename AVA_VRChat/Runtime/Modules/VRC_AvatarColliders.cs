@@ -39,6 +39,10 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.modules
 			var ret = go.gameObject.AddComponent<VRC_AvatarColliders>();
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "VRC AvatarColliders");
 			ret.Json = JsonResource.ToString();
+
+			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
+				ret.enabled = false;
+
 			return (ret, null);
 		}
 

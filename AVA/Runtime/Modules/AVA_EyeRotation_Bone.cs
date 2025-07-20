@@ -47,6 +47,9 @@ namespace com.squirrelbite.stf_unity.ava
 			if (JsonResource.ContainsKey("in")) ret.limits_in = JsonResource.Value<float>("in");
 			if (JsonResource.ContainsKey("out")) ret.limits_out = JsonResource.Value<float>("out");
 
+			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
+				ret.enabled = false;
+
 			return (ret, new () { ret });
 		}
 

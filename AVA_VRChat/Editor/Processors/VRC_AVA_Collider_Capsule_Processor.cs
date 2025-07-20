@@ -28,7 +28,10 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			collider.height = stfCollider.height;
 			collider.position = stfCollider.offset_position;
 			collider.rotation = stfCollider.offset_rotation;
-			return (new(){collider}, null);
+
+			collider.enabled = stfCollider.enabled;
+
+			return (new() { collider }, null);
 		}
 	}
 

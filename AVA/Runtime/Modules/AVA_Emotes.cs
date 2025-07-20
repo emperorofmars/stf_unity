@@ -1,12 +1,8 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using com.squirrelbite.stf_unity.modules;
-using UnityEngine;
 using System.Linq;
 using System.Threading.Tasks;
-
-
-
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -85,6 +81,9 @@ namespace com.squirrelbite.stf_unity.ava
 					}
 				}
 			}
+
+			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
+				ret.enabled = false;
 
 			return (ret, null);
 		}
