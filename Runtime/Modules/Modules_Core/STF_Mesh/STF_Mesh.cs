@@ -53,7 +53,7 @@ namespace com.squirrelbite.stf_unity.modules
 		[Space]
 		[Header("Splits")]
 		public STF_Buffer splits;
-		public STF_Buffer deduped_splits;
+		public STF_Buffer face_corners;
 		public STF_Buffer split_normals;
 		public List<NamedBuffer> uvs = new();
 		public List<STF_Buffer> split_colors = new();
