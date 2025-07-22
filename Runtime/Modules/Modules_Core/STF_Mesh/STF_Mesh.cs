@@ -48,7 +48,6 @@ namespace com.squirrelbite.stf_unity.modules
 		[Space]
 		[Header("Vertices")]
 		public STF_Buffer vertices;
-		public List<STF_Buffer> colors = new();
 
 		[Space]
 		[Header("Splits")]
@@ -56,7 +55,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public STF_Buffer face_corners;
 		public STF_Buffer split_normals;
 		public List<NamedBuffer> uvs = new();
-		public List<STF_Buffer> split_colors = new();
+		public STF_Buffer split_colors;
 
 		[Space]
 		[Header("Topology")]

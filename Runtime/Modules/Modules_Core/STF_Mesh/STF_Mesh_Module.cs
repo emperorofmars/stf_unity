@@ -32,9 +32,6 @@ namespace com.squirrelbite.stf_unity.modules
 			ret.weight_lens_width = JsonResource.Value<int>("weight_lens_width");
 
 			ret.vertices = Context.ImportBuffer(JsonResource.Value<string>("vertices"));
-			if(JsonResource.ContainsKey("colors"))
-				foreach(var color in JsonResource["colors"])
-					ret.colors.Add(Context.ImportBuffer(color.Value<string>()));
 
 			if(JsonResource.ContainsKey("splits")) ret.splits = Context.ImportBuffer(JsonResource.Value<string>("splits"));
 			if(JsonResource.ContainsKey("face_corners")) ret.face_corners = Context.ImportBuffer(JsonResource.Value<string>("face_corners"));
@@ -42,11 +39,9 @@ namespace com.squirrelbite.stf_unity.modules
 			if(JsonResource.ContainsKey("uvs"))
 				foreach(JObject uv in (JArray)JsonResource["uvs"])
 					ret.uvs.Add(new () {name = uv.Value<string>("name"), uv = Context.ImportBuffer(uv.Value<string>("uv"))});
-			if(JsonResource.ContainsKey("split_colors"))
-				foreach(var color in JsonResource["split_colors"])
-					ret.split_colors.Add(Context.ImportBuffer(color.Value<string>()));
+			if(JsonResource.ContainsKey("split_colors") && JsonResource["split_colors"].Type == JTokenType.String) ret.split_colors = Context.ImportBuffer(JsonResource.Value<string>("split_colors"));
 
-			if(JsonResource.ContainsKey("tris")) ret.tris = Context.ImportBuffer(JsonResource.Value<string>("tris"));
+			if (JsonResource.ContainsKey("tris")) ret.tris = Context.ImportBuffer(JsonResource.Value<string>("tris"));
 			if(JsonResource.ContainsKey("faces")) ret.faces = Context.ImportBuffer(JsonResource.Value<string>("faces"));
 			if(JsonResource.ContainsKey("material_indices")) ret.material_indices = Context.ImportBuffer(JsonResource.Value<string>("material_indices"));
 
