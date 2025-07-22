@@ -1,7 +1,6 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
@@ -22,6 +21,8 @@ namespace com.squirrelbite.stf_unity
 			public string TargetShader;
 		}
 		public List<MaterialMapping> MaterialMappings = new();
+
+		public bool ImportVertexColors = true;
 
 		public void Parse(string ImportConfig)
 		{

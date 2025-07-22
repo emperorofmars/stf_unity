@@ -109,10 +109,6 @@ namespace com.squirrelbite.stf_unity
 				Report(new STFReport($"Buffer with ID \"{STF_Id}\" is of not supported type \"{(string)jsonBuffer["type"]}\"" + STF_Id, ErrorSeverity.FATAL_ERROR));
 
 			var bytes = File.Buffers[(int)jsonBuffer["index"]];
-			/*var ret = ScriptableObject.CreateInstance<STF_Buffer>();
-			ret.Data = bytes;
-			ret.STF_Id = STF_Id;
-			ret.name = "Buffer: " + STF_Id;*/
 			var ret = new STF_Buffer{Data = bytes, STF_Id = STF_Id};
 			ImportedBuffers.Add(STF_Id, ret);
 

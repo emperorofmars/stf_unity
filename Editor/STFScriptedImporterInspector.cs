@@ -44,7 +44,7 @@ namespace com.squirrelbite.stf_unity.tools
 			drawImportConfig(importer);
 
 			drawHLine();
-			
+
 			if (EditorGUI.EndChangeCheck())
 			{
 				EditorUtility.SetDirty(importer);
@@ -148,19 +148,10 @@ namespace com.squirrelbite.stf_unity.tools
 				{
 					EditorGUI.indentLevel++;
 
-					//EditorGUILayout.LabelField(mapping.MaterialName + " (" + mapping.ID + ")");
-
-					//EditorGUI.indentLevel++;
-
 					int selectedIndex = availableConverters.FindIndex(c => c == mapping.TargetShader);
 					if (selectedIndex < 0)
 					{
 						selectedIndex = 0; // Standard Shader
-
-						/*EditorGUILayout.BeginHorizontal();
-						EditorGUILayout.PrefixLabel("Unsupported Target Shader");
-						EditorGUILayout.LabelField(mapping.TargetShader);
-						EditorGUILayout.EndHorizontal();*/
 					}
 
 					EditorGUILayout.BeginHorizontal();
@@ -168,12 +159,18 @@ namespace com.squirrelbite.stf_unity.tools
 					var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableConverters.ToArray());
 					EditorGUILayout.EndHorizontal();
 
-					if(newSelectedIndex != selectedIndex) mapping.TargetShader = availableConverters[newSelectedIndex];
+					if (newSelectedIndex != selectedIndex) mapping.TargetShader = availableConverters[newSelectedIndex];
 
-					//EditorGUI.indentLevel--;
 					EditorGUI.indentLevel--;
 				}
 			}
+
+			GUILayout.Space(10);
+
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.PrefixLabel("Import Vertex Colors");
+			Importer.ImportConfig.ImportVertexColors = EditorGUILayout.Toggle(Importer.ImportConfig.ImportVertexColors);
+			EditorGUILayout.EndHorizontal();
 		}
 
 		private void drawHLine()

@@ -135,7 +135,7 @@ namespace com.squirrelbite.stf_unity.processors
 				ret.SetUVs(uvIndex, uvs[uvIndex]);
 
 			// Colors
-			if (STFMesh.split_colors != null)
+			if (STFMesh.split_colors != null && Context.ImportConfig.ImportVertexColors)
 			{
 				var split_colors = new Color[split_count];
 				for (int i = 0; i < split_count; i++)
