@@ -117,7 +117,6 @@ namespace com.squirrelbite.stf_unity.processors
 				ret.RecalculateTangents();
 			}
 
-
 			// UVs
 			var uvs = new List<Vector2[]>();
 			foreach (var uvBuffer in STFMesh.uvs)
@@ -135,8 +134,19 @@ namespace com.squirrelbite.stf_unity.processors
 			for (int uvIndex = 0; uvIndex < uvs.Count; uvIndex++)
 				ret.SetUVs(uvIndex, uvs[uvIndex]);
 
-
-			// TODO colors
+			// Colors
+			if (STFMesh.split_colors != null)
+			{
+				var split_colors = new Color[split_count];
+				for (int i = 0; i < split_count; i++)
+				{
+					split_colors[i].r = parseFloat(STFMesh.split_colors.Data, i * STFMesh.float_width * 4, STFMesh.float_width);
+					split_colors[i].g = parseFloat(STFMesh.split_colors.Data, i * STFMesh.float_width * 4, STFMesh.float_width, STFMesh.float_width);
+					split_colors[i].b = parseFloat(STFMesh.split_colors.Data, i * STFMesh.float_width * 4, STFMesh.float_width, STFMesh.float_width * 2);
+					split_colors[i].a = parseFloat(STFMesh.split_colors.Data, i * STFMesh.float_width * 4, STFMesh.float_width, STFMesh.float_width * 3);
+				}
+				ret.SetColors(split_colors);
+			}
 
 
 			// Topology
