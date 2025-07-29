@@ -45,7 +45,6 @@ namespace com.squirrelbite.stf_unity.processors
 					var smr = meshInstance.gameObject.AddComponent<SkinnedMeshRenderer>();
 					renderer = smr;
 					smr.sharedMesh = processedUnityMesh;
-					smr.materials = new Material[meshInstance.Mesh.material_slots.Count];
 					if (meshInstance.ArmatureInstance)
 					{
 						var instance = meshInstance.ArmatureInstance.GetComponent<STF_Instance_Armature>();
@@ -63,7 +62,7 @@ namespace com.squirrelbite.stf_unity.processors
 					for (int blenshapeIdx = 0; blenshapeIdx < meshInstance.Mesh.blendshapes.Count; blenshapeIdx++)
 					{
 						smr.SetBlendShapeWeight(blenshapeIdx, meshInstance.Mesh.blendshapes[blenshapeIdx].default_value * 100);
-						if (meshInstance.BlendshapeValues[blenshapeIdx].Item1) smr.SetBlendShapeWeight(blenshapeIdx, meshInstance.BlendshapeValues[blenshapeIdx].Item2 * 100);
+						if (meshInstance.BlendshapeValues.Count > blenshapeIdx && meshInstance.BlendshapeValues[blenshapeIdx].Override) smr.SetBlendShapeWeight(blenshapeIdx, meshInstance.BlendshapeValues[blenshapeIdx].Value * 100);
 					}
 				}
 				else
@@ -71,7 +70,6 @@ namespace com.squirrelbite.stf_unity.processors
 					var meshFilter = meshInstance.gameObject.AddComponent<MeshFilter>();
 					meshFilter.sharedMesh = processedUnityMesh;
 					renderer = meshInstance.gameObject.AddComponent<MeshRenderer>();
-					renderer.materials = new Material[meshInstance.Mesh.material_slots.Count];
 				}
 
 				meshInstance.ProcessedObjects.Add(renderer);
@@ -80,13 +78,11 @@ namespace com.squirrelbite.stf_unity.processors
 				for (int matIdx = 0; matIdx < rendererMaterials.Length; matIdx++)
 				{
 					if (matIdx < meshInstance.Materials.Count && meshInstance.Materials[matIdx] != null)
-					{
 						rendererMaterials[matIdx] = STFUtil.GetProcessed<Material>(meshInstance.Materials[matIdx]);
-					}
 					else if (matIdx < meshInstance.Mesh.material_slots.Count && meshInstance.Mesh.material_slots[matIdx] != null)
-					{
 						rendererMaterials[matIdx] = STFUtil.GetProcessed<Material>(meshInstance.Mesh.material_slots[matIdx]);
-					}
+					else
+						break;
 				}
 				renderer.materials = rendererMaterials;
 				return (new List<Object>() { renderer }, null);

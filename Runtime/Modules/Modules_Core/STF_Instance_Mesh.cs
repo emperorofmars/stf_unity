@@ -8,12 +8,14 @@ namespace com.squirrelbite.stf_unity.modules
 {
 	public class STF_Instance_Mesh : STF_InstanceResource
 	{
+		public class BlendshapeValue { public bool Override = false; public float Value = 0; }
+
 		public const string STF_TYPE = "stf.instance.mesh";
 		public override string STF_Type => STF_TYPE;
 
 		public STF_Mesh Mesh;
 		public List<STF_Material> Materials = new();
-		public List<(bool, float)> BlendshapeValues = new();
+		public List<BlendshapeValue> BlendshapeValues = new();
 		public GameObject ArmatureInstance;
 	}
 
@@ -37,27 +39,22 @@ namespace com.squirrelbite.stf_unity.modules
 		{
 			var go = (STF_Node)ContextObject;
 			var ret = go.gameObject.AddComponent<STF_Instance_Mesh>();
-			//var ret = ScriptableObject.CreateInstance<STF_Instance_Mesh>();
 			go.Instance = ret;
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STF Instance Mesh");
 
 			if (JsonResource.ContainsKey("materials"))
-			{
-				ret.Materials = new List<STF_Material>(new STF_Material[JsonResource["materials"].Count()]);
 				for (int matIdx = 0; matIdx < JsonResource["materials"].Count(); matIdx++)
-				{
-					if (Context.ImportResource((string)JsonResource["materials"][matIdx], "data") is var stfMaterial)
-					{
-						ret.Materials[matIdx] = stfMaterial as STF_Material;
-					}
-				}
-			}
+					if (JsonResource["materials"][matIdx].Type == JTokenType.String && Context.ImportResource((string)JsonResource["materials"][matIdx], "data") is var stfMaterial && stfMaterial != null)
+						ret.Materials.Add(stfMaterial as STF_Material);
+					else
+						ret.Materials.Add(null);
+			
 			if (JsonResource.ContainsKey("blendshape_values"))
 				foreach (var value in JsonResource["blendshape_values"])
 					if (value.Type != JTokenType.Null)
-						ret.BlendshapeValues.Add((true, (float)value));
+						ret.BlendshapeValues.Add(new STF_Instance_Mesh.BlendshapeValue{Override = true, Value = (float)value});
 					else
-						ret.BlendshapeValues.Add((false, 0));
+						ret.BlendshapeValues.Add(new STF_Instance_Mesh.BlendshapeValue());
 
 			Context.AddTask(new Task(() =>
 			{

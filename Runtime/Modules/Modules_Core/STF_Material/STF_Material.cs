@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[System.Serializable]
 	public class STF_Material : STF_DataResource
 	{
 		[System.Serializable]
