@@ -67,7 +67,6 @@ namespace com.squirrelbite.stf_unity.processors
 					face_corners[i] = i;
 			}
 
-
 			// Vertices
 			var vertices = new Vector3[vertex_count];
 			for (int i = 0; i < vertex_count; i++)
@@ -79,42 +78,19 @@ namespace com.squirrelbite.stf_unity.processors
 				);
 			}
 
-			var verts_to_split = new Dictionary<int, List<int>>();
-			for (int splitIndex = 0; splitIndex < split_count; splitIndex++)
-			{
-				var vertexIndex = splits[splitIndex];
-				if (!verts_to_split.ContainsKey(vertexIndex))
-					verts_to_split.Add(vertexIndex, new List<int> { splitIndex });
-				else
-					verts_to_split[vertexIndex].Add(splitIndex);
-			}
-
-			var unity_vertices = new List<Vector3>();
-			for (int i = 0; i < splits.Count(); i++)
-				unity_vertices.Add(vertices[splits[i]]);
-			ret.SetVertices(unity_vertices);
-
-
-			// Normals
+			// Split Normals
+			var split_normals = new Vector3[split_count];
 			if (STFMesh.split_normals != null)
 			{
-				var normals = new Vector3[split_count];
 				for (int i = 0; i < split_count; i++)
 				{
-					normals[i].Set(
+					split_normals[i].Set(
 						-parseFloat(STFMesh.split_normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width),
 						parseFloat(STFMesh.split_normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width),
 						parseFloat(STFMesh.split_normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2)
 					);
-					normals[i].Normalize();
+					split_normals[i].Normalize();
 				}
-				ret.SetNormals(normals);
-				ret.RecalculateTangents();
-			}
-			else
-			{
-				ret.RecalculateNormals();
-				ret.RecalculateTangents();
 			}
 
 			// UVs
@@ -131,13 +107,11 @@ namespace com.squirrelbite.stf_unity.processors
 				}
 				uvs.Add(uv);
 			}
-			for (int uvIndex = 0; uvIndex < uvs.Count; uvIndex++)
-				ret.SetUVs(uvIndex, uvs[uvIndex]);
 
 			// Colors
+			var split_colors = new Color[split_count];
 			if (STFMesh.split_colors != null && Context.ImportConfig.ImportVertexColors)
 			{
-				var split_colors = new Color[split_count];
 				for (int i = 0; i < split_count; i++)
 				{
 					split_colors[i].r = parseFloat(STFMesh.split_colors.Data, i * STFMesh.float_width * 4, STFMesh.float_width);
@@ -145,7 +119,77 @@ namespace com.squirrelbite.stf_unity.processors
 					split_colors[i].b = parseFloat(STFMesh.split_colors.Data, i * STFMesh.float_width * 4, STFMesh.float_width, STFMesh.float_width * 2);
 					split_colors[i].a = parseFloat(STFMesh.split_colors.Data, i * STFMesh.float_width * 4, STFMesh.float_width, STFMesh.float_width * 3);
 				}
-				ret.SetColors(split_colors);
+			}
+
+
+			// Optimization
+			bool compareUVs(int a, int b)
+			{
+				foreach (var uv in uvs)
+				{
+					if ((uv[a] - uv[b]).magnitude > 0.0001) return false;
+				}
+				return true;
+			}
+			bool compareColors(int a, int b)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					if (Math.Abs(split_colors[a][i] - split_colors[b][i]) > 0.0001) return false;
+				}
+				return true;
+			}
+			var verts_to_split = new Dictionary<int, List<int>>();
+			var deduped_split_indices = new List<int>();
+			var split_to_deduped_split_index = new List<int>();
+			for (int splitIndex = 0; splitIndex < split_count; splitIndex++)
+			{
+				var vertexIndex = splits[splitIndex];
+				if (!verts_to_split.ContainsKey(vertexIndex))
+				{
+					verts_to_split.Add(vertexIndex, new List<int> { splitIndex });
+					deduped_split_indices.Add(splitIndex);
+					split_to_deduped_split_index.Add(deduped_split_indices.Count - 1);
+				}
+				else
+				{
+					var success = false;
+					for (int candidateIndex = 0; candidateIndex < verts_to_split[vertexIndex].Count; candidateIndex++)
+					{
+						var splitCandidate = verts_to_split[vertexIndex][candidateIndex];
+						if (
+							(STFMesh.split_normals == null || (split_normals[splitIndex] - split_normals[splitCandidate]).magnitude < 0.0001)
+							&& compareUVs(splitIndex, splitCandidate)
+							&& (STFMesh.split_colors == null || !Context.ImportConfig.ImportVertexColors || compareColors(splitIndex, splitCandidate))
+						)
+						{
+							split_to_deduped_split_index.Add(split_to_deduped_split_index[splitCandidate]);
+							success = true;
+							break;
+						}
+					}
+					if (!success)
+					{
+						verts_to_split[vertexIndex].Add(splitIndex);
+						deduped_split_indices.Add(splitIndex);
+						split_to_deduped_split_index.Add(deduped_split_indices.Count - 1);
+					}
+				}
+			}
+
+			var unity_vertices = new List<Vector3>();
+			var unity_normals = new List<Vector3>();
+			var unity_colors = new List<Color>();
+			var unity_uvs = new List<List<Vector2>>();
+			for (int uvIndex = 0; uvIndex < uvs.Count; uvIndex++)
+				unity_uvs.Add(new());
+			for (int i = 0; i < deduped_split_indices.Count; i++)
+			{
+				unity_vertices.Add(vertices[splits[deduped_split_indices[i]]]);
+				if (STFMesh.split_normals != null) unity_normals.Add(split_normals[deduped_split_indices[i]]);
+				if (STFMesh.split_colors != null && Context.ImportConfig.ImportVertexColors) unity_colors.Add(split_colors[deduped_split_indices[i]]);
+				for (int uvIndex = 0; uvIndex < uvs.Count; uvIndex++)
+					unity_uvs[uvIndex].Add(uvs[uvIndex][deduped_split_indices[i]]);
 			}
 
 
@@ -177,20 +221,34 @@ namespace com.squirrelbite.stf_unity.processors
 				{
 					while (subMeshIndices.Count <= matIndex) subMeshIndices.Add(new List<int>());
 
-					subMeshIndices[matIndex].Add(tris[trisIndex].x);
-					subMeshIndices[matIndex].Add(tris[trisIndex].y);
-					subMeshIndices[matIndex].Add(tris[trisIndex].z);
+					subMeshIndices[matIndex].Add(split_to_deduped_split_index[tris[trisIndex].x]);
+					subMeshIndices[matIndex].Add(split_to_deduped_split_index[tris[trisIndex].y]);
+					subMeshIndices[matIndex].Add(split_to_deduped_split_index[tris[trisIndex].z]);
 
 					trisIndex++;
 				}
 			}
 
+
+			// Set base mesh data
+			ret.SetVertices(unity_vertices);
+
 			ret.indexFormat = unity_vertices.Count() > ushort.MaxValue ? UnityEngine.Rendering.IndexFormat.UInt32 : UnityEngine.Rendering.IndexFormat.UInt16;
 			ret.subMeshCount = subMeshIndices.Count;
 			for (int subMeshIdx = 0; subMeshIdx < subMeshIndices.Count; subMeshIdx++)
-			{
 				ret.SetIndices(subMeshIndices[subMeshIdx], MeshTopology.Triangles, subMeshIdx);
-			}
+
+			if (STFMesh.split_normals != null)
+				ret.SetNormals(unity_normals);
+			else
+				ret.RecalculateNormals();
+			ret.RecalculateTangents();
+
+			if (STFMesh.split_colors != null && Context.ImportConfig.ImportVertexColors)
+				ret.SetColors(unity_colors);
+
+			for (int uvIndex = 0; uvIndex < unity_uvs.Count; uvIndex++)
+				ret.SetUVs(uvIndex, unity_uvs[uvIndex]);
 
 
 			// Weightpaint
@@ -219,10 +277,10 @@ namespace com.squirrelbite.stf_unity.processors
 				}
 
 				var unity_weights = new List<BoneWeight1>();
-				var bonesPerVertex = new byte[splits.Count()];
-				for (int i = 0; i < splits.Count(); i++)
+				var bonesPerVertex = new byte[deduped_split_indices.Count()];
+				for (int i = 0; i < deduped_split_indices.Count(); i++)
 				{
-					var boneWeights = weights[splits[i]].OrderByDescending(b => b.weight).ToList();
+					var boneWeights = weights[splits[deduped_split_indices[i]]].OrderByDescending(b => b.weight).ToList();
 
 					if (boneWeights.Count > 0)
 					{
@@ -255,9 +313,9 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				foreach (var stfBlendshape in STFMesh.blendshapes)
 				{
-					var blendshapePositions = new Vector3[splits.Count()];
-					var blendshapeNormals = new Vector3[splits.Count()];
-					var blendshapeTangents = new Vector3[splits.Count()];
+					var blendshapePositions = new Vector3[deduped_split_indices.Count()];
+					var blendshapeNormals = new Vector3[deduped_split_indices.Count()];
+					var blendshapeTangents = new Vector3[deduped_split_indices.Count()];
 
 					Array.Clear(blendshapePositions, 0, blendshapePositions.Length);
 					Array.Clear(blendshapeNormals, 0, blendshapeNormals.Length);
@@ -273,7 +331,7 @@ namespace com.squirrelbite.stf_unity.processors
 							parseFloat(stfBlendshape.position_offsets.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2)
 						);
 						foreach (var split_index in verts_to_split[vertexIndex])
-							blendshapePositions[split_index] = blendshapePosition;
+							blendshapePositions[deduped_split_indices[split_index]] = blendshapePosition;
 					}
 
 					if (stfBlendshape.split_normals != null && stfBlendshape.split_normals.BufferLength == stfBlendshape.position_offsets.BufferLength)
@@ -286,7 +344,7 @@ namespace com.squirrelbite.stf_unity.processors
 								parseFloat(stfBlendshape.split_normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width),
 								parseFloat(stfBlendshape.split_normals.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2)
 							);
-							blendshapeNormals[splitIndex] = blendshapeSplitNormal;
+							blendshapeNormals[deduped_split_indices[splitIndex]] = blendshapeSplitNormal;
 						}
 					}
 
