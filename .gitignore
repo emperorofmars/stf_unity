@@ -1,4 +1,6 @@
 **/*.vscode
-LICENSE-MIT.meta
-LICENSE-APACHE2.meta
-readme.adoc.meta
+
+# Unity will complain if the meta files wont be present -.-
+# LICENSE-MIT.meta
+# LICENSE-APACHE2.meta
+# readme.adoc.meta
