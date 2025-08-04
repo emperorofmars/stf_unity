@@ -11,12 +11,12 @@ ifdef::env-github[]
 :note-caption: :information_source:
 endif::[]
 
-**Squirrel Transfer Format - Modular 3D Interchange Format**
+**Squirrel Transfer Format - Modular 3D File-Format**
 Intended for (not only) game development use-cases.
 
-**WIP implementation for Unity 2022.3. Do not use productively!**
+**WIP implementation for Unity 2022.3+. Do not use productively!**
 
-**https://github.com/emperorofmars/stf_documentation[Read the Documentation!]**
+**https://stfform.at/[Read the Documentation!]**
 
 == Installation
 * VRChat Creator Companion: https://squirrelbite.github.io/vpm/
