@@ -11,6 +11,7 @@ namespace com.squirrelbite.stf_unity.modules
 		[System.Serializable]
 		public class KeyframeValue
 		{
+			public bool isBaked = false;
 			public float value;
 			public Vector2 in_tangent;
 			public Vector2 out_tangent;
@@ -76,17 +77,32 @@ namespace com.squirrelbite.stf_unity.modules
 				foreach (var keyframeJson in trackJson["keyframes"])
 				{
 					var keyframe = new STF_Animation.Keyframe {
-						frame = (float)keyframeJson.Value<float>("frame"),
+						frame = keyframeJson.Value<float>("frame"),
 					};
 					foreach(var keyframeValueJson in keyframeJson["values"])
 					{
-						if(keyframeValueJson != null && keyframeValueJson.Type != JTokenType.Null && keyframeValueJson.Type != JTokenType.None && keyframeValueJson.Type != JTokenType.Undefined)
+						if(keyframeValueJson != null && keyframeValueJson.Type == JTokenType.Array)
 						{
-							keyframe.values.Add(new STF_Animation.KeyframeValue {
-								value = (float)keyframeValueJson[0],
-								in_tangent = new Vector2((float)keyframeValueJson[1], (float)keyframeValueJson[2]),
-								out_tangent = new Vector2((float)keyframeValueJson[3], (float)keyframeValueJson[4]),
-							});
+							JArray keyframeValues = keyframeValueJson as JArray;
+							if (keyframeValues.Count == 5)
+							{
+								keyframe.values.Add(new STF_Animation.KeyframeValue {
+									value = (float)keyframeValueJson[0],
+									in_tangent = new Vector2((float)keyframeValueJson[1], (float)keyframeValueJson[2]),
+									out_tangent = new Vector2((float)keyframeValueJson[3], (float)keyframeValueJson[4]),
+								});
+							}
+							else if(keyframeValues.Count == 1)
+							{
+								keyframe.values.Add(new STF_Animation.KeyframeValue {
+									isBaked = true,
+									value = (float)keyframeValueJson[0],
+								});
+							}
+							else
+							{
+								keyframe.values.Add(null);
+							}
 						}
 						else
 						{

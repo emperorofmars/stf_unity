@@ -49,9 +49,8 @@ namespace com.squirrelbite.stf_unity.processors
 
 						for (int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
 						{
-							if (stfKeyframe.values[curveIndex] != null)
-								curves[curveIndex].AddKey(new Keyframe
-								{
+							if (stfKeyframe.values[curveIndex] != null && !stfKeyframe.values[curveIndex].isBaked)
+								curves[curveIndex].AddKey(new Keyframe {
 									time = stfKeyframe.frame / STFAnimation.fps,
 									value = values[curveIndex],
 									inTangent = stfKeyframe.values[curveIndex].in_tangent.x < 0 ? -stfKeyframe.values[curveIndex].in_tangent.y * (1 / -stfKeyframe.values[curveIndex].in_tangent.x) : 0,
