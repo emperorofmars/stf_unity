@@ -84,19 +84,38 @@ namespace com.squirrelbite.stf_unity.modules
 						if(keyframeValueJson != null && keyframeValueJson.Type == JTokenType.Array)
 						{
 							JArray keyframeValues = keyframeValueJson as JArray;
+							// todo legacy, remove at some point
 							if (keyframeValues.Count == 5)
 							{
 								keyframe.values.Add(new STF_Animation.KeyframeValue {
+									isBaked = false,
 									value = (float)keyframeValueJson[0],
 									in_tangent = new Vector2((float)keyframeValueJson[1], (float)keyframeValueJson[2]),
 									out_tangent = new Vector2((float)keyframeValueJson[3], (float)keyframeValueJson[4]),
 								});
 							}
-							else if(keyframeValues.Count == 1)
+							else if (keyframeValues.Count == 1)
 							{
 								keyframe.values.Add(new STF_Animation.KeyframeValue {
 									isBaked = true,
 									value = (float)keyframeValueJson[0],
+								});
+							}
+							// not legacy, keep this
+							else if (keyframeValues.Count == 6)
+							{
+								keyframe.values.Add(new STF_Animation.KeyframeValue {
+									isBaked = !(bool)keyframeValueJson[0],
+									value = (float)keyframeValueJson[1],
+									in_tangent = new Vector2((float)keyframeValueJson[2], (float)keyframeValueJson[3]),
+									out_tangent = new Vector2((float)keyframeValueJson[4], (float)keyframeValueJson[5]),
+								});
+							}
+							else if (keyframeValues.Count == 2)
+							{
+								keyframe.values.Add(new STF_Animation.KeyframeValue {
+									isBaked = !(bool)keyframeValueJson[0],
+									value = (float)keyframeValueJson[1],
 								});
 							}
 							else
