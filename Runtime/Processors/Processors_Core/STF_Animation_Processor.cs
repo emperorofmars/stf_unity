@@ -22,9 +22,6 @@ namespace com.squirrelbite.stf_unity.processors
 				wrapMode = STFAnimation.loop ? WrapMode.Loop : WrapMode.Default
 			};
 
-			// TODO figure out if this is actually how it works
-			var tangentWeightNormalizeFactor = System.Math.Max(1, STFAnimation.range_end - STFAnimation.range_start);
-
 			foreach (var track in STFAnimation.tracks)
 			{
 				if (STFAnimation.AnimationRoot.PropertyConverter == null)
@@ -41,23 +38,48 @@ namespace com.squirrelbite.stf_unity.processors
 						curves.Add(new AnimationCurve());
 					}
 
-					foreach (var stfKeyframe in track.keyframes)
+					//foreach (var stfKeyframe in track.keyframes)
+					for(int i = 0; i < track.keyframes.Count; i++)
 					{
+						var stfKeyframe = track.keyframes[i];
 						var originalValues = new List<float>(new float[PropertyNames.Count]);
 						for (int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++) originalValues[curveIndex] = stfKeyframe.values[curveIndex] != null ? stfKeyframe.values[curveIndex].value : 0;
 						var values = ConvertValueFunc != null ? ConvertValueFunc(originalValues) : originalValues;
 
 						for (int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
 						{
-							if (stfKeyframe.values[curveIndex] != null && !stfKeyframe.values[curveIndex].isBaked)
-								curves[curveIndex].AddKey(new Keyframe {
+							var prevKeyframe = i > 0 ? track.keyframes[i - 1] : null;
+							var nextKeyframe = i < track.keyframes.Count - 1 ? track.keyframes[i + 1] : null;
+
+							var keyframeDistanceLeft = prevKeyframe != null ? System.Math.Abs(prevKeyframe.frame - stfKeyframe.frame) : 1;
+							var keyframeDistanceRight = nextKeyframe != null ? System.Math.Abs(nextKeyframe.frame - stfKeyframe.frame) : 1;
+
+							var k = stfKeyframe.values[curveIndex];
+
+							if (k != null && !k.isBaked)
+							{
+								/*curves[curveIndex].AddKey(new Keyframe
+								{
 									time = stfKeyframe.frame / STFAnimation.fps,
 									value = values[curveIndex],
-									inTangent = stfKeyframe.values[curveIndex].in_tangent.x < 0 ? -stfKeyframe.values[curveIndex].in_tangent.y * (1 / -stfKeyframe.values[curveIndex].in_tangent.x) : 0,
-									inWeight = stfKeyframe.values[curveIndex].in_tangent.magnitude / tangentWeightNormalizeFactor,
-									outTangent = stfKeyframe.values[curveIndex].out_tangent.x < 0 ? -stfKeyframe.values[curveIndex].out_tangent.y * (1 / stfKeyframe.values[curveIndex].out_tangent.x) : 0,
-									outWeight = stfKeyframe.values[curveIndex].out_tangent.magnitude / tangentWeightNormalizeFactor,
+									inTangent = k.in_tangent.x < 0 ? k.in_tangent.y / k.in_tangent.x : 0,
+									inWeight = k.in_tangent.magnitude / keyframeDistanceLeft,
+									outTangent = k.out_tangent.x > 0 ? k.out_tangent.y / k.out_tangent.x : 0,
+									outWeight = k.out_tangent.magnitude / keyframeDistanceRight,
+									weightedMode = WeightedMode.Both,
+								});*/
+
+								curves[curveIndex].AddKey(new Keyframe
+								{
+									time = stfKeyframe.frame / STFAnimation.fps,
+									value = values[curveIndex],
+									inTangent = -k.in_tangent.y,
+									inWeight = k.in_tangent.magnitude / keyframeDistanceLeft,
+									outTangent = k.out_tangent.y,
+									outWeight = k.out_tangent.magnitude / keyframeDistanceRight,
+									weightedMode = WeightedMode.Both,
 								});
+							}
 						}
 					}
 

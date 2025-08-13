@@ -19,7 +19,7 @@ namespace com.squirrelbite.stf_unity.processors
 				}
 				else if (STFPath[0] == "r")
 				{
-					var ret = resource.transform.localRotation * new Quaternion(Values[0], -Values[1], -Values[2], Values[3]);
+					var ret = resource.transform.localRotation * new Quaternion(Values[0], -Values[1], -Values[2], Values[3]).normalized;
 					return new() { ret.x, ret.y, ret.z, ret.w };
 				}
 				else return Values;
