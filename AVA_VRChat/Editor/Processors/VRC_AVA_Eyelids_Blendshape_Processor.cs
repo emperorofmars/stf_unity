@@ -33,7 +33,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			if (!eyelidBlendshape)
 			{
 				var eyelidBlendshapeResources = Context.GetResourceByType(typeof(AVA_Eyelids_Blendshape));
-				if (eyelidBlendshapeResources.Count == 1)
+				if (eyelidBlendshapeResources != null && eyelidBlendshapeResources.Count == 1)
 				{
 					eyelidBlendshape = eyelidBlendshapeResources[0] as AVA_Eyelids_Blendshape;
 				}

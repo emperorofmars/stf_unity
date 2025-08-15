@@ -26,8 +26,26 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		{
 			var avatar = Context.Root.GetComponent<VRCAvatarDescriptor>();
 			var animator = Context.Root.GetComponent<Animator>();
-			if (!avatar) Context.Report(new STFReport("No Avatar Component created!", ErrorSeverity.FATAL_ERROR, AVA_EyeRotation_Bone._STF_Type));
-			if (!animator) Context.Report(new STFReport("No Animator Component created!", ErrorSeverity.FATAL_ERROR, AVA_EyeRotation_Bone._STF_Type));
+			if (!avatar)
+			{
+				Context.Report(new STFReport("No Avatar Component created!", ErrorSeverity.ERROR, AVA_EyeRotation_Bone._STF_Type));
+				return null;
+			}
+			if (!animator)
+			{
+				Context.Report(new STFReport("No Animator Component created!", ErrorSeverity.ERROR, AVA_EyeRotation_Bone._STF_Type));
+				return null;
+			}
+			if (!animator.avatar)
+			{
+				Context.Report(new STFReport("No Unity Avatar created!", ErrorSeverity.ERROR, AVA_EyeRotation_Bone._STF_Type));
+				return null;
+			}
+			if (!animator.avatar.isHuman)
+			{
+				Context.Report(new STFReport("Unity Avatar is not human!", ErrorSeverity.ERROR, AVA_EyeRotation_Bone._STF_Type));
+				return null;
+			}
 
 			var eyeRotation = (Context as AVAContext).PrimaryArmatureInstance?.Armature.Components.Find(c => c.GetType() == typeof(AVA_EyeRotation_Bone)) as AVA_EyeRotation_Bone;
 

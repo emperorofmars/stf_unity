@@ -84,7 +84,7 @@ namespace com.squirrelbite.stf_unity.processors
 					else
 						break;
 				}
-				renderer.materials = rendererMaterials;
+				if(rendererMaterials.Length > 0) renderer.materials = rendererMaterials;
 				return (new List<Object>() { renderer }, null);
 			}
 			return (null, null);

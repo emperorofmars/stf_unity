@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -9,27 +10,30 @@ namespace com.squirrelbite.stf_unity.modules
 	public class STF_Animation : STF_DataResource
 	{
 		[System.Serializable]
-		public class KeyframeValue
+		public class Keyframe
 		{
-			public bool isBaked = false;
+			public bool source_of_truth = true;
+			public float frame;
 			public float value;
-			public Vector2 in_tangent;
+			public string interpolation_type = "bezier";
+			public string tangent_type;
 			public Vector2 out_tangent;
+			public Vector2 in_tangent;
 		}
 
 		[System.Serializable]
-		public class Keyframe
+		public class SubTrack
 		{
-			public float frame;
-			public List<KeyframeValue> values = new();
-
+			public List<Keyframe> keyframes = new();
+			public int bake_interval = 1;
+			public List<float> baked_values;
 		}
 
 		[System.Serializable]
 		public class Track
 		{
 			public List<string> target = new();
-			public List<Keyframe> keyframes = new();
+			public List<SubTrack> subtracks = new();
 		}
 
 		public const string STF_TYPE = "stf.animation";
@@ -74,37 +78,72 @@ namespace com.squirrelbite.stf_unity.modules
 			if(JsonResource.ContainsKey("tracks")) foreach(var trackJson in JsonResource["tracks"])
 			{
 				var track = new STF_Animation.Track { target = trackJson["target"].ToObject<List<string>>() };
-				foreach (var keyframeJson in trackJson["keyframes"])
+				foreach (var subtrackJson in trackJson["subtracks"])
 				{
-					var keyframe = new STF_Animation.Keyframe {
+					if(subtrackJson.Type == JTokenType.Object)
+					{
+						var subTrack = new STF_Animation.SubTrack();
+						track.subtracks.Add(subTrack);
+						// todo also retrieve baked values
+						foreach (var keyframeJson in subtrackJson["keyframes"])
+						{
+							if(keyframeJson.Type == JTokenType.Array)
+							{
+								var keyframe = new STF_Animation.Keyframe();
+								subTrack.keyframes.Add(keyframe);
+
+								keyframe.source_of_truth = (bool)keyframeJson[0];
+								keyframe.frame = (float)keyframeJson[1];
+								keyframe.value = (float)keyframeJson[2];
+								keyframe.interpolation_type = (string)keyframeJson[3];
+
+								switch(keyframe.interpolation_type)
+								{
+									case "bezier":
+										keyframe.tangent_type = (string)keyframeJson[4];
+										keyframe.out_tangent = new Vector2((float)keyframeJson[5][0], (float)keyframeJson[5][1]);
+										if(keyframeJson.Count() > 6)
+										{
+											keyframe.in_tangent = new Vector2((float)keyframeJson[6][0], (float)keyframeJson[6][1]);
+										}
+										break;
+									case "constant":
+										if(keyframeJson.Count() > 4)
+											keyframe.in_tangent = new Vector2((float)keyframeJson[4][0], (float)keyframeJson[4][1]);
+										break;
+									case "linear":
+										if(keyframeJson.Count() > 4)
+											keyframe.in_tangent = new Vector2((float)keyframeJson[4][0], (float)keyframeJson[4][1]);
+										break;
+									default:
+										// todo warn
+										break;
+								}
+							}
+						}
+					}
+					else
+					{
+						track.subtracks.Add(null);
+					}
+				}
+				
+
+				/*foreach (var keyframeJson in trackJson["keyframes"])
+				{
+					var keyframe = new STF_Animation.Keyframe
+					{
 						frame = keyframeJson.Value<float>("frame"),
 					};
-					foreach(var keyframeValueJson in keyframeJson["values"])
+					foreach (var keyframeValueJson in keyframeJson["values"])
 					{
-						if(keyframeValueJson != null && keyframeValueJson.Type == JTokenType.Array)
+						if (keyframeValueJson != null && keyframeValueJson.Type == JTokenType.Array)
 						{
 							JArray keyframeValues = keyframeValueJson as JArray;
-							// todo legacy, remove at some point
-							if (keyframeValues.Count == 5)
+							if (keyframeValues.Count == 6)
 							{
-								keyframe.values.Add(new STF_Animation.KeyframeValue {
-									isBaked = false,
-									value = (float)keyframeValueJson[0],
-									in_tangent = new Vector2((float)keyframeValueJson[1], (float)keyframeValueJson[2]),
-									out_tangent = new Vector2((float)keyframeValueJson[3], (float)keyframeValueJson[4]),
-								});
-							}
-							else if (keyframeValues.Count == 1)
-							{
-								keyframe.values.Add(new STF_Animation.KeyframeValue {
-									isBaked = true,
-									value = (float)keyframeValueJson[0],
-								});
-							}
-							// not legacy, keep this
-							else if (keyframeValues.Count == 6)
-							{
-								keyframe.values.Add(new STF_Animation.KeyframeValue {
+								keyframe.values.Add(new STF_Animation.KeyframeValue
+								{
 									isBaked = !(bool)keyframeValueJson[0],
 									value = (float)keyframeValueJson[1],
 									in_tangent = new Vector2((float)keyframeValueJson[2], (float)keyframeValueJson[3]),
@@ -113,7 +152,8 @@ namespace com.squirrelbite.stf_unity.modules
 							}
 							else if (keyframeValues.Count == 2)
 							{
-								keyframe.values.Add(new STF_Animation.KeyframeValue {
+								keyframe.values.Add(new STF_Animation.KeyframeValue
+								{
 									isBaked = !(bool)keyframeValueJson[0],
 									value = (float)keyframeValueJson[1],
 								});
@@ -130,8 +170,8 @@ namespace com.squirrelbite.stf_unity.modules
 					}
 
 					track.keyframes.Add(keyframe);
-					if(keyframe.frame > lastFrame) lastFrame = keyframe.frame;
-				}
+					if (keyframe.frame > lastFrame) lastFrame = keyframe.frame;
+				}*/
 				ret.tracks.Add(track);
 			}
 			if(JsonResource.ContainsKey("range"))

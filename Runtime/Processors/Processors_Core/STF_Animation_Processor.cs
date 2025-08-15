@@ -30,7 +30,7 @@ namespace com.squirrelbite.stf_unity.processors
 				}
 				(string RelativePath, System.Type CurveType, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) = STFAnimation.AnimationRoot.PropertyConverter.ConvertPropertyPath(STFAnimation.AnimationRoot, track.target);
 
-				if (!string.IsNullOrWhiteSpace(RelativePath) && PropertyNames != null && PropertyNames.Count > 0)
+				if (!string.IsNullOrWhiteSpace(RelativePath) && CurveType != null && PropertyNames != null && PropertyNames.Count > 0)
 				{
 					var curves = new List<AnimationCurve>();
 					for (int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
@@ -38,48 +38,39 @@ namespace com.squirrelbite.stf_unity.processors
 						curves.Add(new AnimationCurve());
 					}
 
-					//foreach (var stfKeyframe in track.keyframes)
-					for(int i = 0; i < track.keyframes.Count; i++)
+					var len = -1;
+					foreach(var subtrack in track.subtracks) if(subtrack != null) if(subtrack.keyframes.Count > len) len = subtrack.keyframes.Count;
+					if(len <= 0) continue; // error
+
+					for (int i = 0; i < len; i++)
 					{
-						var stfKeyframe = track.keyframes[i];
-						var originalValues = new List<float>(new float[PropertyNames.Count]);
-						for (int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++) originalValues[curveIndex] = stfKeyframe.values[curveIndex] != null ? stfKeyframe.values[curveIndex].value : 0;
+						var originalValues = new List<float>(new float[track.subtracks.Count]);
+						for(int subtrackIndex = 0; subtrackIndex < track.subtracks.Count; subtrackIndex++)
+							if(track.subtracks[subtrackIndex] != null && track.subtracks[subtrackIndex].keyframes[i] is var stfKeyframe && stfKeyframe != null)
+								originalValues[subtrackIndex] = stfKeyframe.value;
+							else
+								originalValues[subtrackIndex] = 0;
 						var values = ConvertValueFunc != null ? ConvertValueFunc(originalValues) : originalValues;
 
-						for (int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
+						for(int subtrackIndex = 0; subtrackIndex < track.subtracks.Count; subtrackIndex++) if(track.subtracks[subtrackIndex] != null && track.subtracks[subtrackIndex].keyframes[i] is var stfKeyframe && stfKeyframe != null && stfKeyframe.source_of_truth)
 						{
-							var prevKeyframe = i > 0 ? track.keyframes[i - 1] : null;
-							var nextKeyframe = i < track.keyframes.Count - 1 ? track.keyframes[i + 1] : null;
+							var prevKeyframe = i > 0 ? track.subtracks[subtrackIndex].keyframes[i - 1] : null;
+							var nextKeyframe = i < track.subtracks[subtrackIndex].keyframes.Count - 1 ? track.subtracks[subtrackIndex].keyframes[i + 1] : null;
 
 							var keyframeDistanceLeft = prevKeyframe != null ? System.Math.Abs(prevKeyframe.frame - stfKeyframe.frame) : 1;
 							var keyframeDistanceRight = nextKeyframe != null ? System.Math.Abs(nextKeyframe.frame - stfKeyframe.frame) : 1;
 
-							var k = stfKeyframe.values[curveIndex];
-
-							if (k != null && !k.isBaked)
+							// todo handle interpolation type
+							curves[subtrackIndex].AddKey(new Keyframe
 							{
-								/*curves[curveIndex].AddKey(new Keyframe
-								{
-									time = stfKeyframe.frame / STFAnimation.fps,
-									value = values[curveIndex],
-									inTangent = k.in_tangent.x < 0 ? k.in_tangent.y / k.in_tangent.x : 0,
-									inWeight = k.in_tangent.magnitude / keyframeDistanceLeft,
-									outTangent = k.out_tangent.x > 0 ? k.out_tangent.y / k.out_tangent.x : 0,
-									outWeight = k.out_tangent.magnitude / keyframeDistanceRight,
-									weightedMode = WeightedMode.Both,
-								});*/
-
-								curves[curveIndex].AddKey(new Keyframe
-								{
-									time = stfKeyframe.frame / STFAnimation.fps,
-									value = values[curveIndex],
-									inTangent = -k.in_tangent.y,
-									inWeight = k.in_tangent.magnitude / keyframeDistanceLeft,
-									outTangent = k.out_tangent.y,
-									outWeight = k.out_tangent.magnitude / keyframeDistanceRight,
-									weightedMode = WeightedMode.Both,
-								});
-							}
+								time = stfKeyframe.frame / STFAnimation.fps,
+								value = values[subtrackIndex],
+								inTangent = stfKeyframe.in_tangent.x < 0 ? (stfKeyframe.in_tangent.y / stfKeyframe.in_tangent.x) * STFAnimation.fps : 0,
+								inWeight = stfKeyframe.in_tangent.magnitude / STFAnimation.fps,
+								outTangent = stfKeyframe.out_tangent.x > 0 ? (stfKeyframe.out_tangent.y / stfKeyframe.out_tangent.x) * STFAnimation.fps : 0,
+								outWeight = stfKeyframe.out_tangent.magnitude / STFAnimation.fps,
+								weightedMode = WeightedMode.Both,
+							});
 						}
 					}
 
@@ -87,7 +78,7 @@ namespace com.squirrelbite.stf_unity.processors
 					{
 						//Debug.Log($"Curve: {RelativePath} - {PropertyNames[curveIndex]} ({CurveType})");
 
-						if (RelativePath != null && CurveType != null && PropertyNames != null)
+						if (curves[curveIndex].keys.Length > 0)
 							ret.SetCurve(RelativePath, CurveType, PropertyNames[curveIndex], curves[curveIndex]);
 					}
 				}

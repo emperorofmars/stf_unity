@@ -33,7 +33,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			if (!visemesBlendshape)
 			{
 				var visemesBlendshapeResources = Context.GetResourceByType(typeof(AVA_Visemes_Blendshape));
-				if (visemesBlendshapeResources.Count == 1)
+				if (visemesBlendshapeResources != null && visemesBlendshapeResources.Count == 1)
 				{
 					visemesBlendshape = visemesBlendshapeResources[0] as AVA_Visemes_Blendshape;
 				}
