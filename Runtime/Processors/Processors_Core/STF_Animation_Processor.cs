@@ -54,13 +54,25 @@ namespace com.squirrelbite.stf_unity.processors
 
 						for(int subtrackIndex = 0; subtrackIndex < track.subtracks.Count; subtrackIndex++) if(track.subtracks[subtrackIndex] != null && track.subtracks[subtrackIndex].keyframes[i] is var stfKeyframe && stfKeyframe != null && stfKeyframe.source_of_truth)
 						{
-							var prevKeyframe = i > 0 ? track.subtracks[subtrackIndex].keyframes[i - 1] : null;
-							var nextKeyframe = i < track.subtracks[subtrackIndex].keyframes.Count - 1 ? track.subtracks[subtrackIndex].keyframes[i + 1] : null;
+							STF_Animation.Keyframe prevKeyframe = null;
+							for(int j = i - 1; j >= 0; j--) if(track.subtracks[subtrackIndex].keyframes[j] != null && track.subtracks[subtrackIndex].keyframes[j].source_of_truth)
+							{
+								prevKeyframe = track.subtracks[subtrackIndex].keyframes[j];
+								break;
+							}
+							/*STF_Animation.Keyframe nextKeyframe = null;
+							for(int j = i + 1; j < track.subtracks[subtrackIndex].keyframes.Count; j--) if(track.subtracks[subtrackIndex].keyframes[j] != null && track.subtracks[subtrackIndex].keyframes[j].source_of_truth)
+							{
+								nextKeyframe = track.subtracks[subtrackIndex].keyframes[j];
+								break;
+							}
+							//var prevKeyframe = i > 0 ? track.subtracks[subtrackIndex].keyframes[i - 1] : null;
+							//var nextKeyframe = i < track.subtracks[subtrackIndex].keyframes.Count - 1 ? track.subtracks[subtrackIndex].keyframes[i + 1] : null;
 
 							var keyframeDistanceLeft = prevKeyframe != null ? System.Math.Abs(prevKeyframe.frame - stfKeyframe.frame) : 1;
-							var keyframeDistanceRight = nextKeyframe != null ? System.Math.Abs(nextKeyframe.frame - stfKeyframe.frame) : 1;
+							var keyframeDistanceRight = nextKeyframe != null ? System.Math.Abs(nextKeyframe.frame - stfKeyframe.frame) : 1;*/
 
-							// todo handle interpolation type
+							// todo handle interpolation type and left tangent depending on the previous keyframe
 							curves[subtrackIndex].AddKey(new Keyframe
 							{
 								time = stfKeyframe.frame / STFAnimation.fps,

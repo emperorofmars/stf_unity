@@ -103,9 +103,7 @@ namespace com.squirrelbite.stf_unity.modules
 										keyframe.tangent_type = (string)keyframeJson[4];
 										keyframe.out_tangent = new Vector2((float)keyframeJson[5][0], (float)keyframeJson[5][1]);
 										if(keyframeJson.Count() > 6)
-										{
 											keyframe.in_tangent = new Vector2((float)keyframeJson[6][0], (float)keyframeJson[6][1]);
-										}
 										break;
 									case "constant":
 										if(keyframeJson.Count() > 4)
@@ -127,51 +125,6 @@ namespace com.squirrelbite.stf_unity.modules
 						track.subtracks.Add(null);
 					}
 				}
-				
-
-				/*foreach (var keyframeJson in trackJson["keyframes"])
-				{
-					var keyframe = new STF_Animation.Keyframe
-					{
-						frame = keyframeJson.Value<float>("frame"),
-					};
-					foreach (var keyframeValueJson in keyframeJson["values"])
-					{
-						if (keyframeValueJson != null && keyframeValueJson.Type == JTokenType.Array)
-						{
-							JArray keyframeValues = keyframeValueJson as JArray;
-							if (keyframeValues.Count == 6)
-							{
-								keyframe.values.Add(new STF_Animation.KeyframeValue
-								{
-									isBaked = !(bool)keyframeValueJson[0],
-									value = (float)keyframeValueJson[1],
-									in_tangent = new Vector2((float)keyframeValueJson[2], (float)keyframeValueJson[3]),
-									out_tangent = new Vector2((float)keyframeValueJson[4], (float)keyframeValueJson[5]),
-								});
-							}
-							else if (keyframeValues.Count == 2)
-							{
-								keyframe.values.Add(new STF_Animation.KeyframeValue
-								{
-									isBaked = !(bool)keyframeValueJson[0],
-									value = (float)keyframeValueJson[1],
-								});
-							}
-							else
-							{
-								keyframe.values.Add(null);
-							}
-						}
-						else
-						{
-							keyframe.values.Add(null);
-						}
-					}
-
-					track.keyframes.Add(keyframe);
-					if (keyframe.frame > lastFrame) lastFrame = keyframe.frame;
-				}*/
 				ret.tracks.Add(track);
 			}
 			if(JsonResource.ContainsKey("range"))
