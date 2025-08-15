@@ -14,13 +14,15 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				if (STFPath[0] == "t")
 				{
-					var ret = resource.transform.localPosition + new Vector3(-Values[0], Values[1], Values[2]);
-					return new() { ret.x, ret.y, ret.z };
+					//var ret = resource.transform.localPosition + new Vector3(-Values[0], Values[1], Values[2]);
+					//return new() { ret.x, ret.y, ret.z };
+					return new() { -Values[0], Values[1], Values[2] };
 				}
 				else if (STFPath[0] == "r")
 				{
-					var ret = resource.transform.localRotation * new Quaternion(Values[0], -Values[1], -Values[2], Values[3]).normalized;
-					return new() { ret.x, ret.y, ret.z, ret.w };
+					//var ret = resource.transform.localRotation * new Quaternion(Values[0], -Values[1], -Values[2], Values[3]).normalized;
+					//return new() { ret.x, ret.y, ret.z, ret.w };
+					return new() { Values[0], -Values[1], -Values[2], Values[3] };
 				}
 				else return Values;
 			});
