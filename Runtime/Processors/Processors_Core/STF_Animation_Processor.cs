@@ -19,8 +19,16 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				name = STFAnimation.STF_Name,
 				frameRate = STFAnimation.fps,
-				wrapMode = STFAnimation.loop ? WrapMode.Loop : WrapMode.Default
 			};
+			switch(STFAnimation.loop)
+			{
+				case "loop":
+					ret.wrapMode = WrapMode.Loop;
+					break;
+				case "pingpong":
+					ret.wrapMode = WrapMode.PingPong;
+					break;
+			}
 
 			foreach (var track in STFAnimation.tracks)
 			{
@@ -42,47 +50,98 @@ namespace com.squirrelbite.stf_unity.processors
 					foreach(var subtrack in track.subtracks) if(subtrack != null) if(subtrack.keyframes.Count > len) len = subtrack.keyframes.Count;
 					if(len <= 0) continue; // error
 
+					var convertedValues = new List<List<float>>();
+					var convertedInTangentValues = new List<List<float>>();
+					var convertedOutTangentValues = new List<List<float>>();
 					for (int i = 0; i < len; i++)
 					{
 						var originalValues = new List<float>(new float[track.subtracks.Count]);
+						var originalInTangentValues = new List<float>(new float[track.subtracks.Count]);
+						var originalOutTangentValues = new List<float>(new float[track.subtracks.Count]);
 						for(int subtrackIndex = 0; subtrackIndex < track.subtracks.Count; subtrackIndex++)
 							if(track.subtracks[subtrackIndex] != null && track.subtracks[subtrackIndex].keyframes[i] is var stfKeyframe && stfKeyframe != null)
+							{
 								originalValues[subtrackIndex] = stfKeyframe.value;
+								originalInTangentValues[subtrackIndex] = stfKeyframe.in_tangent.y;
+								originalOutTangentValues[subtrackIndex] = stfKeyframe.out_tangent.y;
+							}
 							else
+							{
 								originalValues[subtrackIndex] = 0;
-						var values = ConvertValueFunc != null ? ConvertValueFunc(originalValues) : originalValues;
+								originalInTangentValues[subtrackIndex] = 0;
+								originalOutTangentValues[subtrackIndex] = 0;
+							}
+						convertedValues.Add(ConvertValueFunc != null ? ConvertValueFunc(originalValues) : originalValues);
+						convertedInTangentValues.Add(ConvertValueFunc != null ? ConvertValueFunc(originalInTangentValues) : originalInTangentValues);
+						convertedOutTangentValues.Add(ConvertValueFunc != null ? ConvertValueFunc(originalOutTangentValues) : originalOutTangentValues);
+					}
+
+					for (int i = 0; i < len; i++)
+					{
+						var values = convertedValues[i];
+						var inTangentValues = convertedInTangentValues[i];
+						var outTangentValues = convertedOutTangentValues[i];
 
 						for(int subtrackIndex = 0; subtrackIndex < track.subtracks.Count; subtrackIndex++) if(track.subtracks[subtrackIndex] != null && track.subtracks[subtrackIndex].keyframes[i] is var stfKeyframe && stfKeyframe != null && stfKeyframe.source_of_truth)
 						{
 							STF_Animation.Keyframe prevKeyframe = null;
+							List<float> prevValues = null;
 							for(int j = i - 1; j >= 0; j--) if(track.subtracks[subtrackIndex].keyframes[j] != null && track.subtracks[subtrackIndex].keyframes[j].source_of_truth)
 							{
 								prevKeyframe = track.subtracks[subtrackIndex].keyframes[j];
+								prevValues = convertedValues[j];
 								break;
 							}
-							/*STF_Animation.Keyframe nextKeyframe = null;
+							STF_Animation.Keyframe nextKeyframe = null;
+							List<float> nextValues = null;
 							for(int j = i + 1; j < track.subtracks[subtrackIndex].keyframes.Count; j--) if(track.subtracks[subtrackIndex].keyframes[j] != null && track.subtracks[subtrackIndex].keyframes[j].source_of_truth)
 							{
 								nextKeyframe = track.subtracks[subtrackIndex].keyframes[j];
+								nextValues = convertedValues[j];
 								break;
 							}
-							//var prevKeyframe = i > 0 ? track.subtracks[subtrackIndex].keyframes[i - 1] : null;
-							//var nextKeyframe = i < track.subtracks[subtrackIndex].keyframes.Count - 1 ? track.subtracks[subtrackIndex].keyframes[i + 1] : null;
 
 							var keyframeDistanceLeft = prevKeyframe != null ? System.Math.Abs(prevKeyframe.frame - stfKeyframe.frame) : 1;
-							var keyframeDistanceRight = nextKeyframe != null ? System.Math.Abs(nextKeyframe.frame - stfKeyframe.frame) : 1;*/
+							var keyframeDistanceRight = nextKeyframe != null ? System.Math.Abs(nextKeyframe.frame - stfKeyframe.frame) : 1;
 
-							// todo handle interpolation type and left tangent depending on the previous keyframe
-							curves[subtrackIndex].AddKey(new Keyframe
+							var keyframe = new Keyframe
 							{
 								time = stfKeyframe.frame / STFAnimation.fps,
 								value = values[subtrackIndex],
-								inTangent = stfKeyframe.in_tangent.x < 0 ? (stfKeyframe.in_tangent.y / stfKeyframe.in_tangent.x) * STFAnimation.fps : 0,
-								inWeight = stfKeyframe.in_tangent.magnitude / STFAnimation.fps,
-								outTangent = stfKeyframe.out_tangent.x > 0 ? (stfKeyframe.out_tangent.y / stfKeyframe.out_tangent.x) * STFAnimation.fps : 0,
-								outWeight = stfKeyframe.out_tangent.magnitude / STFAnimation.fps,
-								weightedMode = WeightedMode.Both,
-							});
+								weightedMode = WeightedMode.None,
+							};
+							switch(stfKeyframe.interpolation_type)
+							{
+								case "bezier":
+									keyframe.outTangent = stfKeyframe.out_tangent.x > 0 ? (outTangentValues[subtrackIndex] / stfKeyframe.out_tangent.x) * STFAnimation.fps : 0;
+									keyframe.outWeight = stfKeyframe.out_tangent.x / keyframeDistanceRight;
+									keyframe.weightedMode = WeightedMode.Out;
+									break;
+								case "constant":
+									keyframe.outTangent = float.PositiveInfinity;
+									break;
+								case "linear":
+									keyframe.outTangent = nextKeyframe != null && values[subtrackIndex] - nextValues[subtrackIndex] < 0 ? float.NegativeInfinity : float.PositiveInfinity;
+									break;
+								case "cubic":
+									// todo
+									break;
+								case "quadratic":
+									// todo
+									break;
+								// todo more ?
+							}
+							if(prevKeyframe != null && prevKeyframe.interpolation_type == "bezier")
+							{
+								keyframe.inTangent = stfKeyframe.in_tangent.x < 0 ? (inTangentValues[subtrackIndex] / stfKeyframe.in_tangent.x) * STFAnimation.fps : 0;
+								keyframe.inWeight = -stfKeyframe.in_tangent.x / keyframeDistanceLeft;
+								if(keyframe.weightedMode == WeightedMode.Out || keyframe.weightedMode == WeightedMode.Both)
+									keyframe.weightedMode = WeightedMode.Both;
+								else
+									keyframe.weightedMode = WeightedMode.In;
+							}
+
+							curves[subtrackIndex].AddKey(keyframe);
 						}
 					}
 

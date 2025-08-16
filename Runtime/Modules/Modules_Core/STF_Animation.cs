@@ -39,7 +39,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public const string STF_TYPE = "stf.animation";
 		public override string STF_Type => STF_TYPE;
 		public float fps = 30;
-		public bool loop = false;
+		public string loop = "none";
 		public float range_start = 0;
 		public float range_end = 1;
 		public List<Track> tracks = new();
@@ -69,7 +69,7 @@ namespace com.squirrelbite.stf_unity.modules
 			ret.SetFromJson(JsonResource, STF_Id, "STF Animation");
 
 			ret.fps = JsonResource.Value<float>("fps");
-			ret.loop = JsonResource.Value<bool>("loop");
+			if(JsonResource.ContainsKey("loop")) ret.loop = JsonResource.Value<string>("loop");
 
 			ret.AnimationRoot = ContextObject is STF_Prefab ? ContextObject as STF_Prefab : null;
 
