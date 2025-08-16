@@ -25,9 +25,9 @@ namespace com.squirrelbite.stf_unity.processors
 
 			if (STFPath.Count > 0)
 			{
-				if (STFPath[0] == "t") return ("", typeof(Transform), new() { "m_LocalPosition.x", "m_LocalPosition.y", "m_LocalPosition.z" }, convert);
-				else if (STFPath[0] == "r") return ("", typeof(Transform), new() { "m_LocalRotation.x", "m_LocalRotation.y", "m_LocalRotation.z", "m_LocalRotation.w" }, convert);
-				else if (STFPath[0] == "s") return ("", typeof(Transform), new() { "m_LocalScale.x", "m_LocalScale.y", "m_LocalScale.z" }, convert);
+				if (STFPath[0] == "t") return ("", typeof(Transform), new() { "localPosition.x", "localPosition.y", "localPosition.z" }, convert);
+				else if (STFPath[0] == "r") return ("", typeof(Transform), new() { "localRotation.x", "localRotation.y", "localRotation.z", "localRotation.w" }, convert);
+				else if (STFPath[0] == "s") return ("", typeof(Transform), new() { "localScale.x", "localScale.y", "localScale.z" }, convert);
 				else if (STFPath[0] == "instance")
 				{
 					var instance = resource.gameObject.GetComponent<STF_InstanceResource>();
