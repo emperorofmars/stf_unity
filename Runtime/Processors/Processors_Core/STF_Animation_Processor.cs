@@ -47,7 +47,7 @@ namespace com.squirrelbite.stf_unity.processors
 					}
 
 					var len = -1;
-					foreach(var subtrack in track.subtracks) if(subtrack != null) if(subtrack.keyframes.Count > len) len = subtrack.keyframes.Count;
+					foreach(var subtrack in track.subtracks) if(subtrack != null && subtrack.keyframes.Count > len) len = subtrack.keyframes.Count;
 					if(len <= 0) continue; // error
 
 					var convertedValues = new List<List<float>>();
