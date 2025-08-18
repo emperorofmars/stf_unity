@@ -1,16 +1,22 @@
 
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules.stf_material
 {
 
 	public static class STF_Material_Converter_Registry
 	{
-		public static readonly List<IMaterialConverter> DefaultConverters = new() {
-			new StandardConverter(),
-			new UniversalRenderPipeline_Lit(),
-		};
+		public static readonly List<IMaterialConverter> DefaultConverters = new();
 		private static readonly Dictionary<string, IMaterialConverter> RegisteredConverters = new();
+
+		static STF_Material_Converter_Registry()
+		{
+			if (QualitySettings.renderPipeline != null)
+				DefaultConverters.Add(new UniversalRenderPipeline_Lit());
+			else
+				DefaultConverters.Add(new StandardConverter());
+		}
 
 		public static void RegisterConverter(IMaterialConverter Converter)
 		{
