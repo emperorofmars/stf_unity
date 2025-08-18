@@ -21,7 +21,7 @@ Intended for (not only) game development use-cases.
 == Installation
 * VRChat Creator Companion: https://squirrelbite.github.io/vpm/
 * Unity Package Manager: `Window` -> `Package Manager` -> `+` -> `Add package from git URL...`
-Add the following URL: `\https://github.com/emperorofmars/stf_unity.git`
+Add the following URL: `https://github.com/emperorofmars/stf_unity.git#upm`
 
 == License
 All source-code in this repository, except when noted in individual files and/or directories, is licensed under either:
