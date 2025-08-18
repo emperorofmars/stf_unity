@@ -26,6 +26,11 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 		{
 			var stfConstraint = STFResource as STFEXP_Constraint_Twist;
 
+			if (stfConstraint.Target.Count > 0)
+				stfConstraint.TargetGo = STFUtil.ResolveBinding(Context, stfConstraint, stfConstraint.Target);
+			else
+				stfConstraint.TargetGo = stfConstraint.transform?.parent?.parent?.gameObject;
+
 			if (stfConstraint.TargetGo)
 			{
 				var ret = CreateConstraint(stfConstraint.gameObject, stfConstraint.TargetGo, stfConstraint.Weight);

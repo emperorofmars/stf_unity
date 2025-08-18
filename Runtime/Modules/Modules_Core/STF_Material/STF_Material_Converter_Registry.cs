@@ -8,6 +8,7 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 	{
 		public static readonly List<IMaterialConverter> DefaultConverters = new() {
 			new StandardConverter(),
+			new UniversalRenderPipeline_Lit(),
 		};
 		private static readonly Dictionary<string, IMaterialConverter> RegisteredConverters = new();
 

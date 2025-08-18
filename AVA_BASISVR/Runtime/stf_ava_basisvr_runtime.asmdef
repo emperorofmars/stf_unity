@@ -1,0 +1,24 @@
+{
+    "name": "stf_ava_basisvr_runtime",
+    "rootNamespace": "com.squirrelbite.stf_unity.ava.basisvr",
+    "references": [
+        "GUID:8a88ca90357a74942a1113aeb6ad32c6",
+        "GUID:3b9f661eb63cdd24eac0fa805a1e17aa",
+        "GUID:b4ae365a73764ee478adc74cb89832fe"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.basis.sdk",
+            "expression": "",
+            "define": "STF_AVA_BASISVR_FOUND"
+        }
+    ],
+    "noEngineReferences": false
+}

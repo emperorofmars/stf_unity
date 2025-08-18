@@ -25,7 +25,12 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		{
 			var stfConstraint = STFResource as STFEXP_Constraint_Twist;
 
-			Transform target = null;
+			if (stfConstraint.Target.Count > 0)
+				stfConstraint.TargetGo = STFUtil.ResolveBinding(Context, stfConstraint, stfConstraint.Target);
+			else
+				stfConstraint.TargetGo = stfConstraint.transform?.parent?.parent?.gameObject;
+
+			/*Transform target = null;
 			if (stfConstraint.Target == null || stfConstraint.Target.Count == 0)
 			{
 				target = stfConstraint.transform?.parent?.parent;
@@ -44,7 +49,9 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				var ownerGo = Context.Root.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(n => n.STF_Id == stfConstraint.Target[0]);
 				var armatureInstance = ownerGo.GetComponent<STF_Instance_Armature>();
 				target = ownerGo.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == stfConstraint.Target[2] && b.STF_Owner == armatureInstance)?.transform;
-			}
+			}*/
+
+			Transform target = stfConstraint.TargetGo?.transform;
 
 			if (target)
 			{
