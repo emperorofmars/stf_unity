@@ -50,8 +50,8 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			Context.AddTask(new Task(() => {
 				if (ret.Target.Count > 0)
 					ret.TargetGo = STFUtil.ResolveBinding(Context, ret, ret.Target);
-				else
-					ret.TargetGo = ret.transform?.parent?.parent?.gameObject;
+				else if(ret.transform.parent && ret.transform.parent.parent)
+					ret.TargetGo = ret.transform.parent.parent.gameObject;
 			}));
 
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)

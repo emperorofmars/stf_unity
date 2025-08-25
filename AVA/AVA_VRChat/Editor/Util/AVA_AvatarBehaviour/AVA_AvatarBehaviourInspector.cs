@@ -2,7 +2,6 @@
 #if STF_AVA_VRCSDK3_FOUND
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;

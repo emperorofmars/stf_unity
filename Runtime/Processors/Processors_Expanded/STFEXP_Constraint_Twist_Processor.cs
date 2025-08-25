@@ -28,8 +28,8 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 
 			if (stfConstraint.Target.Count > 0)
 				stfConstraint.TargetGo = STFUtil.ResolveBinding(Context, stfConstraint, stfConstraint.Target);
-			else
-				stfConstraint.TargetGo = stfConstraint.transform?.parent?.parent?.gameObject;
+			else if(stfConstraint.transform.parent && stfConstraint.transform.parent.parent)
+				stfConstraint.TargetGo = stfConstraint.transform.parent.parent.gameObject;
 
 			if (stfConstraint.TargetGo)
 			{

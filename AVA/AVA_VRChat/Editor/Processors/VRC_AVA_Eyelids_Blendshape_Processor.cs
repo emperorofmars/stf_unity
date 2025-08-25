@@ -27,8 +27,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			if (!avatar) Context.Report(new STFReport("No Avatar Component created!", ErrorSeverity.FATAL_ERROR, AVA_Eyelids_Blendshape._STF_Type));
 
 			var stfMeshInstance = (Context as AVAContext).PrimaryMeshInstance;
-			var smr = stfMeshInstance?.GetComponent<SkinnedMeshRenderer>();
-			var eyelidBlendshape = stfMeshInstance?.Mesh.Components.Find(c => c.GetType() == typeof(AVA_Eyelids_Blendshape)) as AVA_Eyelids_Blendshape;
+			var smr = stfMeshInstance ? stfMeshInstance.GetComponent<SkinnedMeshRenderer>() : null;
+			var eyelidBlendshape = stfMeshInstance ? stfMeshInstance.Mesh.Components.Find(c => c.GetType() == typeof(AVA_Eyelids_Blendshape)) as AVA_Eyelids_Blendshape : null;
 
 			if (!eyelidBlendshape)
 			{
@@ -44,7 +44,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				var mesh = eyelidBlendshape.ParentObject as STF_Mesh;
 				var meshInstance = Context.Root.GetComponentsInChildren<STF_Instance_Mesh>().FirstOrDefault(e => e.Mesh == mesh);
 				if (meshInstance)
-					smr = meshInstance?.GetComponent<SkinnedMeshRenderer>();
+					smr = meshInstance.GetComponent<SkinnedMeshRenderer>();
 			}
 
 			if (smr && eyelidBlendshape)

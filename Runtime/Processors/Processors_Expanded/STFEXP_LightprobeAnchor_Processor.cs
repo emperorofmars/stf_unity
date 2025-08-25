@@ -21,10 +21,9 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var stfAnchor = STFResource as STFEXP_LightprobeAnchor;
-			foreach (var renderer in stfAnchor.GetComponents<Renderer>())
-			{
-				renderer.probeAnchor = stfAnchor.TargetGo?.transform;
-			}
+			if(stfAnchor.TargetGo)
+				foreach (var renderer in stfAnchor.GetComponents<Renderer>())
+					renderer.probeAnchor = stfAnchor.TargetGo.transform;
 			return (null, null);
 		}
 	}

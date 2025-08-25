@@ -3,18 +3,19 @@
 using System.Linq;
 using com.squirrelbite.stf_unity.modules.stf_material;
 using UnityEditor;
+using UnityEditor.AssetImporters;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.tools
 {
 	[CustomEditor(typeof(STFScriptedImporter))]
-	public class STFScriptedImporterInspector : Editor
+	public class STFScriptedImporterInspector : ScriptedImporterEditor
 	{
 		public override void OnInspectorGUI()
 		{
 			var importer = (STFScriptedImporter)target;
 
-			EditorGUI.BeginChangeCheck();
+			//EditorGUI.BeginChangeCheck();
 
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.PrefixLabel("Authoring Import");
@@ -45,30 +46,6 @@ namespace com.squirrelbite.stf_unity.tools
 
 			drawHLine();
 
-			if (EditorGUI.EndChangeCheck())
-			{
-				EditorUtility.SetDirty(importer);
-			}
-
-			if (EditorUtility.IsDirty(importer))
-			{
-				if (GUILayout.Button("Reimport to apply changes!"))
-				{
-					GUILayout.Space(10);
-					importer.SaveAndReimport();
-				}
-			}
-			else
-			{
-				if (GUILayout.Button("Reimport"))
-				{
-					EditorUtility.SetDirty(importer);
-					importer.SaveAndReimport();
-				}
-			}
-
-			drawHLine();
-
 			if (AssetDatabase.LoadAssetAtPath<STF_Import>(importer.assetPath) is var stfImport)
 			{
 				renderAsset(stfImport);
@@ -77,6 +54,10 @@ namespace com.squirrelbite.stf_unity.tools
 			{
 				EditorGUILayout.LabelField("Import Failed");
 			}
+
+			drawHLine();
+
+			ApplyRevertGUI();
 		}
 
 		private void renderAsset(STF_Import asset)

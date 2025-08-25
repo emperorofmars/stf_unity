@@ -23,13 +23,14 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 		{
 			var animator = Context.Root.GetComponent<Animator>();
 			if (!animator) Context.Report(new STFReport("No Animator Component created!", ErrorSeverity.FATAL_ERROR, AVA_EyeRotation_Bone._STF_Type));
+			var avaContext = Context as AVAContext;
 
-			var eyeRotation = (Context as AVAContext).PrimaryArmatureInstance?.Armature.Components.Find(c => c.GetType() == typeof(AVA_EyeRotation_Bone)) as AVA_EyeRotation_Bone;
+			var eyeRotation = avaContext.PrimaryArmatureInstance ? avaContext.PrimaryArmatureInstance.Armature.Components.Find(c => c.GetType() == typeof(AVA_EyeRotation_Bone)) as AVA_EyeRotation_Bone : null;
 
 			var humanEyeL = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.LeftEye.ToString());
 			var humanEyeR = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.RightEye.ToString());
 
-			if (humanEyeL.boneName != null && humanEyeR.boneName != null)
+			if (eyeRotation && humanEyeL.boneName != null && humanEyeR.boneName != null)
 			{
 				var eyeL = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == humanEyeL.boneName);
 				var eyeR = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == humanEyeR.boneName);

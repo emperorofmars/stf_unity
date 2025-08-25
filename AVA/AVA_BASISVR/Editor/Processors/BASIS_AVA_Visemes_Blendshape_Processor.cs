@@ -27,8 +27,8 @@ namespace com.squirrelbite.stf_unity.ava.basisvr.processors
 			if (!avatar) Context.Report(new STFReport("No Avatar Component created!", ErrorSeverity.FATAL_ERROR, AVA_Visemes_Blendshape._STF_Type));
 
 			var stfMeshInstance = (Context as AVAContext).PrimaryMeshInstance;
-			var smr = stfMeshInstance?.GetComponent<SkinnedMeshRenderer>();
-			var visemesBlendshape = stfMeshInstance?.Mesh.Components.Find(c => c.GetType() == typeof(AVA_Visemes_Blendshape)) as AVA_Visemes_Blendshape;
+			var smr = stfMeshInstance ? stfMeshInstance.GetComponent<SkinnedMeshRenderer>() : null;
+			var visemesBlendshape = stfMeshInstance ? stfMeshInstance.Mesh.Components.Find(c => c.GetType() == typeof(AVA_Visemes_Blendshape)) as AVA_Visemes_Blendshape : null;
 
 			if (!visemesBlendshape)
 			{
@@ -44,7 +44,7 @@ namespace com.squirrelbite.stf_unity.ava.basisvr.processors
 				var mesh = visemesBlendshape.ParentObject as STF_Mesh;
 				var meshInstance = Context.Root.GetComponentsInChildren<STF_Instance_Mesh>().FirstOrDefault(e => e.Mesh == mesh);
 				if (meshInstance)
-					smr = meshInstance?.GetComponent<SkinnedMeshRenderer>();
+					smr = meshInstance.GetComponent<SkinnedMeshRenderer>();
 			}
 
 			if (smr && visemesBlendshape)

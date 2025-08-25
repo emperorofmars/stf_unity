@@ -47,12 +47,14 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				return null;
 			}
 
-			var eyeRotation = (Context as AVAContext).PrimaryArmatureInstance?.Armature.Components.Find(c => c.GetType() == typeof(AVA_EyeRotation_Bone)) as AVA_EyeRotation_Bone;
+			var avaContext = Context as AVAContext;
+
+			var eyeRotation = avaContext.PrimaryArmatureInstance ? avaContext.PrimaryArmatureInstance.Armature.Components.Find(c => c.GetType() == typeof(AVA_EyeRotation_Bone)) as AVA_EyeRotation_Bone : null;
 
 			var humanEyeL = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.LeftEye.ToString());
 			var humanEyeR = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.RightEye.ToString());
 
-			if(humanEyeL.boneName != null && humanEyeR.boneName != null)
+			if(eyeRotation && humanEyeL.boneName != null && humanEyeR.boneName != null)
 			{
 				avatar.enableEyeLook = true;
 

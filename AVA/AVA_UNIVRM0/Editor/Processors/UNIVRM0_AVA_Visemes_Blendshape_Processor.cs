@@ -26,8 +26,8 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 			if (!blendshapeProxy) Context.Report(new STFReport("No Blendshape Proxy Component created!", ErrorSeverity.FATAL_ERROR, AVA_Visemes_Blendshape._STF_Type));
 
 			var stfMeshInstance = (Context as AVAContext).PrimaryMeshInstance;
-			var smr = stfMeshInstance?.GetComponent<SkinnedMeshRenderer>();
-			var visemesBlendshape = stfMeshInstance?.Mesh.Components.Find(c => c.GetType() == typeof(AVA_Visemes_Blendshape)) as AVA_Visemes_Blendshape;
+			var smr = stfMeshInstance ? stfMeshInstance.GetComponent<SkinnedMeshRenderer>() : null;
+			var visemesBlendshape = stfMeshInstance ? stfMeshInstance.Mesh.Components.Find(c => c.GetType() == typeof(AVA_Visemes_Blendshape)) as AVA_Visemes_Blendshape : null;
 
 			if (!visemesBlendshape)
 			{

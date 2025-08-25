@@ -8,7 +8,6 @@ using com.squirrelbite.stf_unity.modules;
 using UnityEngine;
 using VRC.SDK3.Dynamics.Constraint.Components;
 using com.squirrelbite.stf_unity.modules.stfexp;
-using System.Linq;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
@@ -27,35 +26,12 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 
 			if (stfConstraint.Target.Count > 0)
 				stfConstraint.TargetGo = STFUtil.ResolveBinding(Context, stfConstraint, stfConstraint.Target);
-			else
-				stfConstraint.TargetGo = stfConstraint.transform?.parent?.parent?.gameObject;
+			else if(stfConstraint.transform.parent && stfConstraint.transform.parent.parent)
+				stfConstraint.TargetGo = stfConstraint.transform.parent.parent.gameObject;
 
-			/*Transform target = null;
-			if (stfConstraint.Target == null || stfConstraint.Target.Count == 0)
+			if (stfConstraint.TargetGo)
 			{
-				target = stfConstraint.transform?.parent?.parent;
-			}
-			else if (stfConstraint.Target.Count == 1 && stfConstraint.STF_Owner is STF_Bone)
-			{
-				var ownerGo = (stfConstraint.STF_Owner as STF_Bone).STF_Owner;
-				target = ownerGo.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == stfConstraint.Target[0] && b.STF_Owner == ownerGo)?.transform;
-			}
-			else if (stfConstraint.Target.Count == 1)
-			{
-				target = Context.Root.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(n => n.STF_Id == stfConstraint.Target[0])?.transform;
-			}
-			else if (stfConstraint.Target.Count == 3)
-			{
-				var ownerGo = Context.Root.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(n => n.STF_Id == stfConstraint.Target[0]);
-				var armatureInstance = ownerGo.GetComponent<STF_Instance_Armature>();
-				target = ownerGo.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == stfConstraint.Target[2] && b.STF_Owner == armatureInstance)?.transform;
-			}*/
-
-			Transform target = stfConstraint.TargetGo?.transform;
-
-			if (target)
-			{
-				var ret = CreateConstraint(stfConstraint.gameObject, target, stfConstraint.Weight);
+				var ret = CreateConstraint(stfConstraint.gameObject, stfConstraint.TargetGo.transform, stfConstraint.Weight);
 				ret.enabled = stfConstraint.enabled;
 				return (new() { ret }, null);
 			}
