@@ -73,7 +73,7 @@ namespace com.squirrelbite.stf_unity.modules
 			{
 				foreach ((string componentId, JToken componentMod) in (JObject)JsonResource["modified_components"])
 				{
-					if (instance.GetComponentsInChildren<STF_NodeComponentResource>().FirstOrDefault(c => c.STF_Id == componentId) is var component)
+					if (instance.GetComponentsInChildren<STF_NodeComponentResource>().FirstOrDefault(c => c.STF_Id == componentId) is var component && component != null)
 					{
 						if (component.CanHandleInstanceMod)
 						{

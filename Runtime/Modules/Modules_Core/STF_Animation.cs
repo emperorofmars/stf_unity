@@ -78,6 +78,8 @@ namespace com.squirrelbite.stf_unity.modules
 			if(JsonResource.ContainsKey("tracks")) foreach(var trackJson in JsonResource["tracks"])
 			{
 				var track = new STF_Animation.Track { target = trackJson["target"].ToObject<List<string>>() };
+				if(trackJson.Type != JTokenType.Object || !((JObject)trackJson).ContainsKey("subtracks"))
+					continue;
 				foreach (var subtrackJson in trackJson["subtracks"])
 				{
 					if(subtrackJson.Type == JTokenType.Object)
