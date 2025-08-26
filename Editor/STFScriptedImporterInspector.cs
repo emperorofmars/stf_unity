@@ -15,8 +15,6 @@ namespace com.squirrelbite.stf_unity.tools
 		{
 			var importer = (STFScriptedImporter)target;
 
-			//EditorGUI.BeginChangeCheck();
-
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.PrefixLabel("Authoring Import");
 			var authoringImport = EditorGUILayout.Toggle(importer.ImportConfig.AuthoringImport);
@@ -46,7 +44,7 @@ namespace com.squirrelbite.stf_unity.tools
 
 			drawHLine();
 
-			if (AssetDatabase.LoadAssetAtPath<STF_Import>(importer.assetPath) is var stfImport)
+			if (AssetDatabase.LoadAssetAtPath<STF_Import>(importer.assetPath) is var stfImport && stfImport != null)
 			{
 				renderAsset(stfImport);
 			}
