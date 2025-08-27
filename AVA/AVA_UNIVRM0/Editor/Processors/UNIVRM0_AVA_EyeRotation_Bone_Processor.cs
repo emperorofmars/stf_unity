@@ -22,7 +22,21 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 		public List<UnityEngine.Object> Process(ProcessorContextBase Context)
 		{
 			var animator = Context.Root.GetComponent<Animator>();
-			if (!animator) Context.Report(new STFReport("No Animator Component created!", ErrorSeverity.FATAL_ERROR, AVA_EyeRotation_Bone._STF_Type));
+			if (!animator)
+			{
+				Context.Report(new STFReport("No Animator Component created!", ErrorSeverity.ERROR, AVA_EyeRotation_Bone._STF_Type));
+				return null;
+			}
+			if (!animator.avatar)
+			{
+				Context.Report(new STFReport("No Unity Avatar created!", ErrorSeverity.ERROR, AVA_EyeRotation_Bone._STF_Type));
+				return null;
+			}
+			if (!animator.avatar.isHuman)
+			{
+				Context.Report(new STFReport("Unity Avatar is not human!", ErrorSeverity.ERROR, AVA_EyeRotation_Bone._STF_Type));
+				return null;
+			}
 			var avaContext = Context as AVAContext;
 
 			var eyeRotation = avaContext.PrimaryArmatureInstance ? avaContext.PrimaryArmatureInstance.Armature.Components.Find(c => c.GetType() == typeof(AVA_EyeRotation_Bone)) as AVA_EyeRotation_Bone : null;

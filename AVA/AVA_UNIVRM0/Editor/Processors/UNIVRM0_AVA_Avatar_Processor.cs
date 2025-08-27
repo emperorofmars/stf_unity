@@ -74,6 +74,7 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 				vrmFirstPerson = Context.Root.AddComponent<VRMFirstPerson>();
 				vrmFirstPerson.FirstPersonBone = avaAvatar.Viewport.transform.parent;
 				vrmFirstPerson.FirstPersonOffset = avaAvatar.Viewport.transform.localPosition;
+				vrmFirstPerson.enabled = avaAvatar.enabled;
 
 				if (animator && animator.isHuman)
 				{
@@ -82,6 +83,7 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 					{
 						vrmLookAt = Context.Root.AddComponent<VRMLookAtHead>();
 						vrmLookAt.Head = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == headHumanoid.boneName);
+						vrmLookAt.enabled = avaAvatar.enabled;
 					}
 				}
 
@@ -91,8 +93,6 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 
 			vrmMetaComponent.enabled = avaAvatar.enabled;
 			vrmBlendshapeProxy.enabled = avaAvatar.enabled;
-			vrmFirstPerson.enabled = avaAvatar.enabled;
-			vrmLookAt.enabled = avaAvatar.enabled;
 
 			return (new() { vrmMetaComponent, vrmBlendshapeProxy, vrmFirstPerson, vrmLookAt, vrmMeta, vrmBlendShapeAvatar, neutralClip }, new() { vrmMeta, vrmBlendShapeAvatar, neutralClip });
 		}

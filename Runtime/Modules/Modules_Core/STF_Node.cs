@@ -62,7 +62,7 @@ namespace com.squirrelbite.stf_unity.modules
 					var parent = ret.transform.parent.gameObject.GetComponent<STF_InstanceResource>();
 
 					var target = parent.gameObject.GetComponentsInChildren<STF_Bone>().FirstOrDefault(c => c.STF_Owner == parent && c.STF_Id ==  ret.ParentBinding[2]);
-					if(target) ret.transform.SetParent(target.transform, true);
+					if(target) ret.transform.SetParent(target.transform, false);
 				}));
 			}
 
