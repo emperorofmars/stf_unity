@@ -20,6 +20,10 @@ namespace com.squirrelbite.stf_unity.processors
 				{
 					return new() { Values[0], -Values[1], -Values[2], Values[3] };
 				}
+				else if (STFPath[0] == "r_euler")
+				{
+					return new() { Mathf.Rad2Deg * -Values[0], Mathf.Rad2Deg * Values[1], Mathf.Rad2Deg * Values[2] };
+				}
 				else return Values;
 			});
 
@@ -27,6 +31,7 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				if (STFPath[0] == "t") return ("", typeof(Transform), new() { "localPosition.x", "localPosition.y", "localPosition.z" }, convert);
 				else if (STFPath[0] == "r") return ("", typeof(Transform), new() { "localRotation.x", "localRotation.y", "localRotation.z", "localRotation.w" }, convert);
+				else if (STFPath[0] == "r_euler") return ("", typeof(Transform), new() { "localEulerAngles.x", "localEulerAngles.y", "localEulerAngles.z" }, convert);
 				else if (STFPath[0] == "s") return ("", typeof(Transform), new() { "localScale.x", "localScale.y", "localScale.z" }, convert);
 				else if (STFPath[0] == "instance")
 				{

@@ -16,10 +16,10 @@ namespace com.squirrelbite.stf_unity.processors
 				var target = resource.gameObject.GetComponentsInChildren<STF_NodeResource>().FirstOrDefault(c => c.STF_Owner == resource && c.STF_Id == nodeId);
 				if (target && target.PropertyConverter != null)
 				{
-					var ret = UnityUtil.getPath(resource.transform, target.transform, true);
+					var relativePath = UnityUtil.getPath(resource.transform, target.transform, true);
 
 					(string retRelativePath, System.Type retType, List<string> retPropNames, System.Func<List<float>, List<float>> convertValueFunc) = target.PropertyConverter.ConvertPropertyPath(target, STFPath.GetRange(1, STFPath.Count - 1));
-					return (string.IsNullOrEmpty(retRelativePath) ? ret : ret + "/" + retRelativePath, retType, retPropNames, convertValueFunc);
+					return (string.IsNullOrEmpty(retRelativePath) ? relativePath : relativePath + "/" + retRelativePath, retType, retPropNames, convertValueFunc);
 				}
 			}
 			return ("", null, null, null);
