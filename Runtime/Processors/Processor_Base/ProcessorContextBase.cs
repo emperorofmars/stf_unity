@@ -45,6 +45,8 @@ namespace com.squirrelbite.stf_unity.processors
 
 		public GameObject Root => State.Root;
 
+		private Material DefaultMaterial = null;
+
 		public void AddTask(Task Task) { State.Tasks.Add(Task); }
 		public void AddTrash(Object Trash) { State.AddTrash(Trash); }
 		public void AddTrash(IEnumerable<Object> Trash) { State.AddTrash(Trash); }
@@ -121,6 +123,18 @@ namespace com.squirrelbite.stf_unity.processors
 					State.Report(nnaError.Report);
 				else
 					State.Report(new STFReport(e.Message, ErrorSeverity.FATAL_ERROR, null, null, e));
+		}
+
+		public Material GetDefaultMaterial()
+		{
+			if(!DefaultMaterial)
+			{
+				DefaultMaterial = new Material(Shader.Find("Standard")) {
+					name = "Default"
+				};
+				State.RegisterResult(new () {DefaultMaterial});
+			}
+			return DefaultMaterial;
 		}
 	}
 }
