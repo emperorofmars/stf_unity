@@ -40,14 +40,13 @@ namespace com.squirrelbite.stf_unity.modules
 			ret.Connected = JsonResource.ContainsKey("connected") && (bool)JsonResource["connected"];
 			ret.Length = (float)JsonResource["length"];
 
-			go.transform.position = TRSUtil.ParseLocation((JArray)JsonResource["translation"]);
-			go.transform.rotation = TRSUtil.ParseRotation((JArray)JsonResource["rotation"]);
+			go.transform.SetLocalPositionAndRotation(TRSUtil.ParseLocation((JArray)JsonResource["translation"]), TRSUtil.ParseRotation((JArray)JsonResource["rotation"]));
 
 			if(JsonResource.ContainsKey("children")) foreach(var childID in (JArray)JsonResource["children"])
 			{
 				if(Context.ImportResource((string)childID, "node", ContextObject) is STF_Bone childObject)
 				{
-					childObject.transform.SetParent(ret.transform, true);
+					childObject.transform.SetParent(go.transform, true);
 				}
 			}
 
