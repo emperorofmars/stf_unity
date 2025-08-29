@@ -22,7 +22,7 @@ namespace com.squirrelbite.stf_unity.processors
 				}
 				else if (STFPath[0] == "r_euler")
 				{
-					return new() { Mathf.Rad2Deg * Values[0], -Mathf.Rad2Deg * Values[1], Mathf.Rad2Deg * Values[2] };
+					return new() { Mathf.Rad2Deg * Values[0], Mathf.Rad2Deg * Values[1], -Mathf.Rad2Deg * Values[2] };
 				}
 				else return Values;
 			});
