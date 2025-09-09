@@ -113,7 +113,7 @@ namespace com.squirrelbite.stf_unity.processors
 							switch(stfKeyframe.interpolation_type)
 							{
 								case "bezier":
-									keyframe.outTangent = stfKeyframe.out_tangent.x > 0 ? (outTangentValues[subtrackIndex] / stfKeyframe.out_tangent.x) * STFAnimation.fps : 0;
+									keyframe.outTangent = stfKeyframe.out_tangent.x > 0 ? -(outTangentValues[subtrackIndex] / stfKeyframe.out_tangent.x) * STFAnimation.fps : 0;
 									keyframe.outWeight = stfKeyframe.out_tangent.x / keyframeDistanceRight;
 									keyframe.weightedMode = WeightedMode.Out;
 									break;
@@ -133,7 +133,7 @@ namespace com.squirrelbite.stf_unity.processors
 							}
 							if(prevKeyframe != null && prevKeyframe.interpolation_type == "bezier")
 							{
-								keyframe.inTangent = stfKeyframe.in_tangent.x < 0 ? (inTangentValues[subtrackIndex] / stfKeyframe.in_tangent.x) * STFAnimation.fps : 0;
+								keyframe.inTangent = stfKeyframe.in_tangent.x < 0 ? -(inTangentValues[subtrackIndex] / stfKeyframe.in_tangent.x) * STFAnimation.fps : 0;
 								keyframe.inWeight = -stfKeyframe.in_tangent.x / keyframeDistanceLeft;
 								if(keyframe.weightedMode == WeightedMode.Out || keyframe.weightedMode == WeightedMode.Both)
 									keyframe.weightedMode = WeightedMode.Both;
