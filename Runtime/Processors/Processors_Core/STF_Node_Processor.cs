@@ -33,6 +33,7 @@ namespace com.squirrelbite.stf_unity.processors
 				else if (STFPath[0] == "r") return ("", typeof(Transform), new() { "localRotation.x", "localRotation.y", "localRotation.z", "localRotation.w" }, convert);
 				else if (STFPath[0] == "r_euler") return ("", typeof(Transform), new() { "localEulerAngles.x", "localEulerAngles.y", "localEulerAngles.z" }, convert);
 				else if (STFPath[0] == "s") return ("", typeof(Transform), new() { "localScale.x", "localScale.y", "localScale.z" }, convert);
+				else if (STFPath[0] == "enabled") return ("", typeof(GameObject), new() { "active" }, null );
 				else if (STFPath[0] == "instance")
 				{
 					var instance = resource.gameObject.GetComponent<STF_InstanceResource>();
