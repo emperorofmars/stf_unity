@@ -74,7 +74,7 @@ namespace com.squirrelbite.stf_unity.processors
 
 				meshInstance.ProcessedObjects.Add(renderer);
 
-				var rendererMaterials = new Material[renderer.materials.Length];
+				var rendererMaterials = new Material[renderer.sharedMaterials.Length];
 				for (int matIdx = 0; matIdx < rendererMaterials.Length; matIdx++)
 				{
 					if (matIdx < meshInstance.Materials.Count && meshInstance.Materials[matIdx] != null)
@@ -84,7 +84,7 @@ namespace com.squirrelbite.stf_unity.processors
 					else
 						rendererMaterials[matIdx] = Context.GetDefaultMaterial();
 				}
-				if(rendererMaterials.Length > 0) renderer.materials = rendererMaterials;
+				if(rendererMaterials.Length > 0) renderer.sharedMaterials = rendererMaterials;
 				return (new List<Object>() { renderer }, null);
 			}
 			return (null, null);

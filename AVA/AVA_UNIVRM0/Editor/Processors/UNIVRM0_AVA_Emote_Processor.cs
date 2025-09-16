@@ -29,33 +29,39 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 
 			foreach (var emote in avaEmotes.emotes)
 			{
-				var values = new List<(SkinnedMeshRenderer, List<(string, float)>)>();
-				foreach (var emoteBlendshape in emote.BlendshapeFallback)
+				if(emote.fallback != null)
 				{
-					if (values.Find(v => v.Item1 == emoteBlendshape.MeshInstance.GetComponent<SkinnedMeshRenderer>()) is var item && item.Item1 != null)
-					{
-						item.Item2.Add((emoteBlendshape.Name, emoteBlendshape.Value * 100));
-					}
-					else
-					{
-						values.Add((emoteBlendshape.MeshInstance.GetComponent<SkinnedMeshRenderer>(), new List<(string, float)> { (emoteBlendshape.Name, emoteBlendshape.Value * 100) }));
-					}
-				}
+					var values = new List<(SkinnedMeshRenderer, List<(string, float)>)>();
 
-				var preset = emote.meaning switch
-				{
-					"smile" => BlendShapePreset.Joy,
-					"happy" => BlendShapePreset.Joy,
-					"blep" => BlendShapePreset.Fun,
-					"silly" => BlendShapePreset.Fun,
-					"angry" => BlendShapePreset.Angry,
-					"grumpy" => BlendShapePreset.Angry,
-					"sad" => BlendShapePreset.Sorrow,
-					_ => BlendShapePreset.Unknown,
-				};
-				var clip = BlendshapeClipUtil.Create(Context, preset, preset != BlendShapePreset.Unknown ? preset.ToString() : emote.meaning, values);
-				blendshapeProxy.BlendShapeAvatar.Clips.Add(clip);
-				Context.AddUnityObject(avaEmotes, clip);
+					Debug.Log(emote.fallback);
+					Debug.Log(emote.fallback.targets);
+
+					foreach (var emoteTarget in emote.fallback.targets)
+					{
+						var blendshapeList = new List<(string, float)>();
+						values.Add((emoteTarget.mesh_instance.GetComponent<SkinnedMeshRenderer>(), blendshapeList));
+
+						Debug.Log(emoteTarget.mesh_instance.GetComponent<SkinnedMeshRenderer>());
+
+						foreach (var emoteBlendshape in emoteTarget.values)
+							blendshapeList.Add((emoteBlendshape.Name, emoteBlendshape.Value * 100));
+					}
+
+					var preset = emote.meaning switch
+					{
+						"smile" => BlendShapePreset.Joy,
+						"happy" => BlendShapePreset.Joy,
+						"blep" => BlendShapePreset.Fun,
+						"silly" => BlendShapePreset.Fun,
+						"angry" => BlendShapePreset.Angry,
+						"grumpy" => BlendShapePreset.Angry,
+						"sad" => BlendShapePreset.Sorrow,
+						_ => BlendShapePreset.Unknown,
+					};
+					var clip = BlendshapeClipUtil.Create(Context, preset, preset != BlendShapePreset.Unknown ? preset.ToString() : emote.meaning, values);
+					blendshapeProxy.BlendShapeAvatar.Clips.Add(clip);
+					Context.AddUnityObject(avaEmotes, clip);
+				}
 			}
 
 			return (null, null);

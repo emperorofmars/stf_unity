@@ -16,19 +16,11 @@ namespace com.squirrelbite.stf_unity.ava
 		public override string STF_Type => _STF_Type;
 
 		[System.Serializable]
-		public class EmoteBlendshapeFallback
-		{
-			public STF_Node MeshInstance;
-			public string Name = "";
-			public float Value = 0;
-		}
-
-		[System.Serializable]
 		public class Emote
 		{
 			public string meaning;
 			public STF_Animation animation;
-			public List<EmoteBlendshapeFallback> BlendshapeFallback = new();
+			public VRM_BlendshapePose fallback;
 		}
 
 		public List<Emote> emotes = new();
@@ -63,21 +55,9 @@ namespace com.squirrelbite.stf_unity.ava
 					if (jsonEmote is JObject jsonObjectEmote && jsonObjectEmote.ContainsKey("animation"))
 					{
 						var emote = new AVA_Emotes.Emote() { meaning = meaning, animation = Context.ImportResource((string)jsonObjectEmote["animation"], "data") as STF_Animation };
+						if (jsonObjectEmote.ContainsKey("fallback") && jsonObjectEmote["fallback"].Type == JTokenType.String)
+							emote.fallback = Context.ImportResource(jsonObjectEmote.Value<string>("fallback"), "data") as VRM_BlendshapePose;
 						ret.emotes.Add(emote);
-
-						if (jsonObjectEmote.ContainsKey("fallback") && jsonObjectEmote["fallback"] is JArray jsonFallback)
-						{
-							Context.AddTask(new Task(() => {
-								foreach (JObject jsonBlendshape in jsonFallback.Cast<JObject>())
-								{
-									emote.BlendshapeFallback.Add(new AVA_Emotes.EmoteBlendshapeFallback {
-										MeshInstance = Context.ImportResource((string)jsonBlendshape["mesh_instance"], "node") as STF_Node,
-										Name = (string)jsonBlendshape["name"],
-										Value = (float)jsonBlendshape["value"],
-									});
-								}
-							}));
-						}
 					}
 				}
 			}
