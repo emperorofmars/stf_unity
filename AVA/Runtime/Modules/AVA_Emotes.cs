@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using com.squirrelbite.stf_unity.modules;
-using System.Linq;
-using System.Threading.Tasks;
 
 #if UNITY_EDITOR
 using UnityEditor;
