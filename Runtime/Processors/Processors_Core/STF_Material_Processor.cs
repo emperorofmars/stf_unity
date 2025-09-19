@@ -32,7 +32,7 @@ namespace com.squirrelbite.stf_unity.processors
 		public (List<Object>, List<Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var STFMaterial = STFResource as STF_Material;
-			var materialMapping = "Standard";
+			var materialMapping = STF_Material_Converter_Registry.DefaultShader;
 
 			if (Context.ImportConfig.MaterialMappings.Find(m => m.ID == STFMaterial.STF_Id) is var mapping && mapping != null && !string.IsNullOrWhiteSpace(mapping.TargetShader) && STF_Material_Converter_Registry.Converters.ContainsKey(mapping.TargetShader))
 			{
@@ -44,7 +44,7 @@ namespace com.squirrelbite.stf_unity.processors
 				{
 					ID = STFMaterial.STF_Id,
 					MaterialName = STFMaterial.STF_Name,
-					TargetShader = "Standard",
+					TargetShader = materialMapping,
 				});
 			}
 			STFResource.PropertyConverter = new STF_Instance_Mesh_PropertyConverter();

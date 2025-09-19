@@ -10,12 +10,22 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 		public static readonly List<IMaterialConverter> DefaultConverters = new();
 		private static readonly Dictionary<string, IMaterialConverter> RegisteredConverters = new();
 
+		public static readonly string DefaultShader;
+
 		static STF_Material_Converter_Registry()
 		{
 			if (QualitySettings.renderPipeline != null)
-				DefaultConverters.Add(new UniversalRenderPipeline_Lit());
+			{
+				var converter = new UniversalRenderPipeline_Lit();
+				DefaultConverters.Add(converter);
+				DefaultShader = converter.ShaderName;
+			}
 			else
-				DefaultConverters.Add(new StandardConverter());
+			{
+				var converter = new StandardConverter();
+				DefaultConverters.Add(converter);
+				DefaultShader = converter.ShaderName;
+			}
 		}
 
 		public static void RegisterConverter(IMaterialConverter Converter)
