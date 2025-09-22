@@ -23,6 +23,7 @@ namespace com.squirrelbite.stf_unity
 		public List<MaterialMapping> MaterialMappings = new();
 
 		public bool ImportVertexColors = true;
+		public int MaxWeights = 4;
 
 		public void Parse(string ImportConfig)
 		{

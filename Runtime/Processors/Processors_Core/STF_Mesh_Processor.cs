@@ -254,7 +254,7 @@ namespace com.squirrelbite.stf_unity.processors
 			// Weightpaint
 			if (STFMesh.armature != null && STFMesh.bones != null && STFMesh.weights != null)
 			{
-				const int MAX_BONES_PER_VERTEX = 4;
+				var MAX_BONES_PER_VERTEX = Context.ImportConfig.MaxWeights;
 				var weights = new List<BoneWeight1>[vertex_count];
 				for (int i = 0; i < vertex_count; i++) weights[i] = new List<BoneWeight1>();
 

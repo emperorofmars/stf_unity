@@ -150,6 +150,13 @@ namespace com.squirrelbite.stf_unity.tools
 			EditorGUILayout.PrefixLabel("Import Vertex Colors");
 			Importer.ImportConfig.ImportVertexColors = EditorGUILayout.Toggle(Importer.ImportConfig.ImportVertexColors);
 			EditorGUILayout.EndHorizontal();
+
+			GUILayout.Space(10);
+
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.PrefixLabel("Max. Weights");
+			Importer.ImportConfig.MaxWeights = EditorGUILayout.IntSlider(Importer.ImportConfig.MaxWeights, 1, 32);
+			EditorGUILayout.EndHorizontal();
 		}
 
 		private void drawHLine()
