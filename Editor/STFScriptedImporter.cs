@@ -8,7 +8,7 @@ using com.squirrelbite.stf_unity.modules;
 
 namespace com.squirrelbite.stf_unity.tools
 {
-	[HelpURL("https://stfform.at")]
+	[HelpURL("https://docs.stfform.at")]
 	[ScriptedImporter(1, new string[] { "stf" })]
 	public class STFScriptedImporter : ScriptedImporter
 	{
