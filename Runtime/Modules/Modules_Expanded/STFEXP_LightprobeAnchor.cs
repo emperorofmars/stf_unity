@@ -42,7 +42,7 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STFEXP Constraint Twist");
 
 			if (JsonResource.ContainsKey("anchor"))
-				ret.Anchor = JsonResource["anchor"].ToObject<List<string>>();
+				ret.Anchor = STFUtil.ConvertResourcePath(JsonResource, JsonResource["anchor"]);
 
 			Context.AddTask(new Task(() => {
 				if (ret.Anchor.Count > 0)

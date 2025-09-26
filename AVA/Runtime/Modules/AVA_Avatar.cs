@@ -43,16 +43,16 @@ namespace com.squirrelbite.stf_unity.ava
 			var ret = go.gameObject.AddComponent<AVA_Avatar>();
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "AVA Avatar");
 
-			if (JsonResource.ContainsKey("viewport") && Context.ImportResource((string)JsonResource["viewport"], "node") is STF_MonoBehaviour viewport && viewport != null)
+			if (JsonResource.ContainsKey("viewport") && STFUtil.ImportResource(Context, JsonResource, JsonResource["viewport"], "node") is STF_MonoBehaviour viewport && viewport != null)
 				ret.Viewport = viewport.gameObject;
 			if (JsonResource.ContainsKey("primary_armature_instance"))
 				Context.AddTask(new Task(() => {
-					if (Context.ImportResource((string)JsonResource["primary_armature_instance"], "node") is STF_Node primary_armature_instance && primary_armature_instance != null)
+					if (STFUtil.ImportResource(Context, JsonResource, JsonResource["primary_armature_instance"], "node") is STF_Node primary_armature_instance && primary_armature_instance != null)
 						ret.PrimaryArmatureInstance = primary_armature_instance.Instance as STF_Instance_Armature;
 				}));
 			if (JsonResource.ContainsKey("primary_mesh_instance"))
 				Context.AddTask(new Task(() => {
-					if (Context.ImportResource((string)JsonResource["primary_mesh_instance"], "node") is STF_Node primary_mesh_instance && primary_mesh_instance != null)
+					if (STFUtil.ImportResource(Context, JsonResource, JsonResource["primary_mesh_instance"], "node") is STF_Node primary_mesh_instance && primary_mesh_instance != null)
 						ret.PrimaryMeshInstance = primary_mesh_instance.Instance as STF_Instance_Mesh;
 				}));
 

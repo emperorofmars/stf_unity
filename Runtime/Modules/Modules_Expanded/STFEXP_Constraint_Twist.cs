@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using System.Linq;
+using System.Drawing.Printing;
+
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -45,7 +49,7 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			ret.Weight = JsonResource.Value<float>("weight");
 
 			if (JsonResource.ContainsKey("target"))
-				ret.Target = JsonResource["target"].ToObject<List<string>>();
+				ret.Target = STFUtil.ConvertResourcePath(JsonResource, JsonResource["target"]);
 
 			Context.AddTask(new Task(() => {
 				if (ret.Target.Count > 0)

@@ -83,5 +83,53 @@ namespace com.squirrelbite.stf_unity
 				return null;
 			}
 		}
+
+		public static string GetResourceID(JObject JsonResource, JToken ResourceIDIndex)
+		{
+			if(ResourceIDIndex == null) return null;
+			var index = -1;
+			if(ResourceIDIndex.Type == JTokenType.Integer)
+				index = ResourceIDIndex.Value<int>();
+			else if(ResourceIDIndex.Type == JTokenType.String) // In case the ResourceIDIndex was the key in an Json object, it will be a string, because Json
+				index = int.Parse(ResourceIDIndex.Value<string>());
+			else
+				return null;
+
+			if(JsonResource.ContainsKey("referenced_resources") && JsonResource["referenced_resources"].Type == JTokenType.Array)
+			{
+				return JsonResource["referenced_resources"][index].Value<string>();
+			}
+			return null;
+		}
+
+		public static ISTF_Resource ImportResource(ImportContext Context, JObject JsonResource, JToken ResourceIDIndex, string ExpectedKind = "data", ISTF_Resource ContextObject = null)
+		{
+			if(GetResourceID(JsonResource, ResourceIDIndex) is string resourceID && !string.IsNullOrWhiteSpace(resourceID))
+				return Context.ImportResource(resourceID, ExpectedKind, ContextObject);
+			else
+				return null;
+		}
+
+		public static string GetBufferID(JObject JsonResource, JToken BufferIDIndex)
+		{
+			if(JsonResource.ContainsKey("referenced_buffers") && JsonResource["referenced_buffers"].Type == JTokenType.Array && BufferIDIndex != null && BufferIDIndex.Type == JTokenType.Integer)
+			{
+				return JsonResource["referenced_buffers"][BufferIDIndex.Value<int>()].Value<string>();
+			}
+			return null;
+		}
+
+		public static List<string> ConvertResourcePath(JObject JsonResource, JToken JsonTargetToken)
+		{
+			var ret = new List<string>();
+			foreach(var pathElement in JsonTargetToken)
+			{
+				if(pathElement.Type == JTokenType.Integer)
+					ret.Add(GetResourceID(JsonResource, pathElement));
+				else
+					ret.Add(pathElement.Value<string>());
+			}
+			return ret;
+		}
 	}
 }
