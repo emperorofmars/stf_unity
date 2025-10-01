@@ -34,6 +34,7 @@ namespace com.squirrelbite.stf_unity.modules
 		{
 			public List<string> target = new();
 			public List<float> timepoints = new();
+			public string interpolation_type = null;
 			public List<SubTrack> subtracks = new();
 		}
 
@@ -76,11 +77,15 @@ namespace com.squirrelbite.stf_unity.modules
 
 			float lastFrame = 1;
 
-			if(JsonResource.ContainsKey("tracks") && JsonResource["tracks"] is JArray jsonTracks) foreach(var jsonTrack in jsonTracks)
+			if(JsonResource.ContainsKey("tracks") && JsonResource["tracks"] is JArray jsonTracks) foreach(JObject jsonTrack in jsonTracks)
 			{
-				if(jsonTrack.Type != JTokenType.Object || !((JObject)jsonTrack).ContainsKey("subtracks") || !((JObject)jsonTrack).ContainsKey("timepoints"))
+				if(jsonTrack.Type != JTokenType.Object || !jsonTrack.ContainsKey("subtracks") || !jsonTrack.ContainsKey("timepoints"))
 					continue;
-				var track = new STF_Animation.Track { target = jsonTrack["target"].ToObject<List<string>>(), timepoints = jsonTrack["timepoints"].ToObject<List<float>>() };
+				var track = new STF_Animation.Track {
+					target = jsonTrack["target"].ToObject<List<string>>(),
+					timepoints = jsonTrack["timepoints"].ToObject<List<float>>(),
+				};
+				if(jsonTrack.ContainsKey("interpolation")) track.interpolation_type = jsonTrack.Value<string>("interpolation");
 				foreach (var subtrackJson in jsonTrack["subtracks"])
 				{
 					if(subtrackJson.Type == JTokenType.Object)
