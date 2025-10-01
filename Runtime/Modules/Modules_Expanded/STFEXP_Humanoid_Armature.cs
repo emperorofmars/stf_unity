@@ -95,9 +95,9 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 				{
 					if(targetToken is JObject JsonTarget && JsonTarget != null)
 					{
-						var boneMapping = new STFEXP_Humanoid_Armature.BoneMapping();
-						boneMapping.Mapping = mapping;
-						if(JsonTarget.ContainsKey("target")) boneMapping.BoneID = JsonTarget.Value<string>("target");
+						var boneMapping = new STFEXP_Humanoid_Armature.BoneMapping { Mapping = mapping };
+
+						if (JsonTarget.ContainsKey("target")) boneMapping.BoneID = JsonTarget.Value<string>("target");
 						if(JsonTarget.ContainsKey("rotation_limits") && JsonTarget["rotation_limits"] is JObject JsonLimits && JsonLimits != null)
 						{
 							boneMapping.set_rotation_limits = true;
