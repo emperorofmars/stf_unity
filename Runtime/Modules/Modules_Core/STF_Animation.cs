@@ -33,6 +33,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public class Track
 		{
 			public List<string> target = new();
+			public List<float> timepoints = new();
 			public List<SubTrack> subtracks = new();
 		}
 
@@ -75,45 +76,46 @@ namespace com.squirrelbite.stf_unity.modules
 
 			float lastFrame = 1;
 
-			if(JsonResource.ContainsKey("tracks")) foreach(var trackJson in JsonResource["tracks"])
+			if(JsonResource.ContainsKey("tracks") && JsonResource["tracks"] is JArray jsonTracks) foreach(var jsonTrack in jsonTracks)
 			{
-				var track = new STF_Animation.Track { target = trackJson["target"].ToObject<List<string>>() };
-				if(trackJson.Type != JTokenType.Object || !((JObject)trackJson).ContainsKey("subtracks"))
+				if(jsonTrack.Type != JTokenType.Object || !((JObject)jsonTrack).ContainsKey("subtracks") || !((JObject)jsonTrack).ContainsKey("timepoints"))
 					continue;
-				foreach (var subtrackJson in trackJson["subtracks"])
+				var track = new STF_Animation.Track { target = jsonTrack["target"].ToObject<List<string>>(), timepoints = jsonTrack["timepoints"].ToObject<List<float>>() };
+				foreach (var subtrackJson in jsonTrack["subtracks"])
 				{
 					if(subtrackJson.Type == JTokenType.Object)
 					{
 						var subTrack = new STF_Animation.SubTrack();
 						track.subtracks.Add(subTrack);
-						// todo also retrieve baked values
-						foreach (var keyframeJson in subtrackJson["keyframes"])
+						// todo also retrieve baked values if desired
+						for(int keyframeIndex = 0; keyframeIndex < track.timepoints.Count; keyframeIndex++)
 						{
+							var keyframeJson = subtrackJson["keyframes"][keyframeIndex];
 							if(keyframeJson.Type == JTokenType.Array)
 							{
 								var keyframe = new STF_Animation.Keyframe();
 								subTrack.keyframes.Add(keyframe);
 
 								keyframe.source_of_truth = (bool)keyframeJson[0];
-								keyframe.frame = (float)keyframeJson[1];
-								keyframe.value = (float)keyframeJson[2];
-								keyframe.interpolation_type = (string)keyframeJson[3];
+								keyframe.frame = track.timepoints[keyframeIndex];
+								keyframe.value = (float)keyframeJson[1];
+								keyframe.interpolation_type = (string)keyframeJson[2];
 
 								switch(keyframe.interpolation_type)
 								{
 									case "bezier":
-										keyframe.tangent_type = (string)keyframeJson[4];
-										keyframe.out_tangent = new Vector2((float)keyframeJson[5][0], (float)keyframeJson[5][1]);
-										if(keyframeJson.Count() > 6)
-											keyframe.in_tangent = new Vector2((float)keyframeJson[6][0], (float)keyframeJson[6][1]);
+										keyframe.tangent_type = (string)keyframeJson[3];
+										keyframe.out_tangent = new Vector2((float)keyframeJson[4][0], (float)keyframeJson[4][1]);
+										if(keyframeJson.Count() > 5)
+											keyframe.in_tangent = new Vector2((float)keyframeJson[5][0], (float)keyframeJson[5][1]);
 										break;
 									case "constant":
-										if(keyframeJson.Count() > 4)
-											keyframe.in_tangent = new Vector2((float)keyframeJson[4][0], (float)keyframeJson[4][1]);
+										if(keyframeJson.Count() > 3)
+											keyframe.in_tangent = new Vector2((float)keyframeJson[3][0], (float)keyframeJson[3][1]);
 										break;
 									case "linear":
-										if(keyframeJson.Count() > 4)
-											keyframe.in_tangent = new Vector2((float)keyframeJson[4][0], (float)keyframeJson[4][1]);
+										if(keyframeJson.Count() > 3)
+											keyframe.in_tangent = new Vector2((float)keyframeJson[3][0], (float)keyframeJson[3][1]);
 										break;
 									default:
 										// todo warn
