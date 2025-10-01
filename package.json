@@ -1,7 +1,7 @@
 {
 	"name": "com.squirrelbite.stf_unity",
 	"displayName": "STF - Modular 3D File-Format",
-	"version": "0.0.12",
+	"version": "0.0.13",
 	"description": "Support for importing STF assets.",
 	"unity": "2022.3",
 	"unityRelease": "6f1",
