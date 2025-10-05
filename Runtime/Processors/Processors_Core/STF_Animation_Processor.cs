@@ -123,13 +123,6 @@ namespace com.squirrelbite.stf_unity.processors
 								case "linear":
 									keyframe.outTangent = nextKeyframe != null && values[subtrackIndex] - nextValues[subtrackIndex] < 0 ? float.NegativeInfinity : float.PositiveInfinity;
 									break;
-								case "cubic":
-									// todo
-									break;
-								case "quadratic":
-									// todo
-									break;
-								// todo more ?
 							}
 							if(prevKeyframe != null && prevKeyframe.interpolation_type == "bezier")
 							{
