@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
 using System.Linq;
-using System.Threading.Tasks;
-using com.squirrelbite.stf_unity.modules;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
@@ -62,13 +60,13 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				avatar.customEyeLookSettings.rightEye = animator.avatarRoot.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == humanEyeR.boneName);
 
 				avatar.customEyeLookSettings.eyesLookingUp = new VRCAvatarDescriptor.CustomEyeLookSettings.EyeRotations
-						{left = Quaternion.Euler(-eyeRotation.limits_up, 0f, 0f), right = Quaternion.Euler(-eyeRotation.limits_up, 0f, 0f), linked = true};
+						{left = Quaternion.Euler(Mathf.Rad2Deg * -eyeRotation.limits_up, 0f, 0f), right = Quaternion.Euler(Mathf.Rad2Deg * -eyeRotation.limits_up, 0f, 0f), linked = true};
 				avatar.customEyeLookSettings.eyesLookingDown = new VRCAvatarDescriptor.CustomEyeLookSettings.EyeRotations
-						{left = Quaternion.Euler(eyeRotation.limits_down, 0f, 0f), right = Quaternion.Euler(eyeRotation.limits_down, 0f, 0f), linked = true};
+						{left = Quaternion.Euler(Mathf.Rad2Deg * eyeRotation.limits_down, 0f, 0f), right = Quaternion.Euler(Mathf.Rad2Deg * eyeRotation.limits_down, 0f, 0f), linked = true};
 				avatar.customEyeLookSettings.eyesLookingLeft = new VRCAvatarDescriptor.CustomEyeLookSettings.EyeRotations
-						{left = Quaternion.Euler(0f, -eyeRotation.limits_out, 0f), right = Quaternion.Euler(0f, -eyeRotation.limits_in, 0f), linked = Mathf.Approximately(eyeRotation.limits_out, eyeRotation.limits_in)};
+						{left = Quaternion.Euler(0f, Mathf.Rad2Deg * -eyeRotation.limits_out, 0f), right = Quaternion.Euler(0f, Mathf.Rad2Deg * -eyeRotation.limits_in, 0f), linked = Mathf.Approximately(eyeRotation.limits_out, eyeRotation.limits_in)};
 				avatar.customEyeLookSettings.eyesLookingRight = new VRCAvatarDescriptor.CustomEyeLookSettings.EyeRotations
-						{left = Quaternion.Euler(0f, eyeRotation.limits_in, 0f), right = Quaternion.Euler(0f, eyeRotation.limits_out, 0f), linked = Mathf.Approximately(eyeRotation.limits_out, eyeRotation.limits_in)};
+						{left = Quaternion.Euler(0f, Mathf.Rad2Deg * eyeRotation.limits_in, 0f), right = Quaternion.Euler(0f, Mathf.Rad2Deg * eyeRotation.limits_out, 0f), linked = Mathf.Approximately(eyeRotation.limits_out, eyeRotation.limits_in)};
 
 				eyeRotation.ProcessedObjects.Add(avatar);
 			}

@@ -120,9 +120,9 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 						{
 							humanLimit.useDefaultValues = false;
 							humanLimit.axisLength = bone.Length;
-							humanLimit.min = new Vector3(mapping.p_min, mapping.s_min, mapping.t_min);
-							humanLimit.center = new Vector3(mapping.p_center, mapping.s_center, mapping.t_center);
-							humanLimit.max = new Vector3(mapping.p_max, mapping.s_max, mapping.t_max);
+							humanLimit.min = new Vector3(Mathf.Rad2Deg * mapping.p_min, Mathf.Rad2Deg * mapping.s_min, Mathf.Rad2Deg * mapping.t_min);
+							humanLimit.center = new Vector3(Mathf.Rad2Deg * mapping.p_center, Mathf.Rad2Deg * mapping.s_center, Mathf.Rad2Deg * mapping.t_center);
+							humanLimit.max = new Vector3(Mathf.Rad2Deg * mapping.p_max, Mathf.Rad2Deg * mapping.s_max, Mathf.Rad2Deg * mapping.t_max);
 						}
 						var humanBone = new HumanBone {
 							humanName = Humanoid_Armature_Mappings.STF_To_Unity_Mappings[mapping.Mapping],
