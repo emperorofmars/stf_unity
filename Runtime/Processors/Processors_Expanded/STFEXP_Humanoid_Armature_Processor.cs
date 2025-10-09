@@ -71,6 +71,26 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			{"foot.r", HumanBodyBones.RightFoot.ToString()},
 			{"toes.r", HumanBodyBones.RightToes.ToString()},
 		};
+
+		public static string TranslateHumanoidSTFtoUnity(string STFMapping, string LocomotionType, bool NoJaw)
+		{
+			if(NoJaw && STFMapping == "Jaw") return null;
+			if(LocomotionType.StartsWith("digi"))
+			{
+				switch(STFMapping)
+				{
+					case "toes.l":
+						return HumanBodyBones.LeftFoot.ToString();
+					case "toes.r":
+						return HumanBodyBones.RightFoot.ToString();
+					case "foot.l":
+						return null;
+					case "foot.r":
+						return null;
+				}
+			}
+			return STF_To_Unity_Mappings[STFMapping];
+		}
 	}
 
 	public class STFEXP_Humanoid_Armature_Processor : ISTF_Processor
@@ -110,8 +130,12 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 							scale = t.localScale,
 						};
 					}).ToArray(),
-					human = humanoid.bone_mappings.Select(mapping => {
+
+					human = humanoid.bone_mappings.Where(mapping => {
+						return Humanoid_Armature_Mappings.TranslateHumanoidSTFtoUnity(mapping.Mapping, humanoid.locomotion_type, humanoid.no_jaw) != null;
+					}).Select(mapping => {
 						var bone = humanoid.gameObject.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == mapping.BoneID && b.STF_Owner == armature);
+
 						if(bone == null || !Humanoid_Armature_Mappings.STF_To_Unity_Mappings.ContainsKey(mapping.Mapping))
 							return default;
 
@@ -124,8 +148,9 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 							humanLimit.center = new Vector3(Mathf.Rad2Deg * mapping.p_center, Mathf.Rad2Deg * mapping.s_center, Mathf.Rad2Deg * mapping.t_center);
 							humanLimit.max = new Vector3(Mathf.Rad2Deg * mapping.p_max, Mathf.Rad2Deg * mapping.s_max, Mathf.Rad2Deg * mapping.t_max);
 						}
+
 						var humanBone = new HumanBone {
-							humanName = Humanoid_Armature_Mappings.STF_To_Unity_Mappings[mapping.Mapping],
+							humanName = Humanoid_Armature_Mappings.TranslateHumanoidSTFtoUnity(mapping.Mapping, humanoid.locomotion_type, humanoid.no_jaw),
 							boneName = bone.name,
 							limit = humanLimit,
 						};

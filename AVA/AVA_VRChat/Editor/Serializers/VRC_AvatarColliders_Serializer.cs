@@ -14,7 +14,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.serialization
 	{
 		public System.Type Target => typeof(VRCAvatarDescriptor);
 
-		private static JToken SerialilzeVRCCollider(VRCAvatarDescriptor.ColliderConfig ColliderConfig)
+		private static JToken SerializeVRCCollider(VRCAvatarDescriptor.ColliderConfig ColliderConfig)
 		{
 			if(ColliderConfig.state == VRCAvatarDescriptor.ColliderConfig.State.Disabled) return false;
 			if(ColliderConfig.state == VRCAvatarDescriptor.ColliderConfig.State.Automatic) return true;
@@ -33,20 +33,20 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.serialization
 			var ret = new JObject {{"type", VRC_AvatarColliders._STF_Type}};
 			var avatar = (VRCAvatarDescriptor)UnityObject;
 
-			ret.Add("head", SerialilzeVRCCollider(avatar.collider_head));
-			ret.Add("torso", SerialilzeVRCCollider(avatar.collider_torso));
-			ret.Add("footL", SerialilzeVRCCollider(avatar.collider_footL));
-			ret.Add("footR", SerialilzeVRCCollider(avatar.collider_footR));
-			ret.Add("handL", SerialilzeVRCCollider(avatar.collider_handL));
-			ret.Add("handR", SerialilzeVRCCollider(avatar.collider_handR));
-			ret.Add("fingerIndexL", SerialilzeVRCCollider(avatar.collider_fingerIndexL));
-			ret.Add("fingerIndexR", SerialilzeVRCCollider(avatar.collider_fingerIndexR));
-			ret.Add("fingerMiddleL", SerialilzeVRCCollider(avatar.collider_fingerMiddleL));
-			ret.Add("fingerMiddleR", SerialilzeVRCCollider(avatar.collider_fingerMiddleR));
-			ret.Add("fingerRingL", SerialilzeVRCCollider(avatar.collider_fingerRingL));
-			ret.Add("fingerRingR", SerialilzeVRCCollider(avatar.collider_fingerRingR));
-			ret.Add("fingerLittleL", SerialilzeVRCCollider(avatar.collider_fingerLittleL));
-			ret.Add("fingerLittleR", SerialilzeVRCCollider(avatar.collider_fingerLittleR));
+			ret.Add("head", SerializeVRCCollider(avatar.collider_head));
+			ret.Add("torso", SerializeVRCCollider(avatar.collider_torso));
+			ret.Add("footL", SerializeVRCCollider(avatar.collider_footL));
+			ret.Add("footR", SerializeVRCCollider(avatar.collider_footR));
+			ret.Add("handL", SerializeVRCCollider(avatar.collider_handL));
+			ret.Add("handR", SerializeVRCCollider(avatar.collider_handR));
+			ret.Add("fingerIndexL", SerializeVRCCollider(avatar.collider_fingerIndexL));
+			ret.Add("fingerIndexR", SerializeVRCCollider(avatar.collider_fingerIndexR));
+			ret.Add("fingerMiddleL", SerializeVRCCollider(avatar.collider_fingerMiddleL));
+			ret.Add("fingerMiddleR", SerializeVRCCollider(avatar.collider_fingerMiddleR));
+			ret.Add("fingerRingL", SerializeVRCCollider(avatar.collider_fingerRingL));
+			ret.Add("fingerRingR", SerializeVRCCollider(avatar.collider_fingerRingR));
+			ret.Add("fingerLittleL", SerializeVRCCollider(avatar.collider_fingerLittleL));
+			ret.Add("fingerLittleR", SerializeVRCCollider(avatar.collider_fingerLittleR));
 
 			return new List<SerializerResult>{new() {
 				STFType = VRC_AvatarColliders._STF_Type,
