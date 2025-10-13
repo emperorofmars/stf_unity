@@ -90,8 +90,8 @@ namespace com.squirrelbite.stf_unity.modules
 					{
 						foreach (string componentId in componentIds)
 						{
-							var component = Context.ImportResource(componentId, "component", bone);
-							(component as STF_NodeComponentResource).STF_Owner = ret;
+							if(Context.ImportResource(componentId, "component", bone) is STF_NodeComponentResource component && component != null)
+								component.STF_Owner = ret;
 						}
 					}
 				}

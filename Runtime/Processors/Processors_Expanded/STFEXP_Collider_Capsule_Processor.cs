@@ -20,9 +20,9 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 		public (List<Object> ProcessedObjects, List<Object> ObjectsToRegister) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var stfCollider = STFResource as STFEXP_Collider_Capsule;
-			CapsuleCollider collider = null;
+			CapsuleCollider collider;
 
-			if(stfCollider.offset_rotation != null && stfCollider.offset_rotation != Quaternion.identity)
+			if (stfCollider.offset_rotation != null && stfCollider.offset_rotation != Quaternion.identity)
 			{
 				var colliderObject = new GameObject();
 				colliderObject.name = string.IsNullOrWhiteSpace(stfCollider.STF_Name) ? stfCollider.name + "_CapsuleCollider" : stfCollider.STF_Name;
