@@ -17,7 +17,7 @@ namespace com.squirrelbite.stf_unity.ava
 
 		public static readonly string[] _EyelidShapes = { "closed", "up", "down", "left", "right", "closed_left", "up_left", "down_left", "left_left", "right_left", "closed_right", "up_right", "down_right", "left_right", "right_right" };
 
-		public List<string> Mapppings = new();
+		public List<string> Mappings = new();
 	}
 
 	public class AVA_Eyelids_Blendshape_Module : ISTF_Module
@@ -43,9 +43,9 @@ namespace com.squirrelbite.stf_unity.ava
 
 			foreach (var shape in AVA_Eyelids_Blendshape._EyelidShapes)
 				if (JsonResource.ContainsKey(shape))
-					ret.Mapppings.Add(JsonResource.Value<string>(shape));
+					ret.Mappings.Add(JsonResource.Value<string>(shape));
 				else
-					ret.Mapppings.Add(null);
+					ret.Mappings.Add(null);
 
 			return (ret, new() { ret });
 		}

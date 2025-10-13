@@ -63,15 +63,15 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			avatar.customEyeLookSettings.eyelidsBlendshapes = new int[3];
 
 			{
-				if (eyelidsBlendshape.Mapppings[Array.FindIndex(AVA_Eyelids_Blendshape._EyelidShapes, e => e == "closed")] is var mapping && GetBlendshapeIndex(smr.sharedMesh, mapping) >= 0)
+				if (eyelidsBlendshape.Mappings[Array.FindIndex(AVA_Eyelids_Blendshape._EyelidShapes, e => e == "closed")] is var mapping && GetBlendshapeIndex(smr.sharedMesh, mapping) >= 0)
 					avatar.customEyeLookSettings.eyelidsBlendshapes[0] = GetBlendshapeIndex(smr.sharedMesh, mapping);
 			}
 			{
-				if (eyelidsBlendshape.Mapppings[Array.FindIndex(AVA_Eyelids_Blendshape._EyelidShapes, e => e == "up")] is var mapping && GetBlendshapeIndex(smr.sharedMesh, mapping) >= 0)
+				if (eyelidsBlendshape.Mappings[Array.FindIndex(AVA_Eyelids_Blendshape._EyelidShapes, e => e == "up")] is var mapping && GetBlendshapeIndex(smr.sharedMesh, mapping) >= 0)
 					avatar.customEyeLookSettings.eyelidsBlendshapes[1] = GetBlendshapeIndex(smr.sharedMesh, mapping);
 			}
 			{
-				if (eyelidsBlendshape.Mapppings[Array.FindIndex(AVA_Eyelids_Blendshape._EyelidShapes, e => e == "down")] is var mapping && GetBlendshapeIndex(smr.sharedMesh, mapping) >= 0)
+				if (eyelidsBlendshape.Mappings[Array.FindIndex(AVA_Eyelids_Blendshape._EyelidShapes, e => e == "down")] is var mapping && GetBlendshapeIndex(smr.sharedMesh, mapping) >= 0)
 					avatar.customEyeLookSettings.eyelidsBlendshapes[2] = GetBlendshapeIndex(smr.sharedMesh, mapping);
 			}
 		}

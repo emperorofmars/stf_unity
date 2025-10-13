@@ -5,10 +5,11 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
-	public abstract class STF_NodeComponentResource : STF_MonoBehaviour
+	public abstract class STF_NodeComponentResource : STF_MonoBehaviour, ISTF_ComponentResource
 	{
 		public override string STF_Kind => "component";
-		public List<string> Overrides = new();
+		public List<string> _Overrides = new();
+		public List<string> Overrides => this._Overrides;
 
 		public override void SetFromJson(JObject JsonResource, string STF_Id, ISTF_Resource ContextObject, string DefaultName = "STF Prefab")
 		{

@@ -4,10 +4,11 @@ using Newtonsoft.Json.Linq;
 
 namespace com.squirrelbite.stf_unity.modules
 {
-	public abstract class STF_DataComponentResource: STF_ScriptableObject
+	public abstract class STF_DataComponentResource: STF_ScriptableObject, ISTF_ComponentResource
 	{
 		public override string STF_Kind => "component";
-		public List<string> Overrides = new();
+		public List<string> _Overrides = new();
+		public List<string> Overrides => this._Overrides;
 
 		public UnityEngine.Object ParentObject;
 

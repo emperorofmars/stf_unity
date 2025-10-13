@@ -11,11 +11,17 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.modules
 {
 	public class VRC_Physbone : STF_NodeComponentResource
 	{
+		[Serializable]
+		public class PhysboneTarget
+		{
+			public List<string> Target = new();
+		}
+
 		public const string _STF_Type = "com.vrchat.physbone";
 		public override string STF_Type => _STF_Type;
 
-		public List<string> Colliders = new();
-		public List<string> Ignores = new();
+		public List<PhysboneTarget> Colliders = new();
+		public List<PhysboneTarget> Ignores = new();
 		public string Json;
 	}
 
@@ -41,9 +47,16 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.modules
 			var ret = go.gameObject.AddComponent<VRC_Physbone>();
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "VRC Physbone");
 			ret.Json = JsonResource.GetValue("values").ToString();
-			if (JsonResource.ContainsKey("colliders")) ret.Colliders = JsonResource["colliders"].ToObject<List<string>>();
-			if (JsonResource.ContainsKey("ignores")) ret.Ignores = JsonResource["ignores"].ToObject<List<string>>();
-			
+
+			if (JsonResource.ContainsKey("colliders")) foreach(var colliderPath in JsonResource["colliders"])
+			{
+				ret.Colliders.Add(new() {Target=STFUtil.ConvertResourcePath(JsonResource, colliderPath)});
+			}
+			if (JsonResource.ContainsKey("ignores")) foreach(var ignorePath in JsonResource["ignores"])
+			{
+				ret.Ignores.Add(new() {Target=STFUtil.ConvertResourcePath(JsonResource, ignorePath)});
+			}
+
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
 				ret.enabled = false;
 

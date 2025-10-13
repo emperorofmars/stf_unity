@@ -18,10 +18,17 @@ namespace com.squirrelbite.stf_unity.processors
 
 		public ImportOptions ImportConfig => State.State.ImportConfig;
 
-		public void AddUnityObject(ISTF_Resource STFResource, Object UnityObject)
+		public void RegisterProcessedResult(ISTF_Resource STFResource, object Result, bool AddAsUnityObject = true)
 		{
-			STFResource.ProcessedObjects.Add(UnityObject);
-			State.State.AddUnityObject(UnityObject);
+			STFResource.ProcessedObjects.Add(Result);
+
+			if(STFResource is ISTF_ComponentResource componentResource)
+				foreach(var overrideId in componentResource.Overrides)
+					if(State.OverriddenResourcesByID.ContainsKey(overrideId))
+						foreach(var overriddenResource in State.OverriddenResourcesByID[overrideId])
+							overriddenResource.ProcessedObjects.Add(Result);
+			if(AddAsUnityObject && Result is UnityEngine.Object @object)
+				State.RegisterResult(new List<Object> {@object});
 		}
 
 		public List<ISTF_Resource> GetResourceByType(System.Type Type)
@@ -64,7 +71,16 @@ namespace com.squirrelbite.stf_unity.processors
 				State.AddProcessorTask(processor.Order, new Task(() =>
 				{
 					(var ProcessedObjects, var ObjectsToRegister) = processor.Process(this, resource);
-					if (ProcessedObjects != null) resource.ProcessedObjects.AddRange(ProcessedObjects);
+					if (ProcessedObjects != null && ProcessedObjects.Count > 0)
+					{
+						resource.ProcessedObjects.AddRange(ProcessedObjects);
+
+						if(resource is ISTF_ComponentResource componentResource)
+							foreach(var overrideId in componentResource.Overrides)
+								if(State.OverriddenResourcesByID.ContainsKey(overrideId))
+									foreach(var overriddenResource in State.OverriddenResourcesByID[overrideId])
+										overriddenResource.ProcessedObjects.AddRange(ProcessedObjects);
+					}
 					State.RegisterResult(ObjectsToRegister);
 				}));
 			}

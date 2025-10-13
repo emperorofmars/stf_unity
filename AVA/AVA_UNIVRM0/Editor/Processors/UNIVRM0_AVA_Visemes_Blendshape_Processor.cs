@@ -58,11 +58,11 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 		{
 			void TryApplyViseme(string Viseme, BlendShapePreset Preset)
 			{
-				if (visemesBlendshape.Mapppings[Array.FindIndex(AVA_Visemes_Blendshape._Visemes15, e => e == Viseme)] is string vis && !string.IsNullOrWhiteSpace(vis))
+				if (visemesBlendshape.Mappings[Array.FindIndex(AVA_Visemes_Blendshape._Visemes15, e => e == Viseme)] is string vis && !string.IsNullOrWhiteSpace(vis))
 				{
 					var clip = BlendshapeClipUtil.CreateSimple(Context, Preset, smr, vis);
 					blendshapeProxy.BlendShapeAvatar.Clips.Add(clip);
-					Context.AddUnityObject(visemesBlendshape, clip);
+					Context.RegisterProcessedResult(visemesBlendshape, clip, true);
 				}
 			}
 			TryApplyViseme("aa", BlendShapePreset.A);

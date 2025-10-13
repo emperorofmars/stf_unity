@@ -7,12 +7,13 @@ using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.modules;
 using VRC.SDK3.Dynamics.PhysBone.Components;
 using UnityEngine;
+using com.squirrelbite.stf_unity.modules.stfexp;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
-	public class VRC_AVA_Collider_Capsule_Processor : ISTF_Processor
+	public class VRC_STFEXP_Collider_Plane_Processor : ISTF_Processor
 	{
-		public System.Type TargetType => typeof(AVA_Collider_Capsule);
+		public System.Type TargetType => typeof(STFEXP_Collider_Plane);
 
 		public const uint _Order = 100;
 		public uint Order => _Order;
@@ -21,11 +22,9 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 
 		public (List<Object> ProcessedObjects, List<Object> ObjectsToRegister) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
-			var stfCollider = STFResource as AVA_Collider_Capsule;
+			var stfCollider = STFResource as STFEXP_Collider_Plane;
 			var collider = stfCollider.gameObject.AddComponent<VRCPhysBoneCollider>();
-			collider.shapeType = VRC.Dynamics.VRCPhysBoneColliderBase.ShapeType.Capsule;
-			collider.radius = stfCollider.radius;
-			collider.height = stfCollider.height;
+			collider.shapeType = VRC.Dynamics.VRCPhysBoneColliderBase.ShapeType.Plane;
 			collider.position = stfCollider.offset_position;
 			collider.rotation = stfCollider.offset_rotation;
 
@@ -36,11 +35,11 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 	}
 
 	[InitializeOnLoad]
-	class Register_VRC_AVA_Collider_Capsule_Processor
+	class Register_VRC_STFEXP_Collider_Plane_Processor
 	{
-		static Register_VRC_AVA_Collider_Capsule_Processor()
+		static Register_VRC_STFEXP_Collider_Plane_Processor()
 		{
-			STF_Processor_Registry.RegisterProcessor(DetectorVRC.STF_VRC_AVATAR_CONTEXT, new VRC_AVA_Collider_Capsule_Processor());
+			STF_Processor_Registry.RegisterProcessor(DetectorVRC.STF_VRC_AVATAR_CONTEXT, new VRC_STFEXP_Collider_Plane_Processor());
 		}
 	}
 }

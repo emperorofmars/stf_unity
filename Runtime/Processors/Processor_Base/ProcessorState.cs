@@ -14,7 +14,8 @@ namespace com.squirrelbite.stf_unity.processors
 		public readonly GameObject Root;
 
 		public readonly List<ISTF_Resource> ResourcesToProcess = new();
-		public readonly List<string> OverriddenResources = new();
+		//public readonly List<string> OverriddenResources = new();
+		public readonly Dictionary<string, List<ISTF_Resource>> OverriddenResourcesByID = new(); // List because a component can be instantiated multiple times
 		public readonly Dictionary<System.Type, List<ISTF_Resource>> ResourcesByType = new();
 
 		public readonly Dictionary<uint, List<Task>> ProcessOrderMap = new();
@@ -58,8 +59,8 @@ namespace com.squirrelbite.stf_unity.processors
 				}
 
 				// Register all stf resources
-						if (objectToRegister != null && !tmpResources.Contains(objectToRegister) && GetProcessor(objectToRegister) is var processor && processor != null)
-							tmpResources.Add(objectToRegister);
+				if (objectToRegister != null && !tmpResources.Contains(objectToRegister) && GetProcessor(objectToRegister) is var processor && processor != null)
+					tmpResources.Add(objectToRegister);
 
 				// Register all resources that have been instantiated from an armature
 				if (objectToRegister is STF_Prefab go)
@@ -81,15 +82,19 @@ namespace com.squirrelbite.stf_unity.processors
 				{
 					if (resource is STF_DataComponentResource dataComponent)
 						foreach (var o in dataComponent.Overrides)
-							if (!OverriddenResources.Contains(o)) OverriddenResources.Add(o);
+							if (!OverriddenResourcesByID.ContainsKey(o))
+								OverriddenResourcesByID.Add(o, new List<ISTF_Resource>());
 					if (resource is STF_NodeComponentResource nodeComponent)
 						foreach (var o in nodeComponent.Overrides)
-							if (!OverriddenResources.Contains(o)) OverriddenResources.Add(o);
+							if (!OverriddenResourcesByID.ContainsKey(o))
+								OverriddenResourcesByID.Add(o, new List<ISTF_Resource>());
 				}
 
 			foreach (var resource in tmpResources)
-				if (!OverriddenResources.Contains(resource.STF_Id) && !armatureResources.Contains(resource))
+				if (!OverriddenResourcesByID.ContainsKey(resource.STF_Id) && !armatureResources.Contains(resource))
 					ResourcesToProcess.Add(resource);
+				else if(OverriddenResourcesByID.ContainsKey(resource.STF_Id))
+					OverriddenResourcesByID[resource.STF_Id].Add(resource);
 		}
 
 		public ISTF_Processor GetProcessor(ISTF_Resource Resource)
@@ -110,19 +115,15 @@ namespace com.squirrelbite.stf_unity.processors
 
 		public bool IsOverridden(string STF_Id)
 		{
-			return OverriddenResources.Contains(STF_Id);
+			return OverriddenResourcesByID.ContainsKey(STF_Id);
 		}
 
 		public void RegisterResult(List<Object> ApplicationObjects)
 		{
 			if (ApplicationObjects != null && ApplicationObjects.Count > 0)
-			{
 				foreach (var ApplicationObject in ApplicationObjects)
-				{
 					if (ApplicationObject is Object @object)
 						State.ObjectToRegister.Add(@object);
-				}
-			}
 		}
 
 		public object GetImportedResource(string STF_Id)

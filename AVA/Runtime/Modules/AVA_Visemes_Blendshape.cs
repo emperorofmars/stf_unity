@@ -17,7 +17,7 @@ namespace com.squirrelbite.stf_unity.ava
 
 		public static readonly string[] _Visemes15 = { "sil", "aa", "ch", "dd", "e", "ff", "ih", "kk", "nn", "oh", "ou", "pp", "rr", "ss", "th" };
 
-		public List<string> Mapppings = new();
+		public List<string> Mappings = new();
 	}
 
 	public class AVA_Visemes_Blendshape_Module : ISTF_Module
@@ -43,9 +43,9 @@ namespace com.squirrelbite.stf_unity.ava
 
 			foreach (var viseme in AVA_Visemes_Blendshape._Visemes15)
 				if (JsonResource.ContainsKey(viseme))
-					ret.Mapppings.Add(JsonResource.Value<string>(viseme));
+					ret.Mappings.Add(JsonResource.Value<string>(viseme));
 				else
-					ret.Mapppings.Add(null);
+					ret.Mappings.Add(null);
 
 			return (ret, new() { ret });
 		}

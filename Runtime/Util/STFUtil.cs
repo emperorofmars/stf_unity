@@ -24,9 +24,9 @@ namespace com.squirrelbite.stf_unity
 
 		public static GameObject ResolveBinding(ImportContext Context, STF_MonoBehaviour Node, List<string> STFBinding)
 		{
-			if (STFBinding.Count == 1 && Node.STF_Owner is STF_Bone)
+			if (STFBinding.Count == 1 && Node.STF_Owner is STF_Bone stfBone)
 			{
-				var ownerGo = (Node.STF_Owner as STF_Bone).STF_Owner;
+				var ownerGo = stfBone.STF_Owner;
 				var ret = ownerGo.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == STFBinding[0] && b.STF_Owner == ownerGo);
 				return ret != null ? ret.gameObject : null;
 			}
@@ -35,7 +35,7 @@ namespace com.squirrelbite.stf_unity
 				var ret = Context.ImportResource(STFBinding[0], "node") as STF_MonoBehaviour;
 				return ret != null ? ret.gameObject : null;
 			}
-			else if (STFBinding.Count == 3)
+			else if (STFBinding.Count == 3 && STFBinding[1] == "instance")
 			{
 				var ownerTransform = Context.ImportResource(STFBinding[0], "node") as STF_MonoBehaviour;
 				if(ownerTransform)
@@ -66,7 +66,7 @@ namespace com.squirrelbite.stf_unity
 				var ret = Context.Root.GetComponentsInChildren<STF_Node>().FirstOrDefault(n => n.STF_Id == STFBinding[0]);
 				return ret != null ? ret.gameObject : null;
 			}
-			else if (STFBinding.Count == 3)
+			else if (STFBinding.Count == 3 && STFBinding[1] == "instance")
 			{
 				var ownerTransform = Context.Root.GetComponentsInChildren<STF_Node>().FirstOrDefault(n => n.STF_Id == STFBinding[0]);
 				if(ownerTransform)
@@ -82,6 +82,32 @@ namespace com.squirrelbite.stf_unity
 			{
 				return null;
 			}
+		}
+
+		public static STF_MonoBehaviour ResolvePath(STF_MonoBehaviour Source, List<string> TargetPath)
+		{
+			if(TargetPath == null || TargetPath.Count == 0) return null;
+			
+			var ret = Source.STF_Owner.GetComponentsInChildren<STF_MonoBehaviour>().FirstOrDefault(b => b.STF_Id == TargetPath[0] && b.STF_Owner == Source.STF_Owner);
+			if(ret == null) return null;
+
+			if(TargetPath.Count == 1)
+			{
+				return ret;
+			}
+			else if(TargetPath.Count > 2)
+			{
+				if(TargetPath[1] == "instance" && ret is STF_Node stfNode && stfNode.Instance)
+				{
+					return ResolvePath(stfNode.Instance, TargetPath.GetRange(2, TargetPath.Count - 2));
+				}
+				else if(TargetPath[1] == "components")
+				{
+					return ret.GetComponents<STF_NodeComponentResource>().FirstOrDefault(c => c.STF_Id == TargetPath[2]);
+				}
+			}
+
+			return null;
 		}
 
 		public static string GetResourceID(JObject JsonResource, JToken ResourceIDIndex)

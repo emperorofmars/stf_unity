@@ -53,8 +53,8 @@ namespace com.squirrelbite.stf_unity.ava
 					if (jsonEmote is JObject jsonObjectEmote && jsonObjectEmote.ContainsKey("animation"))
 					{
 						var emote = new AVA_Emotes.Emote() { meaning = meaning, animation = STFUtil.ImportResource(Context, JsonResource, jsonObjectEmote["animation"], "data") as STF_Animation };
-						if (jsonObjectEmote.ContainsKey("fallback") && jsonObjectEmote["fallback"].Type == JTokenType.String)
-							emote.fallback = Context.ImportResource(jsonObjectEmote.Value<string>("fallback"), "data") as VRM_BlendshapePose;
+						if (jsonObjectEmote.ContainsKey("fallback") && STFUtil.GetResourceID(JsonResource, jsonObjectEmote["fallback"]) is string fallbackID && fallbackID != null)
+							emote.fallback = Context.ImportResource(fallbackID, "data") as VRM_BlendshapePose;
 						ret.emotes.Add(emote);
 					}
 				}

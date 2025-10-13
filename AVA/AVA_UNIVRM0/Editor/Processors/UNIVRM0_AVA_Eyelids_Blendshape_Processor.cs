@@ -59,11 +59,11 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 		{
 			void TryApplyShape(string Shape, BlendShapePreset Preset)
 			{
-				if (eyelidsBlendshape.Mapppings[Array.FindIndex(AVA_Eyelids_Blendshape._EyelidShapes, e => e == Shape)] is string vis && !string.IsNullOrWhiteSpace(vis))
+				if (eyelidsBlendshape.Mappings[Array.FindIndex(AVA_Eyelids_Blendshape._EyelidShapes, e => e == Shape)] is string vis && !string.IsNullOrWhiteSpace(vis))
 				{
 					var clip = BlendshapeClipUtil.CreateSimple(Context, Preset, smr, vis);
 					blendshapeProxy.BlendShapeAvatar.Clips.Add(clip);
-					Context.AddUnityObject(eyelidsBlendshape, clip);
+					Context.RegisterProcessedResult(eyelidsBlendshape, clip, true);
 				}
 			}
 			TryApplyShape("closed", BlendShapePreset.Blink);

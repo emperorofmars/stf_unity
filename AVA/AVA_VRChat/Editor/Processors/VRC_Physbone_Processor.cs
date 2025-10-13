@@ -29,18 +29,19 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			
 			JsonUtility.FromJsonOverwrite(stfPhysbone.Json.ToString(), physbone);
 
-			if(stfPhysbone.Ignores.Count > 0)
+			if(stfPhysbone.Ignores.Count > 0) foreach(var ignorePath in stfPhysbone.Ignores)
 			{
-				foreach (var node in Context.Root.GetComponentsInChildren<STF_NodeResource>().Where(n => stfPhysbone.Ignores.Contains(n.STF_Id)))
+				if(STFUtil.ResolvePath(stfPhysbone.STF_Owner, ignorePath.Target) is var ignore && ignore != null)
 				{
-					physbone.ignoreTransforms.Add(node.transform);
+					physbone.ignoreTransforms.Add(ignore.transform);
 				}
 			}
-			if(stfPhysbone.Colliders.Count > 0)
+
+			if(stfPhysbone.Colliders.Count > 0) foreach(var colliderPath in stfPhysbone.Colliders)
 			{
-				foreach (var collider in Context.Root.GetComponentsInChildren<STF_MonoBehaviour>().Where(c => stfPhysbone.Colliders.Contains(c.STF_Id)))
+				if(STFUtil.ResolvePath(stfPhysbone.STF_Owner, colliderPath.Target) is var collider && collider != null)
 				{
-					foreach (VRCPhysBoneColliderBase vrcCollider in collider.ProcessedObjects.Where(o => o is VRCPhysBoneColliderBase))
+					foreach (VRCPhysBoneColliderBase vrcCollider in collider.ProcessedObjects.Where(o => o is VRCPhysBoneColliderBase).Cast<VRCPhysBoneColliderBase>())
 					{
 						physbone.colliders.Add(vrcCollider);
 					}

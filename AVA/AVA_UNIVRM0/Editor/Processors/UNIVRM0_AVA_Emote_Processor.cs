@@ -33,15 +33,10 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				{
 					var values = new List<(SkinnedMeshRenderer, List<(string, float)>)>();
 
-					Debug.Log(emote.fallback);
-					Debug.Log(emote.fallback.targets);
-
 					foreach (var emoteTarget in emote.fallback.targets)
 					{
 						var blendshapeList = new List<(string, float)>();
 						values.Add((emoteTarget.mesh_instance.GetComponent<SkinnedMeshRenderer>(), blendshapeList));
-
-						Debug.Log(emoteTarget.mesh_instance.GetComponent<SkinnedMeshRenderer>());
 
 						foreach (var emoteBlendshape in emoteTarget.values)
 							blendshapeList.Add((emoteBlendshape.Name, emoteBlendshape.Value * 100));
@@ -60,7 +55,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 					};
 					var clip = BlendshapeClipUtil.Create(Context, preset, preset != BlendShapePreset.Unknown ? preset.ToString() : emote.meaning, values);
 					blendshapeProxy.BlendShapeAvatar.Clips.Add(clip);
-					Context.AddUnityObject(avaEmotes, clip);
+					Context.RegisterProcessedResult(avaEmotes, clip, true);
 				}
 			}
 

@@ -7,12 +7,13 @@ using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.modules;
 using UnityEngine;
 using VRM;
+using com.squirrelbite.stf_unity.modules.stfexp;
 
 namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 {
-	public class UNIVRM0_AVA_Collider_Sphere_Processor : ISTF_Processor
+	public class UNIVRM0_STFEXP_Collider_Sphere_Processor : ISTF_Processor
 	{
-		public System.Type TargetType => typeof(AVA_Collider_Sphere);
+		public System.Type TargetType => typeof(STFEXP_Collider_Sphere);
 
 		public const uint _Order = 100;
 		public uint Order => _Order;
@@ -21,7 +22,7 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 
 		public (List<Object> ProcessedObjects, List<Object> ObjectsToRegister) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
-			var stfCollider = STFResource as AVA_Collider_Sphere;
+			var stfCollider = STFResource as STFEXP_Collider_Sphere;
 
 			var colliderGroup = stfCollider.gameObject.AddComponent<VRMSpringBoneColliderGroup>();
 			var collider = new VRMSpringBoneColliderGroup.SphereCollider();
@@ -38,11 +39,11 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 	}
 
 	[InitializeOnLoad]
-	public class Register_UNIVRM0_AVA_Collider_Sphere_Processor
+	public class Register_UNIVRM0_STFEXP_Collider_Sphere_Processor
 	{
-		static Register_UNIVRM0_AVA_Collider_Sphere_Processor()
+		static Register_UNIVRM0_STFEXP_Collider_Sphere_Processor()
 		{
-			STF_Processor_Registry.RegisterProcessor(DetectorUNIVRM0.STF_UNIVRM0_AVATAR_CONTEXT, new UNIVRM0_AVA_Collider_Sphere_Processor());
+			STF_Processor_Registry.RegisterProcessor(DetectorUNIVRM0.STF_UNIVRM0_AVATAR_CONTEXT, new UNIVRM0_STFEXP_Collider_Sphere_Processor());
 		}
 	}
 }

@@ -26,7 +26,7 @@ namespace com.squirrelbite.stf_unity.ava
 
 		public int Priority => 1;
 
-		public List<string> LikeTypes => new(){"visemes"};
+		public List<string> LikeTypes => new(){"secondary_motion"};
 
 		public List<Type> UnderstoodApplicationTypes => new(){typeof(AVA_SecondaryMotion)};
 
