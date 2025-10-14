@@ -61,7 +61,7 @@ namespace com.squirrelbite.stf_unity.ava.basisvr.processors
 			avatar.FaceBlinkMesh = smr;
 			var blink_visemes = new int[1];
 
-			if (eyelidsBlendshape.Mapppings[Array.FindIndex(AVA_Eyelids_Blendshape._EyelidShapes, e => e == "closed")] is var mapping && GetBlendshapeIndex(smr.sharedMesh, mapping) >= 0)
+			if (eyelidsBlendshape.Mappings[Array.FindIndex(AVA_Eyelids_Blendshape._EyelidShapes, e => e == "closed")] is var mapping && GetBlendshapeIndex(smr.sharedMesh, mapping) >= 0)
 				blink_visemes[0] = GetBlendshapeIndex(smr.sharedMesh, mapping);
 
 			avatar.BlinkViseme = blink_visemes;
