@@ -21,7 +21,10 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 		{
 
 			var stfLight = STFResource as STFEXP_Light;
-			var light = stfLight.gameObject.AddComponent<Light>();
+			var lightGo = new GameObject(string.IsNullOrWhiteSpace(stfLight.STF_Name) ? stfLight.light_type : stfLight.STF_Name);
+			lightGo.transform.SetParent(stfLight.transform, false);
+			lightGo.transform.Rotate(Vector3.right, 90);
+			var light = lightGo.gameObject.AddComponent<Light>();
 
 			switch(stfLight.light_type)
 			{
@@ -74,6 +77,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			return (new() { light }, null);
 		}
 	}
+
 #if UNITY_EDITOR
 	[InitializeOnLoad]
 	public class Register_STFEXP_Light_Processor
