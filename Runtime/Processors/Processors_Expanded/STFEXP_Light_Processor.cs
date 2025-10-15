@@ -11,10 +11,8 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 	public class STFEXP_Light_Processor : ISTF_Processor
 	{
 		public System.Type TargetType => typeof(STFEXP_Light);
-
 		public const uint _Order = 100;
 		public uint Order => _Order;
-
 		public int Priority => 1;
 
 		public (List<Object> ProcessedObjects, List<Object> ObjectsToRegister) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
@@ -24,7 +22,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			var lightGo = new GameObject(string.IsNullOrWhiteSpace(stfLight.STF_Name) ? stfLight.light_type : stfLight.STF_Name);
 			lightGo.transform.SetParent(stfLight.transform, false);
 			lightGo.transform.Rotate(Vector3.right, 90);
-			var light = lightGo.gameObject.AddComponent<Light>();
+			var light = lightGo.AddComponent<Light>();
 
 			switch(stfLight.light_type)
 			{
@@ -68,6 +66,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 					light.type = LightType.Point;
 					break;
 			};
+			light.intensity = stfLight.brightness;
 			light.color = stfLight.color;
 			light.useColorTemperature = stfLight.use_temperature;
 			light.colorTemperature = stfLight.temperature;
