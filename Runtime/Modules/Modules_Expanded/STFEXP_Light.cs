@@ -15,16 +15,13 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 		public override string STF_Type => _STF_Type;
 
 		public string light_type = "point";
-		public string area_shape = "disc";
-		public float brightness;
+		public float brightness = 1;
 		public bool use_temperature = false;
-		public float temperature;
-		public Color color;
-		public float radius;
-		public float angle;
-		public float size;
-		public float width;
-		public float height;
+		public float temperature = 6570;
+		public Color color = Color.white;
+		public float range = 10;
+		public float spot_angle = 30 * Mathf.Deg2Rad;
+		public bool shadow = false;
 	}
 
 	public class STFEXP_Light_Module : ISTF_Module
@@ -44,7 +41,6 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STFEXP Light");
 
 			if(JsonResource.ContainsKey("light_type")) ret.light_type = JsonResource.Value<string>("light_type");
-			if(JsonResource.ContainsKey("area_shape")) ret.area_shape = JsonResource.Value<string>("area_shape");
 			if(JsonResource.ContainsKey("brightness")) ret.brightness = JsonResource.Value<float>("brightness");
 			if(JsonResource.ContainsKey("temperature"))
 			{
@@ -52,11 +48,10 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 				ret.temperature = JsonResource.Value<float>("temperature");
 			}
 			if(JsonResource.ContainsKey("color")) ret.color = new Color((float)JsonResource["color"][0], (float)JsonResource["color"][1], (float)JsonResource["color"][2]);
-			if(JsonResource.ContainsKey("radius")) ret.radius = JsonResource.Value<float>("radius");
-			if(JsonResource.ContainsKey("angle")) ret.angle = JsonResource.Value<float>("angle");
-			if(JsonResource.ContainsKey("size")) ret.size = JsonResource.Value<float>("size");
-			if(JsonResource.ContainsKey("width")) ret.width = JsonResource.Value<float>("width");
-			if(JsonResource.ContainsKey("height")) ret.height = JsonResource.Value<float>("height");
+			if(JsonResource.ContainsKey("range")) ret.range = JsonResource.Value<float>("range");
+			if(JsonResource.ContainsKey("spot_angle")) ret.spot_angle = JsonResource.Value<float>("spot_angle");
+
+			if(JsonResource.ContainsKey("shadow")) ret.shadow = JsonResource.Value<bool>("shadow");
 
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
 				ret.enabled = false;

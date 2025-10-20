@@ -28,39 +28,15 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			{
 				case "point":
 					light.type = LightType.Point;
-					light.range = stfLight.radius;
+					light.range = stfLight.range;
 					break;
 				case "directional":
 					light.type = LightType.Directional;
 					break;
 				case "spot":
 					light.type = LightType.Spot;
-					light.range = stfLight.radius;
-					break;
-				case "area":
-					switch(stfLight.area_shape)
-					{
-						case "disc":
-							light.type = LightType.Disc;
-							light.areaSize = new Vector2(stfLight.size, stfLight.size);
-							break;
-						case "square":
-							light.type = LightType.Rectangle;
-							light.areaSize = new Vector2(stfLight.size, stfLight.size);
-							break;
-						case "rectangle":
-							light.type = LightType.Rectangle;
-							light.areaSize = new Vector2(stfLight.width, stfLight.height);
-							break;
-						case "ellipsis":
-							light.type = LightType.Disc;
-							light.areaSize = new Vector2(stfLight.width, stfLight.height);
-							break;
-						default:
-							light.type = LightType.Disc;
-							light.areaSize = new Vector2(stfLight.size, stfLight.size);
-							break;
-					};
+					light.range = stfLight.range;
+					light.spotAngle = stfLight.spot_angle * Mathf.Rad2Deg;
 					break;
 				default:
 					light.type = LightType.Point;
@@ -70,6 +46,8 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			light.color = stfLight.color;
 			light.useColorTemperature = stfLight.use_temperature;
 			light.colorTemperature = stfLight.temperature;
+
+			light.shadows = stfLight.shadow ? LightShadows.Soft : LightShadows.None;
 
 			light.enabled = stfLight.enabled;
 
