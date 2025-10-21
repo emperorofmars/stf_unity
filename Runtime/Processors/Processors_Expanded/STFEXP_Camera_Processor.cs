@@ -16,8 +16,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 		}
 		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource STFResource, List<string> STFPath)
 		{
-			var convert = new System.Func<List<float>, List<float>>(Values =>
-			{
+			var convert = new System.Func<List<float>, List<float>>(Values => {
 				Values[0] *= Mathf.Rad2Deg;
 				return Values;
 			});

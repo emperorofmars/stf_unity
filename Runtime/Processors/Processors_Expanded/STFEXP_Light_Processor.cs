@@ -5,6 +5,39 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors.stfexp
 {
+	public class STF_Light_Converter : ISTF_PropertyConverter
+	{
+		private Light Light;
+		public STF_Light_Converter(Light Light)
+		{
+			this.Light = Light;
+		}
+		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource STFResource, List<string> STFPath)
+		{
+			var convert = new System.Func<List<float>, List<float>>(Values => {
+				Values[0] *= Mathf.Rad2Deg;
+				return Values;
+			});
+
+			if(STFPath.Count == 1)
+			{
+				switch(STFPath[0])
+				{
+					case "temperature":
+						return (Light.name, typeof(Light), new() { "m_ColorTemperature" }, null);
+					case "color":
+						return (Light.name, typeof(Light), new() { "m_Color.r", "m_Color.g", "m_Color.b" }, null);
+					case "brightness":
+						return (Light.name, typeof(Light), new() { "m_Intensity" }, null);
+					case "range":
+						return (Light.name, typeof(Light), new() { "m_Range" }, null);
+					case "spot_angle":
+						return (Light.name, typeof(Light), new() { "m_SpotAngle" }, convert);
+				}
+			}
+			return ("", null, null, null);
+		}
+	}
 	public class STFEXP_Light_Processor : ISTF_Processor
 	{
 		public System.Type TargetType => typeof(STFEXP_Light);
@@ -48,6 +81,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 
 			light.enabled = stfLight.enabled;
 
+			stfLight.PropertyConverter = new STF_Light_Converter(light);
 			return (new() { light }, null);
 		}
 	}
