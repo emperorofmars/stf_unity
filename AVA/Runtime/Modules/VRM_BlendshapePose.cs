@@ -3,7 +3,6 @@ using Newtonsoft.Json.Linq;
 using com.squirrelbite.stf_unity.modules;
 using UnityEngine;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -27,17 +26,11 @@ namespace com.squirrelbite.stf_unity.ava
 	public class VRM_BlendshapePose_Module : ISTF_Module
 	{
 		public string STF_Type => VRM_BlendshapePose._STF_Type;
-
 		public string STF_Kind => "data";
-
 		public int Priority => 1;
-
 		public List<string> LikeTypes => new(){"animation", "pose"};
-
 		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(VRM_BlendshapePose)};
-
 		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return new List<ISTF_Resource>(((STF_Node)ApplicationObject).Components); }
-
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)

@@ -1,14 +1,12 @@
-
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 namespace com.squirrelbite.stf_unity
 {
-	[Serializable]
+	[System.Serializable]
 	public class AssetInfo
 	{
-		[Serializable]
+		[System.Serializable]
 		public class AssetInfoProperty {public string Name; public string Value;}
 
 		public string AssetName;
@@ -54,7 +52,6 @@ namespace com.squirrelbite.stf_unity
 			foreach(var customProperty in CustomProperties)
 				if(!string.IsNullOrWhiteSpace(customProperty.Name))
 					ret.Add(customProperty.Name, customProperty.Value);
-
 
 			return ret;
 		}

@@ -1,17 +1,11 @@
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.modules.stfexp;
 using com.squirrelbite.stf_unity.modules;
 using System.Linq;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 namespace com.squirrelbite.stf_unity.processors.stfexp
 {
-	
 	public class Humanoid_Armature_Mappings
 	{
 		public static readonly Dictionary<string, string> STF_To_Unity_Mappings = new() {
@@ -95,7 +89,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 
 	public class STFEXP_Humanoid_Armature_Processor : ISTF_Processor
 	{
-		public Type TargetType => typeof(STFEXP_Humanoid_Armature);
+		public System.Type TargetType => typeof(STFEXP_Humanoid_Armature);
 
 		public uint Order => 10;
 
@@ -182,15 +176,4 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			return (new() { avatar }, new() { avatar });
 		}
 	}
-
-#if UNITY_EDITOR
-	[InitializeOnLoad]
-	public class Register_STFEXP_Humanoid_Armature_Processor
-	{
-		static Register_STFEXP_Humanoid_Armature_Processor()
-		{
-			STF_Processor_Registry.RegisterProcessor("default", new STFEXP_Humanoid_Armature_Processor());
-		}
-	}
-#endif
 }

@@ -1,6 +1,4 @@
-
 using System.Collections.Generic;
-using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +9,7 @@ using UnityEngine;
 namespace com.squirrelbite.stf_unity
 {
 	// Read and write binary STF files
-	[Serializable]
+	[System.Serializable]
 	public class STF_File
 	{
 		public const string _MAGIC = "STF0";
@@ -43,7 +41,7 @@ namespace com.squirrelbite.stf_unity
 			// Magic Number
 			var magic = Encoding.UTF8.GetString(bufferReader.UnreadSpan[..4]); bufferReader.Advance(4);
 			if(magic != _MAGIC)
-				throw new Exception("Not an STF file, invalid magic number.");
+				throw new System.Exception("Not an STF file, invalid magic number.");
 
 			// Version
 			VersionMajor = BinaryPrimitives.ReadUInt32LittleEndian(bufferReader.UnreadSpan);
@@ -83,12 +81,11 @@ namespace com.squirrelbite.stf_unity
 			{
 				Reader.TryRead(out ret[i]);
 			}
-
 			return ret;
 		}
 
 
-		public ReadOnlyMemory<byte> CreateSTFBinary()
+		public System.ReadOnlyMemory<byte> CreateSTFBinary()
 		{
 			var bufferWriter = new ArrayBufferWriter<byte>();
 

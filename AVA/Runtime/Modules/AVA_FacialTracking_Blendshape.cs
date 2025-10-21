@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -23,7 +22,7 @@ namespace com.squirrelbite.stf_unity.ava
 		public string STF_Kind => "component";
 		public int Priority => 1;
 		public List<string> LikeTypes => new(){"facial_tracking.blendshapes"};
-		public List<Type> UnderstoodApplicationTypes => new(){typeof(AVA_FacialTracking_Blendshape)};
+		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(AVA_FacialTracking_Blendshape)};
 		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
@@ -39,7 +38,7 @@ namespace com.squirrelbite.stf_unity.ava
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
 		{
-			throw new NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 	}
 

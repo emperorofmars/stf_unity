@@ -1,10 +1,8 @@
-
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules.stf_material
 {
-
 	public static class STF_Material_Converter_Registry
 	{
 		public static readonly List<IMaterialConverter> DefaultConverters = new();

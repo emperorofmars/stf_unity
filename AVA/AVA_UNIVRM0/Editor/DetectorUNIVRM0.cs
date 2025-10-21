@@ -7,6 +7,8 @@ using UnityEditor.Compilation;
 using com.squirrelbite.stf_unity.processors.stfexp;
 using com.squirrelbite.stf_unity.processors.ava.util;
 using com.squirrelbite.stf_unity.processors;
+using System.Collections.Generic;
+using com.squirrelbite.stf_unity.modules.stfexp;
 
 namespace com.squirrelbite.stf_unity.ava.univrm0
 {
@@ -28,6 +30,8 @@ namespace com.squirrelbite.stf_unity.ava.univrm0
 		const string STF_AVA_UNIVRM0_FOUND = "STF_AVA_UNIVRM0_FOUND";
 		public const string STF_UNIVRM0_AVATAR_CONTEXT = "univrm0";
 
+		public static readonly List<System.Type> Ignores = new() { typeof(STFEXP_Collider_Sphere), typeof(STFEXP_Collider_Capsule), typeof(STFEXP_Collider_Plane), };
+
 		static DetectorUNIVRM0()
 		{
 			if(Directory.GetFiles(Path.GetDirectoryName(Application.dataPath), "IVRMComponent.cs", SearchOption.AllDirectories).Length > 0)
@@ -41,12 +45,10 @@ namespace com.squirrelbite.stf_unity.ava.univrm0
 				else
 				{
 					STF_Processor_Registry.RegisterContext(new UNIVRM0ContextFactory());
-
+					
 					foreach ((var _, var processor) in STF_Processor_Registry.GetProcessors("default"))
-						STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, processor);
-					STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, new STFEXP_Humanoid_Armature_Processor());
-					STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, new STFEXP_Constraint_Twist_Processor());
-					STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, new STFEXP_LightprobeAnchor_Processor());
+						if(!Ignores.Contains(processor.TargetType))
+							STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, processor);
 				}
 			}
 			else

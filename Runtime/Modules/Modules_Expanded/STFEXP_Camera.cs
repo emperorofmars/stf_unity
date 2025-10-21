@@ -1,11 +1,6 @@
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace com.squirrelbite.stf_unity.modules.stfexp
 {
@@ -25,7 +20,7 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 		public string STF_Kind => "component";
 		public int Priority => 1;
 		public List<string> LikeTypes => new(){"light"};
-		public List<Type> UnderstoodApplicationTypes => new(){typeof(STFEXP_Camera)};
+		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(STFEXP_Camera)};
 		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
@@ -47,18 +42,7 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
 		{
-			throw new NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 	}
-
-#if UNITY_EDITOR
-	[InitializeOnLoad]
-	class Register_STFEXP_Camera_Module
-	{
-		static Register_STFEXP_Camera_Module()
-		{
-			STF_Module_Registry.RegisterModule(new STFEXP_Camera_Module());
-		}
-	}
-#endif
 }

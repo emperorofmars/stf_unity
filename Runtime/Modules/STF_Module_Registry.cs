@@ -1,5 +1,5 @@
-
 using System.Collections.Generic;
+using com.squirrelbite.stf_unity.modules.stfexp;
 
 namespace com.squirrelbite.stf_unity.modules
 {
@@ -17,10 +17,19 @@ namespace com.squirrelbite.stf_unity.modules
 			new STF_Image_Module(),
 			new STF_Texture_Module(),
 			new STF_Animation_Module(),
+			new STFEXP_Humanoid_Armature_Module(),
+			new STFEXP_Constraint_Twist_Module(),
+			new STFEXP_Camera_Module(),
+			new STFEXP_Light_Module(),
+			new STFEXP_LightprobeAnchor_Module(),
+			new STFEXP_Collider_Sphere_Module(),
+			new STFEXP_Collider_Capsule_Module(),
+			new STFEXP_Collider_Plane_Module(),
 		};
 
 		public static readonly HashSet<string> DefaultIgnores = new() {
 			"stfexp.mesh.seams",
+			"stfexp.mesh.creases",
 			"org.blender",
 		};
 

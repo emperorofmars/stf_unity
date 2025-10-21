@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TexPacker;
 using UnityEngine;
@@ -36,7 +35,7 @@ namespace com.squirrelbite.stf_unity.modules.stf_material.util
 					1 => Channel1,
 					2 => Channel2,
 					3 => Channel3,
-					_ => throw new Exception("Invalid Channel Access!"),
+					_ => throw new System.Exception("Invalid Channel Access!"),
 				};
 			}
 		}
@@ -52,7 +51,7 @@ namespace com.squirrelbite.stf_unity.modules.stf_material.util
 				1 => TextureChannel.ChannelGreen,
 				2 => TextureChannel.ChannelBlue,
 				3 => TextureChannel.ChannelAlpha,
-				_ => throw new Exception("Invalid Channel Access!"),
+				_ => throw new System.Exception("Invalid Channel Access!"),
 			};
 		}
 
@@ -91,7 +90,7 @@ namespace com.squirrelbite.stf_unity.modules.stf_material.util
 					}*/
 					else
 					{
-						throw new Exception("Unsupported PropertyValue Type");
+						throw new System.Exception("Unsupported PropertyValue Type");
 					}
 					packer.Add(input);
 				}

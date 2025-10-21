@@ -27,17 +27,11 @@ namespace com.squirrelbite.stf_unity.ava
 	public class AVA_Emotes_Module : ISTF_Module
 	{
 		public string STF_Type => AVA_Emotes._STF_Type;
-
 		public string STF_Kind => "component";
-
 		public int Priority => 1;
-
 		public List<string> LikeTypes => new(){"emotes"};
-
 		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(AVA_Emotes)};
-
 		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
-
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)

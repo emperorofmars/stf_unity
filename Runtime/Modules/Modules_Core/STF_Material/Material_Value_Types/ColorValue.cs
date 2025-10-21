@@ -1,5 +1,3 @@
-
-
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules.stf_material

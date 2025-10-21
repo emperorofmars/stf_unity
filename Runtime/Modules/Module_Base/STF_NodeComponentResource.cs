@@ -1,7 +1,5 @@
-
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {

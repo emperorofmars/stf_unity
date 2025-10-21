@@ -1,19 +1,14 @@
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 using UnityEngine.Animations;
 using com.squirrelbite.stf_unity.modules;
 using com.squirrelbite.stf_unity.modules.stfexp;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 namespace com.squirrelbite.stf_unity.processors.stfexp
 {
 	public class STFEXP_Constraint_Twist_Processor : ISTF_Processor
 	{
-		public Type TargetType => typeof(STFEXP_Constraint_Twist);
+		public System.Type TargetType => typeof(STFEXP_Constraint_Twist);
 
 		public uint Order => 10;
 
@@ -61,15 +56,4 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			return converted;
 		}
 	}
-
-#if UNITY_EDITOR
-	[InitializeOnLoad]
-	public class Register_STFEXP_Constraint_Twist_Processor
-	{
-		static Register_STFEXP_Constraint_Twist_Processor()
-		{
-			STF_Processor_Registry.RegisterProcessor("default", new STFEXP_Constraint_Twist_Processor());
-		}
-	}
-#endif
 }

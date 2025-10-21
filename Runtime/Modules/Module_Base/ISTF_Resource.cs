@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 
 namespace com.squirrelbite.stf_unity.modules

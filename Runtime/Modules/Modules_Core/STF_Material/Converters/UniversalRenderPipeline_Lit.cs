@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.modules.stf_material.util;
 using UnityEngine;
@@ -9,9 +8,9 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 	{
 		public string ShaderName => "Universal Render Pipeline/Lit";
 
-		public (string RelativePath, Type Type, List<string> PropertyNames, Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
+		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
 		{
-			throw new NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 
 		public (Material ConvertedMaterial, List<UnityEngine.Object> GeneratedObjects) ConvertToUnityMaterial(STF_Material STFMaterial)

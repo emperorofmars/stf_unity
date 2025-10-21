@@ -1,5 +1,3 @@
-
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -18,17 +16,11 @@ namespace com.squirrelbite.stf_unity.modules
 	public class STF_Bone_Module : ISTF_Module
 	{
 		public string STF_Type => STF_Bone.STF_TYPE;
-
 		public string STF_Kind => "node";
-
 		public int Priority => 0;
-
 		public List<string> LikeTypes => new(){"bone", "node"};
-
-		public List<Type> UnderstoodApplicationTypes => new(){typeof(STF_Bone)};
-
+		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(STF_Bone)};
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 1; }
-
 		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return new List<ISTF_Resource>(((STF_Bone)ApplicationObject).Components); }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)

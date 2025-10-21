@@ -1,5 +1,3 @@
-
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using com.squirrelbite.stf_unity.modules;
@@ -10,7 +8,7 @@ namespace com.squirrelbite.stf_unity.processors
 {
 	public class STF_Mesh_Processor : ISTF_Processor
 	{
-		public Type TargetType => typeof(STF_Mesh);
+		public System.Type TargetType => typeof(STF_Mesh);
 		public uint Order => 20;
 		public int Priority => 1;
 
@@ -31,9 +29,9 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				return Width switch
 				{
-					4 => BitConverter.ToSingle(Buffer, IndexBytes + OffsetBytes),
-					8 => (float)BitConverter.ToDouble(Buffer, IndexBytes + OffsetBytes),
-					_ => throw new NotImplementedException()
+					4 => System.BitConverter.ToSingle(Buffer, IndexBytes + OffsetBytes),
+					8 => (float)System.BitConverter.ToDouble(Buffer, IndexBytes + OffsetBytes),
+					_ => throw new System.NotImplementedException()
 				};
 			}
 
@@ -42,10 +40,10 @@ namespace com.squirrelbite.stf_unity.processors
 				return Width switch
 				{
 					1 => Buffer[IndexBytes + OffsetBytes],
-					2 => BitConverter.ToUInt16(Buffer, IndexBytes + OffsetBytes),
-					4 => (int)BitConverter.ToUInt32(Buffer, IndexBytes + OffsetBytes),
-					8 => (int)BitConverter.ToUInt64(Buffer, IndexBytes + OffsetBytes),
-					_ => throw new NotImplementedException()
+					2 => System.BitConverter.ToUInt16(Buffer, IndexBytes + OffsetBytes),
+					4 => (int)System.BitConverter.ToUInt32(Buffer, IndexBytes + OffsetBytes),
+					8 => (int)System.BitConverter.ToUInt64(Buffer, IndexBytes + OffsetBytes),
+					_ => throw new System.NotImplementedException()
 				};
 			}
 
@@ -135,7 +133,7 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				for (int i = 0; i < 4; i++)
 				{
-					if (Math.Abs(split_colors[a][i] - split_colors[b][i]) > 0.0001) return false;
+					if (System.Math.Abs(split_colors[a][i] - split_colors[b][i]) > 0.0001) return false;
 				}
 				return true;
 			}
@@ -284,7 +282,7 @@ namespace com.squirrelbite.stf_unity.processors
 
 					if (boneWeights.Count > 0)
 					{
-						bonesPerVertex[i] = (byte)Math.Min(boneWeights.Count, MAX_BONES_PER_VERTEX);
+						bonesPerVertex[i] = (byte)System.Math.Min(boneWeights.Count, MAX_BONES_PER_VERTEX);
 
 						var sum_weights = .0;
 						for (int weightIndex = 0; weightIndex < boneWeights.Count && weightIndex < MAX_BONES_PER_VERTEX; weightIndex++)
@@ -317,9 +315,9 @@ namespace com.squirrelbite.stf_unity.processors
 					var blendshapeNormals = new Vector3[deduped_split_indices.Count()];
 					var blendshapeTangents = new Vector3[deduped_split_indices.Count()];
 
-					Array.Clear(blendshapePositions, 0, blendshapePositions.Length);
-					Array.Clear(blendshapeNormals, 0, blendshapeNormals.Length);
-					Array.Clear(blendshapeTangents, 0, blendshapeTangents.Length);
+					System.Array.Clear(blendshapePositions, 0, blendshapePositions.Length);
+					System.Array.Clear(blendshapeNormals, 0, blendshapeNormals.Length);
+					System.Array.Clear(blendshapeTangents, 0, blendshapeTangents.Length);
 
 					for (int i = 0; i < (int)stfBlendshape.position_offsets.BufferLength / (STFMesh.float_width * 3); i++)
 					{

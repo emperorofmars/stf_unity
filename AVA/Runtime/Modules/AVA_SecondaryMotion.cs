@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using com.squirrelbite.stf_unity.modules;
-using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -21,17 +19,11 @@ namespace com.squirrelbite.stf_unity.ava
 	public class AVA_SecondaryMotion_Module : ISTF_Module
 	{
 		public string STF_Type => AVA_SecondaryMotion._STF_Type;
-
 		public string STF_Kind => "component";
-
 		public int Priority => 1;
-
 		public List<string> LikeTypes => new(){"secondary_motion"};
-
-		public List<Type> UnderstoodApplicationTypes => new(){typeof(AVA_SecondaryMotion)};
-
+		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(AVA_SecondaryMotion)};
 		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
-
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
@@ -50,7 +42,7 @@ namespace com.squirrelbite.stf_unity.ava
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
 		{
-			throw new NotImplementedException();
+			throw new System.NotImplementedException();
 		}
 	}
 

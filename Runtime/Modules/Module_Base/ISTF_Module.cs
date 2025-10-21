@@ -1,5 +1,3 @@
-
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
@@ -12,7 +10,7 @@ namespace com.squirrelbite.stf_unity.modules
 		string STF_Kind {get;}
 		int Priority {get;}
 		List<string> LikeTypes {get;}
-		List<Type> UnderstoodApplicationTypes {get;}
+		List<System.Type> UnderstoodApplicationTypes {get;}
 		int CanHandleApplicationObject(ISTF_Resource ApplicationObject);
 		(ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject);
 		(JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject);

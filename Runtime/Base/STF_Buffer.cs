@@ -1,9 +1,8 @@
-using System;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
-	[Serializable]
+	[System.Serializable]
 	public class STF_Buffer
 	{
 		public string STF_Id;

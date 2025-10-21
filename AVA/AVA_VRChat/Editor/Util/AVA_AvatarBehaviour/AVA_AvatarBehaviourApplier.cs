@@ -10,7 +10,6 @@ using VRC.SDK3.Avatars.Components;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.util
 {
-
 	public static class AVA_AvatarBehaviourApplier
 	{
 		public static readonly ReadOnlyDictionary<HandGesture, int> HandGestureToParameterIndex = new(new Dictionary<HandGesture, int>()

@@ -1,5 +1,3 @@
-
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -17,17 +15,11 @@ namespace com.squirrelbite.stf_unity.modules
 	public class STF_Armature_Module : ISTF_Module
 	{
 		public string STF_Type => STF_Armature.STF_TYPE;
-
 		public string STF_Kind => "data";
-
 		public int Priority => 0;
-
 		public List<string> LikeTypes => new(){"armature", "prefab"};
-
-		public List<Type> UnderstoodApplicationTypes => new(){typeof(STF_Armature)};
-
+		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(STF_Armature)};
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
-
 		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)

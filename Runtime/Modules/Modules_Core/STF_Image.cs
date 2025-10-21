@@ -1,5 +1,3 @@
-
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -19,17 +17,11 @@ namespace com.squirrelbite.stf_unity.modules
 	public class STF_Image_Module : ISTF_Module
 	{
 		public string STF_Type => STF_Image.STF_TYPE;
-
 		public string STF_Kind => "data";
-
 		public int Priority => 0;
-
 		public List<string> LikeTypes => new(){"image"};
-
-		public List<Type> UnderstoodApplicationTypes => new(){typeof(STF_Image)};
-
+		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(STF_Image)};
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
-
 		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return new List<ISTF_Resource>(((STF_Image)ApplicationObject).Components); }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)

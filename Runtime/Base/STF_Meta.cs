@@ -1,11 +1,9 @@
-
-using System;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
 
 namespace com.squirrelbite.stf_unity
 {
-	[Serializable]
+	[System.Serializable]
 	public class STF_Meta
 	{
 		public const uint _DefinitionVersionMajor = 0;
@@ -15,7 +13,7 @@ namespace com.squirrelbite.stf_unity
 
 		public uint DefinitionVersionMajor = _DefinitionVersionMajor;
 		public uint DefinitionVersionMinor = _DefinitionVersionMinor;
-		public string Timestamp = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture.DateTimeFormat.UniversalSortableDateTimePattern);
+		public string Timestamp = System.DateTime.UtcNow.ToString(CultureInfo.InvariantCulture.DateTimeFormat.UniversalSortableDateTimePattern);
 		public string Generator = _Generator;
 		public string GeneratorVersion = _GeneratorVersion;
 		public string Root;
@@ -44,7 +42,7 @@ namespace com.squirrelbite.stf_unity
 			var ret = new JObject {
 				{"version_major", _DefinitionVersionMajor},
 				{"version_minor", _DefinitionVersionMinor},
-				{"timestamp", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture.DateTimeFormat.UniversalSortableDateTimePattern)},
+				{"timestamp", System.DateTime.UtcNow.ToString(CultureInfo.InvariantCulture.DateTimeFormat.UniversalSortableDateTimePattern)},
 				{"generator", _Generator},
 				{"generator_version", _GeneratorVersion},
 				{"root", Root},

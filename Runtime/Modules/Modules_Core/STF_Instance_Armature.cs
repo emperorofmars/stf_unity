@@ -103,7 +103,7 @@ namespace com.squirrelbite.stf_unity.modules
 			#if UNITY_EDITOR
 				Object.DestroyImmediate(instance);
 			#else
-			Object.Destroy(instance);
+				Object.Destroy(instance);
 			#endif
 
 			return (ret, null);

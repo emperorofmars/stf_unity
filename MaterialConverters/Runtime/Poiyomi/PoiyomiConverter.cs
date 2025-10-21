@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-
 namespace com.squirrelbite.stf_unity.modules.stf_material
 {
 	public class PoiyomiConverter : IMaterialConverter

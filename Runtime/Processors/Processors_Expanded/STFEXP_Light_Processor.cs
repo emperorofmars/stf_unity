@@ -1,6 +1,3 @@
-#if UNITY_EDITOR
-
-using UnityEditor;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.modules;
 using com.squirrelbite.stf_unity.modules.stfexp;
@@ -54,17 +51,4 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			return (new() { light }, null);
 		}
 	}
-
-#if UNITY_EDITOR
-	[InitializeOnLoad]
-	public class Register_STFEXP_Light_Processor
-	{
-		static Register_STFEXP_Light_Processor()
-		{
-			STF_Processor_Registry.RegisterProcessor("default", new STFEXP_Light_Processor());
-		}
-	}
-#endif
 }
-
-#endif

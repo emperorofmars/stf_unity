@@ -11,7 +11,6 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.util
 	[CustomEditor(typeof(AVA_AvatarBehaviourSetup))]
 	public class AVA_AvatarBehaviourInspector : Editor
 	{
-
 		void OnEnable()
 		{
 		}

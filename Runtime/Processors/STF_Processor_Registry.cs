@@ -1,7 +1,7 @@
-
 using System.Collections.Generic;
 using System.Linq;
 using com.squirrelbite.stf_unity.processors;
+using com.squirrelbite.stf_unity.processors.stfexp;
 
 namespace com.squirrelbite.stf_unity
 {
@@ -19,6 +19,13 @@ namespace com.squirrelbite.stf_unity
 					new STF_Material_Processor(),
 					new STF_Image_Processor(),
 					new STF_Animation_Processor(),
+					new STFEXP_Humanoid_Armature_Processor(),
+					new STFEXP_Constraint_Twist_Processor(),
+					new STFEXP_Camera_Processor(),
+					new STFEXP_Light_Processor(),
+					new STFEXP_LightprobeAnchor_Processor(),
+					new STFEXP_Collider_Sphere_Processor(),
+					new STFEXP_Collider_Capsule_Processor(),
 				}
 			},
 		};

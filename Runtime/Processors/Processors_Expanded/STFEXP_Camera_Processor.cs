@@ -1,6 +1,3 @@
-#if UNITY_EDITOR
-
-using UnityEditor;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.modules;
 using com.squirrelbite.stf_unity.modules.stfexp;
@@ -8,6 +5,31 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors.stfexp
 {
+	public class STF_Camera_Converter : ISTF_PropertyConverter
+	{
+		private bool Orthographic;
+		private Camera Camera;
+		public STF_Camera_Converter(Camera Camera, bool Orthographic)
+		{
+			this.Orthographic = Orthographic;
+			this.Camera = Camera;
+		}
+		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource STFResource, List<string> STFPath)
+		{
+			var convert = new System.Func<List<float>, List<float>>(Values =>
+			{
+				Values[0] *= Mathf.Rad2Deg;
+				return Values;
+			});
+
+			if (STFPath.Count == 1 && STFPath[0] == "fov")
+			{
+				return (Camera.name, typeof(Camera), new() { Orthographic ? "orthographic size" : "field of view" }, !Orthographic ? convert : null);
+			}
+			else return ("", null, null, null);
+		}
+	}
+
 	public class STFEXP_Camera_Processor : ISTF_Processor
 	{
 		public System.Type TargetType => typeof(STFEXP_Camera);
@@ -32,7 +54,6 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			camera.orthographic = stfCamera.projection == "orthographic";
 			if(camera.orthographic)
 			{
-				Debug.Log(stfCamera.aspect_ratio);
 				camera.orthographicSize = stfCamera.fov / 2;
 			}
 			else
@@ -42,20 +63,8 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 
 			camera.enabled = stfCamera.enabled;
 
+			stfCamera.PropertyConverter = new STF_Camera_Converter(camera, camera.orthographic);
 			return (new() { camera }, null);
 		}
 	}
-
-#if UNITY_EDITOR
-	[InitializeOnLoad]
-	public class Register_STFEXP_Camera_Processor
-	{
-		static Register_STFEXP_Camera_Processor()
-		{
-			STF_Processor_Registry.RegisterProcessor("default", new STFEXP_Camera_Processor());
-		}
-	}
-#endif
 }
-
-#endif

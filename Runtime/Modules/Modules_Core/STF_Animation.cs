@@ -1,5 +1,3 @@
-
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -52,17 +50,11 @@ namespace com.squirrelbite.stf_unity.modules
 	public class STF_Animation_Module : ISTF_Module
 	{
 		public string STF_Type => STF_Animation.STF_TYPE;
-
 		public string STF_Kind => "data";
-
 		public int Priority => 0;
-
 		public List<string> LikeTypes => new(){"animation"};
-
 		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(STF_Animation)};
-
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
-
 		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
