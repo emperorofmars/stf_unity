@@ -17,6 +17,9 @@ namespace com.squirrelbite.stf_unity.tools
 		{
 			var file = new STF_File(ctx.assetPath);
 
+			foreach(var m in ImportConfig.MaterialMappings)
+				Debug.Log(m.MaterialName + " : " + m.TargetShader);
+
 			var state = new ImportState(file, STF_Module_Registry.Modules, STF_Module_Registry.Ignores, ImportConfig);
 			var rootContext = new ImportContext(state);
 

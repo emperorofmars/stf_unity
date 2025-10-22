@@ -42,6 +42,13 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 					if(!ret.ContainsKey(module.ShaderName))
 						ret.Add(module.ShaderName, module);
 				}
+				foreach(var (shaderName, module) in RegisteredConverters)
+				{
+					if(ret.ContainsKey(shaderName))
+						ret[shaderName] = module;
+					else
+						ret.Add(shaderName, module);
+				}
 				return ret;
 			}
 		}

@@ -34,6 +34,8 @@ namespace com.squirrelbite.stf_unity.processors
 			var STFMaterial = STFResource as STF_Material;
 			var materialMapping = STF_Material_Converter_Registry.DefaultShader;
 
+			// todo handle shader targets & style hints
+
 			if (Context.ImportConfig.MaterialMappings.Find(m => m.ID == STFMaterial.STF_Id) is var mapping && mapping != null && !string.IsNullOrWhiteSpace(mapping.TargetShader) && STF_Material_Converter_Registry.Converters.ContainsKey(mapping.TargetShader))
 			{
 				materialMapping = mapping.TargetShader;

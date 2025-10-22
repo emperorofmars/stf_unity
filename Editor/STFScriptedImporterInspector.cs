@@ -138,7 +138,11 @@ namespace com.squirrelbite.stf_unity.tools
 					var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableConverters.ToArray());
 					EditorGUILayout.EndHorizontal();
 
-					if (newSelectedIndex != selectedIndex) mapping.TargetShader = availableConverters[newSelectedIndex];
+					if (newSelectedIndex != selectedIndex)
+					{
+						mapping.TargetShader = availableConverters[newSelectedIndex];
+						EditorUtility.SetDirty(Importer);
+					}
 
 					EditorGUI.indentLevel--;
 				}
@@ -148,14 +152,24 @@ namespace com.squirrelbite.stf_unity.tools
 
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.PrefixLabel("Import Vertex Colors");
-			Importer.ImportConfig.ImportVertexColors = EditorGUILayout.Toggle(Importer.ImportConfig.ImportVertexColors);
+			var newImportVertexColors = EditorGUILayout.Toggle(Importer.ImportConfig.ImportVertexColors);
+			if(newImportVertexColors != Importer.ImportConfig.ImportVertexColors)
+			{
+				Importer.ImportConfig.ImportVertexColors = newImportVertexColors;
+				EditorUtility.SetDirty(Importer);
+			}
 			EditorGUILayout.EndHorizontal();
 
 			GUILayout.Space(10);
 
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.PrefixLabel("Max. Weights");
-			Importer.ImportConfig.MaxWeights = EditorGUILayout.IntSlider(Importer.ImportConfig.MaxWeights, 1, 32);
+			var newMaxWeights = EditorGUILayout.IntSlider(Importer.ImportConfig.MaxWeights, 1, 32);
+			if(newMaxWeights != Importer.ImportConfig.MaxWeights)
+			{
+				Importer.ImportConfig.MaxWeights = newMaxWeights;
+				EditorUtility.SetDirty(Importer);
+			}
 			EditorGUILayout.EndHorizontal();
 		}
 
