@@ -55,6 +55,7 @@ namespace com.squirrelbite.stf_unity
 		{
 			public string Module;
 			public string STF_Id;
+			public string DisplayName;
 			public string Json;
 		}
 		public List<ResourceImportOption> ResourceImportOptions = new();
@@ -75,7 +76,7 @@ namespace com.squirrelbite.stf_unity
 			return new JObject();
 		}
 
-		public void ConfirmResourceImportOptions(string Module, string STF_Id, JObject Options)
+		public void ConfirmResourceImportOptions(string Module, string STF_Id, JObject Options, string DisplayName = null)
 		{
 			foreach(var opt in ResourceImportOptionsConfirm)
 			{
@@ -83,10 +84,11 @@ namespace com.squirrelbite.stf_unity
 				{
 					opt.Module = Module;
 					opt.Json = Options.ToString();
+					opt.DisplayName = DisplayName;
 					return;
 				}
 			}
-			ResourceImportOptionsConfirm.Add(new () { Module = Module, STF_Id = STF_Id, Json = Options.ToString() });
+			ResourceImportOptionsConfirm.Add(new () { Module = Module, STF_Id = STF_Id, Json = Options.ToString(), DisplayName = DisplayName });
 		}
 
 

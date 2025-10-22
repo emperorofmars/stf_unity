@@ -119,7 +119,10 @@ namespace com.squirrelbite.stf_unity.tools
 			foreach(var opt in Importer.ImportConfig.ResourceImportOptions)
 			{
 				EditorGUILayout.BeginHorizontal();
-					EditorGUILayout.PrefixLabel(opt.Module + " (" + opt.STF_Id + ")");
+					if(!string.IsNullOrWhiteSpace(opt.DisplayName))
+						EditorGUILayout.PrefixLabel(opt.DisplayName);
+					else
+						EditorGUILayout.PrefixLabel(opt.Module + " (" + opt.STF_Id + ")");
 					EditorGUILayout.LabelField(opt.Json.ToString());
 				EditorGUILayout.EndHorizontal();
 			}

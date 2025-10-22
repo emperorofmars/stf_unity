@@ -27,7 +27,7 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				importOptions["target_shader"] = STF_Material_Converter_Registry.DefaultShader;
 			}
-			Context.ImportConfig.ConfirmResourceImportOptions(STF_Material.STF_TYPE, STFMaterial.STF_Id, importOptions);
+			Context.ImportConfig.ConfirmResourceImportOptions(STF_Material.STF_TYPE, STFMaterial.STF_Id, importOptions, STFMaterial.STF_Name);
 
 
 			/*if (Context.ImportConfig.MaterialMappings.Find(m => m.ID == STFMaterial.STF_Id) is var mapping && mapping != null && !string.IsNullOrWhiteSpace(mapping.TargetShader) && STF_Material_Converter_Registry.Converters.ContainsKey(mapping.TargetShader))
