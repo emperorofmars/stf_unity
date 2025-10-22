@@ -11,15 +11,14 @@ namespace com.squirrelbite.stf_unity.tools
 	[ScriptedImporter(1, new string[] { "stf" })]
 	public class STFScriptedImporter : ScriptedImporter
 	{
+		[SerializeField]
 		public ImportOptions ImportConfig = new();
 
 		public override void OnImportAsset(AssetImportContext ctx)
 		{
+			ImportConfig.ResourceImportOptionsConfirm = new();
+
 			var file = new STF_File(ctx.assetPath);
-
-			foreach(var m in ImportConfig.MaterialMappings)
-				Debug.Log(m.MaterialName + " : " + m.TargetShader);
-
 			var state = new ImportState(file, STF_Module_Registry.Modules, STF_Module_Registry.Ignores, ImportConfig);
 			var rootContext = new ImportContext(state);
 
@@ -34,6 +33,7 @@ namespace com.squirrelbite.stf_unity.tools
 			var processorContext = STF_Processor_Registry.CreateApplicationContext(ImportConfig.SelectedApplication, processorState);
 			processorContext.Run();
 
+			//! TODO Remove
 			for (int i = 0; i < ImportConfig.MaterialMappings.Count; i++)
 			{
 				if (state.GetImportedResource(ImportConfig.MaterialMappings[i].ID) == null)
@@ -58,13 +58,12 @@ namespace com.squirrelbite.stf_unity.tools
 
 				if (!ImportConfig.AuthoringImport)
 					foreach (var stfResource in import.Root.GetComponentsInChildren<ISTF_Resource>())
-#if UNITY_EDITOR
 						DestroyImmediate(stfResource as UnityEngine.Object);
-#else
-						Destroy(stfResource as UnityEngine.Object);
-#endif
 
+				ImportConfig.ResourceImportOptions = ImportConfig.ResourceImportOptionsConfirm;
+				ImportConfig.ResourceImportOptionsConfirm = null;
 				ImportConfig.IsFirstImport = false;
+
 				Debug.Log("STF Import Success!");
 			}
 			else

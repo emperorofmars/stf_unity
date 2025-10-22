@@ -116,6 +116,14 @@ namespace com.squirrelbite.stf_unity.tools
 
 		private void drawImportConfig(STFScriptedImporter Importer)
 		{
+			foreach(var opt in Importer.ImportConfig.ResourceImportOptions)
+			{
+				EditorGUILayout.BeginHorizontal();
+					EditorGUILayout.PrefixLabel(opt.Module + " (" + opt.STF_Id + ")");
+					EditorGUILayout.LabelField(opt.Json.ToString());
+				EditorGUILayout.EndHorizontal();
+			}
+
 			var availableConverters = STF_Material_Converter_Registry.Converters.Select(c => c.Key).ToList();
 
 			if (Importer.ImportConfig.MaterialMappings.Count > 0)
