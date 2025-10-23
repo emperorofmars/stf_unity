@@ -61,48 +61,54 @@ namespace com.squirrelbite.stf_unity
 		public List<ResourceImportOption> ResourceImportOptions = new();
 		public List<ResourceImportOption> ResourceImportOptionsConfirm = null;
 
-		public JObject GetResourceImportOptions(string Module, string STF_Id)
+		public T GetAndConfirmImportOption<T>(string Module, string STF_Id, string DisplayName, string Option, T Default = default)
+		{
+			var ret = GetImportOption(Module, STF_Id, Option, Default);
+			ConfirmImportOption(Module, STF_Id, DisplayName, Option, ret);
+			return ret;
+		}
+
+		public T GetImportOption<T>(string Module, string STF_Id, string Option, T Default = default)
 		{
 			foreach(var opt in ResourceImportOptions)
 			{
 				try {
-					if(opt.Module == Module && opt.STF_Id == STF_Id) return JObject.Parse(opt.Json);
+					if(opt.Module == Module && opt.STF_Id == STF_Id)
+					{
+						var settings = JObject.Parse(opt.Json);
+						if(settings.ContainsKey(Option))
+						{
+							return settings.Value<T>(Option);
+						}
+					}
 				}
 				catch
 				{
 					break;
 				}
 			}
-			return new JObject();
+			return Default;
 		}
-
-		public void ConfirmResourceImportOptions(string Module, string STF_Id, JObject Options, string DisplayName = null)
+		public void ConfirmImportOption<T>(string Module, string STF_Id, string DisplayName, string Option, T Value)
 		{
-			foreach(var opt in ResourceImportOptionsConfirm)
-			{
-				if(opt.STF_Id == STF_Id)
+			try {
+				foreach(var opt in ResourceImportOptionsConfirm)
 				{
-					opt.Module = Module;
-					opt.Json = Options.ToString();
-					opt.DisplayName = DisplayName;
-					return;
+					if(opt.STF_Id == STF_Id)
+					{
+						opt.Module = Module;
+						opt.DisplayName = DisplayName;
+						var settings = JObject.Parse(opt.Json);
+						settings[Option] = JToken.FromObject(Value);
+						opt.Json = settings.ToString();
+						return;
+					}
 				}
+				ResourceImportOptionsConfirm.Add(new () { Module = Module, STF_Id = STF_Id, DisplayName = DisplayName, Json = new JObject() {{ Option, JToken.FromObject(Value) }}.ToString()});
 			}
-			ResourceImportOptionsConfirm.Add(new () { Module = Module, STF_Id = STF_Id, Json = Options.ToString(), DisplayName = DisplayName });
+			catch
+			{
+			}
 		}
-
-
-		//! TODO Remove everything below
-		[System.Serializable]
-		public class MaterialMapping
-		{
-			public string ID;
-			public string MaterialName;
-			public string TargetShader;
-		}
-		public List<MaterialMapping> MaterialMappings = new();
-
-		public bool ImportVertexColors = true;
-		public int MaxWeights = 4;
 	}
 }

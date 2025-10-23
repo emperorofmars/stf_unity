@@ -32,17 +32,6 @@ namespace com.squirrelbite.stf_unity.tools
 			var processorState = new ProcessorState(state, import.Root);
 			var processorContext = STF_Processor_Registry.CreateApplicationContext(ImportConfig.SelectedApplication, processorState);
 			processorContext.Run();
-
-			//! TODO Remove
-			for (int i = 0; i < ImportConfig.MaterialMappings.Count; i++)
-			{
-				if (state.GetImportedResource(ImportConfig.MaterialMappings[i].ID) == null)
-				{
-					ImportConfig.MaterialMappings.Remove(ImportConfig.MaterialMappings[i]);
-					i--;
-				}
-			}
-
 			state.Cleanup();
 
 			foreach (var importedObject in state.ObjectToRegister)

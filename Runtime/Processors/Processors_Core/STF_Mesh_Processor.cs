@@ -106,9 +106,11 @@ namespace com.squirrelbite.stf_unity.processors
 				uvs.Add(uv);
 			}
 
+			var importVertexColors = Context.ImportConfig.GetAndConfirmImportOption(STF_Mesh.STF_TYPE, STFMesh.STF_Id, STFMesh.STF_Name, "vertex_colors", true);
+
 			// Colors
 			var split_colors = new Color[split_count];
-			if (STFMesh.split_colors != null && Context.ImportConfig.ImportVertexColors)
+			if (STFMesh.split_colors != null && importVertexColors)
 			{
 				for (int i = 0; i < split_count; i++)
 				{
@@ -158,7 +160,7 @@ namespace com.squirrelbite.stf_unity.processors
 						if (
 							(STFMesh.split_normals == null || (split_normals[splitIndex] - split_normals[splitCandidate]).magnitude < 0.0001)
 							&& compareUVs(splitIndex, splitCandidate)
-							&& (STFMesh.split_colors == null || !Context.ImportConfig.ImportVertexColors || compareColors(splitIndex, splitCandidate))
+							&& (STFMesh.split_colors == null || !importVertexColors || compareColors(splitIndex, splitCandidate))
 						)
 						{
 							split_to_deduped_split_index.Add(split_to_deduped_split_index[splitCandidate]);
@@ -185,7 +187,7 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				unity_vertices.Add(vertices[splits[deduped_split_indices[i]]]);
 				if (STFMesh.split_normals != null) unity_normals.Add(split_normals[deduped_split_indices[i]]);
-				if (STFMesh.split_colors != null && Context.ImportConfig.ImportVertexColors) unity_colors.Add(split_colors[deduped_split_indices[i]]);
+				if (STFMesh.split_colors != null && importVertexColors) unity_colors.Add(split_colors[deduped_split_indices[i]]);
 				for (int uvIndex = 0; uvIndex < uvs.Count; uvIndex++)
 					unity_uvs[uvIndex].Add(uvs[uvIndex][deduped_split_indices[i]]);
 			}
@@ -242,7 +244,7 @@ namespace com.squirrelbite.stf_unity.processors
 				ret.RecalculateNormals();
 			ret.RecalculateTangents();
 
-			if (STFMesh.split_colors != null && Context.ImportConfig.ImportVertexColors)
+			if (STFMesh.split_colors != null && importVertexColors)
 				ret.SetColors(unity_colors);
 
 			for (int uvIndex = 0; uvIndex < unity_uvs.Count; uvIndex++)
@@ -252,7 +254,17 @@ namespace com.squirrelbite.stf_unity.processors
 			// Weightpaint
 			if (STFMesh.armature != null && STFMesh.bones != null && STFMesh.weights != null)
 			{
-				var MAX_BONES_PER_VERTEX = Context.ImportConfig.MaxWeights;
+				/*int MAX_BONES_PER_VERTEX = 4;
+				if(importOptions.ContainsKey("max_weights") && importOptions.Value<int>("max_weights") is int maxWeights && maxWeights >= 1 && maxWeights <= 32)
+				{
+					MAX_BONES_PER_VERTEX = maxWeights;
+				}
+				else
+				{
+					importOptions["max_weights"] = MAX_BONES_PER_VERTEX;
+				}*/
+				var maxWeights = Context.ImportConfig.GetAndConfirmImportOption(STF_Mesh.STF_TYPE, STFMesh.STF_Id, STFMesh.STF_Name, "max_weights", 4);
+
 				var weights = new List<BoneWeight1>[vertex_count];
 				for (int i = 0; i < vertex_count; i++) weights[i] = new List<BoneWeight1>();
 
@@ -282,13 +294,13 @@ namespace com.squirrelbite.stf_unity.processors
 
 					if (boneWeights.Count > 0)
 					{
-						bonesPerVertex[i] = (byte)System.Math.Min(boneWeights.Count, MAX_BONES_PER_VERTEX);
+						bonesPerVertex[i] = (byte)System.Math.Min(boneWeights.Count, maxWeights);
 
 						var sum_weights = .0;
-						for (int weightIndex = 0; weightIndex < boneWeights.Count && weightIndex < MAX_BONES_PER_VERTEX; weightIndex++)
+						for (int weightIndex = 0; weightIndex < boneWeights.Count && weightIndex < maxWeights; weightIndex++)
 							sum_weights += boneWeights[weightIndex].weight;
 
-						for (int weightIndex = 0; weightIndex < boneWeights.Count && weightIndex < MAX_BONES_PER_VERTEX; weightIndex++)
+						for (int weightIndex = 0; weightIndex < boneWeights.Count && weightIndex < maxWeights; weightIndex++)
 							unity_weights.Add(new BoneWeight1 { boneIndex = boneWeights[weightIndex].boneIndex, weight = (float)(boneWeights[weightIndex].weight / sum_weights) });
 					}
 					else

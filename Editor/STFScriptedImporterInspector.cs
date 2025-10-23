@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 
 using System.Linq;
-using com.squirrelbite.stf_unity.modules.stf_material;
+using com.squirrelbite.stf_unity.modules.editors;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEngine;
@@ -11,6 +11,9 @@ namespace com.squirrelbite.stf_unity.tools
 	[CustomEditor(typeof(STFScriptedImporter))]
 	public class STFScriptedImporterInspector : ScriptedImporterEditor
 	{
+		private int SelectedToolbarTab = 0;
+		private readonly string[] ToolbarOptions = new string[] {"Info", "Settings"};
+
 		public override void OnInspectorGUI()
 		{
 			var importer = (STFScriptedImporter)target;
@@ -25,7 +28,7 @@ namespace com.squirrelbite.stf_unity.tools
 				EditorUtility.SetDirty(importer);
 			}
 
-			var availableContexts = STF_Processor_Registry.GetAvaliableContextDisplayNames();
+			var availableContexts = STF_Processor_Registry.GetAvailableContextDisplayNames();
 
 			int selectedIndex = availableContexts.FindIndex(c => c.Item1 == importer.ImportConfig.SelectedApplication);
 
@@ -40,25 +43,37 @@ namespace com.squirrelbite.stf_unity.tools
 				EditorUtility.SetDirty(importer);
 			}
 
-			drawImportConfig(importer);
+			GUILayout.Space(10);
 
-			drawHLine();
+			GUILayout.BeginHorizontal();
+			GUILayout.FlexibleSpace();
+			SelectedToolbarTab = GUILayout.Toolbar(SelectedToolbarTab, ToolbarOptions, GUILayout.Height(25), GUILayout.MaxWidth(250));
+			GUILayout.FlexibleSpace();
+			GUILayout.EndHorizontal();
 
-			if (AssetDatabase.LoadAssetAtPath<STF_Import>(importer.assetPath) is var stfImport && stfImport != null)
+			if(SelectedToolbarTab == 0)
 			{
-				renderAsset(stfImport);
+				GUILayout.Space(10);
+				if (AssetDatabase.LoadAssetAtPath<STF_Import>(importer.assetPath) is var stfImport && stfImport != null)
+				{
+					RenderAsset(stfImport);
+				}
+				else
+				{
+					EditorGUILayout.LabelField("Import Failed");
+				}
 			}
-			else
+			else if(SelectedToolbarTab == 1)
 			{
-				EditorGUILayout.LabelField("Import Failed");
+				STF_Module_Editor_Registry.DrawSettings(importer);
 			}
 
-			drawHLine();
+			DrawHLine();
 
 			ApplyRevertGUI();
 		}
 
-		private void renderAsset(STF_Import asset)
+		private void RenderAsset(STF_Import asset)
 		{
 			if(asset != null)
 			{
@@ -114,77 +129,7 @@ namespace com.squirrelbite.stf_unity.tools
 			}
 		}
 
-		private void drawImportConfig(STFScriptedImporter Importer)
-		{
-			foreach(var opt in Importer.ImportConfig.ResourceImportOptions)
-			{
-				EditorGUILayout.BeginHorizontal();
-					if(!string.IsNullOrWhiteSpace(opt.DisplayName))
-						EditorGUILayout.PrefixLabel(opt.DisplayName);
-					else
-						EditorGUILayout.PrefixLabel(opt.Module + " (" + opt.STF_Id + ")");
-					EditorGUILayout.LabelField(opt.Json.ToString());
-				EditorGUILayout.EndHorizontal();
-			}
-
-			var availableConverters = STF_Material_Converter_Registry.Converters.Select(c => c.Key).ToList();
-
-			if (Importer.ImportConfig.MaterialMappings.Count > 0)
-			{
-				drawHLine();
-
-				EditorGUILayout.LabelField("Material Mappings");
-				foreach (var mapping in Importer.ImportConfig.MaterialMappings)
-				{
-					EditorGUI.indentLevel++;
-
-					int selectedIndex = availableConverters.FindIndex(c => c == mapping.TargetShader);
-					if (selectedIndex < 0)
-					{
-						selectedIndex = 0; // Standard Shader
-					}
-
-					EditorGUILayout.BeginHorizontal();
-					EditorGUILayout.PrefixLabel(mapping.MaterialName);
-					var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableConverters.ToArray());
-					EditorGUILayout.EndHorizontal();
-
-					if (newSelectedIndex != selectedIndex)
-					{
-						mapping.TargetShader = availableConverters[newSelectedIndex];
-						EditorUtility.SetDirty(Importer);
-					}
-
-					EditorGUI.indentLevel--;
-				}
-			}
-
-			GUILayout.Space(10);
-
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.PrefixLabel("Import Vertex Colors");
-			var newImportVertexColors = EditorGUILayout.Toggle(Importer.ImportConfig.ImportVertexColors);
-			if(newImportVertexColors != Importer.ImportConfig.ImportVertexColors)
-			{
-				Importer.ImportConfig.ImportVertexColors = newImportVertexColors;
-				EditorUtility.SetDirty(Importer);
-			}
-			EditorGUILayout.EndHorizontal();
-
-			GUILayout.Space(10);
-
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.PrefixLabel("Max. Weights");
-			var newMaxWeights = EditorGUILayout.IntSlider(Importer.ImportConfig.MaxWeights, 1, 32);
-			if(newMaxWeights != Importer.ImportConfig.MaxWeights)
-			{
-				Importer.ImportConfig.MaxWeights = newMaxWeights;
-				EditorUtility.SetDirty(Importer);
-			}
-			EditorGUILayout.EndHorizontal();
-		}
-
-		private void drawHLine()
+		private void DrawHLine()
 		{
 			GUILayout.Space(10);
 			EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 2), Color.gray);

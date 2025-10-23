@@ -96,7 +96,7 @@ namespace com.squirrelbite.stf_unity
 				return new ProcessorContextBase(State);
 		}
 
-		public static List<string> GetAvaliableContexts()
+		public static List<string> GetAvailableContexts()
 		{
 			var ret = new HashSet<string>();
 			foreach (var entry in RegisteredProcessors)
@@ -108,7 +108,7 @@ namespace com.squirrelbite.stf_unity
 			return ret.ToList();
 		}
 
-		public static List<(string, string)> GetAvaliableContextDisplayNames()
+		public static List<(string, string)> GetAvailableContextDisplayNames()
 		{
 			var contexts = new HashSet<string>();
 			foreach(var entry in RegisteredProcessors)
