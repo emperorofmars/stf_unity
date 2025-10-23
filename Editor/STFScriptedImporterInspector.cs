@@ -94,7 +94,13 @@ namespace com.squirrelbite.stf_unity.tools
 
 				EditorGUILayout.BeginHorizontal();
 				EditorGUILayout.PrefixLabel("URL");
-				EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.URL);
+				if(!string.IsNullOrWhiteSpace(asset.Meta?.STFAssetInfo?.URL) && asset.Meta.STFAssetInfo.URL.StartsWith("https://"))
+				{
+					if(EditorGUILayout.LinkButton(asset.Meta?.STFAssetInfo?.URL))
+						Application.OpenURL(asset.Meta?.STFAssetInfo?.URL);
+				}
+				else
+					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.URL);
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
@@ -102,15 +108,26 @@ namespace com.squirrelbite.stf_unity.tools
 				EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.License);
 				EditorGUILayout.EndHorizontal();
 
-				// TODO make these clickable
 				EditorGUILayout.BeginHorizontal();
 				EditorGUILayout.PrefixLabel("License URL");
-				EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.LicenseURL);
+				if(!string.IsNullOrWhiteSpace(asset.Meta?.STFAssetInfo?.LicenseURL) && asset.Meta.STFAssetInfo.LicenseURL.StartsWith("https://"))
+				{
+					if(EditorGUILayout.LinkButton(asset.Meta?.STFAssetInfo?.LicenseURL))
+						Application.OpenURL(asset.Meta?.STFAssetInfo?.LicenseURL);
+				}
+				else
+					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.LicenseURL);
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
 				EditorGUILayout.PrefixLabel("Documentation URL");
-				EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.DocumentationURL);
+				if(!string.IsNullOrWhiteSpace(asset.Meta?.STFAssetInfo?.DocumentationURL) && asset.Meta.STFAssetInfo.DocumentationURL.StartsWith("https://"))
+				{
+					if(EditorGUILayout.LinkButton(asset.Meta?.STFAssetInfo?.DocumentationURL))
+						Application.OpenURL(asset.Meta?.STFAssetInfo?.DocumentationURL);
+				}
+				else
+					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.DocumentationURL);
 				EditorGUILayout.EndHorizontal();
 
 				EditorGUILayout.BeginHorizontal();
