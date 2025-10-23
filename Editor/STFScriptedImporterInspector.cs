@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 
+using System;
 using System.Linq;
 using com.squirrelbite.stf_unity.modules.editors;
 using UnityEditor;
@@ -44,6 +45,8 @@ namespace com.squirrelbite.stf_unity.tools
 			}
 
 			GUILayout.Space(10);
+			EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 2), Color.gray);
+			GUILayout.Space(5);
 
 			GUILayout.BeginHorizontal();
 			GUILayout.FlexibleSpace();
@@ -68,7 +71,8 @@ namespace com.squirrelbite.stf_unity.tools
 				STF_Module_Editor_Registry.DrawSettings(importer);
 			}
 
-			DrawHLine();
+			GUILayout.Space(10);
+			EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 2), Color.gray);
 
 			ApplyRevertGUI();
 		}
@@ -144,13 +148,6 @@ namespace com.squirrelbite.stf_unity.tools
 			{
 				EditorGUILayout.LabelField("Invalid Asset");
 			}
-		}
-
-		private void DrawHLine()
-		{
-			GUILayout.Space(10);
-			EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 2), Color.gray);
-			GUILayout.Space(10);
 		}
 	}
 }
