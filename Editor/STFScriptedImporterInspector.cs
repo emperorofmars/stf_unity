@@ -12,7 +12,7 @@ namespace com.squirrelbite.stf_unity.tools
 	public class STFScriptedImporterInspector : ScriptedImporterEditor
 	{
 		private int SelectedToolbarTab = 0;
-		private readonly string[] ToolbarOptions = new string[] {"Info", "Settings"};
+		private readonly string[] ToolbarOptions = new string[] {"Info", "Main Settings", "Advanced Settings"};
 
 		public override void OnInspectorGUI()
 		{
@@ -49,7 +49,7 @@ namespace com.squirrelbite.stf_unity.tools
 
 			GUILayout.BeginHorizontal();
 			GUILayout.FlexibleSpace();
-			SelectedToolbarTab = GUILayout.Toolbar(SelectedToolbarTab, ToolbarOptions, GUILayout.Height(25), GUILayout.MaxWidth(250));
+			SelectedToolbarTab = GUILayout.Toolbar(SelectedToolbarTab, ToolbarOptions, GUILayout.Height(25), GUILayout.MaxWidth(450));
 			GUILayout.FlexibleSpace();
 			GUILayout.EndHorizontal();
 
@@ -67,7 +67,11 @@ namespace com.squirrelbite.stf_unity.tools
 			}
 			else if(SelectedToolbarTab == 1)
 			{
-				STF_Module_Editor_Registry.DrawSettings(importer);
+				STF_Module_Editor_Registry.DrawHeroSettings(importer);
+			}
+			else if(SelectedToolbarTab == 2)
+			{
+				STF_Module_Editor_Registry.DrawAdvancedSettings(importer);
 			}
 
 			GUILayout.Space(10);

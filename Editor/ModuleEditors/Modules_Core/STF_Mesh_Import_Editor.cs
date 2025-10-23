@@ -9,8 +9,15 @@ namespace com.squirrelbite.stf_unity.modules.editors
 	public class STF_Mesh_Import_Editor : ISTF_Module_Editor
 	{
 		public string STF_Type => STF_Mesh.STF_TYPE;
+		public string HeroSettingsLabel => null;
+		public bool HasHeroSettings => false;
+		public bool HasAdvancedSettings => true;
 
-		public void Draw(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
+		public void DrawHeroSettings(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
+		{
+		}
+
+		public void DrawAdvancedSettings(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
 		{
 			EditorGUILayout.LabelField(Option.DisplayName);
 			EditorGUI.indentLevel++;

@@ -9,8 +9,8 @@ namespace com.squirrelbite.stf_unity.modules.editors
 	{
 		public static readonly List<ISTF_Module_Editor> DefaultModules = new()
 		{
-			new STF_Mesh_Import_Editor(),
 			new STF_Material_Import_Editor(),
+			new STF_Mesh_Import_Editor(),
 		};
 
 		private static readonly Dictionary<string, ISTF_Module_Editor> RegisteredModules = new();
@@ -35,29 +35,60 @@ namespace com.squirrelbite.stf_unity.modules.editors
 			}
 		}
 
-		public static void DrawSettings(STFScriptedImporter Importer)
+		public static void DrawHeroSettings(STFScriptedImporter Importer)
 		{
-			EditorGUILayout.LabelField("Module Settings", EditorStyles.largeLabel);
 			foreach(var module in Modules)
 			{
-				GUILayout.Space(10);
-				GUILayout.Label(module.Key, EditorStyles.whiteLargeLabel);
-				EditorGUI.indentLevel++;
 				// todo module settings
-				foreach(var option in Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key))
+				var moduleOptions = Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key);
+				if(moduleOptions.Count > 0 && module.Value.HasHeroSettings)
 				{
-					try
+					GUILayout.Space(10);
+					GUILayout.Label(!string.IsNullOrWhiteSpace(module.Value.HeroSettingsLabel) ? module.Value.HeroSettingsLabel : module.Value.STF_Type, EditorStyles.whiteLargeLabel);
+					EditorGUI.indentLevel++;
+					foreach(var option in Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key))
 					{
-						GUILayout.Space(5);
-						module.Value.Draw(Importer, option);
+						try
+						{
+							module.Value.DrawHeroSettings(Importer, option);
+						}
+						catch
+						{
+							// todo
+							Debug.Log("FAIL");
+						}
 					}
-					catch
-					{
-						// todo
-						Debug.Log("FAIL");
-					}
+					EditorGUI.indentLevel--;
 				}
-				EditorGUI.indentLevel--;
+			}
+		}
+
+		public static void DrawAdvancedSettings(STFScriptedImporter Importer)
+		{
+			foreach(var module in Modules)
+			{
+				// todo module settings
+				var moduleOptions = Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key);
+				if(moduleOptions.Count > 0 && module.Value.HasAdvancedSettings)
+				{
+					GUILayout.Space(10);
+					GUILayout.Label(module.Key, EditorStyles.whiteLargeLabel);
+					EditorGUI.indentLevel++;
+					foreach(var option in Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key))
+					{
+						try
+						{
+							GUILayout.Space(5);
+							module.Value.DrawAdvancedSettings(Importer, option);
+						}
+						catch
+						{
+							// todo
+							Debug.Log("FAIL");
+						}
+					}
+					EditorGUI.indentLevel--;
+				}
 			}
 		}
 	}

@@ -7,7 +7,11 @@ namespace com.squirrelbite.stf_unity.modules.editors
 	public interface ISTF_Module_Editor
 	{
 		string STF_Type {get;}
-		void Draw(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option);
+		string HeroSettingsLabel {get;}
+		bool HasHeroSettings {get;}
+		bool HasAdvancedSettings {get;}
+		void DrawHeroSettings(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option);
+		void DrawAdvancedSettings(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option);
 	}
 }
 

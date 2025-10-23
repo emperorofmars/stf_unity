@@ -11,8 +11,11 @@ namespace com.squirrelbite.stf_unity.modules.editors
 	public class STF_Material_Import_Editor : ISTF_Module_Editor
 	{
 		public string STF_Type => STF_Material.STF_TYPE;
+		public string HeroSettingsLabel => "Material Selection";
+		public bool HasHeroSettings => true;
+		public bool HasAdvancedSettings => false;
 
-		public void Draw(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
+		public void DrawHeroSettings(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
 		{
 			var availableConverters = STF_Material_Converter_Registry.Converters.Select(c => c.Key).ToList();
 			var options = JObject.Parse(Option.Json);
@@ -36,6 +39,10 @@ namespace com.squirrelbite.stf_unity.modules.editors
 					EditorUtility.SetDirty(Importer);
 				}
 			}
+		}
+
+		public void DrawAdvancedSettings(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
+		{
 		}
 	}
 }
