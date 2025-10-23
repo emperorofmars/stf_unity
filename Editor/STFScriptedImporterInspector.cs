@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 
-using System;
 using System.Linq;
 using com.squirrelbite.stf_unity.modules.editors;
 using UnityEditor;
