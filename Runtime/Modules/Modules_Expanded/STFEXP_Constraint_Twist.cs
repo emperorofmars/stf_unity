@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mono.Cecil;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -13,6 +14,25 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 		public float Weight = 0.5f;
 		public List<string> Target = new();
 		public GameObject TargetGo;
+	}
+
+	public class STFEXP_Constraint_Twist_InstanceModHandler : STF_InstanceModHandler
+	{
+		public void HandleInstanceMod(ImportContext Context, ISTF_ComponentResource Resource, JObject JsonResource)
+		{
+			var r = Resource as STFEXP_Constraint_Twist;
+			if (JsonResource.ContainsKey("weight")) r.Weight = JsonResource.Value<float>("weight");
+			if (JsonResource.ContainsKey("target"))
+			{
+				r.Target = STFUtil.ConvertResourcePath(JsonResource, JsonResource["target"]);
+				if (r.Target.Count > 0)
+				{
+					Context.AddTask(new Task(() => {
+						r.TargetGo = STFUtil.ResolveBinding(Context, r, r.Target);
+					}));
+				}
+			}
+		}
 	}
 
 	public class STFEXP_Constraint_Twist_Module : ISTF_Module
@@ -46,6 +66,7 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
 				ret.enabled = false;
 
+			ret.InstanceModHandler = new STFEXP_Constraint_Twist_InstanceModHandler();
 			return (ret, null);
 		}
 

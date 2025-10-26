@@ -13,6 +13,16 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 		public Quaternion offset_rotation;
 	}
 
+	public class STFEXP_Collider_Plane_InstanceModHandler : STF_InstanceModHandler
+	{
+		public void HandleInstanceMod(ImportContext Context, ISTF_ComponentResource Resource, JObject JsonResource)
+		{
+			var r = Resource as STFEXP_Collider_Plane;
+			if (JsonResource.ContainsKey("offset_position")) r.offset_position = TRSUtil.ParseVector3(JsonResource["offset_position"] as JArray);
+			if (JsonResource.ContainsKey("offset_rotation")) r.offset_rotation = TRSUtil.ParseQuat(JsonResource["offset_rotation"] as JArray);
+		}
+	}
+
 	public class STFEXP_Collider_Plane_Module : ISTF_Module
 	{
 		public string STF_Type => STFEXP_Collider_Plane._STF_Type;
@@ -35,6 +45,7 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
 				ret.enabled = false;
 
+			ret.InstanceModHandler = new STFEXP_Collider_Plane_InstanceModHandler();
 			return (ret, null);
 		}
 

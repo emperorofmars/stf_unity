@@ -11,14 +11,15 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 
 		public float radius = 1;
 		public Vector3 offset_position;
+	}
 
-
-		public override bool CanHandleInstanceMod => true;
-
-		public override void HandleInstanceMod(ImportContext Context, JObject JsonResource)
+	public class STFEXP_Collider_Sphere_InstanceModHandler : STF_InstanceModHandler
+	{
+		public void HandleInstanceMod(ImportContext Context, ISTF_ComponentResource Resource, JObject JsonResource)
 		{
-			if (JsonResource.ContainsKey("radius")) radius = JsonResource.Value<float>("radius");
-			if (JsonResource.ContainsKey("offset_position")) offset_position = TRSUtil.ParseVector3(JsonResource["offset_position"] as JArray);
+			var r = Resource as STFEXP_Collider_Sphere;
+			if (JsonResource.ContainsKey("radius")) r.radius = JsonResource.Value<float>("radius");
+			if (JsonResource.ContainsKey("offset_position")) r.offset_position = TRSUtil.ParseVector3(JsonResource["offset_position"] as JArray);
 		}
 	}
 
@@ -44,6 +45,7 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
 				ret.enabled = false;
 
+			ret.InstanceModHandler = new STFEXP_Collider_Sphere_InstanceModHandler();
 			return (ret, null);
 		}
 

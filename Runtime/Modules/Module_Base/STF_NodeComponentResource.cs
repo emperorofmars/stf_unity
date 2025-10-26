@@ -3,11 +3,17 @@ using Newtonsoft.Json.Linq;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	public interface STF_InstanceModHandler
+	{
+		void HandleInstanceMod(ImportContext Context, ISTF_ComponentResource Resource, JObject JsonResource);
+	}
+
 	public abstract class STF_NodeComponentResource : STF_MonoBehaviour, ISTF_ComponentResource
 	{
 		public override string STF_Kind => "component";
 		public List<string> _Overrides = new();
 		public List<string> Overrides => this._Overrides;
+		public STF_InstanceModHandler InstanceModHandler = null;
 
 		public override void SetFromJson(JObject JsonResource, string STF_Id, ISTF_Resource ContextObject, string DefaultName = "STF Prefab")
 		{
@@ -15,12 +21,5 @@ namespace com.squirrelbite.stf_unity.modules
 			if (JsonResource.ContainsKey("overrides")) foreach (var o in JsonResource["overrides"])
 					Overrides.Add((string)o);
 		}
-
-		public virtual bool CanHandleInstanceMod => false;
-
-		public virtual void HandleInstanceMod(ImportContext Context, JObject JsonResource)
-		{
-		}
-
 	}
 }
