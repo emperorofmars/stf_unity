@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 #if STF_AVA_VRCSDK3_FOUND
+#if AVA_BASE_SETUP_FOUND
 
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
@@ -61,5 +62,6 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 	}
 }
 
+#endif
 #endif
 #endif

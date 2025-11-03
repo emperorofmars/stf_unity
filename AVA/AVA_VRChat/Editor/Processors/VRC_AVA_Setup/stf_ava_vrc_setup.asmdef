@@ -18,6 +18,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.squirrelbite.ava_base_setup",
+            "expression": "",
+            "define": "AVA_BASE_SETUP_FOUND"
+        }
+    ],
     "noEngineReferences": false
 }
