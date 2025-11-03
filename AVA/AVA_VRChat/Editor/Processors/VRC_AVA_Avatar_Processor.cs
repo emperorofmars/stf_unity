@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.modules;
-using com.squirrelbite.stf_unity.ava.vrchat.util;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
@@ -24,7 +23,6 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var avaAvatar = STFResource as AVA_Avatar;
-			var baseSetup = Context.Root.AddComponent<AVA_AvatarBehaviourSetup>();
 			Context.Root.AddComponent<VRC.Core.PipelineManager>();
 			var avatar = Context.Root.AddComponent<VRCAvatarDescriptor>();
 

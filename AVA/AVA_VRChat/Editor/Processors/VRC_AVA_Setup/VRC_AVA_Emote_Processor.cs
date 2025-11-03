@@ -6,8 +6,8 @@ using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.modules;
-using com.squirrelbite.stf_unity.ava.vrchat.util;
 using UnityEngine;
+using com.squirrelbite.ava_base_setup.vrchat;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
@@ -23,20 +23,25 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var avaEmotes = STFResource as AVA_Emotes;
-			var baseSetup = Context.Root.GetComponent<AVA_AvatarBehaviourSetup>();
+			var baseSetup = Context.Root.GetComponent<AVABaseSetupVRC>();
+			if(!baseSetup)
+				baseSetup = Context.Root.AddComponent<AVABaseSetupVRC>();
+
+			var expressionsSetup = Context.Root.AddComponent<AVAExpressionsController>();
+			baseSetup.ManualExpressions.ProducerComponent = expressionsSetup;
 
 			foreach (var emote in avaEmotes.emotes)
 			{
 				if (emote.animation.ProcessedObjects.Count == 1 && emote.animation.ProcessedObjects[0] is AnimationClip animationClip)
 				{
-					baseSetup.AddAvatarEmote(new AvatarEmote() {
+					expressionsSetup.AddAvatarEmote(new AvatarEmote() {
 						Emote = emote.meaning,
 						Animation = animationClip,
 					});
 				}
 			}
 
-			return (new() { baseSetup }, null);
+			return (new() { baseSetup, expressionsSetup }, null);
 		}
 	}
 
