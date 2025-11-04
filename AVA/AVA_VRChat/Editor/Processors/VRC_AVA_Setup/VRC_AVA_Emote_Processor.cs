@@ -29,7 +29,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				baseSetup = Context.Root.AddComponent<AVABaseSetupVRC>();
 
 			var expressionsSetup = Context.Root.AddComponent<AVAExpressionsController>();
-			baseSetup.ManualExpressions.ProducerComponent = expressionsSetup;
+			baseSetup.LayerManualExpressions.Add(new() { ProducerComponent = expressionsSetup });
 
 			foreach (var emote in avaEmotes.emotes)
 			{

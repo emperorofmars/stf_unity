@@ -44,7 +44,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				"sranipal" => FT_Type.SRanipal,
 				_ => FT_Type.Automatic,
 			};
-			baseSetup.FacialTracking.ProducerComponent = FTSetup;
+			baseSetup.LayerFT.Add(new () { ProducerComponent = FTSetup });
 
 			var stfMeshInstance = (Context as AVAContext).PrimaryMeshInstance;
 
