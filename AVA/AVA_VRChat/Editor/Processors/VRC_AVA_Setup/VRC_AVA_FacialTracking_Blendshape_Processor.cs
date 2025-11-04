@@ -45,6 +45,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				_ => FT_Type.Automatic,
 			};
 			baseSetup.LayerFT.Add(new () { ProducerComponent = FTSetup });
+			baseSetup.FacialTrackingSetupType = AVA_FT_Setup_Type.Manual;
 
 			var stfMeshInstance = (Context as AVAContext).PrimaryMeshInstance;
 
