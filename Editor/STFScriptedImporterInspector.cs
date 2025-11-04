@@ -18,40 +18,42 @@ namespace com.squirrelbite.stf_unity.tools
 		{
 			var importer = (STFScriptedImporter)target;
 
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.PrefixLabel("Authoring Import");
-			var authoringImport = EditorGUILayout.Toggle(importer.ImportConfig.AuthoringImport);
-			EditorGUILayout.EndHorizontal();
-			if(authoringImport != importer.ImportConfig.AuthoringImport)
+			using(new EditorGUILayout.HorizontalScope())
 			{
-				importer.ImportConfig.AuthoringImport = authoringImport;
-				EditorUtility.SetDirty(importer);
+				EditorGUILayout.PrefixLabel("Authoring Import");
+				var authoringImport = EditorGUILayout.Toggle(importer.ImportConfig.AuthoringImport);
+				if(authoringImport != importer.ImportConfig.AuthoringImport)
+				{
+					importer.ImportConfig.AuthoringImport = authoringImport;
+					EditorUtility.SetDirty(importer);
+				}
 			}
 
 			var availableContexts = STF_Processor_Registry.GetAvailableContextDisplayNames();
 
 			int selectedIndex = availableContexts.FindIndex(c => c.Item1 == importer.ImportConfig.SelectedApplication);
 
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.PrefixLabel("Select Import Context");
-			var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableContexts.Select(p => p.Item2).ToArray());
-			EditorGUILayout.EndHorizontal();
-
-			if (newSelectedIndex != selectedIndex && newSelectedIndex >= 0 && newSelectedIndex < availableContexts.Count)
+			using(new EditorGUILayout.HorizontalScope())
 			{
-				importer.ImportConfig.SelectedApplication = availableContexts[newSelectedIndex].Item1;
-				EditorUtility.SetDirty(importer);
+				EditorGUILayout.PrefixLabel("Select Import Context");
+				var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableContexts.Select(p => p.Item2).ToArray());
+				if (newSelectedIndex != selectedIndex && newSelectedIndex >= 0 && newSelectedIndex < availableContexts.Count)
+				{
+					importer.ImportConfig.SelectedApplication = availableContexts[newSelectedIndex].Item1;
+					EditorUtility.SetDirty(importer);
+				}
 			}
 
 			GUILayout.Space(10);
 			EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 2), Color.gray);
 			GUILayout.Space(5);
 
-			GUILayout.BeginHorizontal();
-			GUILayout.FlexibleSpace();
-			SelectedToolbarTab = GUILayout.Toolbar(SelectedToolbarTab, ToolbarOptions, GUILayout.Height(25), GUILayout.MaxWidth(450));
-			GUILayout.FlexibleSpace();
-			GUILayout.EndHorizontal();
+			using(new EditorGUILayout.HorizontalScope())
+			{
+				GUILayout.FlexibleSpace();
+				SelectedToolbarTab = GUILayout.Toolbar(SelectedToolbarTab, ToolbarOptions, GUILayout.Height(25), GUILayout.MaxWidth(450));
+				GUILayout.FlexibleSpace();
+			}
 
 			if(SelectedToolbarTab == 0)
 			{
@@ -84,68 +86,69 @@ namespace com.squirrelbite.stf_unity.tools
 		{
 			if(asset != null)
 			{
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.PrefixLabel("Asset Name");
-				EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.AssetName);
-				EditorGUILayout.EndHorizontal();
-
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.PrefixLabel("Asset Version");
-				EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.Version);
-				EditorGUILayout.EndHorizontal();
-
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.PrefixLabel("Author");
-				EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.Author);
-				EditorGUILayout.EndHorizontal();
-
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.PrefixLabel("URL");
-				if(!string.IsNullOrWhiteSpace(asset.Meta?.STFAssetInfo?.URL) && asset.Meta.STFAssetInfo.URL.StartsWith("https://"))
+				using(new EditorGUILayout.HorizontalScope())
 				{
-					if(EditorGUILayout.LinkButton(asset.Meta?.STFAssetInfo?.URL))
-						Application.OpenURL(asset.Meta?.STFAssetInfo?.URL);
+					EditorGUILayout.PrefixLabel("Asset Name");
+					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.AssetName);
 				}
-				else
-					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.URL);
-				EditorGUILayout.EndHorizontal();
-
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.PrefixLabel("License");
-				EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.License);
-				EditorGUILayout.EndHorizontal();
-
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.PrefixLabel("License URL");
-				if(!string.IsNullOrWhiteSpace(asset.Meta?.STFAssetInfo?.LicenseURL) && asset.Meta.STFAssetInfo.LicenseURL.StartsWith("https://"))
+				using(new EditorGUILayout.HorizontalScope())
 				{
-					if(EditorGUILayout.LinkButton(asset.Meta?.STFAssetInfo?.LicenseURL))
-						Application.OpenURL(asset.Meta?.STFAssetInfo?.LicenseURL);
+					EditorGUILayout.PrefixLabel("Asset Version");
+					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.Version);
 				}
-				else
-					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.LicenseURL);
-				EditorGUILayout.EndHorizontal();
-
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.PrefixLabel("Documentation URL");
-				if(!string.IsNullOrWhiteSpace(asset.Meta?.STFAssetInfo?.DocumentationURL) && asset.Meta.STFAssetInfo.DocumentationURL.StartsWith("https://"))
+				using(new EditorGUILayout.HorizontalScope())
 				{
-					if(EditorGUILayout.LinkButton(asset.Meta?.STFAssetInfo?.DocumentationURL))
-						Application.OpenURL(asset.Meta?.STFAssetInfo?.DocumentationURL);
+					EditorGUILayout.PrefixLabel("Author");
+					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.Author);
 				}
-				else
-					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.DocumentationURL);
-				EditorGUILayout.EndHorizontal();
-
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.PrefixLabel("Binary Version");
-				EditorGUILayout.LabelField($"{asset.BinaryVersionMajor}.{asset.BinaryVersionMinor}");
-				EditorGUILayout.EndHorizontal();
-
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.PrefixLabel("Definition Version");
-				EditorGUILayout.LabelField($"{asset.Meta?.DefinitionVersionMajor}.{asset.Meta?.DefinitionVersionMinor}");
-				EditorGUILayout.EndHorizontal();
+				using(new EditorGUILayout.HorizontalScope())
+				{
+					EditorGUILayout.PrefixLabel("URL");
+					if(!string.IsNullOrWhiteSpace(asset.Meta?.STFAssetInfo?.URL) && asset.Meta.STFAssetInfo.URL.StartsWith("https://"))
+					{
+						if(EditorGUILayout.LinkButton(asset.Meta?.STFAssetInfo?.URL))
+							Application.OpenURL(asset.Meta?.STFAssetInfo?.URL);
+					}
+					else
+						EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.URL);
+				}
+				using(new EditorGUILayout.HorizontalScope())
+				{
+					EditorGUILayout.PrefixLabel("License");
+					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.License);
+				}
+				using(new EditorGUILayout.HorizontalScope())
+				{
+					EditorGUILayout.PrefixLabel("License URL");
+					if(!string.IsNullOrWhiteSpace(asset.Meta?.STFAssetInfo?.LicenseURL) && asset.Meta.STFAssetInfo.LicenseURL.StartsWith("https://"))
+					{
+						if(EditorGUILayout.LinkButton(asset.Meta?.STFAssetInfo?.LicenseURL))
+							Application.OpenURL(asset.Meta?.STFAssetInfo?.LicenseURL);
+					}
+					else
+						EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.LicenseURL);
+				}
+				using(new EditorGUILayout.HorizontalScope())
+				{
+					EditorGUILayout.PrefixLabel("Documentation URL");
+					if(!string.IsNullOrWhiteSpace(asset.Meta?.STFAssetInfo?.DocumentationURL) && asset.Meta.STFAssetInfo.DocumentationURL.StartsWith("https://"))
+					{
+						if(EditorGUILayout.LinkButton(asset.Meta?.STFAssetInfo?.DocumentationURL))
+							Application.OpenURL(asset.Meta?.STFAssetInfo?.DocumentationURL);
+					}
+					else
+						EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.DocumentationURL);
+				}
+				using(new EditorGUILayout.HorizontalScope())
+				{
+					EditorGUILayout.PrefixLabel("Binary Version");
+					EditorGUILayout.LabelField($"{asset.BinaryVersionMajor}.{asset.BinaryVersionMinor}");
+				}
+				using(new EditorGUILayout.HorizontalScope())
+				{
+					EditorGUILayout.PrefixLabel("Definition Version");
+					EditorGUILayout.LabelField($"{asset.Meta?.DefinitionVersionMajor}.{asset.Meta?.DefinitionVersionMinor}");
+				}
 			}
 			else
 			{
