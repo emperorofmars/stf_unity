@@ -32,7 +32,10 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 
 			var baseSetup = Context.Root.GetComponent<AVABaseSetupVRC>();
 			if(!baseSetup)
+			{
 				baseSetup = Context.Root.AddComponent<AVABaseSetupVRC>();
+				while(UnityEditorInternal.ComponentUtility.MoveComponentUp(baseSetup));
+			}
 
 			var FTSetup = Context.Root.AddComponent<AVASetupVRCFTProducer>();
 
@@ -45,7 +48,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				_ => FT_Type.Automatic,
 			};
 			baseSetup.LayerFT.Add(new () { ProducerComponent = FTSetup });
-			baseSetup.FacialTrackingSetupType = AVA_FT_Setup_Type.Manual;
+			baseSetup.FaceTrackingSetupType = AVA_FT_Setup_Type.Automatic;
 
 			var stfMeshInstance = (Context as AVAContext).PrimaryMeshInstance;
 

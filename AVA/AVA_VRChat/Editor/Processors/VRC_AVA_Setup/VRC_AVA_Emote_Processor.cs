@@ -26,7 +26,10 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			var avaEmotes = STFResource as AVA_Emotes;
 			var baseSetup = Context.Root.GetComponent<AVABaseSetupVRC>();
 			if(!baseSetup)
+			{
 				baseSetup = Context.Root.AddComponent<AVABaseSetupVRC>();
+				while(UnityEditorInternal.ComponentUtility.MoveComponentUp(baseSetup));
+			}
 
 			var expressionsSetup = Context.Root.AddComponent<AVAExpressionsProducer>();
 			baseSetup.LayerManualExpressions.Add(new() { ProducerComponent = expressionsSetup });
