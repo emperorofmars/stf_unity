@@ -4,7 +4,9 @@ using System.Linq;
 using com.squirrelbite.stf_unity.modules.editors;
 using UnityEditor;
 using UnityEditor.AssetImporters;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace com.squirrelbite.stf_unity.tools
 {
@@ -14,40 +16,58 @@ namespace com.squirrelbite.stf_unity.tools
 		private int SelectedToolbarTab = 0;
 		private readonly string[] ToolbarOptions = new string[] {"Info", "Main Settings", "Advanced Settings"};
 
-		public override void OnInspectorGUI()
+		
+		public override VisualElement CreateInspectorGUI()
 		{
 			var importer = (STFScriptedImporter)target;
+			VisualElement ui = new();
 
-			using(new EditorGUILayout.HorizontalScope())
 			{
-				EditorGUILayout.PrefixLabel("Authoring Import");
-				var authoringImport = EditorGUILayout.Toggle(importer.ImportConfig.AuthoringImport);
-				if(authoringImport != importer.ImportConfig.AuthoringImport)
-				{
-					importer.ImportConfig.AuthoringImport = authoringImport;
-					EditorUtility.SetDirty(importer);
-				}
+				var mainSettings = new VisualElement();
+				mainSettings.style.marginTop = mainSettings.style.marginBottom = 5;
+				ui.Add(mainSettings);
+
+				var p_AuthoringImport = new PropertyField(serializedObject.FindProperty("ImportConfig").FindPropertyRelative("AuthoringImport"));
+				p_AuthoringImport.label = "<size=+1>Authoring Import</size>";
+				mainSettings.Add(p_AuthoringImport);
+
+				var p_SelectedApplication = new DropdownField(STF_Processor_Registry.GetAvailableContextDisplayNames().Select(p => p.Item2).ToList(), 0);
+				p_SelectedApplication.BindProperty(serializedObject.FindProperty("ImportConfig").FindPropertyRelative("SelectedApplication"));
+				p_SelectedApplication.AddToClassList(BaseField<DropdownField>.alignedFieldUssClassName);
+				p_SelectedApplication.label = "<size=+1>Select Import Context</size>";
+				mainSettings.Add(p_SelectedApplication);
 			}
 
-			var availableContexts = STF_Processor_Registry.GetAvailableContextDisplayNames();
-
-			int selectedIndex = availableContexts.FindIndex(c => c.Item1 == importer.ImportConfig.SelectedApplication);
-
-			using(new EditorGUILayout.HorizontalScope())
 			{
-				EditorGUILayout.PrefixLabel("Select Import Context");
-				var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableContexts.Select(p => p.Item2).ToArray());
-				if (newSelectedIndex != selectedIndex && newSelectedIndex >= 0 && newSelectedIndex < availableContexts.Count)
-				{
-					importer.ImportConfig.SelectedApplication = availableContexts[newSelectedIndex].Item1;
-					EditorUtility.SetDirty(importer);
-				}
+				var spacer = new VisualElement();
+				spacer.style.marginTop = spacer.style.marginBottom = 5;
+				spacer.style.borderBottomWidth = 5;
+				spacer.style.borderBottomColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
+				ui.Add(spacer);
 			}
 
-			GUILayout.Space(10);
-			EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 2), Color.gray);
-			GUILayout.Space(5);
+			// Unity plz
+			//var tabBar = new TabView();
+			var tabBar = new IMGUIContainer { onGUIHandler = DrawTabView };
+			tabBar.style.marginTop = tabBar.style.marginBottom = 10;
+			ui.Add(tabBar);
 
+			{
+				var spacer = new VisualElement();
+				spacer.style.marginTop = spacer.style.marginBottom = 5;
+				spacer.style.borderBottomWidth = 5;
+				spacer.style.borderBottomColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
+				ui.Add(spacer);
+			}
+
+			ui.Add(new IMGUIContainer { onGUIHandler = ApplyRevertGUI });
+
+			return ui;
+		}
+
+		private void DrawTabView()
+		{
+			var importer = (STFScriptedImporter)target;
 			using(new EditorGUILayout.HorizontalScope())
 			{
 				GUILayout.FlexibleSpace();
@@ -75,11 +95,6 @@ namespace com.squirrelbite.stf_unity.tools
 			{
 				STF_Module_Editor_Registry.DrawAdvancedSettings(importer);
 			}
-
-			GUILayout.Space(10);
-			EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 2), Color.gray);
-
-			ApplyRevertGUI();
 		}
 
 		private void RenderAsset(STF_Import asset)
