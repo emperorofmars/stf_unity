@@ -16,31 +16,28 @@ namespace com.squirrelbite.stf_unity.tools
 		private int SelectedToolbarTab = 0;
 		private readonly string[] ToolbarOptions = new string[] {"Info", "Main Settings", "Advanced Settings"};
 
-		
 		public override VisualElement CreateInspectorGUI()
 		{
 			var importer = (STFScriptedImporter)target;
 			VisualElement ui = new();
 
 			{
-				var mainSettings = new VisualElement();
-				mainSettings.style.marginTop = mainSettings.style.marginBottom = 5;
+				var mainSettings = new Box();
+				mainSettings.style.marginTop = mainSettings.style.marginBottom = 10;
+				mainSettings.style.paddingRight = 5;
 				ui.Add(mainSettings);
 
-				var p_AuthoringImport = new PropertyField(serializedObject.FindProperty("ImportConfig").FindPropertyRelative("AuthoringImport"));
-				p_AuthoringImport.label = "<size=+1>Authoring Import</size>";
+				var p_AuthoringImport = new PropertyField(serializedObject.FindProperty("ImportConfig").FindPropertyRelative("AuthoringImport"), "<size=+1>Authoring Import</size>");
 				mainSettings.Add(p_AuthoringImport);
 
-				var p_SelectedApplication = new DropdownField(STF_Processor_Registry.GetAvailableContextDisplayNames().Select(p => p.Item2).ToList(), 0);
+				var p_SelectedApplication = new DropdownField(STF_Processor_Registry.GetAvailableContextDisplayNames().Select(p => p.Item2).ToList(), 0) { label = "<size=+1>Select Import Context</size>" };
 				p_SelectedApplication.BindProperty(serializedObject.FindProperty("ImportConfig").FindPropertyRelative("SelectedApplication"));
 				p_SelectedApplication.AddToClassList(BaseField<DropdownField>.alignedFieldUssClassName);
-				p_SelectedApplication.label = "<size=+1>Select Import Context</size>";
 				mainSettings.Add(p_SelectedApplication);
 			}
 
 			{
 				var spacer = new VisualElement();
-				spacer.style.marginTop = spacer.style.marginBottom = 5;
 				spacer.style.borderBottomWidth = 5;
 				spacer.style.borderBottomColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
 				ui.Add(spacer);
@@ -54,7 +51,6 @@ namespace com.squirrelbite.stf_unity.tools
 
 			{
 				var spacer = new VisualElement();
-				spacer.style.marginTop = spacer.style.marginBottom = 5;
 				spacer.style.borderBottomWidth = 5;
 				spacer.style.borderBottomColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
 				ui.Add(spacer);
@@ -163,6 +159,23 @@ namespace com.squirrelbite.stf_unity.tools
 				{
 					EditorGUILayout.PrefixLabel("Definition Version");
 					EditorGUILayout.LabelField($"{asset.Meta?.DefinitionVersionMajor}.{asset.Meta?.DefinitionVersionMinor}");
+				}
+
+				if(asset.Meta?.STFAssetInfo?.CustomProperties?.Count > 0)
+				{
+					GUILayout.Space(10);
+					EditorGUILayout.LabelField("Custom Properties", EditorStyles.boldLabel);
+					using(new EditorGUI.IndentLevelScope())
+					{
+						foreach(var custom in asset.Meta?.STFAssetInfo?.CustomProperties)
+						{
+							using(new EditorGUILayout.HorizontalScope())
+							{
+								EditorGUILayout.SelectableLabel(custom.Name);
+								EditorGUILayout.SelectableLabel(custom.Value);
+							}
+						}
+					}
 				}
 			}
 			else
