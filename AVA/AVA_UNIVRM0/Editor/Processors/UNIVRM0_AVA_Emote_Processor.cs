@@ -13,7 +13,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
 	public class UNIVRM0_AVA_Emote_Processor : ISTF_Processor
 	{
-		public System.Type TargetType => typeof(AVA_Emotes);
+		public System.Type TargetType => typeof(AVA_Expressions);
 
 		public const uint _Order = 1000;
 		public uint Order => _Order;
@@ -22,12 +22,12 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 
 		public (List<Object>, List<Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
-			var avaEmotes = STFResource as AVA_Emotes;
+			var avaEmotes = STFResource as AVA_Expressions;
 
 			var blendshapeProxy = Context.Root.GetComponent<VRMBlendShapeProxy>();
 			if (!blendshapeProxy) Context.Report(new STFReport("No Blendshape Proxy Component created!", ErrorSeverity.FATAL_ERROR, AVA_Visemes_Blendshape._STF_Type));
 
-			foreach (var emote in avaEmotes.emotes)
+			foreach (var emote in avaEmotes.expressions)
 			{
 				if(emote.fallback != null)
 				{
