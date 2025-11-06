@@ -5,18 +5,16 @@
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
 using UnityEditor;
-using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.modules;
-using System.Linq;
 using com.squirrelbite.ava_base_setup.vrchat;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
 	public class VRC_AVA_FacialTracking_Blendshape_Processor : ISTF_Processor
 	{
-		public Type TargetType => typeof(AVA_FacialTracking_Blendshape);
+		public System.Type TargetType => typeof(AVA_FacialTracking_Blendshape);
 
 		public const uint _Order = 1000;
 		public uint Order => _Order;

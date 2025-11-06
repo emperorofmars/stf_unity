@@ -3,7 +3,6 @@
 #if AVA_BASE_SETUP_FOUND
 
 using UnityEditor;
-using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.modules;
@@ -14,7 +13,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
 	public class VRC_AVA_Emotes_Processor : ISTF_Processor
 	{
-		public Type TargetType => typeof(AVA_Emotes);
+		public System.Type TargetType => typeof(AVA_Emotes);
 
 		public const uint _Order = STF_Animation_Processor._Order + 1000;
 		public uint Order => _Order;
