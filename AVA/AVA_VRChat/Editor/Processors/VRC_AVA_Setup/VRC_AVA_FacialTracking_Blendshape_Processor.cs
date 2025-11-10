@@ -38,7 +38,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			var FTSetup = Context.Root.AddComponent<AVASetupVRCFTProducer>();
 
 			FTSetup.FTMesh = (Context as AVAContext).PrimaryMeshInstance.ProcessedObjects.Find(po => po is SkinnedMeshRenderer) as SkinnedMeshRenderer;
-			FTSetup.Type = avaFT.ft_type switch
+			FTSetup.FTType = avaFT.ft_type switch
 			{
 				"unified_expressions" => FT_Type.UnifiedExpressions,
 				"arkit" => FT_Type.ARKit,

@@ -58,6 +58,7 @@ namespace com.squirrelbite.stf_unity.tools
 
 			ui.Add(new IMGUIContainer { onGUIHandler = ApplyRevertGUI });
 
+
 			return ui;
 		}
 
