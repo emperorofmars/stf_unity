@@ -22,7 +22,9 @@
 	"type": "library",
 	"url": "",
 	"gitDependencies": {},
-	"vpmDependencies": {},
+	"vpmDependencies": {
+		"com.squirrelbite.ava_base_setup": "0.0.x"
+	},
 	"legacyFolders": {
 		"Assets\\stf_unity": ""
 	},
