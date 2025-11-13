@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mono.Cecil;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -12,8 +11,8 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 		public override string STF_Type => _STF_Type;
 
 		public float Weight = 0.5f;
-		public List<string> Target = new();
-		public GameObject TargetGo;
+		public List<string> SourcePath = new();
+		public GameObject SourceGo;
 	}
 
 	public class STFEXP_Constraint_Twist_InstanceModHandler : STF_InstanceModHandler
@@ -22,13 +21,13 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 		{
 			var r = Resource as STFEXP_Constraint_Twist;
 			if (JsonResource.ContainsKey("weight")) r.Weight = JsonResource.Value<float>("weight");
-			if (JsonResource.ContainsKey("target"))
+			if (JsonResource.ContainsKey("source"))
 			{
-				r.Target = STFUtil.ConvertResourcePath(JsonResource, JsonResource["target"]);
-				if (r.Target.Count > 0)
+				r.SourcePath = STFUtil.ConvertResourcePath(JsonResource, JsonResource["source"]);
+				if (r.SourcePath.Count > 0)
 				{
 					Context.AddTask(new Task(() => {
-						r.TargetGo = STFUtil.ResolveBinding(Context, r, r.Target);
+						r.SourceGo = STFUtil.ResolveBinding(Context, r, r.SourcePath);
 					}));
 				}
 			}
@@ -53,14 +52,14 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 
 			ret.Weight = JsonResource.Value<float>("weight");
 
-			if (JsonResource.ContainsKey("target"))
-				ret.Target = STFUtil.ConvertResourcePath(JsonResource, JsonResource["target"]);
+			if (JsonResource.ContainsKey("source"))
+				ret.SourcePath = STFUtil.ConvertResourcePath(JsonResource, JsonResource["source"]);
 
 			Context.AddTask(new Task(() => {
-				if (ret.Target.Count > 0)
-					ret.TargetGo = STFUtil.ResolveBinding(Context, ret, ret.Target);
+				if (ret.SourcePath.Count > 0)
+					ret.SourceGo = STFUtil.ResolveBinding(Context, ret, ret.SourcePath);
 				else if(ret.transform.parent && ret.transform.parent.parent)
-					ret.TargetGo = ret.transform.parent.parent.gameObject;
+					ret.SourceGo = ret.transform.parent.parent.gameObject;
 			}));
 
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)

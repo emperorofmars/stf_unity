@@ -24,14 +24,14 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		{
 			var stfConstraint = STFResource as STFEXP_Constraint_Twist;
 
-			if (stfConstraint.Target.Count > 0)
-				stfConstraint.TargetGo = STFUtil.ResolveBinding(Context, stfConstraint, stfConstraint.Target);
+			if (stfConstraint.SourcePath.Count > 0)
+				stfConstraint.SourceGo = STFUtil.ResolveBinding(Context, stfConstraint, stfConstraint.SourcePath);
 			else if(stfConstraint.transform.parent && stfConstraint.transform.parent.parent)
-				stfConstraint.TargetGo = stfConstraint.transform.parent.parent.gameObject;
+				stfConstraint.SourceGo = stfConstraint.transform.parent.parent.gameObject;
 
-			if (stfConstraint.TargetGo)
+			if (stfConstraint.SourceGo)
 			{
-				var ret = CreateConstraint(stfConstraint.gameObject, stfConstraint.TargetGo.transform, stfConstraint.Weight);
+				var ret = CreateConstraint(stfConstraint.gameObject, stfConstraint.SourceGo.transform, stfConstraint.Weight);
 				ret.enabled = stfConstraint.enabled;
 				return (new() { ret }, null);
 			}
