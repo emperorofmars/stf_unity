@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using com.squirrelbite.stf_unity.modules;
+using com.squirrelbite.stf_unity.modules.stf_material;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors
@@ -145,7 +146,7 @@ namespace com.squirrelbite.stf_unity.processors
 		{
 			if(!DefaultMaterial)
 			{
-				DefaultMaterial = new Material(Shader.Find("Standard")) {
+				DefaultMaterial = new Material(Shader.Find(STF_Material_Converter_Registry.DefaultShader)) {
 					name = "Default"
 				};
 				State.RegisterResult(new () {DefaultMaterial});

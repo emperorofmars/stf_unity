@@ -73,9 +73,9 @@ namespace com.squirrelbite.stf_unity.processors
 
 				meshInstance.ProcessedObjects.Add(renderer);
 
-				
-				var rendererMaterials = new Material[meshInstance.Mesh.material_slots.Count];
-				for (int matIdx = 0; matIdx < meshInstance.Mesh.material_slots.Count; matIdx++)
+				var materialCount = System.Math.Max(meshInstance.Mesh.material_slots.Count, renderer.sharedMaterials.Length);
+				var rendererMaterials = new Material[materialCount];
+				for (int matIdx = 0; matIdx < materialCount; matIdx++)
 				{
 					if (matIdx < meshInstance.Materials.Count && meshInstance.Materials[matIdx] != null)
 						rendererMaterials[matIdx] = STFUtil.GetProcessed<Material>(meshInstance.Materials[matIdx]);
