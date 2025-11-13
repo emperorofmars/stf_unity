@@ -30,7 +30,8 @@ namespace com.squirrelbite.stf_unity.tools
 				var p_AuthoringImport = new PropertyField(serializedObject.FindProperty("ImportConfig").FindPropertyRelative("AuthoringImport"), "<size=+1>Authoring Import</size>");
 				mainSettings.Add(p_AuthoringImport);
 
-				var p_SelectedApplication = new DropdownField(STF_Processor_Registry.GetAvailableContextDisplayNames().Select(p => p.Item2).ToList(), 0) { label = "<size=+1>Select Import Context</size>" };
+				string formatValue(string key) { return STF_Processor_Registry.GetAvailableContextDisplayNames().Find(e => e.Item1 == key).Item2; }
+				var p_SelectedApplication = new DropdownField(STF_Processor_Registry.GetAvailableContextDisplayNames().Select(p => p.Item1).ToList(), 0, formatValue, formatValue) { label = "<size=+1>Select Import Context</size>" };
 				p_SelectedApplication.BindProperty(serializedObject.FindProperty("ImportConfig").FindPropertyRelative("SelectedApplication"));
 				p_SelectedApplication.AddToClassList(BaseField<DropdownField>.alignedFieldUssClassName);
 				mainSettings.Add(p_SelectedApplication);

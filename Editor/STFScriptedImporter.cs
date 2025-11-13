@@ -16,6 +16,8 @@ namespace com.squirrelbite.stf_unity.tools
 
 		public override void OnImportAsset(AssetImportContext ctx)
 		{
+			Debug.Log($"Importing {ctx.assetPath} for context {ImportConfig.SelectedApplication}");
+
 			ImportConfig.ResourceImportOptionsConfirm = new();
 
 			var file = new STF_File(ctx.assetPath);
