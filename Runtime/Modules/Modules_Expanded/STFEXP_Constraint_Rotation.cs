@@ -27,12 +27,13 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 		public void HandleInstanceMod(ImportContext Context, ISTF_ComponentResource Resource, JObject JsonResource)
 		{
 			var ret = Resource as STFEXP_Constraint_Rotation;
-			if(JsonResource.ContainsKey("sources")) foreach(JObject jsonSource in (JsonResource["sources"] as JArray).Cast<JObject>())
+			ret.Sources = new();
+			if(JsonResource.ContainsKey("sources")) foreach(JObject jsonSource in JsonResource["sources"] as JArray)
 			{
 				var source = new STFEXP_Constraint_Rotation.Source();
-				source.Weight = JsonResource.Value<float>("weight");
-				if (JsonResource.ContainsKey("source"))
-					source.SourcePath = STFUtil.ConvertResourcePath(JsonResource, JsonResource["source"]);
+				source.Weight = jsonSource.Value<float>("weight");
+				if (jsonSource.ContainsKey("source"))
+					source.SourcePath = STFUtil.ConvertResourcePath(JsonResource, jsonSource["source"]);
 				ret.Sources.Add(source);
 
 				Context.AddTask(new Task(() => {
@@ -64,9 +65,9 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			if(JsonResource.ContainsKey("sources")) foreach(JObject jsonSource in (JsonResource["sources"] as JArray).Cast<JObject>())
 			{
 				var source = new STFEXP_Constraint_Rotation.Source();
-				source.Weight = JsonResource.Value<float>("weight");
-				if (JsonResource.ContainsKey("source"))
-					source.SourcePath = STFUtil.ConvertResourcePath(JsonResource, JsonResource["source"]);
+				source.Weight = jsonSource.Value<float>("weight");
+				if (jsonSource.ContainsKey("source"))
+					source.SourcePath = STFUtil.ConvertResourcePath(JsonResource, jsonSource["source"]);
 				ret.Sources.Add(source);
 
 				Context.AddTask(new Task(() => {

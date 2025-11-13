@@ -21,6 +21,7 @@ namespace com.squirrelbite.stf_unity
 					new STF_Animation_Processor(),
 					new STFEXP_Humanoid_Armature_Processor(),
 					new STFEXP_Constraint_Twist_Processor(),
+					new STFEXP_Constraint_Rotation_Processor(),
 					new STFEXP_Camera_Processor(),
 					new STFEXP_Light_Processor(),
 					new STFEXP_LightprobeAnchor_Processor(),

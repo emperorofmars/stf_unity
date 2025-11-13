@@ -19,6 +19,7 @@ namespace com.squirrelbite.stf_unity.modules
 			new STF_Animation_Module(),
 			new STFEXP_Humanoid_Armature_Module(),
 			new STFEXP_Constraint_Twist_Module(),
+			new STFEXP_Constraint_Rotation_Module(),
 			new STFEXP_Camera_Module(),
 			new STFEXP_Light_Module(),
 			new STFEXP_LightprobeAnchor_Module(),
