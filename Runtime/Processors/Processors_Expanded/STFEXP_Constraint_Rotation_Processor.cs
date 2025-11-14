@@ -27,15 +27,21 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 				if (stfSource.SourceGo)
 				{
 					ret.AddSource(new ConstraintSource { weight = stfSource.Weight, sourceTransform = stfSource.SourceGo.transform });
+
+					// todo figure this out
 					sourceTransformQuat *= Quaternion.SlerpUnclamped(Quaternion.identity, stfSource.SourceGo.transform.rotation, stfSource.Weight);
 				}
 			}
 
-			Quaternion rotationOffset = Quaternion.Inverse(sourceTransformQuat) * ret.transform.rotation;
-			ret.rotationOffset = rotationOffset.eulerAngles;
+			// todo figure this out
+			ret.rotationOffset = (Quaternion.Inverse(sourceTransformQuat) * ret.transform.rotation).eulerAngles;
+			ret.rotationAtRest = ret.transform.rotation.eulerAngles;
 
-			ret.constraintActive = true;
 			ret.locked = true;
+			ret.constraintActive = true;
+
+			//typeof(RotationConstraint).GetMethod("ActivateAndPreserveOffset", BindingFlags.Instance | BindingFlags.NonPublic)?.Invoke(ret, null);
+			//typeof(RotationConstraint).GetMethod("UserUpdateOffset", BindingFlags.Instance | BindingFlags.NonPublic)?.Invoke(ret, null);
 
 			return (new() { ret }, null);
 		}
