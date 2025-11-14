@@ -20,6 +20,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			var ret = stfConstraint.gameObject.AddComponent<RotationConstraint>();
 
 			var sourceTransformQuat = Quaternion.identity;
+			float totalWeight = 0;
 			foreach(var stfSource in stfConstraint.Sources)
 			{
 				if (stfSource.SourcePath.Count > 0)
@@ -27,15 +28,19 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 				if (stfSource.SourceGo)
 				{
 					ret.AddSource(new ConstraintSource { weight = stfSource.Weight, sourceTransform = stfSource.SourceGo.transform });
-
-					// todo figure this out
-					sourceTransformQuat *= Quaternion.SlerpUnclamped(Quaternion.identity, stfSource.SourceGo.transform.rotation, stfSource.Weight);
+					totalWeight += stfSource.Weight;
 				}
 			}
 
 			// todo figure this out
+			if(totalWeight > 0)
+				foreach(var stfSource in stfConstraint.Sources)
+					if (stfSource.SourceGo)
+						sourceTransformQuat *= Quaternion.Slerp(Quaternion.identity, stfSource.SourceGo.transform.rotation, stfSource.Weight / totalWeight);
+
 			ret.rotationOffset = (Quaternion.Inverse(sourceTransformQuat) * ret.transform.rotation).eulerAngles;
-			ret.rotationAtRest = ret.transform.rotation.eulerAngles;
+
+			ret.rotationAtRest = ret.transform.localRotation.eulerAngles;
 
 			ret.locked = true;
 			ret.constraintActive = true;
