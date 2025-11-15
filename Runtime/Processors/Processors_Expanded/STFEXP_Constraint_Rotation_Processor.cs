@@ -17,10 +17,14 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var stfConstraint = STFResource as STFEXP_Constraint_Rotation;
-			var ret = stfConstraint.gameObject.AddComponent<RotationConstraint>();
+			var ret = stfConstraint.gameObject.AddComponent<ParentConstraint>();
 
-			var sourceTransformQuat = Quaternion.identity;
-			float totalWeight = 0;
+			ret.weight = stfConstraint.Weight;
+			ret.rotationAxis = stfConstraint.Axes;
+
+			ret.translationAxis = Axis.None;
+
+			int sourceIndex = 0;
 			foreach(var stfSource in stfConstraint.Sources)
 			{
 				if (stfSource.SourcePath.Count > 0)
@@ -28,25 +32,13 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 				if (stfSource.SourceGo)
 				{
 					ret.AddSource(new ConstraintSource { weight = stfSource.Weight, sourceTransform = stfSource.SourceGo.transform });
-					totalWeight += stfSource.Weight;
+					ret.SetRotationOffset(sourceIndex, (Quaternion.Inverse(stfSource.SourceGo.transform.rotation) * ret.transform.rotation).eulerAngles);
+					sourceIndex++;
 				}
 			}
 
-			// todo figure this out
-			if(totalWeight > 0)
-				foreach(var stfSource in stfConstraint.Sources)
-					if (stfSource.SourceGo)
-						sourceTransformQuat *= Quaternion.Slerp(Quaternion.identity, stfSource.SourceGo.transform.rotation, stfSource.Weight / totalWeight);
-
-			ret.rotationOffset = (Quaternion.Inverse(sourceTransformQuat) * ret.transform.rotation).eulerAngles;
-
-			ret.rotationAtRest = ret.transform.localRotation.eulerAngles;
-
 			ret.locked = true;
 			ret.constraintActive = true;
-
-			//typeof(RotationConstraint).GetMethod("ActivateAndPreserveOffset", BindingFlags.Instance | BindingFlags.NonPublic)?.Invoke(ret, null);
-			//typeof(RotationConstraint).GetMethod("UserUpdateOffset", BindingFlags.Instance | BindingFlags.NonPublic)?.Invoke(ret, null);
 
 			return (new() { ret }, null);
 		}

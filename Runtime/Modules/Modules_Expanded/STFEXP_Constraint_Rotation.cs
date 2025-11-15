@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityEngine.Animations;
 
 namespace com.squirrelbite.stf_unity.modules.stfexp
 {
@@ -19,6 +20,8 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			public GameObject SourceGo;
 		}
 
+		public float Weight = 1;
+		public Axis Axes = Axis.X | Axis.Y | Axis.Z;
 		public List<Source> Sources = new();
 	}
 
@@ -61,6 +64,16 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			var go = ContextObject as STF_MonoBehaviour;
 			var ret = go.gameObject.AddComponent<STFEXP_Constraint_Rotation>();
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STFEXP Constraint Rotation");
+
+			if(JsonResource.ContainsKey("weight")) ret.Weight = JsonResource.Value<float>("weight");
+			if(JsonResource.ContainsKey("axes") && JsonResource["axes"] is JArray jsonAxes && jsonAxes != null)
+			{
+				var axes = Axis.None;
+				if(jsonAxes[0].Value<bool>()) axes |= Axis.X;
+				if(jsonAxes[1].Value<bool>()) axes |= Axis.Z;
+				if(jsonAxes[2].Value<bool>()) axes |= Axis.Y;
+				ret.Axes = axes;
+			}
 
 			if(JsonResource.ContainsKey("sources")) foreach(JObject jsonSource in (JsonResource["sources"] as JArray).Cast<JObject>())
 			{
