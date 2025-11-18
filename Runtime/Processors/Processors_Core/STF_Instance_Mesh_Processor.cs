@@ -9,6 +9,7 @@ namespace com.squirrelbite.stf_unity.processors
 	{
 		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource STFResource, List<string> STFPath)
 		{
+			var meshInstance = STFResource as STF_Instance_Mesh;
 			var convert = new System.Func<List<float>, List<float>>(Values =>
 			{
 				Values[0] *= 100;
@@ -19,7 +20,17 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				return ("", typeof(SkinnedMeshRenderer), new() { "blendShape." + STFPath[1] }, convert);
 			}
-			else return ("", null, null, null);
+
+			if(STFPath.Count > 2 && STFPath[0] == "material" && int.TryParse(STFPath[1], out int materialIndex) && meshInstance.Materials.Count > materialIndex)
+			{
+				var material = meshInstance.Materials[materialIndex] ? meshInstance.Materials[materialIndex] : meshInstance.Mesh.material_slots.Count > materialIndex ? meshInstance.Mesh.material_slots[materialIndex] : null;
+				if(material)
+				{
+					(string retRelativePath, System.Type retType, List<string> retPropNames, System.Func<List<float>, List<float>> convertValueFunc) = material.PropertyConverter.ConvertPropertyPath(material, STFPath.GetRange(2, STFPath.Count - 2));
+					return ("", typeof(SkinnedMeshRenderer), retPropNames, convertValueFunc);
+				}
+			}
+			return ("", null, null, null);
 		}
 	}
 

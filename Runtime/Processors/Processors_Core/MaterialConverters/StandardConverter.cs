@@ -4,19 +4,29 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules.stf_material
 {
+	public class STF_PropertyConverter_Material_Standard : ISTF_PropertyConverter
+	{
+		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource Resource, List<string> STFPath)
+		{
+			if(STFPath.Count == 3 && STFPath[0] == "albedo.color" && int.TryParse(STFPath[1], out int propertyIndex) && STFPath[2] == "color")
+			{
+				// todo
+			}
+
+			return ("", null, null, null);
+		}
+	}
+
 	public class StandardConverter : IMaterialConverter
 	{
 		public string ShaderName => "Standard";
-
-		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(List<string> STFPath)
-		{
-			throw new System.NotImplementedException();
-		}
 
 		public (Material ConvertedMaterial, List<UnityEngine.Object> GeneratedObjects) ConvertToUnityMaterial(STF_Material STFMaterial)
 		{
 			var ret = new Material(Shader.Find(ShaderName));
 			ret.name = STFMaterial.STF_Name;
+
+			STFMaterial.PropertyConverter = new STF_PropertyConverter_Material_Standard();
 
 			var generatedObjects = new List<UnityEngine.Object>();
 
