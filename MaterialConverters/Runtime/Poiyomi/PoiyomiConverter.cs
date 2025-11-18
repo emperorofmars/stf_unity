@@ -10,6 +10,12 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 {
 	public class STF_PropertyConverter_Material_Poiyomi : ISTF_PropertyConverter
 	{
+		private readonly Material Mat;
+		public STF_PropertyConverter_Material_Poiyomi(Material Mat)
+		{
+			this.Mat = Mat;
+		}
+
 		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource Resource, List<string> STFPath)
 		{
 			return ("", null, null, null);
@@ -26,7 +32,7 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 			var ret = new Material(Shader.Find(ShaderName));
 			ret.name = STFMaterial.STF_Name;
 
-			STFMaterial.PropertyConverter = new STF_PropertyConverter_Material_Poiyomi();
+			STFMaterial.PropertyConverter = new STF_PropertyConverter_Material_Poiyomi(ret);
 
 			var generatedObjects = new List<Object>();
 

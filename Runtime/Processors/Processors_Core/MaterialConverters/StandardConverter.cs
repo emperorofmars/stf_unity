@@ -11,9 +11,9 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 			if(STFPath.Count <= 2 || !int.TryParse(STFPath[1], out int propertyIndex))
 				return ("", null, null, null);
 
-			if(STFPath[0] == "albedo.color" && STFPath[2] == "color")
+			if(STFPath[0] == "albedo.color" && propertyIndex == 0 && STFPath[2] == "color")
 			{
-				return ("", null, new() { "color.r", "color.g", "color.b", "color.a" }, null);
+				return ("", null, new() { "material._Color.r", "material._Color.g", "material._Color.b", "material._Color.a" }, null);
 			}
 
 			return ("", null, null, null);
