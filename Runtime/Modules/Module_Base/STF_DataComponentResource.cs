@@ -3,6 +3,9 @@ using Newtonsoft.Json.Linq;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	/// <summary>
+	/// Unity doesn't support components on ScriptableObjects like on GameObjects, so they have to be implemented differently.
+	/// </summary>
 	public abstract class STF_DataComponentResource: STF_ScriptableObject, ISTF_ComponentResource
 	{
 		public override string STF_Kind => "component";

@@ -3,6 +3,9 @@ using Newtonsoft.Json.Linq;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	/// <summary>
+	/// For resources like nodes and bones.
+	/// </summary>
 	public abstract class STF_NodeResource : STF_MonoBehaviour
 	{
 		public override string STF_Kind => "node";

@@ -3,6 +3,9 @@ using Newtonsoft.Json.Linq;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	/// <summary>
+	/// For resources that need to become a Unity Prefab. They are 'data' resources in STF otherwise.
+	/// </summary>
 	public abstract class STF_PrefabResource : STF_MonoBehaviour
 	{
 		public override string STF_Kind => "data";

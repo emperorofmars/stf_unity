@@ -4,6 +4,9 @@ using Newtonsoft.Json.Linq;
 namespace com.squirrelbite.stf_unity.modules
 {
 	// TODO make this a static interface, once that language feature is available in Unity
+	/// <summary>
+	/// Base interface for all implementations of STF modules.
+	/// </summary>
 	public interface ISTF_Module
 	{
 		string STF_Type {get;}
