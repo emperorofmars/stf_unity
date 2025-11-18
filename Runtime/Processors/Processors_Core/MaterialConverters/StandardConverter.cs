@@ -8,9 +8,12 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 	{
 		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource Resource, List<string> STFPath)
 		{
-			if(STFPath.Count == 3 && STFPath[0] == "albedo.color" && int.TryParse(STFPath[1], out int propertyIndex) && STFPath[2] == "color")
+			if(STFPath.Count <= 2 || !int.TryParse(STFPath[1], out int propertyIndex))
+				return ("", null, null, null);
+
+			if(STFPath[0] == "albedo.color" && STFPath[2] == "color")
 			{
-				// todo
+				return ("", null, new() { "color.r", "color.g", "color.b", "color.a" }, null);
 			}
 
 			return ("", null, null, null);
