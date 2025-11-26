@@ -12,9 +12,9 @@ using com.squirrelbite.ava_base_setup.vrchat;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
-	public class VRC_AVA_FacialTracking_Blendshape_Processor : ISTF_Processor
+	public class VRC_AVA_FaceTracking_Blendshape_Processor : ISTF_Processor
 	{
-		public System.Type TargetType => typeof(AVA_FacialTracking_Blendshape);
+		public System.Type TargetType => typeof(AVA_FaceTracking_Blendshape);
 
 		public const uint _Order = 1000;
 		public uint Order => _Order;
@@ -23,7 +23,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 
 		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
-			var avaFT = STFResource as AVA_FacialTracking_Blendshape;
+			var avaFT = STFResource as AVA_FaceTracking_Blendshape;
 
 			var avatar = Context.Root.GetComponent<VRCAvatarDescriptor>();
 			if (!avatar) Context.Report(new STFReport("No Avatar Component created!", ErrorSeverity.FATAL_ERROR, AVA_Eyelids_Blendshape._STF_Type));
@@ -35,7 +35,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				while(UnityEditorInternal.ComponentUtility.MoveComponentUp(baseSetup));
 			}
 
-			var FTSetup = Context.Root.AddComponent<AVASetupVRCFTProducer>();
+			var FTSetup = Context.Root.AddComponent<AVAVRCFTProducer>();
 
 			FTSetup.FTMesh = (Context as AVAContext).PrimaryMeshInstance.ProcessedObjects.Find(po => po is SkinnedMeshRenderer) as SkinnedMeshRenderer;
 			FTSetup.FTType = avaFT.ft_type switch
@@ -59,7 +59,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 	{
 		static Register_VRC_AVA_FacialTracking_Blendshape_Processor()
 		{
-			STF_Processor_Registry.RegisterProcessor(DetectorVRC.STF_VRC_AVATAR_CONTEXT, new VRC_AVA_FacialTracking_Blendshape_Processor());
+			STF_Processor_Registry.RegisterProcessor(DetectorVRC.STF_VRC_AVATAR_CONTEXT, new VRC_AVA_FaceTracking_Blendshape_Processor());
 		}
 	}
 }
