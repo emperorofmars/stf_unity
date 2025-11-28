@@ -42,7 +42,7 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public static ImportPropertyPathPart operator +(ImportPropertyPathPart a, ImportPropertyPathPart b)
 		{
-			if(b == null) return null;
+			if(a == null || b == null) return null;
 
 			string path = null;
 			if(!string.IsNullOrEmpty(a.RelativePath))

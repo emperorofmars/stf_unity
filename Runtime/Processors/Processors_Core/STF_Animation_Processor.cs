@@ -37,6 +37,10 @@ namespace com.squirrelbite.stf_unity.processors
 					continue; //TODO Report Warning
 				}
 				var pathRet = STFAnimation.AnimationRoot.PropertyConverter.ConvertPropertyPath(STFAnimation.AnimationRoot, track.target);
+				if (pathRet == null)
+				{
+					continue; //TODO Report Warning
+				}
 
 				//(string RelativePath, System.Type CurveType, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) = STFAnimation.AnimationRoot.PropertyConverter.ConvertPropertyPath(STFAnimation.AnimationRoot, track.target);
 
