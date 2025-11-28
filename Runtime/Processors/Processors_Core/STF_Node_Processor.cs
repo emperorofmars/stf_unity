@@ -7,7 +7,7 @@ namespace com.squirrelbite.stf_unity.processors
 {
 	public class STF_NodeResource_Converter : ISTF_PropertyConverter
 	{
-		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource Resource, List<string> STFPath)
+		public ImportPropertyPathPart ConvertPropertyPath(ISTF_Resource Resource, List<string> STFPath)
 		{
 			var resource = Resource as STF_NodeResource;
 			var convert = new System.Func<List<float>, List<float>>(Values =>
@@ -29,18 +29,17 @@ namespace com.squirrelbite.stf_unity.processors
 
 			if (STFPath.Count > 0)
 			{
-				if (STFPath[0] == "t") return ("", typeof(Transform), new() { "localPosition.x", "localPosition.y", "localPosition.z" }, convert);
-				else if (STFPath[0] == "r") return ("", typeof(Transform), new() { "localRotation.x", "localRotation.y", "localRotation.z", "localRotation.w" }, convert);
-				else if (STFPath[0] == "r_euler") return ("", typeof(Transform), new() { "localEulerAngles.x", "localEulerAngles.y", "localEulerAngles.z" }, convert);
-				else if (STFPath[0] == "s") return ("", typeof(Transform), new() { "localScale.x", "localScale.y", "localScale.z" }, convert);
-				else if (STFPath[0] == "enabled") return ("", typeof(GameObject), new() { "active" }, null );
+				if (STFPath[0] == "t") return new ImportPropertyPathPart(typeof(Transform), new() { "localPosition.x", "localPosition.y", "localPosition.z" }, convert);
+				else if (STFPath[0] == "r") return new ImportPropertyPathPart(typeof(Transform), new() { "localRotation.x", "localRotation.y", "localRotation.z", "localRotation.w" }, convert);
+				else if (STFPath[0] == "r_euler") return new ImportPropertyPathPart(typeof(Transform), new() { "localEulerAngles.x", "localEulerAngles.y", "localEulerAngles.z" }, convert);
+				else if (STFPath[0] == "s") return new ImportPropertyPathPart(typeof(Transform), new() { "localScale.x", "localScale.y", "localScale.z" }, convert);
+				else if (STFPath[0] == "enabled") return new ImportPropertyPathPart(typeof(GameObject), new() { "active" });
 				else if (STFPath[0] == "instance")
 				{
 					var instance = resource.gameObject.GetComponent<STF_InstanceResource>();
 					if (instance && instance.PropertyConverter != null)
 					{
-						(string retRelativePath, System.Type retType, List<string> retPropNames, System.Func<List<float>, List<float>> convertValueFunc) = instance.PropertyConverter.ConvertPropertyPath(instance, STFPath.GetRange(1, STFPath.Count - 1));
-						return (retRelativePath, retType, retPropNames, convertValueFunc);
+						return instance.PropertyConverter.ConvertPropertyPath(instance, STFPath.GetRange(1, STFPath.Count - 1));
 					}
 				}
 				else if (STFPath[0] == "component")
@@ -48,12 +47,11 @@ namespace com.squirrelbite.stf_unity.processors
 					var component = resource.gameObject.GetComponents<STF_MonoBehaviour>().FirstOrDefault(c => c.STF_Owner == resource && c.STF_Id == STFPath[1]);
 					if (component && component.PropertyConverter != null)
 					{
-						(string retRelativePath, System.Type retType, List<string> retPropNames, System.Func<List<float>, List<float>> convertValueFunc) = component.PropertyConverter.ConvertPropertyPath(component, STFPath.GetRange(2, STFPath.Count - 2));
-						return (retRelativePath, retType, retPropNames, convertValueFunc);
+						return component.PropertyConverter.ConvertPropertyPath(component, STFPath.GetRange(2, STFPath.Count - 2));
 					}
 				}
 			}
-			return ("", null, null, null);
+			return null;
 		}
 	}
 

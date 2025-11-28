@@ -12,7 +12,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 		{
 			this.Light = Light;
 		}
-		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource STFResource, List<string> STFPath)
+		public ImportPropertyPathPart ConvertPropertyPath(ISTF_Resource STFResource, List<string> STFPath)
 		{
 			var convert = new System.Func<List<float>, List<float>>(Values => {
 				Values[0] *= Mathf.Rad2Deg;
@@ -24,18 +24,18 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 				switch(STFPath[0])
 				{
 					case "temperature":
-						return (Light.name, typeof(Light), new() { "m_ColorTemperature" }, null);
+						return new ImportPropertyPathPart(Light.name, typeof(Light), new() { "m_ColorTemperature" });
 					case "color":
-						return (Light.name, typeof(Light), new() { "m_Color.r", "m_Color.g", "m_Color.b" }, null);
+						return new ImportPropertyPathPart(Light.name, typeof(Light), new() { "m_Color.r", "m_Color.g", "m_Color.b" });
 					case "brightness":
-						return (Light.name, typeof(Light), new() { "m_Intensity" }, null);
+						return new ImportPropertyPathPart(Light.name, typeof(Light), new() { "m_Intensity" });
 					case "range":
-						return (Light.name, typeof(Light), new() { "m_Range" }, null);
+						return new ImportPropertyPathPart(Light.name, typeof(Light), new() { "m_Range" });
 					case "spot_angle":
-						return (Light.name, typeof(Light), new() { "m_SpotAngle" }, convert);
+						return new ImportPropertyPathPart(Light.name, typeof(Light), new() { "m_SpotAngle" });
 				}
 			}
-			return ("", null, null, null);
+			return null;
 		}
 	}
 	public class STFEXP_Light_Processor : ISTF_Processor

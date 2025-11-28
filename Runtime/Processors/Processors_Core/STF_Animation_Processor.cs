@@ -36,7 +36,14 @@ namespace com.squirrelbite.stf_unity.processors
 				{
 					continue; //TODO Report Warning
 				}
-				(string RelativePath, System.Type CurveType, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) = STFAnimation.AnimationRoot.PropertyConverter.ConvertPropertyPath(STFAnimation.AnimationRoot, track.target);
+				var pathRet = STFAnimation.AnimationRoot.PropertyConverter.ConvertPropertyPath(STFAnimation.AnimationRoot, track.target);
+
+				//(string RelativePath, System.Type CurveType, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) = STFAnimation.AnimationRoot.PropertyConverter.ConvertPropertyPath(STFAnimation.AnimationRoot, track.target);
+
+				var RelativePath = pathRet.RelativePath;
+				var CurveType = pathRet.TargetType;
+				var PropertyNames = pathRet.PropertyNames;
+				var ConvertValueFunc = pathRet.ConvertValueFunc;
 
 				if (!string.IsNullOrWhiteSpace(RelativePath) && CurveType != null && PropertyNames != null && PropertyNames.Count > 0)
 				{

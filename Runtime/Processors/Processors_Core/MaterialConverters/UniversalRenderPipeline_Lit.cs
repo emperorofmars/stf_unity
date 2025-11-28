@@ -6,9 +6,9 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 {
 	public class STF_PropertyConverter_Material_UniversalRenderPipeline_Lit : ISTF_PropertyConverter
 	{
-		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource Resource, List<string> STFPath)
+		public ImportPropertyPathPart ConvertPropertyPath(ISTF_Resource Resource, List<string> STFPath)
 		{
-			return ("", null, null, null);
+			return null;
 		}
 	}
 

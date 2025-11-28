@@ -14,7 +14,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			this.Orthographic = Orthographic;
 			this.Camera = Camera;
 		}
-		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource STFResource, List<string> STFPath)
+		public ImportPropertyPathPart ConvertPropertyPath(ISTF_Resource STFResource, List<string> STFPath)
 		{
 			var convert = new System.Func<List<float>, List<float>>(Values => {
 				Values[0] *= Mathf.Rad2Deg;
@@ -23,9 +23,9 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 
 			if (STFPath.Count == 1 && STFPath[0] == "fov")
 			{
-				return (Camera.name, typeof(Camera), new() { Orthographic ? "orthographic size" : "field of view" }, !Orthographic ? convert : null);
+				return new ImportPropertyPathPart(Camera.name, typeof(Camera), new() { Orthographic ? "orthographic size" : "field of view" }, !Orthographic ? convert : null);
 			}
-			else return ("", null, null, null);
+			else return null;
 		}
 	}
 

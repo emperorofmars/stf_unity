@@ -6,17 +6,17 @@ namespace com.squirrelbite.stf_unity.modules.stf_material
 {
 	public class STF_PropertyConverter_Material_Standard : ISTF_PropertyConverter
 	{
-		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource Resource, List<string> STFPath)
+		public ImportPropertyPathPart ConvertPropertyPath(ISTF_Resource Resource, List<string> STFPath)
 		{
 			if(STFPath.Count <= 2 || !int.TryParse(STFPath[1], out int propertyIndex))
-				return ("", null, null, null);
+				return null;
 
 			if(STFPath[0] == "albedo.color" && propertyIndex == 0 && STFPath[2] == "color")
 			{
-				return ("", null, new() { "material._Color.r", "material._Color.g", "material._Color.b", "material._Color.a" }, null);
+				return new ImportPropertyPathPart(new List<string>() { "material._Color.r", "material._Color.g", "material._Color.b", "material._Color.a" });
 			}
 
-			return ("", null, null, null);
+			return null;
 		}
 	}
 

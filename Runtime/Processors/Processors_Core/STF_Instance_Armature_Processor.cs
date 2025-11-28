@@ -7,7 +7,7 @@ namespace com.squirrelbite.stf_unity.processors
 {
 	public class STF_Instance_Armature_Converter : ISTF_PropertyConverter
 	{
-		public (string RelativePath, System.Type Type, List<string> PropertyNames, System.Func<List<float>, List<float>> ConvertValueFunc) ConvertPropertyPath(ISTF_Resource Resource, List<string> STFPath)
+		public ImportPropertyPathPart ConvertPropertyPath(ISTF_Resource Resource, List<string> STFPath)
 		{
 			var resource = Resource as STF_Instance_Armature;
 			if (STFPath.Count > 1)
@@ -18,11 +18,10 @@ namespace com.squirrelbite.stf_unity.processors
 				{
 					var relativePath = UnityUtil.getPath(resource.transform, target.transform, true);
 
-					(string retRelativePath, System.Type retType, List<string> retPropNames, System.Func<List<float>, List<float>> convertValueFunc) = target.PropertyConverter.ConvertPropertyPath(target, STFPath.GetRange(1, STFPath.Count - 1));
-					return (string.IsNullOrEmpty(retRelativePath) ? relativePath : relativePath + "/" + retRelativePath, retType, retPropNames, convertValueFunc);
+					return new ImportPropertyPathPart(relativePath) + target.PropertyConverter.ConvertPropertyPath(target, STFPath.GetRange(1, STFPath.Count - 1));
 				}
 			}
-			return ("", null, null, null);
+			return null;
 		}
 	}
 
