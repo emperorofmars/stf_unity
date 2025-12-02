@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 
+using System.Collections.Generic;
 using System.Linq;
 using com.squirrelbite.stf_unity.modules.editors;
 using UnityEditor;
@@ -23,12 +24,15 @@ namespace com.squirrelbite.stf_unity.tools
 
 			{
 				var mainSettings = new Box();
-				mainSettings.style.marginTop = mainSettings.style.marginBottom = 10;
-				mainSettings.style.paddingRight = 5;
+				mainSettings.style.marginTop = mainSettings.style.marginBottom = 8;
+				mainSettings.style.paddingTop = mainSettings.style.paddingRight = mainSettings.style.paddingBottom = mainSettings.style.paddingLeft = 5;
+				mainSettings.style.paddingRight = 10;
+				mainSettings.style.borderTopLeftRadius = mainSettings.style.borderBottomLeftRadius = mainSettings.style.borderTopRightRadius = mainSettings.style.borderBottomRightRadius = 3;
 				ui.Add(mainSettings);
 
 				var p_AuthoringImport = new PropertyField(serializedObject.FindProperty("ImportConfig").FindPropertyRelative("AuthoringImport"), "<size=+1>Authoring Import</size>");
 				mainSettings.Add(p_AuthoringImport);
+				p_AuthoringImport.style.marginBottom = 3;
 
 				string formatValue(string key) { return STF_Processor_Registry.GetAvailableContextDisplayNames().Find(e => e.Item1 == key).Item2; }
 				var p_SelectedApplication = new DropdownField(STF_Processor_Registry.GetAvailableContextDisplayNames().Select(p => p.Item1).ToList(), 0, formatValue, formatValue) { label = "<size=+1>Select Import Context</size>" };
@@ -38,20 +42,84 @@ namespace com.squirrelbite.stf_unity.tools
 			}
 
 			{
-				var spacer = new VisualElement();
-				spacer.style.borderBottomWidth = 5;
-				spacer.style.borderBottomColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
-				ui.Add(spacer);
-			}
+				// Unity plz
+				//var tabBar = new TabView();
 
-			// Unity plz
-			//var tabBar = new TabView();
-			var tabBar = new IMGUIContainer { onGUIHandler = DrawTabView };
-			tabBar.style.marginTop = tabBar.style.marginBottom = 10;
-			ui.Add(tabBar);
+				var tabBar = new VisualElement();
+				ui.Add(tabBar);
+				var tabContentContainer = new VisualElement();
+				ui.Add(tabContentContainer);
+
+				tabBar.style.flexDirection = FlexDirection.Row;
+				tabBar.style.marginTop = tabBar.style.marginBottom = 6;
+				//tabBar.style.paddingTop = tabBar.style.paddingRight = tabBar.style.paddingBottom = tabBar.style.paddingLeft = 3;
+
+				var tabs = new List<VisualElement>();
+				var tabContent = new Dictionary<VisualElement, VisualElement>();
+				Label currentTab = null;
+
+				Label setupLabel(string text, VisualElement content, int roundSide = 0)
+				{
+					var tab = new Label(text);
+					tabBar.Add(tab);
+					tabs.Add(tab);
+					tabContentContainer.Add(content);
+					tabContent.Add(tab, content);
+					tab.style.minWidth = 100;
+					tab.style.flexGrow = 1;
+					tab.style.unityTextAlign = TextAnchor.MiddleCenter;
+					tab.style.paddingTop = tab.style.paddingRight = tab.style.paddingBottom = tab.style.paddingLeft = 6;
+					if(roundSide == -1)
+						tab.style.borderTopLeftRadius = tab.style.borderBottomLeftRadius = 3;
+					else if(roundSide == 0)
+					{
+						tab.style.borderLeftWidth = tab.style.borderRightWidth = 1;
+						tab.style.borderLeftColor = tab.style.borderRightColor = new StyleColor(new Color(0.12f, 0.12f, 0.12f));
+					}
+					else if(roundSide == 1)
+						tab.style.borderTopRightRadius = tab.style.borderBottomRightRadius = 3;
+					tab.style.backgroundColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
+
+					tab.RegisterCallback<MouseOverEvent>(e => {
+						if(tab != currentTab)
+							tab.style.backgroundColor = new StyleColor(new Color(0.19f, 0.19f, 0.19f));
+					});
+					tab.RegisterCallback<MouseOutEvent>(e => {
+						if(tab != currentTab)
+							tab.style.backgroundColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
+					});
+					tab.RegisterCallback<PointerUpEvent>(e => {
+						currentTab = e.currentTarget as Label;
+						foreach(var tab in tabs)
+						{
+							if(tab != currentTab)
+							{
+								tab.style.backgroundColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
+								tab.style.borderBottomWidth = 0;
+								tabContent[tab].style.display = DisplayStyle.None;
+							}
+						}
+						currentTab.style.backgroundColor = new StyleColor(new Color(0.28f, 0.38f, 0.52f));
+						if(tabContent.ContainsKey(tab))
+							tabContent[tab].style.display = DisplayStyle.Flex;
+					});
+					return tab;
+				}
+				currentTab = setupLabel("Info", new IMGUIContainer { onGUIHandler = RenderAssetInfoGUI }, -1);
+				currentTab.style.backgroundColor = new StyleColor(new Color(0.28f, 0.38f, 0.52f));
+
+				var mainTab = new IMGUIContainer { onGUIHandler = RenderMainSettingsGUI };
+				mainTab.style.display = DisplayStyle.None;
+				setupLabel("Main Settings", mainTab);
+
+				var advancedTab = new IMGUIContainer { onGUIHandler = RenderAdvancedSettingsGUI };
+				setupLabel("Advanced", advancedTab, 1);
+				advancedTab.style.display = DisplayStyle.None;
+			}
 
 			{
 				var spacer = new VisualElement();
+				spacer.style.marginTop = 15;
 				spacer.style.borderBottomWidth = 5;
 				spacer.style.borderBottomColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
 				ui.Add(spacer);
@@ -63,41 +131,22 @@ namespace com.squirrelbite.stf_unity.tools
 			return ui;
 		}
 
-		private void DrawTabView()
+		private void RenderMainSettingsGUI()
 		{
 			var importer = (STFScriptedImporter)target;
-			using(new EditorGUILayout.HorizontalScope())
-			{
-				GUILayout.FlexibleSpace();
-				SelectedToolbarTab = GUILayout.Toolbar(SelectedToolbarTab, ToolbarOptions, GUILayout.Height(25), GUILayout.MaxWidth(450));
-				GUILayout.FlexibleSpace();
-			}
-
-			if(SelectedToolbarTab == 0)
-			{
-				GUILayout.Space(10);
-				if (AssetDatabase.LoadAssetAtPath<STF_Import>(importer.assetPath) is var stfImport && stfImport != null)
-				{
-					RenderAsset(stfImport);
-				}
-				else
-				{
-					EditorGUILayout.LabelField("Import Failed");
-				}
-			}
-			else if(SelectedToolbarTab == 1)
-			{
-				STF_Module_Editor_Registry.DrawHeroSettings(importer);
-			}
-			else if(SelectedToolbarTab == 2)
-			{
-				STF_Module_Editor_Registry.DrawAdvancedSettings(importer);
-			}
+			STF_Module_Editor_Registry.DrawHeroSettings(importer);
+		}
+		private void RenderAdvancedSettingsGUI()
+		{
+			var importer = (STFScriptedImporter)target;
+			STF_Module_Editor_Registry.DrawAdvancedSettings(importer);
 		}
 
-		private void RenderAsset(STF_Import asset)
+		private void RenderAssetInfoGUI()
 		{
-			if(asset != null)
+			var importer = (STFScriptedImporter)target;
+			GUILayout.Space(10);
+			if (AssetDatabase.LoadAssetAtPath<STF_Import>(importer.assetPath) is var asset && asset != null)
 			{
 				using(new EditorGUILayout.HorizontalScope())
 				{
@@ -182,7 +231,7 @@ namespace com.squirrelbite.stf_unity.tools
 			}
 			else
 			{
-				EditorGUILayout.LabelField("Invalid Asset");
+				EditorGUILayout.LabelField("Import Failed");
 			}
 		}
 	}
