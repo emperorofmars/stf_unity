@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using com.squirrelbite.stf_unity.tools;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace com.squirrelbite.stf_unity.modules.editors
 {
@@ -35,61 +36,64 @@ namespace com.squirrelbite.stf_unity.modules.editors
 			}
 		}
 
-		public static void DrawHeroSettings(STFScriptedImporter Importer)
+		public static VisualElement CreateHeroSettingsGUI(STFScriptedImporter Importer)
 		{
+			var ret = new VisualElement();
 			foreach(var module in Modules)
 			{
-				// todo module settings
+				// todo general module settings
 				var moduleOptions = Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key);
 				if(moduleOptions.Count > 0 && module.Value.HasHeroSettings)
 				{
-					GUILayout.Space(10);
-					GUILayout.Label(!string.IsNullOrWhiteSpace(module.Value.HeroSettingsLabel) ? module.Value.HeroSettingsLabel : module.Value.STF_Type, EditorStyles.whiteLargeLabel);
-					EditorGUI.indentLevel++;
+					var modulePanel = new Box();
+					modulePanel.Add(new Label($"<size=+1><font-weight=700>{(!string.IsNullOrWhiteSpace(module.Value.HeroSettingsLabel) ? module.Value.HeroSettingsLabel : module.Value.STF_Type)}</font-weight></size>"));
+					ApplyPanelStyle(modulePanel);
+					ret.Add(modulePanel);
+
+					var moduleSettingsPanel = new VisualElement();
+					moduleSettingsPanel.style.marginLeft = 10;
+					modulePanel.Add(moduleSettingsPanel);
+
 					foreach(var option in Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key))
 					{
-						try
-						{
-							module.Value.DrawHeroSettings(Importer, option);
-						}
-						catch
-						{
-							// todo
-							Debug.Log("FAIL");
-						}
+						moduleSettingsPanel.Add(module.Value.CreateHeroSettingsGUI(Importer, option));
 					}
-					EditorGUI.indentLevel--;
 				}
 			}
+			return ret;
 		}
 
-		public static void DrawAdvancedSettings(STFScriptedImporter Importer)
+		public static VisualElement CreateAdvancedSettingsGUI(STFScriptedImporter Importer)
 		{
+			var ret = new VisualElement();
 			foreach(var module in Modules)
 			{
-				// todo module settings
+				// todo general module settings
 				var moduleOptions = Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key);
 				if(moduleOptions.Count > 0 && module.Value.HasAdvancedSettings)
 				{
-					GUILayout.Space(10);
-					GUILayout.Label(module.Key, EditorStyles.whiteLargeLabel);
-					EditorGUI.indentLevel++;
+					var modulePanel = new Box();
+					modulePanel.Add(new Label($"<size=+1><font-weight=700>{module.Key}</font-weight></size>"));
+					ApplyPanelStyle(modulePanel);
+					ret.Add(modulePanel);
+
+					var moduleSettingsPanel = new VisualElement();
+					moduleSettingsPanel.style.marginLeft = 10;
+					modulePanel.Add(moduleSettingsPanel);
+
 					foreach(var option in Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key))
 					{
-						try
-						{
-							GUILayout.Space(5);
-							module.Value.DrawAdvancedSettings(Importer, option);
-						}
-						catch
-						{
-							// todo
-							Debug.Log("FAIL");
-						}
+						moduleSettingsPanel.Add(module.Value.CreateAdvancedSettingsGUI(Importer, option));
 					}
-					EditorGUI.indentLevel--;
 				}
 			}
+			return ret;
+		}
+
+		private static void ApplyPanelStyle(VisualElement Panel)
+		{
+			Panel.style.paddingTop = Panel.style.paddingLeft = Panel.style.paddingBottom = Panel.style.paddingRight = 6;
+			Panel.style.borderTopLeftRadius = Panel.style.borderBottomLeftRadius = Panel.style.borderTopRightRadius = Panel.style.borderBottomRightRadius = 3;
 		}
 	}
 }

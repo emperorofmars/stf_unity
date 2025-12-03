@@ -51,7 +51,8 @@ namespace com.squirrelbite.stf_unity.tools
 				ui.Add(tabContentContainer);
 
 				tabBar.style.flexDirection = FlexDirection.Row;
-				tabBar.style.marginTop = tabBar.style.marginBottom = 6;
+				tabBar.style.marginTop = 6;
+				tabBar.style.marginBottom = 10;
 				//tabBar.style.paddingTop = tabBar.style.paddingRight = tabBar.style.paddingBottom = tabBar.style.paddingLeft = 3;
 
 				var tabs = new List<VisualElement>();
@@ -95,7 +96,6 @@ namespace com.squirrelbite.stf_unity.tools
 							if(tab != currentTab)
 							{
 								tab.style.backgroundColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
-								tab.style.borderBottomWidth = 0;
 								tabContent[tab].style.display = DisplayStyle.None;
 							}
 						}
@@ -105,14 +105,14 @@ namespace com.squirrelbite.stf_unity.tools
 					});
 					return tab;
 				}
-				currentTab = setupLabel("Info", new IMGUIContainer { onGUIHandler = RenderAssetInfoGUI }, -1);
+				currentTab = setupLabel("Info", CreateAssetInfoGUI(), -1);
 				currentTab.style.backgroundColor = new StyleColor(new Color(0.28f, 0.38f, 0.52f));
 
-				var mainTab = new IMGUIContainer { onGUIHandler = RenderMainSettingsGUI };
+				var mainTab = STF_Module_Editor_Registry.CreateHeroSettingsGUI(importer);
 				mainTab.style.display = DisplayStyle.None;
 				setupLabel("Main Settings", mainTab);
 
-				var advancedTab = new IMGUIContainer { onGUIHandler = RenderAdvancedSettingsGUI };
+				var advancedTab = STF_Module_Editor_Registry.CreateAdvancedSettingsGUI(importer);
 				setupLabel("Advanced", advancedTab, 1);
 				advancedTab.style.display = DisplayStyle.None;
 			}
@@ -127,112 +127,22 @@ namespace com.squirrelbite.stf_unity.tools
 
 			ui.Add(new IMGUIContainer { onGUIHandler = ApplyRevertGUI });
 
-
 			return ui;
 		}
 
-		private void RenderMainSettingsGUI()
+		private VisualElement CreateAssetInfoGUI()
 		{
 			var importer = (STFScriptedImporter)target;
-			STF_Module_Editor_Registry.DrawHeroSettings(importer);
-		}
-		private void RenderAdvancedSettingsGUI()
-		{
-			var importer = (STFScriptedImporter)target;
-			STF_Module_Editor_Registry.DrawAdvancedSettings(importer);
-		}
-
-		private void RenderAssetInfoGUI()
-		{
-			var importer = (STFScriptedImporter)target;
-			GUILayout.Space(10);
+			var ret = new VisualElement();
 			if (AssetDatabase.LoadAssetAtPath<STF_Import>(importer.assetPath) is var asset && asset != null)
 			{
-				using(new EditorGUILayout.HorizontalScope())
-				{
-					EditorGUILayout.PrefixLabel("Asset Name");
-					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.AssetName);
-				}
-				using(new EditorGUILayout.HorizontalScope())
-				{
-					EditorGUILayout.PrefixLabel("Asset Version");
-					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.Version);
-				}
-				using(new EditorGUILayout.HorizontalScope())
-				{
-					EditorGUILayout.PrefixLabel("Author");
-					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.Author);
-				}
-				using(new EditorGUILayout.HorizontalScope())
-				{
-					EditorGUILayout.PrefixLabel("URL");
-					if(!string.IsNullOrWhiteSpace(asset.Meta?.STFAssetInfo?.URL) && asset.Meta.STFAssetInfo.URL.StartsWith("https://"))
-					{
-						if(EditorGUILayout.LinkButton(asset.Meta?.STFAssetInfo?.URL))
-							Application.OpenURL(asset.Meta?.STFAssetInfo?.URL);
-					}
-					else
-						EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.URL);
-				}
-				using(new EditorGUILayout.HorizontalScope())
-				{
-					EditorGUILayout.PrefixLabel("License");
-					EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.License);
-				}
-				using(new EditorGUILayout.HorizontalScope())
-				{
-					EditorGUILayout.PrefixLabel("License URL");
-					if(!string.IsNullOrWhiteSpace(asset.Meta?.STFAssetInfo?.LicenseURL) && asset.Meta.STFAssetInfo.LicenseURL.StartsWith("https://"))
-					{
-						if(EditorGUILayout.LinkButton(asset.Meta?.STFAssetInfo?.LicenseURL))
-							Application.OpenURL(asset.Meta?.STFAssetInfo?.LicenseURL);
-					}
-					else
-						EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.LicenseURL);
-				}
-				using(new EditorGUILayout.HorizontalScope())
-				{
-					EditorGUILayout.PrefixLabel("Documentation URL");
-					if(!string.IsNullOrWhiteSpace(asset.Meta?.STFAssetInfo?.DocumentationURL) && asset.Meta.STFAssetInfo.DocumentationURL.StartsWith("https://"))
-					{
-						if(EditorGUILayout.LinkButton(asset.Meta?.STFAssetInfo?.DocumentationURL))
-							Application.OpenURL(asset.Meta?.STFAssetInfo?.DocumentationURL);
-					}
-					else
-						EditorGUILayout.LabelField(asset.Meta?.STFAssetInfo?.DocumentationURL);
-				}
-				using(new EditorGUILayout.HorizontalScope())
-				{
-					EditorGUILayout.PrefixLabel("Binary Version");
-					EditorGUILayout.LabelField($"{asset.BinaryVersionMajor}.{asset.BinaryVersionMinor}");
-				}
-				using(new EditorGUILayout.HorizontalScope())
-				{
-					EditorGUILayout.PrefixLabel("Definition Version");
-					EditorGUILayout.LabelField($"{asset.Meta?.DefinitionVersionMajor}.{asset.Meta?.DefinitionVersionMinor}");
-				}
-
-				if(asset.Meta?.STFAssetInfo?.CustomProperties?.Count > 0)
-				{
-					GUILayout.Space(10);
-					EditorGUILayout.LabelField("Custom Properties", EditorStyles.boldLabel);
-					using(new EditorGUI.IndentLevelScope())
-					{
-						foreach(var custom in asset.Meta?.STFAssetInfo?.CustomProperties)
-						{
-							using(new EditorGUILayout.HorizontalScope())
-							{
-								EditorGUILayout.SelectableLabel(custom.Name);
-								EditorGUILayout.SelectableLabel(custom.Value);
-							}
-						}
-					}
-				}
+				ret.Add(CreateEditor(asset).CreateInspectorGUI());
 			}
 			else
 			{
-				EditorGUILayout.LabelField("Import Failed");
+				ret.Add(new HelpBox("Import Failed :(", HelpBoxMessageType.Error));
 			}
+			return ret;
 		}
 	}
 }

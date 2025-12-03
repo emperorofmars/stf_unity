@@ -5,6 +5,7 @@ using com.squirrelbite.stf_unity.modules.stf_material;
 using com.squirrelbite.stf_unity.tools;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
+using UnityEngine.UIElements;
 
 namespace com.squirrelbite.stf_unity.modules.editors
 {
@@ -15,34 +16,39 @@ namespace com.squirrelbite.stf_unity.modules.editors
 		public bool HasHeroSettings => true;
 		public bool HasAdvancedSettings => false;
 
-		public void DrawHeroSettings(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
+		public VisualElement CreateHeroSettingsGUI(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
 		{
-			var availableConverters = STF_Material_Converter_Registry.Converters.Select(c => c.Key).ToList();
-			var options = JObject.Parse(Option.Json);
-			if(options.ContainsKey("target_shader") && options.Value<string>("target_shader") is string targetShader && !string.IsNullOrWhiteSpace(targetShader))
+			void draw()
 			{
-				int selectedIndex = availableConverters.FindIndex(c => c == targetShader);
-				if (selectedIndex < 0)
+				var availableConverters = STF_Material_Converter_Registry.Converters.Select(c => c.Key).ToList();
+				var options = JObject.Parse(Option.Json);
+				if(options.ContainsKey("target_shader") && options.Value<string>("target_shader") is string targetShader && !string.IsNullOrWhiteSpace(targetShader))
 				{
-					selectedIndex = 0; // Standard Shader
-				}
+					int selectedIndex = availableConverters.FindIndex(c => c == targetShader);
+					if (selectedIndex < 0)
+					{
+						selectedIndex = 0; // Default Shader
+					}
 
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.PrefixLabel(Option.DisplayName);
-				var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableConverters.ToArray());
-				EditorGUILayout.EndHorizontal();
+					EditorGUILayout.BeginHorizontal();
+					EditorGUILayout.PrefixLabel(Option.DisplayName);
+					var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableConverters.ToArray());
+					EditorGUILayout.EndHorizontal();
 
-				if (newSelectedIndex != selectedIndex)
-				{
-					options["target_shader"] = availableConverters[newSelectedIndex];
-					Option.Json = options.ToString();
-					EditorUtility.SetDirty(Importer);
+					if (newSelectedIndex != selectedIndex)
+					{
+						options["target_shader"] = availableConverters[newSelectedIndex];
+						Option.Json = options.ToString();
+						EditorUtility.SetDirty(Importer);
+					}
 				}
 			}
+			return new IMGUIContainer { onGUIHandler = draw };
 		}
 
-		public void DrawAdvancedSettings(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
+		public VisualElement CreateAdvancedSettingsGUI(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
 		{
+			return null;
 		}
 	}
 }
