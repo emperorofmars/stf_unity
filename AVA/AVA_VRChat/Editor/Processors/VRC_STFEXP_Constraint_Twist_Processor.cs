@@ -14,7 +14,6 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 	public class VRC_STFEXP_Constraint_Twist_Processor : ISTF_Processor
 	{
 		public System.Type TargetType => typeof(STFEXP_Constraint_Twist);
-
 		public const uint _Order = 10;
 		public uint Order => _Order;
 
