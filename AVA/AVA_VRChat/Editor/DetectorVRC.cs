@@ -3,7 +3,6 @@
 using UnityEditor;
 using UnityEngine;
 using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity.processors.stfexp;
 using com.squirrelbite.stf_unity.modules.stfexp;
 using System.Collections.Generic;
 

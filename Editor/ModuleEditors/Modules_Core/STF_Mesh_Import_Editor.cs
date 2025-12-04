@@ -21,45 +21,43 @@ namespace com.squirrelbite.stf_unity.modules.editors
 
 		public VisualElement CreateAdvancedSettingsGUI(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
 		{
-			void draw()
+			var ret = new VisualElement();
+			ret.Add(new Label(Option.DisplayName));
+
+			var options = JObject.Parse(Option.Json);
+			if(options.ContainsKey("vertex_colors") && options.Value<bool>("vertex_colors") is bool vertexColors)
 			{
-				EditorGUILayout.LabelField(Option.DisplayName);
-				EditorGUI.indentLevel++;
-
-				var options = JObject.Parse(Option.Json);
-				if(options.ContainsKey("vertex_colors") && options.Value<bool>("vertex_colors") is bool vertexColors)
-				{
-					EditorGUILayout.BeginHorizontal();
-					EditorGUILayout.PrefixLabel("Import Vertex Colors");
-					var newImportVertexColors = EditorGUILayout.Toggle(vertexColors);
-					EditorGUILayout.EndHorizontal();
-
-					if(newImportVertexColors != vertexColors)
-					{
-						options["vertex_colors"] = newImportVertexColors;
-						Option.Json = options.ToString();
-						EditorUtility.SetDirty(Importer);
-					}
-				}
-
-				options = JObject.Parse(Option.Json);
-				if(options.ContainsKey("max_weights") && options.Value<int>("max_weights") is int maxWeights)
-				{
-					EditorGUILayout.BeginHorizontal();
-					EditorGUILayout.PrefixLabel("Max. Weights");
-					var newMaxWeights = EditorGUILayout.IntSlider(maxWeights, 1, 32);
-					EditorGUILayout.EndHorizontal();
-
-					if(newMaxWeights != maxWeights)
-					{
-						options["max_weights"] = newMaxWeights;
-						Option.Json = options.ToString();
-						EditorUtility.SetDirty(Importer);
-					}
-				}
-				EditorGUI.indentLevel--;
+				var toggleVertexColors = new Toggle("Import Vertex Colors") { value = vertexColors };
+				toggleVertexColors.RegisterValueChangedCallback(e => {
+					var options = JObject.Parse(Option.Json);
+					options["vertex_colors"] = e.newValue;
+					Option.Json = options.ToString();
+					EditorUtility.SetDirty(Importer);
+				});
+				ret.Add(toggleVertexColors);
 			}
-			return new IMGUIContainer { onGUIHandler = draw };
+
+			if(options.ContainsKey("max_weights") && options.Value<int>("max_weights") is int maxWeights)
+			{
+				var hbar = new VisualElement();
+				hbar.style.flexDirection = FlexDirection.Row;
+				var valueLabel = new Label(maxWeights.ToString());
+				valueLabel.style.marginLeft = 10;
+				var sliderMaxWeights = new SliderInt("Max. Weights", 1, 32) { value = maxWeights };
+				sliderMaxWeights.style.flexGrow = 1;
+				sliderMaxWeights.RegisterValueChangedCallback(e => {
+					var options = JObject.Parse(Option.Json);
+					options["max_weights"] = e.newValue;
+					Option.Json = options.ToString();
+					EditorUtility.SetDirty(Importer);
+					valueLabel.text = e.newValue.ToString();
+				});
+				hbar.Add(sliderMaxWeights);
+				hbar.Add(valueLabel);
+				ret.Add(hbar);
+			}
+
+			return ret;
 		}
 	}
 }

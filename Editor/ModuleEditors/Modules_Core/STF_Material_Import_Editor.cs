@@ -18,32 +18,23 @@ namespace com.squirrelbite.stf_unity.modules.editors
 
 		public VisualElement CreateHeroSettingsGUI(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
 		{
-			void draw()
+			var availableConverters = STF_Material_Converter_Registry.Converters.Select(c => c.Key).ToList();
+			var options = JObject.Parse(Option.Json);
+			if(options.ContainsKey("target_shader") && options.Value<string>("target_shader") is string targetShader && !string.IsNullOrWhiteSpace(targetShader))
 			{
-				var availableConverters = STF_Material_Converter_Registry.Converters.Select(c => c.Key).ToList();
-				var options = JObject.Parse(Option.Json);
-				if(options.ContainsKey("target_shader") && options.Value<string>("target_shader") is string targetShader && !string.IsNullOrWhiteSpace(targetShader))
-				{
-					int selectedIndex = availableConverters.FindIndex(c => c == targetShader);
-					if (selectedIndex < 0)
-					{
-						selectedIndex = 0; // Default Shader
-					}
-
-					EditorGUILayout.BeginHorizontal();
-					EditorGUILayout.PrefixLabel(Option.DisplayName);
-					var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, availableConverters.ToArray());
-					EditorGUILayout.EndHorizontal();
-
-					if (newSelectedIndex != selectedIndex)
-					{
-						options["target_shader"] = availableConverters[newSelectedIndex];
-						Option.Json = options.ToString();
-						EditorUtility.SetDirty(Importer);
-					}
-				}
+				int selectedIndex = availableConverters.FindIndex(c => c == targetShader);
+				if (selectedIndex < 0)
+					selectedIndex = 0; // Default Shader
+				var ret = new PopupField<string>(availableConverters, selectedIndex);
+				ret.RegisterValueChangedCallback(e => {
+					var options = JObject.Parse(Option.Json);
+					options["target_shader"] = e.newValue;
+					Option.Json = options.ToString();
+					EditorUtility.SetDirty(Importer);
+				});
+				return ret;
 			}
-			return new IMGUIContainer { onGUIHandler = draw };
+			else return new VisualElement();
 		}
 
 		public VisualElement CreateAdvancedSettingsGUI(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
