@@ -14,9 +14,6 @@ namespace com.squirrelbite.stf_unity.tools
 	[CustomEditor(typeof(STFScriptedImporter))]
 	public class STFScriptedImporterInspector : ScriptedImporterEditor
 	{
-		private int SelectedToolbarTab = 0;
-		private readonly string[] ToolbarOptions = new string[] {"Info", "Main Settings", "Advanced Settings"};
-
 		public override VisualElement CreateInspectorGUI()
 		{
 			var importer = (STFScriptedImporter)target;
@@ -75,19 +72,19 @@ namespace com.squirrelbite.stf_unity.tools
 					else if(roundSide == 0)
 					{
 						tab.style.borderLeftWidth = tab.style.borderRightWidth = 1;
-						tab.style.borderLeftColor = tab.style.borderRightColor = new StyleColor(new Color(0.12f, 0.12f, 0.12f));
+						tab.style.borderLeftColor = tab.style.borderRightColor = new StyleColor(UIConstants.ColorBorder);
 					}
 					else if(roundSide == 1)
 						tab.style.borderTopRightRadius = tab.style.borderBottomRightRadius = 3;
-					tab.style.backgroundColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
+					tab.style.backgroundColor = new StyleColor(UIConstants.ColorBackground);
 
 					tab.RegisterCallback<MouseOverEvent>(e => {
 						if(tab != currentTab)
-							tab.style.backgroundColor = new StyleColor(new Color(0.19f, 0.19f, 0.19f));
+							tab.style.backgroundColor = new StyleColor(UIConstants.ColorMouseOver);
 					});
 					tab.RegisterCallback<MouseOutEvent>(e => {
 						if(tab != currentTab)
-							tab.style.backgroundColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
+							tab.style.backgroundColor = new StyleColor(UIConstants.ColorBackground);
 					});
 					tab.RegisterCallback<PointerUpEvent>(e => {
 						currentTab = e.currentTarget as Label;
@@ -95,18 +92,18 @@ namespace com.squirrelbite.stf_unity.tools
 						{
 							if(tab != currentTab)
 							{
-								tab.style.backgroundColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
+								tab.style.backgroundColor = new StyleColor(UIConstants.ColorBackground);
 								tabContent[tab].style.display = DisplayStyle.None;
 							}
 						}
-						currentTab.style.backgroundColor = new StyleColor(new Color(0.28f, 0.38f, 0.52f));
+						currentTab.style.backgroundColor = new StyleColor(UIConstants.ColorActive);
 						if(tabContent.ContainsKey(tab))
 							tabContent[tab].style.display = DisplayStyle.Flex;
 					});
 					return tab;
 				}
 				currentTab = setupLabel("Info", CreateAssetInfoGUI(), -1);
-				currentTab.style.backgroundColor = new StyleColor(new Color(0.28f, 0.38f, 0.52f));
+				currentTab.style.backgroundColor = new StyleColor(UIConstants.ColorActive);
 
 				var mainTab = STF_Module_Editor_Registry.CreateHeroSettingsGUI(importer);
 				mainTab.style.display = DisplayStyle.None;
@@ -121,7 +118,7 @@ namespace com.squirrelbite.stf_unity.tools
 				var spacer = new VisualElement();
 				spacer.style.marginTop = 15;
 				spacer.style.borderBottomWidth = 5;
-				spacer.style.borderBottomColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
+				spacer.style.borderBottomColor = new StyleColor(UIConstants.ColorBackground);
 				ui.Add(spacer);
 			}
 
