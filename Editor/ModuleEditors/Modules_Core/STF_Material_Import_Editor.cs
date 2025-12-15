@@ -25,7 +25,7 @@ namespace com.squirrelbite.stf_unity.modules.editors
 				int selectedIndex = availableConverters.FindIndex(c => c == targetShader);
 				if (selectedIndex < 0)
 					selectedIndex = 0; // Default Shader
-				var ret = new PopupField<string>(availableConverters, selectedIndex);
+				var ret = new PopupField<string>(availableConverters, selectedIndex) { label = Option.DisplayName };
 				ret.RegisterValueChangedCallback(e => {
 					var options = JObject.Parse(Option.Json);
 					options["target_shader"] = e.newValue;

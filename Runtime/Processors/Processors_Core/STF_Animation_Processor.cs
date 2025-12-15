@@ -15,6 +15,9 @@ namespace com.squirrelbite.stf_unity.processors
 		{
 			var STFAnimation = STFResource as STF_Animation;
 
+			var preferBaked = Context.ImportConfig.GetAndConfirmImportOption(STF_Animation.STF_TYPE, STFAnimation.STF_Id, STFAnimation.STF_Name, "prefer_baked", false);
+			var importBaked = Context.ImportConfig.GetAndConfirmImportOption(STF_Animation.STF_TYPE, STFAnimation.STF_Id, STFAnimation.STF_Name, "import_baked", true);
+
 			var ret = new AnimationClip
 			{
 				name = STFAnimation.STF_Name,

@@ -12,6 +12,7 @@ namespace com.squirrelbite.stf_unity.modules.editors
 		{
 			new STF_Material_Import_Editor(),
 			new STF_Mesh_Import_Editor(),
+			new STF_Animation_Import_Editor(),
 		};
 
 		private static readonly Dictionary<string, ISTF_Module_Editor> RegisteredModules = new();
@@ -46,17 +47,20 @@ namespace com.squirrelbite.stf_unity.modules.editors
 				if(moduleOptions.Count > 0 && module.Value.HasHeroSettings)
 				{
 					var modulePanel = new Box();
-					modulePanel.Add(new Label($"<size=+1><font-weight=700>{(!string.IsNullOrWhiteSpace(module.Value.HeroSettingsLabel) ? module.Value.HeroSettingsLabel : module.Value.STF_Type)}</font-weight></size>"));
+					modulePanel.Add(new Label($"<size=+2><font-weight=700>{(!string.IsNullOrWhiteSpace(module.Value.HeroSettingsLabel) ? module.Value.HeroSettingsLabel : module.Value.STF_Type)}</font-weight></size>"));
 					ApplyPanelStyle(modulePanel);
 					ret.Add(modulePanel);
 
 					var moduleSettingsPanel = new VisualElement();
 					moduleSettingsPanel.style.marginLeft = 10;
+					moduleSettingsPanel.style.marginTop = moduleSettingsPanel.style.marginBottom = 3;
 					modulePanel.Add(moduleSettingsPanel);
 
 					foreach(var option in Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key))
 					{
-						moduleSettingsPanel.Add(module.Value.CreateHeroSettingsGUI(Importer, option));
+						var resourceSettingsPanel = module.Value.CreateHeroSettingsGUI(Importer, option);
+						resourceSettingsPanel.style.marginTop = resourceSettingsPanel.style.marginBottom = 3;
+						moduleSettingsPanel.Add(resourceSettingsPanel);
 					}
 				}
 			}
@@ -72,18 +76,28 @@ namespace com.squirrelbite.stf_unity.modules.editors
 				var moduleOptions = Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key);
 				if(moduleOptions.Count > 0 && module.Value.HasAdvancedSettings)
 				{
-					var modulePanel = new Box();
-					modulePanel.Add(new Label($"<size=+1><font-weight=700>{module.Key}</font-weight></size>"));
-					ApplyPanelStyle(modulePanel);
-					ret.Add(modulePanel);
+					var foldout = new Foldout { text = $"<size=+1><font-weight=700>{module.Key}</font-weight></size>", value = false, viewDataKey = $"{module.Key}_advanced_settings" };
+					foldout.style.marginTop = foldout.style.marginBottom = 3;
+					foldout.style.marginLeft = 10;
+					foldout.contentContainer.style.marginLeft = 0;
+					ret.Add(foldout);
 
-					var moduleSettingsPanel = new VisualElement();
-					moduleSettingsPanel.style.marginLeft = 10;
+					var modulePanel = new Box();
+					ApplyPanelStyle(modulePanel);
+					foldout.Add(modulePanel);
+
+					var moduleSettingsPanel = new ScrollView(ScrollViewMode.Vertical) { horizontalScrollerVisibility = ScrollerVisibility.Hidden };
+					moduleSettingsPanel.style.maxHeight = 400;
+					moduleSettingsPanel.style.marginTop = moduleSettingsPanel.style.marginBottom = 3;
 					modulePanel.Add(moduleSettingsPanel);
 
 					foreach(var option in Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key))
 					{
-						moduleSettingsPanel.Add(module.Value.CreateAdvancedSettingsGUI(Importer, option));
+						moduleSettingsPanel.Add(new Label($"<font-weight=700>{option.DisplayName}</font-weight>"));
+						var resourceSettingsPanel = module.Value.CreateAdvancedSettingsGUI(Importer, option);
+						resourceSettingsPanel.style.marginLeft = 10;
+						resourceSettingsPanel.style.marginTop = resourceSettingsPanel.style.marginBottom = 3;
+						moduleSettingsPanel.Add(resourceSettingsPanel);
 					}
 				}
 			}
@@ -92,6 +106,7 @@ namespace com.squirrelbite.stf_unity.modules.editors
 
 		private static void ApplyPanelStyle(VisualElement Panel)
 		{
+			Panel.style.marginTop = Panel.style.marginBottom = 2;
 			Panel.style.paddingTop = Panel.style.paddingLeft = Panel.style.paddingBottom = Panel.style.paddingRight = 6;
 			Panel.style.borderTopLeftRadius = Panel.style.borderBottomLeftRadius = Panel.style.borderTopRightRadius = Panel.style.borderBottomRightRadius = 3;
 		}

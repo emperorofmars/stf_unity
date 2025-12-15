@@ -24,7 +24,7 @@ namespace com.squirrelbite.stf_unity.modules
 		{
 			public List<Keyframe> keyframes = new();
 			public int bake_interval = 1;
-			public List<float> baked_values;
+			public STF_Buffer baked_values;
 		}
 
 		[System.Serializable]
@@ -36,6 +36,13 @@ namespace com.squirrelbite.stf_unity.modules
 			public List<SubTrack> subtracks = new();
 		}
 
+		[System.Serializable]
+		public class TrackBaked
+		{
+			public List<string> target = new();
+			public List<STF_Buffer> subtracks = new();
+		}
+
 		public const string STF_TYPE = "stf.animation";
 		public override string STF_Type => STF_TYPE;
 		public float fps = 30;
@@ -43,6 +50,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public float range_start = 0;
 		public float range_end = 1;
 		public List<Track> tracks = new();
+		public List<TrackBaked> track_baked = new();
 
 		public STF_Prefab AnimationRoot;
 	}
@@ -78,13 +86,16 @@ namespace com.squirrelbite.stf_unity.modules
 					timepoints = jsonTrack["timepoints"].ToObject<List<float>>(),
 				};
 				if(jsonTrack.ContainsKey("interpolation")) track.interpolation_type = jsonTrack.Value<string>("interpolation");
-				foreach (var subtrackJson in jsonTrack["subtracks"])
+				foreach (JObject subtrackJson in jsonTrack["subtracks"])
 				{
 					if(subtrackJson.Type == JTokenType.Object)
 					{
 						var subTrack = new STF_Animation.SubTrack();
 						track.subtracks.Add(subTrack);
-						// todo also retrieve baked values if desired
+
+						if(subtrackJson.ContainsKey("baked"))
+							subTrack.baked_values = Context.ImportBuffer(subtrackJson.Value<string>("baked"));
+
 						for(int keyframeIndex = 0; keyframeIndex < track.timepoints.Count; keyframeIndex++)
 						{
 							var keyframeJson = subtrackJson["keyframes"][keyframeIndex];
@@ -128,6 +139,17 @@ namespace com.squirrelbite.stf_unity.modules
 				}
 				ret.tracks.Add(track);
 			}
+
+			if(JsonResource.ContainsKey("tracks_baked") && JsonResource["tracks_baked"] is JArray jsonTracksBaked) foreach(JObject jsonTrack in jsonTracksBaked)
+			{
+				if(jsonTrack.Type != JTokenType.Object || !jsonTrack.ContainsKey("subtracks") || !jsonTrack.ContainsKey("timepoints"))
+					continue;
+				var track = new STF_Animation.TrackBaked {
+					target = jsonTrack["target"].ToObject<List<string>>(),
+					subtracks = jsonTrack["subtracks"].ToObject<List<string>>().Select(bufferId => !string.IsNullOrEmpty(bufferId) ? Context.ImportBuffer(bufferId) : null).ToList(),
+				};
+			}
+
 			if(JsonResource.ContainsKey("range"))
 			{
 				ret.range_start = (float)JsonResource["range"][0];

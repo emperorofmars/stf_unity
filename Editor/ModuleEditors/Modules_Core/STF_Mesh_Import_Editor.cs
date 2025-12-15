@@ -22,9 +22,8 @@ namespace com.squirrelbite.stf_unity.modules.editors
 		public VisualElement CreateAdvancedSettingsGUI(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
 		{
 			var ret = new VisualElement();
-			ret.Add(new Label(Option.DisplayName));
-
 			var options = JObject.Parse(Option.Json);
+
 			if(options.ContainsKey("vertex_colors") && options.Value<bool>("vertex_colors") is bool vertexColors)
 			{
 				var toggleVertexColors = new Toggle("Import Vertex Colors") { value = vertexColors };

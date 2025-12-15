@@ -21,17 +21,13 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var stfConstraint = STFResource as STFEXP_Constraint_Rotation;
-			var ret = stfConstraint.gameObject.AddComponent<VRCParentConstraint>();
+			var ret = stfConstraint.gameObject.AddComponent<VRCRotationConstraint>();
 
 			ret.GlobalWeight = stfConstraint.Weight;
 
 			ret.AffectsRotationX = (stfConstraint.Axes & Axis.X) > 0;
 			ret.AffectsRotationY = (stfConstraint.Axes & Axis.Y) > 0;
 			ret.AffectsRotationZ = (stfConstraint.Axes & Axis.Z) > 0;
-
-			ret.AffectsPositionX = false;
-			ret.AffectsPositionY = false;
-			ret.AffectsPositionZ = false;
 
 			foreach(var stfSource in stfConstraint.Sources)
 			{
