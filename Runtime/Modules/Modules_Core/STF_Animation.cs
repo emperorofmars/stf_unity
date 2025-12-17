@@ -23,7 +23,6 @@ namespace com.squirrelbite.stf_unity.modules
 		public class SubTrack
 		{
 			public List<Keyframe> keyframes = new();
-			public int bake_interval = 1;
 			public STF_Buffer baked_values;
 		}
 
@@ -34,13 +33,7 @@ namespace com.squirrelbite.stf_unity.modules
 			public List<float> timepoints = new();
 			public string interpolation_type = null;
 			public List<SubTrack> subtracks = new();
-		}
-
-		[System.Serializable]
-		public class TrackBaked
-		{
-			public List<string> target = new();
-			public List<STF_Buffer> subtracks = new();
+			public bool baked_track = false;
 		}
 
 		public const string STF_TYPE = "stf.animation";
@@ -50,7 +43,7 @@ namespace com.squirrelbite.stf_unity.modules
 		public float range_start = 0;
 		public float range_end = 1;
 		public List<Track> tracks = new();
-		public List<TrackBaked> track_baked = new();
+		public List<Track> tracks_baked = new();
 
 		public STF_Prefab AnimationRoot;
 	}
@@ -77,78 +70,77 @@ namespace com.squirrelbite.stf_unity.modules
 
 			float lastFrame = 1;
 
-			if(JsonResource.ContainsKey("tracks") && JsonResource["tracks"] is JArray jsonTracks) foreach(JObject jsonTrack in jsonTracks)
+			void parseTracks(JArray jsonTracks, List<STF_Animation.Track> Target)
 			{
-				if(jsonTrack.Type != JTokenType.Object || !jsonTrack.ContainsKey("subtracks") || !jsonTrack.ContainsKey("timepoints"))
-					continue;
-				var track = new STF_Animation.Track {
-					target = jsonTrack["target"].ToObject<List<string>>(),
-					timepoints = jsonTrack["timepoints"].ToObject<List<float>>(),
-				};
-				if(jsonTrack.ContainsKey("interpolation")) track.interpolation_type = jsonTrack.Value<string>("interpolation");
-				foreach (JObject subtrackJson in jsonTrack["subtracks"])
+				foreach(JObject jsonTrack in jsonTracks.Cast<JObject>())
 				{
-					if(subtrackJson.Type == JTokenType.Object)
+					if(jsonTrack.Type != JTokenType.Object || !jsonTrack.ContainsKey("subtracks") || !jsonTrack.ContainsKey("timepoints"))
+						continue;
+					var track = new STF_Animation.Track {
+						target = jsonTrack["target"].ToObject<List<string>>(),
+						timepoints = jsonTrack["timepoints"].ToObject<List<float>>(),
+					};
+					if(jsonTrack.ContainsKey("interpolation")) track.interpolation_type = jsonTrack.Value<string>("interpolation");
+					foreach (JObject subtrackJson in jsonTrack["subtracks"])
 					{
-						var subTrack = new STF_Animation.SubTrack();
-						track.subtracks.Add(subTrack);
-
-						if(subtrackJson.ContainsKey("baked"))
-							subTrack.baked_values = Context.ImportBuffer(subtrackJson.Value<string>("baked"));
-
-						for(int keyframeIndex = 0; keyframeIndex < track.timepoints.Count; keyframeIndex++)
+						if(subtrackJson.Type == JTokenType.Object)
 						{
-							var keyframeJson = subtrackJson["keyframes"][keyframeIndex];
-							if(keyframeJson.Type == JTokenType.Array)
+							var subTrack = new STF_Animation.SubTrack();
+							track.subtracks.Add(subTrack);
+
+							if(subtrackJson.ContainsKey("baked"))
+								subTrack.baked_values = Context.ImportBuffer(subtrackJson.Value<string>("baked"));
+
+							for(int keyframeIndex = 0; keyframeIndex < track.timepoints.Count; keyframeIndex++)
 							{
-								var keyframe = new STF_Animation.Keyframe();
-								subTrack.keyframes.Add(keyframe);
-
-								keyframe.source_of_truth = (bool)keyframeJson[0];
-								keyframe.frame = track.timepoints[keyframeIndex];
-								keyframe.value = (float)keyframeJson[1];
-								keyframe.interpolation_type = (string)keyframeJson[2];
-
-								switch(keyframe.interpolation_type)
+								var keyframeJson = subtrackJson["keyframes"][keyframeIndex];
+								if(keyframeJson.Type == JTokenType.Array)
 								{
-									case "bezier":
-										keyframe.tangent_type = (string)keyframeJson[3];
-										keyframe.out_tangent = new Vector2((float)keyframeJson[4][0], (float)keyframeJson[4][1]);
-										if(keyframeJson.Count() > 5)
-											keyframe.in_tangent = new Vector2((float)keyframeJson[5][0], (float)keyframeJson[5][1]);
-										break;
-									case "constant":
-										if(keyframeJson.Count() > 3)
-											keyframe.in_tangent = new Vector2((float)keyframeJson[3][0], (float)keyframeJson[3][1]);
-										break;
-									case "linear":
-										if(keyframeJson.Count() > 3)
-											keyframe.in_tangent = new Vector2((float)keyframeJson[3][0], (float)keyframeJson[3][1]);
-										break;
-									default:
-										// todo warn
-										break;
+									var keyframe = new STF_Animation.Keyframe();
+									subTrack.keyframes.Add(keyframe);
+
+									keyframe.source_of_truth = (bool)keyframeJson[0];
+									keyframe.frame = track.timepoints[keyframeIndex];
+									keyframe.value = (float)keyframeJson[1];
+									keyframe.interpolation_type = (string)keyframeJson[2];
+
+									switch(keyframe.interpolation_type)
+									{
+										case "bezier":
+											keyframe.tangent_type = (string)keyframeJson[3];
+											keyframe.out_tangent = new Vector2((float)keyframeJson[4][0], (float)keyframeJson[4][1]);
+											if(keyframeJson.Count() > 5)
+												keyframe.in_tangent = new Vector2((float)keyframeJson[5][0], (float)keyframeJson[5][1]);
+											break;
+										case "constant":
+											if(keyframeJson.Count() > 3)
+												keyframe.in_tangent = new Vector2((float)keyframeJson[3][0], (float)keyframeJson[3][1]);
+											break;
+										case "linear":
+											if(keyframeJson.Count() > 3)
+												keyframe.in_tangent = new Vector2((float)keyframeJson[3][0], (float)keyframeJson[3][1]);
+											break;
+										default:
+											// todo warn
+											break;
+									}
 								}
 							}
 						}
+						else
+						{
+							track.subtracks.Add(null);
+						}
 					}
-					else
-					{
-						track.subtracks.Add(null);
-					}
+					Target.Add(track);
 				}
-				ret.tracks.Add(track);
 			}
 
-			if(JsonResource.ContainsKey("tracks_baked") && JsonResource["tracks_baked"] is JArray jsonTracksBaked) foreach(JObject jsonTrack in jsonTracksBaked)
-			{
-				if(jsonTrack.Type != JTokenType.Object || !jsonTrack.ContainsKey("subtracks") || !jsonTrack.ContainsKey("timepoints"))
-					continue;
-				var track = new STF_Animation.TrackBaked {
-					target = jsonTrack["target"].ToObject<List<string>>(),
-					subtracks = jsonTrack["subtracks"].ToObject<List<string>>().Select(bufferId => !string.IsNullOrEmpty(bufferId) ? Context.ImportBuffer(bufferId) : null).ToList(),
-				};
-			}
+			if(JsonResource.ContainsKey("tracks") && JsonResource["tracks"] is JArray jsonTracks)
+				parseTracks(jsonTracks, ret.tracks);
+
+			if(JsonResource.ContainsKey("tracks_baked") && JsonResource["tracks_baked"] is JArray jsonTracksBaked)
+				parseTracks(jsonTracksBaked, ret.tracks_baked);
 
 			if(JsonResource.ContainsKey("range"))
 			{

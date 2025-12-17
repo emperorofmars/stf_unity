@@ -254,15 +254,6 @@ namespace com.squirrelbite.stf_unity.processors
 			// Weightpaint
 			if (STFMesh.armature != null && STFMesh.bones != null && STFMesh.weights != null)
 			{
-				/*int MAX_BONES_PER_VERTEX = 4;
-				if(importOptions.ContainsKey("max_weights") && importOptions.Value<int>("max_weights") is int maxWeights && maxWeights >= 1 && maxWeights <= 32)
-				{
-					MAX_BONES_PER_VERTEX = maxWeights;
-				}
-				else
-				{
-					importOptions["max_weights"] = MAX_BONES_PER_VERTEX;
-				}*/
 				var maxWeights = Context.ImportConfig.GetAndConfirmImportOption(STF_Mesh.STF_TYPE, STFMesh.STF_Id, STFMesh.STF_Name, "max_weights", 4);
 
 				var weights = new List<BoneWeight1>[vertex_count];

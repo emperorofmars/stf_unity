@@ -14,6 +14,10 @@ namespace com.squirrelbite.stf_unity.processors
 		public (List<Object>, List<Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var STFAnimation = STFResource as STF_Animation;
+			if (STFAnimation.AnimationRoot.PropertyConverter == null)
+			{
+				return (null, null); //TODO Report Warning
+			}
 
 			var preferBaked = Context.ImportConfig.GetAndConfirmImportOption(STF_Animation.STF_TYPE, STFAnimation.STF_Id, STFAnimation.STF_Name, "prefer_baked", false);
 			var importBaked = Context.ImportConfig.GetAndConfirmImportOption(STF_Animation.STF_TYPE, STFAnimation.STF_Id, STFAnimation.STF_Name, "import_baked", true);
@@ -33,30 +37,24 @@ namespace com.squirrelbite.stf_unity.processors
 					break;
 			}
 
-			foreach (var track in STFAnimation.tracks)
+			var handledTracks = new HashSet<string>();
+
+			void handleTracks(List<STF_Animation.Track> tracks)
 			{
-				if (STFAnimation.AnimationRoot.PropertyConverter == null)
+				foreach (var track in tracks)
 				{
-					continue; //TODO Report Warning
-				}
-				var pathRet = STFAnimation.AnimationRoot.PropertyConverter.ConvertPropertyPath(STFAnimation.AnimationRoot, track.target);
-				if (pathRet == null)
-				{
-					continue; //TODO Report Warning
-				}
-
-				var RelativePath = pathRet.RelativePath;
-				var CurveType = pathRet.TargetType;
-				var PropertyNames = pathRet.PropertyNames;
-				var ConvertValueFunc = pathRet.ConvertValueFunc;
-
-				if (!string.IsNullOrWhiteSpace(RelativePath) && CurveType != null && PropertyNames != null && PropertyNames.Count > 0)
-				{
-					var curves = new List<AnimationCurve>();
-					for (int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
+					var pathRet = STFAnimation.AnimationRoot.PropertyConverter.ConvertPropertyPath(STFAnimation.AnimationRoot, track.target);
+					if (pathRet == null || !pathRet.IsValid())
 					{
-						curves.Add(new AnimationCurve());
+						continue; //TODO Report Warning
 					}
+					if(handledTracks.Contains(pathRet.ToString()))
+						continue;
+					handledTracks.Add(pathRet.ToString());
+
+					var curves = new List<AnimationCurve>();
+					for (int curveIndex = 0; curveIndex < pathRet.PropertyNames.Count; curveIndex++)
+						curves.Add(new AnimationCurve());
 
 					var len = -1;
 					foreach(var subtrack in track.subtracks) if(subtrack != null && subtrack.keyframes.Count > len) len = subtrack.keyframes.Count;
@@ -83,9 +81,9 @@ namespace com.squirrelbite.stf_unity.processors
 								originalInTangentValues[subtrackIndex] = 0;
 								originalOutTangentValues[subtrackIndex] = 0;
 							}
-						convertedValues.Add(ConvertValueFunc != null ? ConvertValueFunc(originalValues) : originalValues);
-						convertedInTangentValues.Add(ConvertValueFunc != null ? ConvertValueFunc(originalInTangentValues) : originalInTangentValues);
-						convertedOutTangentValues.Add(ConvertValueFunc != null ? ConvertValueFunc(originalOutTangentValues) : originalOutTangentValues);
+						convertedValues.Add(pathRet.ConvertValueFunc != null ? pathRet.ConvertValueFunc(originalValues) : originalValues);
+						convertedInTangentValues.Add(pathRet.ConvertValueFunc != null ? pathRet.ConvertValueFunc(originalInTangentValues) : originalInTangentValues);
+						convertedOutTangentValues.Add(pathRet.ConvertValueFunc != null ? pathRet.ConvertValueFunc(originalOutTangentValues) : originalOutTangentValues);
 					}
 
 					for (int i = 0; i < len; i++)
@@ -150,19 +148,18 @@ namespace com.squirrelbite.stf_unity.processors
 						}
 					}
 
-					for (int curveIndex = 0; curveIndex < PropertyNames.Count; curveIndex++)
+					for (int curveIndex = 0; curveIndex < pathRet.PropertyNames.Count; curveIndex++)
 					{
-						//Debug.Log($"Curve: {RelativePath} - {PropertyNames[curveIndex]} ({CurveType})");
+						//Debug.Log($"Curve: {pathRet.RelativePath} - {pathRet.PropertyNames[curveIndex]} ({pathRet.TargetType})");
 
 						if (curves[curveIndex].keys.Length > 0)
-							ret.SetCurve(RelativePath, CurveType, PropertyNames[curveIndex], curves[curveIndex]);
+							ret.SetCurve(pathRet.RelativePath, pathRet.TargetType, pathRet.PropertyNames[curveIndex], curves[curveIndex]);
 					}
 				}
-				else
-				{
-					// TODO Report Warning
-				}
 			}
+
+			if(importBaked && STFAnimation.tracks_baked != null) handleTracks(STFAnimation.tracks_baked);
+			if(STFAnimation.tracks != null) handleTracks(STFAnimation.tracks);
 
 			return (new() { ret }, new() { ret });
 		}

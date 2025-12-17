@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace com.squirrelbite.stf_unity.modules
 {
@@ -60,6 +61,19 @@ namespace com.squirrelbite.stf_unity.modules
 				path = b.RelativePath;
 			}
 			return new ImportPropertyPathPart(path, b.TargetType ?? a.TargetType, b.PropertyNames ?? a.PropertyNames, b.ConvertValueFunc ?? a.ConvertValueFunc);
+		}
+
+		public bool IsValid()
+		{
+			return !string.IsNullOrWhiteSpace(this.RelativePath) && this.TargetType != null && this.PropertyNames != null && this.PropertyNames.Count > 0;
+		}
+
+		public override string ToString()
+		{
+			if(IsValid())
+				return this.TargetType.ToString() + "_" + this.RelativePath + "_" + this.PropertyNames.Aggregate((a, b) => a + b);
+			else
+				return"Invalid";
 		}
 	}
 
