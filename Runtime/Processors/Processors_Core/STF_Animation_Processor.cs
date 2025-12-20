@@ -68,15 +68,21 @@ namespace com.squirrelbite.stf_unity.processors
 						}
 					}
 
+					var useBaked = preferBaked;
+					if(useBaked)
+						for(int subtrackIndex = 0; subtrackIndex < track.subtracks.Count; subtrackIndex++)
+							if(track.subtracks[subtrackIndex].baked_values == null)
+							{
+								useBaked = false;
+								break;
+							}
+
 					for(int subtrackIndex = 0; subtrackIndex < track.subtracks.Count; subtrackIndex++)
 					{
 						stfKeyframes.Add(new List<STF_Animation.Keyframe>());
-						if(preferBaked)
-							if(track.subtracks[subtrackIndex].baked_values == null)
-								for(int i = 0; i < track.subtracks[subtrackIndex].baked_values.Data.Length / 4; i++)
-									stfKeyframes[subtrackIndex].Add(new STF_Animation.Keyframe {frame = STFAnimation.range_start + i, value = System.BitConverter.ToSingle(track.subtracks[subtrackIndex].baked_values.Data, i * 4), interpolation_type = track.interpolation_type, source_of_truth = false});
-							else
-								return; // TODO report error
+						if(useBaked)
+							for(int i = 0; i < track.subtracks[subtrackIndex].baked_values.Data.Length / 4; i++)
+								stfKeyframes[subtrackIndex].Add(new STF_Animation.Keyframe {frame = STFAnimation.range_start + i, value = System.BitConverter.ToSingle(track.subtracks[subtrackIndex].baked_values.Data, i * 4), interpolation_type = track.interpolation_type, source_of_truth = false});
 						else
 							stfKeyframes[subtrackIndex] = track.subtracks[subtrackIndex].keyframes;
 					}
@@ -116,11 +122,11 @@ namespace com.squirrelbite.stf_unity.processors
 						var inTangentValues = convertedInTangentValues[i];
 						var outTangentValues = convertedOutTangentValues[i];
 
-						for(int subtrackIndex = 0; subtrackIndex < stfKeyframes.Count; subtrackIndex++) if(stfKeyframes[subtrackIndex] != null && stfKeyframes[subtrackIndex][i] is var stfKeyframe && stfKeyframe != null && stfKeyframe.source_of_truth)
+						for(int subtrackIndex = 0; subtrackIndex < stfKeyframes.Count; subtrackIndex++) if(stfKeyframes[subtrackIndex] != null && stfKeyframes[subtrackIndex][i] is var stfKeyframe && stfKeyframe != null )
 						{
 							STF_Animation.Keyframe prevKeyframe = null;
 							List<float> prevValues = null;
-							for(int j = i - 1; j >= 0; j--) if(stfKeyframes[subtrackIndex][j] != null && stfKeyframes[subtrackIndex][j].source_of_truth)
+							for(int j = i - 1; j >= 0; j--) if(stfKeyframes[subtrackIndex][j] != null)
 							{
 								prevKeyframe = stfKeyframes[subtrackIndex][j];
 								prevValues = convertedValues[j];
@@ -128,7 +134,7 @@ namespace com.squirrelbite.stf_unity.processors
 							}
 							STF_Animation.Keyframe nextKeyframe = null;
 							List<float> nextValues = null;
-							for(int j = i + 1; j < stfKeyframes[subtrackIndex].Count; j--) if(stfKeyframes[subtrackIndex][j] != null && stfKeyframes[subtrackIndex][j].source_of_truth)
+							for(int j = i + 1; j < stfKeyframes[subtrackIndex].Count; j--) if(stfKeyframes[subtrackIndex][j] != null)
 							{
 								nextKeyframe = stfKeyframes[subtrackIndex][j];
 								nextValues = convertedValues[j];
