@@ -20,7 +20,6 @@ namespace com.squirrelbite.stf_unity.processors
 			}
 
 			var preferBaked = Context.ImportConfig.GetAndConfirmImportOption(STF_Animation.STF_TYPE, STFAnimation.STF_Id, STFAnimation.STF_Name, "prefer_baked", false);
-			var importBaked = Context.ImportConfig.GetAndConfirmImportOption(STF_Animation.STF_TYPE, STFAnimation.STF_Id, STFAnimation.STF_Name, "import_baked", true);
 
 			var ret = new AnimationClip
 			{
@@ -158,7 +157,11 @@ namespace com.squirrelbite.stf_unity.processors
 				}
 			}
 
-			if(importBaked && STFAnimation.tracks_baked != null) handleTracks(STFAnimation.tracks_baked);
+			if(STFAnimation.tracks_baked != null && STFAnimation.tracks_baked.Count > 0)
+			{
+				var importBaked = Context.ImportConfig.GetAndConfirmImportOption(STF_Animation.STF_TYPE, STFAnimation.STF_Id, STFAnimation.STF_Name, "import_baked", true);
+				if(importBaked) handleTracks(STFAnimation.tracks_baked);
+			}
 			if(STFAnimation.tracks != null) handleTracks(STFAnimation.tracks);
 
 			return (new() { ret }, new() { ret });
