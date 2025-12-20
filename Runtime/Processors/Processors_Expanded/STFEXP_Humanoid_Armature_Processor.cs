@@ -68,7 +68,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 
 		public static string TranslateHumanoidSTFtoUnity(string STFMapping, string LocomotionType, bool NoJaw)
 		{
-			if(NoJaw && STFMapping == "Jaw") return null;
+			if(NoJaw && STFMapping == "jaw") return null;
 			if(LocomotionType.StartsWith("digi"))
 			{
 				switch(STFMapping)
