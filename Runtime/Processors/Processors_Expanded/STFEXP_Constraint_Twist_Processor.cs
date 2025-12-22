@@ -25,35 +25,33 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 
 			if (stfConstraint.SourceGo)
 			{
-				var ret = CreateConstraint(stfConstraint.gameObject, stfConstraint.SourceGo, stfConstraint.Weight);
+				var ret = stfConstraint.gameObject.AddComponent<RotationConstraint>();
+				if(!ret)
+				{
+					return (null, null); //TODO Report Warning
+				}
+
+				ret.weight = stfConstraint.Weight;
+				ret.rotationAxis = Axis.Y;
+
+				var source = new ConstraintSource
+				{
+					weight = 1,
+					sourceTransform = stfConstraint.SourceGo.transform,
+				};
+				ret.AddSource(source);
+
+				Quaternion rotationOffset = Quaternion.Inverse(source.sourceTransform.rotation) * ret.transform.rotation;
+				ret.rotationOffset = rotationOffset.eulerAngles;
+
+				ret.locked = true;
+				ret.constraintActive = true;
+
 				ret.enabled = stfConstraint.enabled;
 				return (new() { ret }, null);
 			}
 			else
 				return (null, null);
-		}
-
-		public static RotationConstraint CreateConstraint(GameObject Node, GameObject Source, float Weight)
-		{
-			var converted = Node.AddComponent<RotationConstraint>();
-
-			converted.weight = Weight;
-			converted.rotationAxis = Axis.Y;
-
-			var source = new ConstraintSource
-			{
-				weight = 1,
-				sourceTransform = Source.transform,
-			};
-			converted.AddSource(source);
-
-			Quaternion rotationOffset = Quaternion.Inverse(source.sourceTransform.rotation) * converted.transform.rotation;
-			converted.rotationOffset = rotationOffset.eulerAngles;
-
-			converted.locked = true;
-			converted.constraintActive = true;
-
-			return converted;
 		}
 	}
 }

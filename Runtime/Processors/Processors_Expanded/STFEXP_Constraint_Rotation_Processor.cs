@@ -20,6 +20,10 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			if(stfConstraint.Sources.Count == 1)
 			{
 				var ret = stfConstraint.gameObject.AddComponent<RotationConstraint>();
+				if(!ret)
+				{
+					return (null, null); //TODO Report Warning
+				}
 
 				ret.weight = stfConstraint.Weight;
 				ret.rotationAxis = stfConstraint.Axes;
