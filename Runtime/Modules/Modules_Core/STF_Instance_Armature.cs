@@ -65,11 +65,14 @@ namespace com.squirrelbite.stf_unity.modules
 			// handle added and modified components
 			if (JsonResource.ContainsKey("modified_components"))
 			{
-				foreach ((string componentId, JToken componentMod) in (JObject)JsonResource["modified_components"])
+				foreach ((string boneId, JToken componentMods) in (JObject)JsonResource["modified_components"])
 				{
-					if (instance.GetComponentsInChildren<STF_NodeComponentResource>().FirstOrDefault(c => c.STF_Id == componentId) is var component && component != null)
+					foreach ((string componentId, JToken componentMod) in (JObject)componentMods)
 					{
-						component.InstanceModHandler?.HandleInstanceMod(Context, component, componentMod as JObject);
+						if (instance.GetComponentsInChildren<STF_NodeComponentResource>().FirstOrDefault(c => c.STF_Id == componentId) is var component && component != null)
+						{
+							component.InstanceModHandler?.HandleInstanceMod(Context, component, componentMod as JObject);
+						}
 					}
 				}
 			}
