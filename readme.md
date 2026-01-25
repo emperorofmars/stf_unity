@@ -5,7 +5,7 @@ Intended for (not only) games-development use-cases.
 
 **WIP implementation for Unity 2022.3+. Do not use productively!**
 
-**[STF Website](https://docs.stfform.at/)**
+🌰 **[Read the User Guide!](https://docs.stfform.at/guide/unity.html)**  🌰 **[Report Issues](https://codeberg.org/emperorofmars/stf_unity/issues)** 🌰 **[STF Website](https://docs.stfform.at/)**
 
 ## Installation
 * VRChat Creator Companion: https://squirrelbite.github.io/vpm/
