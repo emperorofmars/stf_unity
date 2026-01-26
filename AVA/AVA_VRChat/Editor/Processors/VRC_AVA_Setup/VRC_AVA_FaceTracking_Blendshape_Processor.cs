@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.modules;
 using com.squirrelbite.ava_base_setup.vrchat;
+using com.squirrelbite.ava_base_setup;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
@@ -43,10 +44,10 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				"unified_expressions" => FT_Type.UnifiedExpressions,
 				"arkit" => FT_Type.ARKit,
 				"sranipal" => FT_Type.SRanipal,
-				_ => FT_Type.Automatic,
+				_ => FT_Type.Unknown,
 			};
 			baseSetup.LayerFT.Add(new () { ProducerComponent = FTSetup });
-			baseSetup.FaceTrackingSetupType = AVA_FT_Setup_Type.Automatic;
+			baseSetup.FaceTrackingSetupType = FT_Setup.Automatic;
 
 			var stfMeshInstance = (Context as AVAContext).PrimaryMeshInstance;
 

@@ -45,7 +45,7 @@ namespace com.squirrelbite.stf_unity.ava.univrm0
 				else
 				{
 					STF_Processor_Registry.RegisterContext(new UNIVRM0ContextFactory());
-					
+
 					foreach ((var _, var processor) in STF_Processor_Registry.GetProcessors("default"))
 						if(!Ignores.Contains(processor.TargetType))
 							STF_Processor_Registry.RegisterProcessor(STF_UNIVRM0_AVATAR_CONTEXT, processor);
