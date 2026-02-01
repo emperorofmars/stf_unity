@@ -17,15 +17,16 @@ namespace com.squirrelbite.stf_unity.modules
 			new STF_Image_Module(),
 			new STF_Texture_Module(),
 			new STF_Animation_Module(),
-			new STFEXP_Humanoid_Armature_Module(),
-			new STFEXP_Constraint_Twist_Module(),
-			new STFEXP_Constraint_Rotation_Module(),
 			new STFEXP_Camera_Module(),
 			new STFEXP_Light_Module(),
 			new STFEXP_LightprobeAnchor_Module(),
 			new STFEXP_Collider_Sphere_Module(),
 			new STFEXP_Collider_Capsule_Module(),
 			new STFEXP_Collider_Plane_Module(),
+			new STFEXP_Constraint_Twist_Module(),
+			new STFEXP_Constraint_Rotation_Module(),
+			new STFEXP_Constraint_Parent_Module(),
+			new STFEXP_Humanoid_Armature_Module(),
 		};
 
 		public static readonly HashSet<string> DefaultIgnores = new() {
@@ -35,7 +36,7 @@ namespace com.squirrelbite.stf_unity.modules
 		};
 
 		private static readonly Dictionary<string, ISTF_Module> RegisteredModules = new();
-		
+
 		private static readonly HashSet<string> RegisteredIgnores = new();
 
 		public static void RegisterModule(ISTF_Module Module)
