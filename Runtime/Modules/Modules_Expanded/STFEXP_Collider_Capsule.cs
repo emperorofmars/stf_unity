@@ -15,18 +15,6 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 		public Quaternion offset_rotation;
 	}
 
-	public class STFEXP_Collider_Capsule_InstanceModHandler : STF_InstanceModHandler
-	{
-		public void HandleInstanceMod(ImportContext Context, ISTF_ComponentResource Resource, JObject JsonResource)
-		{
-			var r = Resource as STFEXP_Collider_Capsule;
-			if (JsonResource.ContainsKey("radius")) r.radius = JsonResource.Value<float>("radius");
-			if (JsonResource.ContainsKey("height")) r.height = JsonResource.Value<float>("height");
-			if (JsonResource.ContainsKey("offset_position")) r.offset_position = TRSUtil.ParseVector3(JsonResource["offset_position"] as JArray);
-			if (JsonResource.ContainsKey("offset_rotation")) r.offset_rotation = TRSUtil.ParseQuat(JsonResource["offset_rotation"] as JArray);
-		}
-	}
-
 	public class STFEXP_Collider_Capsule_Module : ISTF_Module
 	{
 		public string STF_Type => STFEXP_Collider_Capsule._STF_Type;
@@ -51,8 +39,16 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
 				ret.enabled = false;
 
-			ret.InstanceModHandler = new STFEXP_Collider_Capsule_InstanceModHandler();
 			return (ret, null);
+		}
+
+		public void ImportInstanceMod(ImportContext Context, ISTF_Resource Resource, JObject JsonResource)
+		{
+			var r = Resource as STFEXP_Collider_Capsule;
+			if (JsonResource.ContainsKey("radius")) r.radius = JsonResource.Value<float>("radius");
+			if (JsonResource.ContainsKey("height")) r.height = JsonResource.Value<float>("height");
+			if (JsonResource.ContainsKey("offset_position")) r.offset_position = TRSUtil.ParseVector3(JsonResource["offset_position"] as JArray);
+			if (JsonResource.ContainsKey("offset_rotation")) r.offset_rotation = TRSUtil.ParseQuat(JsonResource["offset_rotation"] as JArray);
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)

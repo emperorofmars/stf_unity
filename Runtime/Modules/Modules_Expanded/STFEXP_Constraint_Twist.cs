@@ -15,25 +15,6 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 		public GameObject SourceGo;
 	}
 
-	public class STFEXP_Constraint_Twist_InstanceModHandler : STF_InstanceModHandler
-	{
-		public void HandleInstanceMod(ImportContext Context, ISTF_ComponentResource Resource, JObject JsonResource)
-		{
-			var r = Resource as STFEXP_Constraint_Twist;
-			if (JsonResource.ContainsKey("weight")) r.Weight = JsonResource.Value<float>("weight");
-			if (JsonResource.ContainsKey("source"))
-			{
-				r.SourcePath = STFUtil.ConvertResourcePath(JsonResource, JsonResource["source"]);
-				if (r.SourcePath.Count > 0)
-				{
-					Context.AddTask(new Task(() => {
-						r.SourceGo = STFUtil.ResolveBinding(Context, r, r.SourcePath);
-					}));
-				}
-			}
-		}
-	}
-
 	public class STFEXP_Constraint_Twist_Module : ISTF_Module
 	{
 		public string STF_Type => STFEXP_Constraint_Twist._STF_Type;
@@ -65,8 +46,23 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
 				ret.enabled = false;
 
-			ret.InstanceModHandler = new STFEXP_Constraint_Twist_InstanceModHandler();
 			return (ret, null);
+		}
+
+		public void ImportInstanceMod(ImportContext Context, ISTF_Resource Resource, JObject JsonResource)
+		{
+			var r = Resource as STFEXP_Constraint_Twist;
+			if (JsonResource.ContainsKey("weight")) r.Weight = JsonResource.Value<float>("weight");
+			if (JsonResource.ContainsKey("source"))
+			{
+				r.SourcePath = STFUtil.ConvertResourcePath(JsonResource, JsonResource["source"]);
+				if (r.SourcePath.Count > 0)
+				{
+					Context.AddTask(new Task(() => {
+						r.SourceGo = STFUtil.ResolveBinding(Context, r, r.SourcePath);
+					}));
+				}
+			}
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)

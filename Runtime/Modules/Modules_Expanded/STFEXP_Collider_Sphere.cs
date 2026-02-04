@@ -13,16 +13,6 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 		public Vector3 offset_position;
 	}
 
-	public class STFEXP_Collider_Sphere_InstanceModHandler : STF_InstanceModHandler
-	{
-		public void HandleInstanceMod(ImportContext Context, ISTF_ComponentResource Resource, JObject JsonResource)
-		{
-			var r = Resource as STFEXP_Collider_Sphere;
-			if (JsonResource.ContainsKey("radius")) r.radius = JsonResource.Value<float>("radius");
-			if (JsonResource.ContainsKey("offset_position")) r.offset_position = TRSUtil.ParseVector3(JsonResource["offset_position"] as JArray);
-		}
-	}
-
 	public class STFEXP_Collider_Sphere_Module : ISTF_Module
 	{
 		public string STF_Type => STFEXP_Collider_Sphere._STF_Type;
@@ -45,8 +35,14 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
 				ret.enabled = false;
 
-			ret.InstanceModHandler = new STFEXP_Collider_Sphere_InstanceModHandler();
 			return (ret, null);
+		}
+
+		public void ImportInstanceMod(ImportContext Context, ISTF_Resource Resource, JObject JsonResource)
+		{
+			var r = Resource as STFEXP_Collider_Sphere;
+			if (JsonResource.ContainsKey("radius")) r.radius = JsonResource.Value<float>("radius");
+			if (JsonResource.ContainsKey("offset_position")) r.offset_position = TRSUtil.ParseVector3(JsonResource["offset_position"] as JArray);
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)

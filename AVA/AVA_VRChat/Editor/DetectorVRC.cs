@@ -25,7 +25,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat
 	{
 		public const string STF_VRC_AVATAR_CONTEXT = "vrchat_avatar3";
 
-		public static readonly List<System.Type> Ignores = new() { typeof(STFEXP_Collider_Sphere), typeof(STFEXP_Collider_Capsule), typeof(STFEXP_Collider_Plane), typeof(STFEXP_Constraint_Twist), typeof(STFEXP_Constraint_Rotation), };
+		public static readonly List<System.Type> Ignores = new() { typeof(STFEXP_Collider_Sphere), typeof(STFEXP_Collider_Capsule), typeof(STFEXP_Collider_Plane), typeof(STFEXP_Constraint_Twist), typeof(STFEXP_Constraint_Rotation), typeof(STFEXP_Constraint_Parent), };
 
 		static DetectorVRC()
 		{

@@ -18,6 +18,10 @@ namespace com.squirrelbite.stf_unity.modules
 		(ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject);
 		(JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject);
 		List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject);
+
+
+		// When a component happens to be on a bone inside an armature, it will get instantiated with the armature. Armature instances have 'component-mods', which can override values.
+		public void ImportInstanceMod(ImportContext Context, ISTF_Resource Resource, JObject JsonResource) {}
 	}
 }
 

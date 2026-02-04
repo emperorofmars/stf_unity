@@ -26,30 +26,6 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 		public List<Source> Sources = new();
 	}
 
-	public class STFEXP_Constraint_Parent_InstanceModHandler : STF_InstanceModHandler
-	{
-		public void HandleInstanceMod(ImportContext Context, ISTF_ComponentResource Resource, JObject JsonResource)
-		{
-			var ret = Resource as STFEXP_Constraint_Rotation;
-			ret.Sources = new();
-			if(JsonResource.ContainsKey("sources")) foreach(JObject jsonSource in JsonResource["sources"] as JArray)
-			{
-				var source = new STFEXP_Constraint_Rotation.Source();
-				source.Weight = jsonSource.Value<float>("weight");
-				if (jsonSource.ContainsKey("source"))
-					source.SourcePath = STFUtil.ConvertResourcePath(JsonResource, jsonSource["source"]);
-				ret.Sources.Add(source);
-
-				Context.AddTask(new Task(() => {
-					if (source.SourcePath.Count > 0)
-						source.SourceGo = STFUtil.ResolveBinding(Context, ret, source.SourcePath);
-					else if(ret.transform.parent && ret.transform.parent.parent)
-						source.SourceGo = ret.transform.parent.parent.gameObject;
-				}));
-			}
-		}
-	}
-
 	public class STFEXP_Constraint_Parent_Module : ISTF_Module
 	{
 		public string STF_Type => STFEXP_Constraint_Parent._STF_Type;
@@ -103,8 +79,28 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
 				ret.enabled = false;
 
-			ret.InstanceModHandler = new STFEXP_Constraint_Rotation_InstanceModHandler();
 			return (ret, null);
+		}
+
+		public void ImportInstanceMod(ImportContext Context, ISTF_Resource Resource, JObject JsonResource)
+		{
+			var ret = Resource as STFEXP_Constraint_Rotation;
+			ret.Sources = new();
+			if(JsonResource.ContainsKey("sources")) foreach(JObject jsonSource in JsonResource["sources"] as JArray)
+			{
+				var source = new STFEXP_Constraint_Rotation.Source();
+				source.Weight = jsonSource.Value<float>("weight");
+				if (jsonSource.ContainsKey("source"))
+					source.SourcePath = STFUtil.ConvertResourcePath(JsonResource, jsonSource["source"]);
+				ret.Sources.Add(source);
+
+				Context.AddTask(new Task(() => {
+					if (source.SourcePath.Count > 0)
+						source.SourceGo = STFUtil.ResolveBinding(Context, ret, source.SourcePath);
+					else if(ret.transform.parent && ret.transform.parent.parent)
+						source.SourceGo = ret.transform.parent.parent.gameObject;
+				}));
+			}
 		}
 
 		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)

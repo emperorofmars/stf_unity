@@ -59,18 +59,21 @@ namespace com.squirrelbite.stf_unity
 
 		public ISTF_Module DetermineModule(JObject JsonResource, string ExpectedKind)
 		{
-			var type = (string)JsonResource.GetValue("type");
+			return DetermineModule((string)JsonResource.GetValue("type"), ExpectedKind);
+		}
 
+		public ISTF_Module DetermineModule(string STF_Type, string ExpectedKind)
+		{
 			foreach (var ignore in Ignores)
-				if (type.StartsWith(ignore)) return null;
+				if (STF_Type.StartsWith(ignore)) return null;
 
-			if (Modules.ContainsKey(type))
+			if (Modules.ContainsKey(STF_Type))
 			{
-				return Modules[type];
+				return Modules[STF_Type];
 			}
 			else
 			{
-				Report(new STFReport("Unrecognized Resource", ErrorSeverity.WARNING, (string)JsonResource.GetValue("type"), null, null));
+				Report(new STFReport("Unrecognized Resource", ErrorSeverity.WARNING, STF_Type, null, null));
 				return null;
 			}
 		}

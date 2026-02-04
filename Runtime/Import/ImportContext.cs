@@ -89,6 +89,14 @@ namespace com.squirrelbite.stf_unity
 			return State.ImportBuffer(STF_Id);
 		}
 
+		public void ImportInstanceMod(ISTF_Resource Resource, JObject JsonResource)
+		{
+			if(State.DetermineModule(Resource.STF_Type, "component") is var module)
+			{
+				module.ImportInstanceMod(this, Resource, JsonResource);
+			}
+		}
+
 		public virtual ISTF_Resource HandleFallback(JObject JsonResource, string STF_Id, string ExpectedKind, ISTF_Resource ContextObject = null)
 		{
 			if(ExpectedKind == "data")
