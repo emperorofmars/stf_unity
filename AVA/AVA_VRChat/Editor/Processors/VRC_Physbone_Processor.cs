@@ -20,13 +20,13 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		public const uint _Order = 1000;
 		public uint Order => _Order;
 
-		public int Priority => 1;
+		public int Priority => 10;
 
 		public (List<Object> ProcessedObjects, List<Object> ObjectsToRegister) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var stfPhysbone = STFResource as VRC_Physbone;
 			var physbone = stfPhysbone.gameObject.AddComponent<VRCPhysBone>();
-			
+
 			JsonUtility.FromJsonOverwrite(stfPhysbone.Json.ToString(), physbone);
 
 			if(stfPhysbone.Ignores.Count > 0) foreach(var ignorePath in stfPhysbone.Ignores)

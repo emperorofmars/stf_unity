@@ -23,11 +23,13 @@ namespace com.squirrelbite.stf_unity.processors
 		{
 			STFResource.ProcessedObjects.Add(Result);
 
-			if(STFResource is ISTF_ComponentResource componentResource)
-				foreach(var overrideId in componentResource.Overrides)
-					if(State.OverriddenResourcesByID.ContainsKey(overrideId))
-						foreach(var overriddenResource in State.OverriddenResourcesByID[overrideId])
-							overriddenResource.ProcessedObjects.Add(Result);
+			// Also register to all excluded components
+			if(STFResource is ISTF_ComponentResource componentResource && !string.IsNullOrWhiteSpace(componentResource.ExclusionGroup))
+				foreach((var k, var components) in State.ExclusionGroups[componentResource.ExclusionGroup])
+					if(!State.GroupWinners[componentResource.ExclusionGroup].Contains(State.GetProcessor(k)))
+						foreach(var c in components)
+							c.ProcessedObjects.Add(Result);
+
 			if(AddAsUnityObject && Result is UnityEngine.Object @object)
 				State.RegisterResult(new List<Object> {@object});
 		}
@@ -76,11 +78,12 @@ namespace com.squirrelbite.stf_unity.processors
 					{
 						resource.ProcessedObjects.AddRange(ProcessedObjects);
 
-						if(resource is ISTF_ComponentResource componentResource)
-							foreach(var overrideId in componentResource.Overrides)
-								if(State.OverriddenResourcesByID.ContainsKey(overrideId))
-									foreach(var overriddenResource in State.OverriddenResourcesByID[overrideId])
-										overriddenResource.ProcessedObjects.AddRange(ProcessedObjects);
+						// Also register to all excluded components
+						if(resource is ISTF_ComponentResource componentResource && !string.IsNullOrWhiteSpace(componentResource.ExclusionGroup))
+							foreach((var k, var components) in State.ExclusionGroups[componentResource.ExclusionGroup])
+								if(!State.GroupWinners[componentResource.ExclusionGroup].Contains(State.GetProcessor(k)))
+									foreach(var c in components)
+										c.ProcessedObjects.AddRange(ProcessedObjects);
 					}
 					State.RegisterResult(ObjectsToRegister);
 				}));
