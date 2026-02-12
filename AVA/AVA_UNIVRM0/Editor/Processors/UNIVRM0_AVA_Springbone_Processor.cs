@@ -18,7 +18,7 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 		public const uint _Order = 1000;
 		public uint Order => _Order;
 
-		public int Priority => 1;
+		public int Priority => 10;
 
 		public (List<Object> ProcessedObjects, List<Object> ObjectsToRegister) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
