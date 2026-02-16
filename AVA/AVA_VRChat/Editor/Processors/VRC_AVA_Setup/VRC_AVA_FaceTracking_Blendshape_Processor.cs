@@ -36,7 +36,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				while(UnityEditorInternal.ComponentUtility.MoveComponentUp(baseSetup));
 			}
 
-			var FTSetup = Context.Root.AddComponent<AVAVRCFTProducer>();
+			var FTSetup = Context.Root.AddComponent<AVAFaceTrackingProducerVRC>();
 
 			FTSetup.FTMesh = (Context as AVAContext).PrimaryMeshInstance.ProcessedObjects.Find(po => po is SkinnedMeshRenderer) as SkinnedMeshRenderer;
 			FTSetup.FTType = avaFT.ft_type switch

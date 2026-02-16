@@ -32,7 +32,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			}
 
 			var expressionsSetup = Context.Root.AddComponent<AVAExpressionsVRC>();
-			var bindingsSetup = Context.Root.AddComponent<AVAExpressionBindingsVRCProducer>();
+			var bindingsSetup = Context.Root.AddComponent<AVAExpressionBindingsProducerVRC>();
 
 			baseSetup.LayerManualExpressions.Add(new() { ProducerComponent = bindingsSetup });
 
