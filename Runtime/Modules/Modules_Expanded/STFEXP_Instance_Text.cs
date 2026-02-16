@@ -4,35 +4,35 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules.stfexp
 {
-	public class STFEXP_Camera : STF_InstanceResource
+	public class STFEXP_Instance_Text : STF_InstanceResource
 	{
-		public const string _STF_Type = "stfexp.camera";
+		public const string _STF_Type = "stfexp.instance.text";
 		public override string STF_Type => _STF_Type;
 
-		public string projection = "perspective";
-		public float aspect_ratio = 16/9;
-		public float fov = Mathf.PI / 2;
+		public STFEXP_Text Text;
 	}
 
-	public class STFEXP_Camera_Module : ISTF_Module
+	public class STFEXP_Instance_Text_Module : ISTF_Module
 	{
-		public string STF_Type => STFEXP_Camera._STF_Type;
+		public string STF_Type => STFEXP_Instance_Text._STF_Type;
 		public string STF_Kind => "instance";
 		public int Priority => 1;
-		public List<string> LikeTypes => new(){"light"};
-		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(STFEXP_Camera)};
+		public List<string> LikeTypes => new(){"instance.text"};
+		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(STFEXP_Instance_Text)};
 		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
 		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
 
 		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
 		{
 			var go = ContextObject as STF_MonoBehaviour;
-			var ret = go.gameObject.AddComponent<STFEXP_Camera>();
-			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STFEXP Camera");
+			var ret = go.gameObject.AddComponent<STFEXP_Instance_Text>();
+			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STFEXP Light");
 
-			if(JsonResource.ContainsKey("projection")) ret.projection = JsonResource.Value<string>("projection");
-			if(JsonResource.ContainsKey("aspect_ratio")) ret.aspect_ratio = JsonResource.Value<float>("aspect_ratio");
-			if(JsonResource.ContainsKey("fov")) ret.fov = JsonResource.Value<float>("fov");
+			if(JsonResource.ContainsKey("text"))
+			{
+				if(STFUtil.ImportResource(Context, JsonResource, JsonResource.Value<int>("text")) is STFEXP_Text text && text != null)
+					ret.Text = text;
+			}
 
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
 				ret.enabled = false;

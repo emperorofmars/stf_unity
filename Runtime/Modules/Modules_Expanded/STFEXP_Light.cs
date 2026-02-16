@@ -22,7 +22,7 @@ namespace com.squirrelbite.stf_unity.modules.stfexp
 	public class STFEXP_Light_Module : ISTF_Module
 	{
 		public string STF_Type => STFEXP_Light._STF_Type;
-		public string STF_Kind => "component";
+		public string STF_Kind => "instance";
 		public int Priority => 1;
 		public List<string> LikeTypes => new(){"light"};
 		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(STFEXP_Light)};

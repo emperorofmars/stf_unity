@@ -28,6 +28,7 @@ namespace com.squirrelbite.stf_unity
 					new STFEXP_Constraint_Rotation_Processor(),
 					new STFEXP_Constraint_Parent_Processor(),
 					new STFEXP_Humanoid_Armature_Processor(),
+					new STFEXP_Instance_Text_Processor(),
 				}
 			},
 		};
