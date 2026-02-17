@@ -22,26 +22,25 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			var stfTextInstance = STFResource as STFEXP_Instance_Text;
 			if(!stfTextInstance.Text) return (null, null);
 
-			var go = new GameObject("STF Canvas");
-			go.transform.SetParent(stfTextInstance.transform, false);
-			go.transform.Rotate(Vector3.right, -90);
-			go.transform.Rotate(Vector3.up, 180);
-			var canvas = go.AddComponent<Canvas>();
-
-			var textGo = new GameObject(stfTextInstance.Text.STF_Name ?? "STF Text");
-			textGo.transform.SetParent(go.transform, false);
+			var textGo = new GameObject("STF Text");
+			textGo.transform.SetParent(stfTextInstance.transform, false);
+			textGo.transform.Rotate(Vector3.right, -90);
+			textGo.transform.Rotate(Vector3.up, 180);
 
 #if STF_TEXTMESHPRO_FOUND
 			var text = textGo.AddComponent<TextMeshPro>();
 			text.text = stfTextInstance.Text.text;
+
+			var rect = textGo.GetComponent<RectTransform>();
+			rect.sizeDelta = new Vector2(text.preferredWidth, text.preferredHeight);
 #else
 			var text = textGo.AddComponent<Text>();
 			text.text = stfTextInstance.Text.text;
 #endif
 
-			canvas.enabled = stfTextInstance.enabled;
+			//canvas.enabled = stfTextInstance.enabled;
 
-			return (new() { canvas }, null);
+			return (new() { textGo }, null);
 		}
 	}
 }
