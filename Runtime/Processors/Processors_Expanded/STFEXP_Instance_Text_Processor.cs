@@ -33,12 +33,14 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 
 			var rect = textGo.GetComponent<RectTransform>();
 			rect.sizeDelta = new Vector2(text.preferredWidth, text.preferredHeight);
+
+			text.enabled = stfTextInstance.enabled;
 #else
 			var text = textGo.AddComponent<Text>();
 			text.text = stfTextInstance.Text.text;
-#endif
 
-			//canvas.enabled = stfTextInstance.enabled;
+			text.enabled = stfTextInstance.enabled;
+#endif
 
 			return (new() { textGo }, null);
 		}
