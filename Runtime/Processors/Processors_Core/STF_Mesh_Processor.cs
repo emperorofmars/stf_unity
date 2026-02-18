@@ -322,6 +322,8 @@ namespace com.squirrelbite.stf_unity.processors
 					System.Array.Clear(blendshapeNormals, 0, blendshapeNormals.Length);
 					System.Array.Clear(blendshapeTangents, 0, blendshapeTangents.Length);
 
+					Debug.Log(stfBlendshape.name);
+
 					for (int i = 0; i < (int)stfBlendshape.position_offsets.BufferLength / (STFMesh.float_width * 3); i++)
 					{
 						var vertexIndex = stfBlendshape.indices != null ? parseInt(stfBlendshape.indices.Data, i * STFMesh.indices_width, STFMesh.indices_width, 0) : i;
@@ -331,8 +333,9 @@ namespace com.squirrelbite.stf_unity.processors
 							parseFloat(stfBlendshape.position_offsets.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width),
 							parseFloat(stfBlendshape.position_offsets.Data, i * STFMesh.float_width * 3, STFMesh.float_width, STFMesh.float_width * 2)
 						);
-						foreach (var split_index in verts_to_split[vertexIndex])
-							blendshapePositions[deduped_split_indices[split_index]] = blendshapePosition;
+						if(verts_to_split.ContainsKey(vertexIndex))
+							foreach (var split_index in verts_to_split[vertexIndex])
+								blendshapePositions[deduped_split_indices[split_index]] = blendshapePosition;
 					}
 
 					if (stfBlendshape.split_normals != null && stfBlendshape.split_normals.BufferLength == stfBlendshape.position_offsets.BufferLength)
