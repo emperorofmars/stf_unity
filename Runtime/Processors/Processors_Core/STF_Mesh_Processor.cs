@@ -334,6 +334,7 @@ namespace com.squirrelbite.stf_unity.processors
 						if(verts_to_split.ContainsKey(vertexIndex))
 							foreach (var split_index in verts_to_split[vertexIndex])
 								blendshapePositions[deduped_split_indices[split_index]] = blendshapePosition;
+						// else a it affects a vertex that is not part of a triangle, e.g. a line or point
 					}
 
 					if (stfBlendshape.split_normals != null && stfBlendshape.split_normals.BufferLength == stfBlendshape.position_offsets.BufferLength)
