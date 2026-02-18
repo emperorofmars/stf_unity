@@ -322,8 +322,6 @@ namespace com.squirrelbite.stf_unity.processors
 					System.Array.Clear(blendshapeNormals, 0, blendshapeNormals.Length);
 					System.Array.Clear(blendshapeTangents, 0, blendshapeTangents.Length);
 
-					Debug.Log(stfBlendshape.name);
-
 					for (int i = 0; i < (int)stfBlendshape.position_offsets.BufferLength / (STFMesh.float_width * 3); i++)
 					{
 						var vertexIndex = stfBlendshape.indices != null ? parseInt(stfBlendshape.indices.Data, i * STFMesh.indices_width, STFMesh.indices_width, 0) : i;
