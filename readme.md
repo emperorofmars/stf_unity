@@ -12,6 +12,13 @@ Intended for (not only) games-development use-cases.
 * Unity Package Manager: `Window` → `Package Manager` → `+` → `Add package from git URL...`
 Add the following URL: `https://codeberg.org/emperorofmars/stf_unity.git#upm`
 
+## Development
+* Clone the repository into the `Packages` directory of a Unity 2022.3+ project.
+* Preferably setup Unity to use VSCode with the [recommended extensions](./.vscode/extensions.json).
+* Use Unity to open the C# project.
+
+Optionally install the appropriate SDKs for VRChat, VRM or Basis to work on their respective parts of the codebase.
+
 ## License
 All source-code in this repository, except when noted in individual files and/or directories, is licensed under either:
 
