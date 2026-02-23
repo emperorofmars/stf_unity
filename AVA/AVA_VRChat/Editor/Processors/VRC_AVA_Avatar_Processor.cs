@@ -34,9 +34,12 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			animator.updateMode = AnimatorUpdateMode.Normal;
 			animator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
 
-			if (avaAvatar.Viewport) avatar.ViewPosition = avaAvatar.Viewport.transform.position - Context.Root.transform.position;
-			if (!Context.ImportConfig.AuthoringImport)
-				Context.AddTrash(avaAvatar.Viewport);
+			if (avaAvatar.Viewport)
+			{
+				avatar.ViewPosition = avaAvatar.Viewport.transform.position - Context.Root.transform.position;
+				if (!Context.ImportConfig.AuthoringImport)
+					Context.AddTrash(avaAvatar.Viewport);
+			}
 
 			avatar.enabled = avaAvatar.enabled;
 

@@ -6,7 +6,9 @@
         "GUID:3b9f661eb63cdd24eac0fa805a1e17aa",
         "GUID:b4ae365a73764ee478adc74cb89832fe",
         "GUID:7a6619954e39edb4a87be61d250e97b0",
-        "GUID:96b5f20a56b2acb478bb94e3cebbb36e"
+        "GUID:96b5f20a56b2acb478bb94e3cebbb36e",
+        "GUID:2afe69e1ed424ef683b047e7b47aa34c",
+        "GUID:36654df604fac454eb30035133ddc310"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -20,6 +22,11 @@
             "name": "com.basis.sdk",
             "expression": "",
             "define": "STF_AVA_BASISVR_FOUND"
+        },
+        {
+            "name": "dev.hai-vr.basis.comms",
+            "expression": "",
+            "define": "STF_AVA_BASISVR_HAI_FOUND"
         }
     ],
     "noEngineReferences": false
