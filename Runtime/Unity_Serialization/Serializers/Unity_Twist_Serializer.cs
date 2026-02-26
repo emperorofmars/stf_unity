@@ -6,7 +6,7 @@ using UnityEngine.Animations;
 
 namespace com.squirrelbite.stf_unity.serialization
 {
-	public class NNA_Twist_Serializer : IUnity_Serializer
+	public class Unity_Twist_Serializer : IUnity_Serializer
 	{
 		public static readonly System.Type _Target = typeof(RotationConstraint);
 		public System.Type Target => _Target;

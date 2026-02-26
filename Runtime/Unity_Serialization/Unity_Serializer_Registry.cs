@@ -8,7 +8,7 @@ namespace com.squirrelbite.stf_unity.serialization
 	public static class Unity_Serializer_Registry
 	{
 		public static readonly List<IUnity_Serializer> DefaultSerializers = new() {
-			new NNA_Twist_Serializer(),
+			new Unity_Twist_Serializer(),
 		};
 
 		private static readonly List<IUnity_Serializer> RegisteredSerializers = new();
