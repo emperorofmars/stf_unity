@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules.stfexp
 {
+	// TODO implement processors for various Unity IK implementations, like FinalIK
+
 	public class STFEXP_Constraint_IK : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "stfexp.constraint.ik";
