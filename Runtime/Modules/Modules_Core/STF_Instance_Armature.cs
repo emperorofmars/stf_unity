@@ -95,9 +95,9 @@ namespace com.squirrelbite.stf_unity.modules
 			{
 				bone.STF_Owner = ret;
 			}
-			for(var child_index = 0; child_index < instance.transform.childCount; child_index++)
+			while(instance.transform.childCount > 0)
 			{
-				instance.transform.GetChild(child_index).SetParent(go.transform, false);
+				instance.transform.GetChild(0).SetParent(go.transform, false);
 			}
 
 			#if UNITY_EDITOR

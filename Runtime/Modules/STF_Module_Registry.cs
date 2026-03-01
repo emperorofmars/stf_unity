@@ -26,6 +26,7 @@ namespace com.squirrelbite.stf_unity.modules
 			new STFEXP_Constraint_Twist_Module(),
 			new STFEXP_Constraint_Rotation_Module(),
 			new STFEXP_Constraint_Parent_Module(),
+			new STFEXP_Constraint_IK_Module(),
 			new STFEXP_Humanoid_Armature_Module(),
 			new STFEXP_Instance_Text_Module(),
 			new STFEXP_Text_Module(),
