@@ -48,6 +48,15 @@ namespace com.squirrelbite.stf_unity.processors
 			var processedUnityMesh = (Mesh)(meshInstance.Mesh.ProcessedObjects != null && meshInstance.Mesh.ProcessedObjects.Count == 1 ? meshInstance.Mesh.ProcessedObjects[0] : null);
 			if (processedUnityMesh != null)
 			{
+				if(meshInstance.Mesh.weights != null && meshInstance.transform.parent && meshInstance.transform.parent.parent)
+				{
+					var reparentSkinned = Context.ImportConfig.GetAndConfirmImportOption(STF_Animation.STF_TYPE, meshInstance.STF_Id, meshInstance.STF_Name, "reparent_skinned", true);
+					if(reparentSkinned)
+					{
+						meshInstance.transform.SetParent(meshInstance.transform.parent.parent, true);
+					}
+				}
+
 				Renderer renderer;
 				if (meshInstance.Mesh.weights != null  || meshInstance.Mesh.blendshapes != null && meshInstance.Mesh.blendshapes.Count > 0)
 				{
