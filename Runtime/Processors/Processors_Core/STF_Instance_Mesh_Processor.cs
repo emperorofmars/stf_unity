@@ -50,7 +50,7 @@ namespace com.squirrelbite.stf_unity.processors
 			{
 				if(meshInstance.Mesh.weights != null && meshInstance.transform.parent && meshInstance.transform.parent.parent)
 				{
-					var reparentSkinned = Context.ImportConfig.GetAndConfirmImportOption(STF_Animation.STF_TYPE, meshInstance.STF_Id, meshInstance.STF_Name, "reparent_skinned", true);
+					var reparentSkinned = Context.ImportConfig.GetAndConfirmImportOption(STF_Instance_Mesh.STF_TYPE, meshInstance.STF_Id, UnityUtil.getPath(Context.Root.transform, meshInstance.transform), "reparent_skinned", true);
 					if(reparentSkinned)
 					{
 						meshInstance.transform.SetParent(meshInstance.transform.parent.parent, true);

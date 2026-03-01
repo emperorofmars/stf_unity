@@ -13,6 +13,7 @@ namespace com.squirrelbite.stf_unity.modules.editors
 			new STF_Material_Import_Editor(),
 			new STF_Mesh_Import_Editor(),
 			new STF_Animation_Import_Editor(),
+			new STF_Instance_Mesh_Import_Editor(),
 		};
 
 		private static readonly Dictionary<string, ISTF_Module_Editor> RegisteredModules = new();
