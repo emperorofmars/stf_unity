@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using com.squirrelbite.stf_unity.modules;
 using com.squirrelbite.stf_unity.modules.stfexp;
 using UnityEngine;
-using UnityEngine.UI;
 
 #if STF_TEXTMESHPRO_FOUND
 using TMPro;
+#else
+using UnityEngine.UI;
 #endif
 
 namespace com.squirrelbite.stf_unity.processors.stfexp
