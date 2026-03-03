@@ -6,6 +6,10 @@ using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.modules.stfexp;
 using System.Collections.Generic;
 
+#if STF_FINALIK_FOUND
+using com.squirrelbite.stf_unity.processors.finalik;
+#endif
+
 namespace com.squirrelbite.stf_unity.ava.vrchat
 {
 	public class VRCContextFactory : STF_ApplicationContextDefinition
@@ -36,8 +40,9 @@ namespace com.squirrelbite.stf_unity.ava.vrchat
 			foreach ((var _, var processor) in STF_Processor_Registry.GetProcessors("default"))
 				if(!Ignores.Contains(processor.TargetType))
 					STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, processor);
-#else
-			Debug.Log("AVA: Didn't find VRC SDK 3");
+#if STF_FINALIK_FOUND
+			STF_Processor_Registry.RegisterProcessor(STF_VRC_AVATAR_CONTEXT, new FinalIK_STFEXP_Constraint_IK_Processor());
+#endif
 #endif
 		}
 	}

@@ -16,7 +16,7 @@ namespace com.squirrelbite.stf_unity.tools
 
 		public override void OnImportAsset(AssetImportContext ctx)
 		{
-			Debug.Log($"Importing {ctx.assetPath} for context {ImportConfig.SelectedApplication}");
+			var timeStart = Time.realtimeSinceStartupAsDouble;
 
 			ImportConfig.ResourceImportOptionsConfirm = new();
 
@@ -55,7 +55,11 @@ namespace com.squirrelbite.stf_unity.tools
 				ImportConfig.ResourceImportOptionsConfirm = null;
 				ImportConfig.IsFirstImport = false;
 
-				Debug.Log("STF Import Success!");
+				var timeEnd = Time.realtimeSinceStartupAsDouble;
+
+				//Debug.Log("STF Import Success!");
+				//Debug.Log($"Successfully imported {ctx.assetPath} for context {ImportConfig.SelectedApplication}");
+				Debug.Log($"Successfully imported STF asset \"{ ctx.assetPath }\" in { System.Math.Round(timeEnd - timeStart, 4) } s.");
 			}
 			else
 			{

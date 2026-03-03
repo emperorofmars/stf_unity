@@ -1,12 +1,13 @@
 {
-    "name": "stf_ava_univrm0_editor",
-    "rootNamespace": "com.squirrelbite.stf_unity.processors.ava.stf_ava_univrm0",
+    "name": "stf_finalik_editor",
+    "rootNamespace": "com.squirrelbite.stf_unity.processors.finalik",
     "references": [
+        "GUID:6d4810c931e638d489b58e9b332f3fb9",
+        "GUID:fad9225a277e8764b81e4bda5c8fc27d",
         "GUID:8a88ca90357a74942a1113aeb6ad32c6",
         "GUID:7a6619954e39edb4a87be61d250e97b0",
         "GUID:3b9f661eb63cdd24eac0fa805a1e17aa",
-        "GUID:915b0571b66d8f545801d82ff1007498",
-        "GUID:05dd262a0c0a2f841b8252c8c3815582"
+        "GUID:915b0571b66d8f545801d82ff1007498"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

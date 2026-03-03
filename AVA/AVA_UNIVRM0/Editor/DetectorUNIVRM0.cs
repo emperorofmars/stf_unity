@@ -4,7 +4,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityEditor.Compilation;
-using com.squirrelbite.stf_unity.processors.ava.util;
+using com.squirrelbite.stf_unity.util;
 using com.squirrelbite.stf_unity.processors;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.modules.stfexp;
@@ -52,7 +52,6 @@ namespace com.squirrelbite.stf_unity.ava.univrm0
 			}
 			else
 			{
-				Debug.Log("AVA: Didn't find UNIVRM0 SDK");
 				if (ScriptDefinesManager.IsDefined(STF_UNIVRM0_AVATAR_CONTEXT))
 				{
 					ScriptDefinesManager.RemoveDefines(STF_UNIVRM0_AVATAR_CONTEXT);

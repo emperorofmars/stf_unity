@@ -36,8 +36,6 @@ namespace com.squirrelbite.stf_unity.ava.basisvr
 			foreach ((var _, var processor) in STF_Processor_Registry.GetProcessors("default"))
 				if(!Ignores.Contains(processor.TargetType))
 					STF_Processor_Registry.RegisterProcessor(STF_BASISVR_AVATAR_CONTEXT, processor);
-#else
-			Debug.Log("AVA: Didn't find BASISVR SDK");
 #endif
 		}
 	}

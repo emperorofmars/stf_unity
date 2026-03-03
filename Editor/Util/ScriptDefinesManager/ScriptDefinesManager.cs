@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.processors.ava.util
+namespace com.squirrelbite.stf_unity.util
 {
     [InitializeOnLoad]
     public static class ScriptDefinesManager
@@ -33,7 +33,7 @@ namespace com.squirrelbite.stf_unity.processors.ava.util
         /// <summary>
         /// Checks if define is set for the currently selected build target
         /// </summary>
-        /// <param name="defineString">String to check for</param>                
+        /// <param name="defineString">String to check for</param>
         public static bool IsDefined(string defineString)
         {
             return IsDefined(EditorUserBuildSettings.selectedBuildTargetGroup, defineString);
@@ -72,7 +72,7 @@ namespace com.squirrelbite.stf_unity.processors.ava.util
         /// <param name="definesToRemove">Defines to remove from selected build target</param>
         public static void RemoveDefines(BuildTargetGroup buildTarget, params string[] definesToRemove)
         {
-            string existingDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);            
+            string existingDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
 
             if(existingDefines.Length == 0)
                 return;
@@ -91,30 +91,30 @@ namespace com.squirrelbite.stf_unity.processors.ava.util
 
             string finalDefineString = string.Join(";", defineSet.ToArray());
             PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTarget, finalDefineString);
-            Debug.LogFormat("Set Scripting Define Symbols for selected build target ({0}) to: {1}", buildTarget.ToString(), finalDefineString);            
+            Debug.LogFormat("Set Scripting Define Symbols for selected build target ({0}) to: {1}", buildTarget.ToString(), finalDefineString);
         }
 
         /// <summary>
         /// Checks if define is set for given build target
         /// </summary>
         /// <param name="buildTarget">Build target to check define for</param>
-        /// <param name="defineString">String to check for</param>        
+        /// <param name="defineString">String to check for</param>
         public static bool IsDefined(BuildTargetGroup buildTarget, string defineString)
         {
             string existingDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
             List<string> splitDefines = existingDefines.Split(';').ToList();
 
-            if(splitDefines != null && splitDefines.Count > 0)            
+            if(splitDefines != null && splitDefines.Count > 0)
                 if(splitDefines.Contains(defineString))
-                    return true;                
-            
+                    return true;
+
             return false;
         }
 
         /// <summary>
         /// Returns currently set defines for the given build target as an array split by ';'
         /// </summary>
-        /// <param name="buildTarget">Selected build target</param>        
+        /// <param name="buildTarget">Selected build target</param>
         public static string[] GetDefinesAsArray(BuildTargetGroup buildTarget)
         {
             return PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget).Split(';');
@@ -122,7 +122,7 @@ namespace com.squirrelbite.stf_unity.processors.ava.util
 
         /// <summary>
         /// Returns currently set defines for the currently selected build target as an array split by ';'
-        /// </summary>        
+        /// </summary>
         public static string[] GetDefinesAsArray()
         {
             return PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup).Split(';');
