@@ -7,6 +7,8 @@ using UnityEngine.Animations;
 
 namespace com.squirrelbite.stf_unity.modules.stfexp
 {
+	[AddComponentMenu("STF/Modules/stfexp/stfexp.constraint.rotation")]
+	[HelpURL("https://docs.stfform.at/modules/stfexp/stfexp_constraint_rotation.html")]
 	public class STFEXP_Constraint_Rotation : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "stfexp.constraint.rotation";

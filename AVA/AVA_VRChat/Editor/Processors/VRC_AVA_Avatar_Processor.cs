@@ -40,6 +40,12 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				if (!Context.ImportConfig.AuthoringImport)
 					Context.AddTrash(avaAvatar.Viewport);
 			}
+			// VRC doesn't support specifying a voice position, if present, remove the redundant GameObject.
+			if(Context.Root.GetComponent<AVA_VoicePosition>() is AVA_VoicePosition voicePosition && voicePosition.VoicePosition != null)
+			{
+				if (!Context.ImportConfig.AuthoringImport)
+					Context.AddTrash(voicePosition.VoicePosition);
+			}
 
 			avatar.enabled = avaAvatar.enabled;
 

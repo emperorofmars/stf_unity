@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.modules;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -8,6 +9,7 @@ using UnityEditor;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.modules
 {
+	[AddComponentMenu("STF/Modules/com.vrchat/com.vrchat.physbone")]
 	public class VRC_Physbone : STF_NodeComponentResource
 	{
 		[System.Serializable]

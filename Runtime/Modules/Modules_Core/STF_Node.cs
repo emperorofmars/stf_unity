@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[AddComponentMenu("STF/Modules/stf/stf.node")]
+	[HelpURL("https://docs.stfform.at/modules/stf/stf_node.html")]
 	public class STF_Node : STF_NodeResource
 	{
 		public const string STF_TYPE = "stf.node";

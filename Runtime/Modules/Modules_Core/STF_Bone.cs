@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[AddComponentMenu("STF/Modules/stf/stf.bone")]
+	[HelpURL("https://docs.stfform.at/modules/stf/stf_bone.html")]
 	public class STF_Bone : STF_NodeResource
 	{
 		public const string STF_TYPE = "stf.bone";
@@ -11,6 +13,8 @@ namespace com.squirrelbite.stf_unity.modules
 
 		public bool Connected = false;
 		public float Length = 0;
+		public bool IsDeformBone = true;
+		public string NonDeformUse = "";
 	}
 
 	public class STF_Bone_Module : ISTF_Module
@@ -32,6 +36,9 @@ namespace com.squirrelbite.stf_unity.modules
 			ret.Connected = JsonResource.ContainsKey("connected") && (bool)JsonResource["connected"];
 			ret.Length = (float)JsonResource["length"];
 
+			if(JsonResource.ContainsKey("deform")) ret.IsDeformBone = JsonResource.Value<bool>("deform");
+			if(JsonResource.ContainsKey("non_deform_use")) ret.NonDeformUse = JsonResource.Value<string>("non_deform_use");
+
 			go.transform.SetLocalPositionAndRotation(TRSUtil.ParseLocation((JArray)JsonResource["translation"]), TRSUtil.ParseRotation((JArray)JsonResource["rotation"]));
 
 			if(JsonResource.ContainsKey("children")) foreach(var childID in (JArray)JsonResource["children"])
@@ -50,7 +57,7 @@ namespace com.squirrelbite.stf_unity.modules
 			var node = ApplicationObject as STF_Bone;
 			var ret = new JObject {
 				{"type", STF_Type},
-				{"name", node.STF_Name},
+				{"name", node.STF_Name ?? node.name},
 				//{"trs", TRSUtil.SerializeTRS(node.transform)}
 			};
 

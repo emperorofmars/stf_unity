@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[AddComponentMenu("STF/Modules/stf/stf.prefab")]
+	[HelpURL("https://docs.stfform.at/modules/stf/stf_prefab.html")]
 	public class STF_Prefab : STF_PrefabResource
 	{
 		public const string STF_TYPE = "stf.prefab";

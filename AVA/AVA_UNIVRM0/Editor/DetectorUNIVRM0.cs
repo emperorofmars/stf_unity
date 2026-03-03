@@ -4,7 +4,6 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityEditor.Compilation;
-using com.squirrelbite.stf_unity.processors.stfexp;
 using com.squirrelbite.stf_unity.processors.ava.util;
 using com.squirrelbite.stf_unity.processors;
 using System.Collections.Generic;

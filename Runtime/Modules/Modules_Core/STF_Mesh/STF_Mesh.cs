@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[CreateAssetMenu(menuName = "STF/Modules/stf/stf.mesh")]
+	[HelpURL("https://docs.stfform.at/modules/stf/stf_mesh.html")]
 	public class STF_Mesh : STF_DataResource
 	{
 		public const string STF_TYPE = "stf.mesh";

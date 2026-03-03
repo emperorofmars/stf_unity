@@ -9,6 +9,7 @@ using UnityEditor;
 
 namespace com.squirrelbite.stf_unity.ava
 {
+	[AddComponentMenu("STF/Modules/dev.vrm/dev.vrm.blendshape_pose")]
 	public class VRM_BlendshapePose : STF_DataResource
 	{
 		public const string _STF_Type = "dev.vrm.blendshape_pose";

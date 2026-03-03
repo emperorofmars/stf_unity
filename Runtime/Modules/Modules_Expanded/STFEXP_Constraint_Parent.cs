@@ -7,6 +7,8 @@ using UnityEngine.Animations;
 
 namespace com.squirrelbite.stf_unity.modules.stfexp
 {
+	[AddComponentMenu("STF/Modules/stfexp/stfexp.constraint.parent")]
+	[HelpURL("https://docs.stfform.at/modules/stfexp/stfexp_constraint_parent.html")]
 	public class STFEXP_Constraint_Parent : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "stfexp.constraint.parent";

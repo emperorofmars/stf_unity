@@ -3,7 +3,6 @@
 using UnityEditor;
 using UnityEngine;
 using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity.processors.stfexp;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.modules.stfexp;
 
@@ -33,7 +32,7 @@ namespace com.squirrelbite.stf_unity.ava.basisvr
 #if STF_AVA_BASISVR_FOUND
 			Debug.Log("AVA: Found BASISVR SDK");
 			STF_Processor_Registry.RegisterContext(new BasisContextFactory());
-					
+
 			foreach ((var _, var processor) in STF_Processor_Registry.GetProcessors("default"))
 				if(!Ignores.Contains(processor.TargetType))
 					STF_Processor_Registry.RegisterProcessor(STF_BASISVR_AVATAR_CONTEXT, processor);

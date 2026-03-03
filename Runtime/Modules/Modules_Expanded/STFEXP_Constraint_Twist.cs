@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules.stfexp
 {
+	[AddComponentMenu("STF/Modules/stfexp/stfexp.constraint.twist")]
+	[HelpURL("https://docs.stfform.at/modules/stfexp/stfexp_constraint_twist.html")]
 	public class STFEXP_Constraint_Twist : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "stfexp.constraint.twist";

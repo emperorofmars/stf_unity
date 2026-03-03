@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[CreateAssetMenu(menuName = "STF/Modules/stf/stf.image")]
+	[HelpURL("https://docs.stfform.at/modules/stf/stf_image.html")]
 	public class STF_Image : STF_DataResource
 	{
 		public const string STF_TYPE = "stf.image";

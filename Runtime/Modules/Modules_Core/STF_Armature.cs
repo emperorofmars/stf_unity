@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[AddComponentMenu("STF/Modules/stf/stf.armature")]
+	[HelpURL("https://docs.stfform.at/modules/stf/stf_armature.html")]
 	public class STF_Armature : STF_PrefabResource
 	{
 		public const string STF_TYPE = "stf.armature";

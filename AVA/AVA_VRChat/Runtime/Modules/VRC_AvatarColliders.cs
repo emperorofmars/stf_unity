@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.modules;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -8,6 +9,7 @@ using UnityEditor;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.modules
 {
+	[AddComponentMenu("STF/Modules/com.vrchat/com.vrchat.avatar_colliders")]
 	public class VRC_AvatarColliders : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "com.vrchat.avatar_colliders";

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using com.squirrelbite.stf_unity.modules;
+using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -8,6 +9,8 @@ using UnityEditor;
 
 namespace com.squirrelbite.stf_unity.ava
 {
+	[AddComponentMenu("STF/Modules/ava/ava.eye_rotation.bone")]
+	[HelpURL("https://docs.stfform.at/modules/ava/ava_eye_rotation_bone.html")]
 	public class AVA_EyeRotation_Bone : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "ava.eye_rotation.bone";

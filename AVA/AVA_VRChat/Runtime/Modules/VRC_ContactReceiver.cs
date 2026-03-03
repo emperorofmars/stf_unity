@@ -9,6 +9,7 @@ using UnityEditor;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.modules
 {
+	[AddComponentMenu("STF/Modules/com.vrchat/com.vrchat.contact_receiver")]
 	public class VRC_ContactReceiver : VRC_ContactBase
 	{
 		public const string _STF_Type = "com.vrchat.contact_receiver";

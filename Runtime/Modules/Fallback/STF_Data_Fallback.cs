@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[CreateAssetMenu(menuName = "STF/Modules/Fallback/STF_Data_Fallback")]
 	public class STF_Data_Fallback : STF_DataResource, IJsonFallback
 	{
 		public string _FallbackType;

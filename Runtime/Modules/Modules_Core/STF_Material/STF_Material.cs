@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
-	[System.Serializable]
+	[CreateAssetMenu(menuName = "STF/Modules/stf/stf.material")]
+	[HelpURL("https://docs.stfform.at/modules/stf/stf_material.html")]
 	public class STF_Material : STF_DataResource
 	{
 		[System.Serializable]

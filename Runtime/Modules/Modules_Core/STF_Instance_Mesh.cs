@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[AddComponentMenu("STF/Modules/stf/stf.instance.mesh")]
+	[HelpURL("https://docs.stfform.at/modules/stf/stf_instance_mesh.html")]
 	public class STF_Instance_Mesh : STF_InstanceResource
 	{
 		public class BlendshapeValue { public bool Override = false; public float Value = 0; }
@@ -42,7 +44,7 @@ namespace com.squirrelbite.stf_unity.modules
 						ret.Materials.Add(stfMaterial as STF_Material);
 					else
 						ret.Materials.Add(null);
-			
+
 			if (JsonResource.ContainsKey("blendshape_values"))
 				foreach (var value in JsonResource["blendshape_values"])
 					if (value.Type != JTokenType.Null)

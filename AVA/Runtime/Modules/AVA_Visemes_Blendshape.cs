@@ -9,6 +9,8 @@ using UnityEditor;
 
 namespace com.squirrelbite.stf_unity.ava
 {
+	[AddComponentMenu("STF/Modules/ava/ava.visemes.blendshape")]
+	[HelpURL("https://docs.stfform.at/modules/ava/ava_visemes_blendshape.html")]
 	public class AVA_Visemes_Blendshape : STF_DataComponentResource
 	{
 		public const string _STF_Type = "ava.visemes.blendshape";

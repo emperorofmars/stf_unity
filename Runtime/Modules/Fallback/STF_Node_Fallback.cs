@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[AddComponentMenu("STF/Modules/Fallback/STF_Node_Fallback")]
 	public class STF_Node_Fallback : STF_NodeResource, IJsonFallback
 	{
 		public string _FallbackType;

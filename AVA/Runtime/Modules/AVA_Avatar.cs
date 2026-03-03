@@ -10,6 +10,8 @@ using UnityEditor;
 
 namespace com.squirrelbite.stf_unity.ava
 {
+	[AddComponentMenu("STF/Modules/ava/ava.avatar")]
+	[HelpURL("https://docs.stfform.at/modules/ava/ava_avatar.html")]
 	public class AVA_Avatar : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "ava.avatar";

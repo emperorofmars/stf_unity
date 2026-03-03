@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[CreateAssetMenu(menuName = "STF/Modules/stf/stf.animation")]
+	[HelpURL("https://docs.stfform.at/modules/stf/stf_animation.html")]
 	public class STF_Animation : STF_DataResource
 	{
 		[System.Serializable]

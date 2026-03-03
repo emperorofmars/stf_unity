@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules.stfexp
 {
+	[AddComponentMenu("STF/Modules/stfexp/stfexp.camera")]
+	[HelpURL("https://docs.stfform.at/modules/stfexp/stfexp_camera.html")]
 	public class STFEXP_Camera : STF_InstanceResource
 	{
 		public const string _STF_Type = "stfexp.camera";

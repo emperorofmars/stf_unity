@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules.stfexp
 {
+	[AddComponentMenu("STF/Modules/stfexp/stfexp.armature.humanoid")]
+	[HelpURL("https://docs.stfform.at/modules/stfexp/stfexp_armature_humanoid.html")]
 	public class STFEXP_Humanoid_Armature : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "stfexp.armature.humanoid";
 		public override string STF_Type => _STF_Type;
-		
+
 		public static class HumanoidLocomotionType { public const string Plantigrade = "planti"; public const string Digitigrade = "digi"; }
 		public string locomotion_type = HumanoidLocomotionType.Plantigrade;
 		public bool no_jaw = false;

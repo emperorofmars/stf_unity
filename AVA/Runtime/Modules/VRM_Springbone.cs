@@ -9,6 +9,7 @@ using UnityEditor;
 
 namespace com.squirrelbite.stf_unity.ava
 {
+	[AddComponentMenu("STF/Modules/dev.vrm/dev.vrm.springbone")]
 	public class VRM_Springbone : STF_NodeComponentResource
 	{
 		[System.Serializable]

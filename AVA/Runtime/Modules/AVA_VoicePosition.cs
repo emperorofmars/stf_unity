@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using com.squirrelbite.stf_unity.modules;
-using System.Threading.Tasks;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,6 +9,8 @@ using UnityEditor;
 
 namespace com.squirrelbite.stf_unity.ava
 {
+	[AddComponentMenu("STF/Modules/ava/ava.voice_position")]
+	[HelpURL("https://docs.stfform.at/modules/ava/ava_voice_position.html")]
 	public class AVA_VoicePosition : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "ava.voice_position";

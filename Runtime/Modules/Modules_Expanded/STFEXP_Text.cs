@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules.stfexp
 {
+	[CreateAssetMenu(menuName = "STF/Modules/stfexp/stfexp.text")]
+	[HelpURL("https://docs.stfform.at/modules/stfexp/stfexp_text.html")]
 	public class STFEXP_Text : STF_DataResource
 	{
 		public const string _STF_Type = "stfexp.text";

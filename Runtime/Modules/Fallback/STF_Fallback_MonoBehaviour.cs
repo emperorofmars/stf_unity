@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[AddComponentMenu("STF/Modules/Fallback/STF_Fallback_MonoBehaviour")]
 	public class STF_Fallback_MonoBehaviour : STF_MonoBehaviour, IJsonFallback
 	{
 		public string _FallbackType;

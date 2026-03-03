@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.modules
 {
+	[CreateAssetMenu(menuName = "STF/Modules/stf/stf.texture")]
+	[HelpURL("https://docs.stfform.at/modules/stf/stf_texture.html")]
 	public class STF_Texture : STF_DataComponentResource
 	{
 		public const string _STF_Type = "stf.texture";
