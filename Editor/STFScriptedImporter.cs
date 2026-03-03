@@ -61,7 +61,7 @@ namespace com.squirrelbite.stf_unity.tools
 			}
 			else
 			{
-				Debug.Log("Importing STF asset \"{ ctx.assetPath }\" failed! Check the reports.");
+				Debug.Log($"Importing STF asset \"{ ctx.assetPath }\" failed! Check the reports.");
 			}
 		}
 
