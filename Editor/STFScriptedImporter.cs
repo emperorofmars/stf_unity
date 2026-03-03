@@ -57,13 +57,11 @@ namespace com.squirrelbite.stf_unity.tools
 
 				var timeEnd = Time.realtimeSinceStartupAsDouble;
 
-				//Debug.Log("STF Import Success!");
-				//Debug.Log($"Successfully imported {ctx.assetPath} for context {ImportConfig.SelectedApplication}");
 				Debug.Log($"Successfully imported STF asset \"{ ctx.assetPath }\" in { System.Math.Round(timeEnd - timeStart, 4) } s.");
 			}
 			else
 			{
-				Debug.Log("STF Import Failed! Check the reports.");
+				Debug.Log("Importing STF asset \"{ ctx.assetPath }\" failed! Check the reports.");
 			}
 		}
 
