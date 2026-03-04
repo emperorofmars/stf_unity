@@ -88,6 +88,8 @@ namespace com.squirrelbite.stf_unity
 
 		public void RegisterImportedResource(string STF_Id, ISTF_Resource ImportedObject, List<object> ApplicationObjects)
 		{
+			if(ImportedObjects.ContainsKey(STF_Id)) return;
+
 			ImportedObjects.Add(STF_Id, ImportedObject);
 			if(ApplicationObjects != null && ApplicationObjects.Count > 0)
 			{

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -14,8 +15,12 @@ namespace com.squirrelbite.stf_unity.modules
 		public string _FallbackJson;
 		public string FallbackJson => _FallbackJson;
 
-		public List<Object> _ReferencedResources = new();
-		public List<Object> ReferencedResources => _ReferencedResources;
+		public List<STF_ScriptableObject> _ReferencedScriptableObjectResources = new();
+		public List<STF_ScriptableObject> ReferencedScriptableObjectResources => _ReferencedScriptableObjectResources;
+
+		public List<STF_MonoBehaviour> _ReferencedMonoBehaviourResources = new();
+		public List<STF_MonoBehaviour> ReferencedMonoBehaviourResources => _ReferencedMonoBehaviourResources;
+
 
 		public List<STF_Buffer> _ReferencedBuffers = new();
 		public List<STF_Buffer> ReferencedBuffers => _ReferencedBuffers;
@@ -33,7 +38,9 @@ namespace com.squirrelbite.stf_unity.modules
 			ret._FallbackType = (string)JsonResource.GetValue("type");
 			ret._FallbackJson = JsonResource.ToString();
 
-			// TODO referenced resources and buffers
+			Context.AddTask(new Task(() => {
+				IJsonFallback.ImportReferences(Context, JsonResource, ContextObject, ret);
+			}));
 
 			return ret;
 		}

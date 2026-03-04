@@ -99,25 +99,7 @@ namespace com.squirrelbite.stf_unity
 
 		public virtual ISTF_Resource HandleFallback(JObject JsonResource, string STF_Id, string ExpectedKind, ISTF_Resource ContextObject = null)
 		{
-			if(ExpectedKind == "data")
-			{
-				var fallbackObject = STF_Data_Fallback_Module.Import(this, JsonResource, STF_Id, ContextObject);
-				State.RegisterImportedResource(STF_Id, fallbackObject, new() {fallbackObject});
-
-				if(JsonResource.ContainsKey("components"))
-				{
-					foreach(var componentId in JsonResource["components"])
-					{
-						var component = ImportResource((string)componentId, "component", fallbackObject);
-						if(component is STF_ScriptableObject resource)
-							((STF_DataResource)fallbackObject).Components.Add(resource);
-						else
-							Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)JsonResource.GetValue("type"), null, null));
-					}
-				}
-				return fallbackObject;
-			}
-			else if(ExpectedKind == "node")
+			if(ExpectedKind == "node")
 			{
 				var fallbackObject = STF_Node_Fallback_Module.Import(this, JsonResource, STF_Id, ContextObject);
 				State.RegisterImportedResource(STF_Id, fallbackObject, null);
@@ -149,9 +131,22 @@ namespace com.squirrelbite.stf_unity
 			}
 			else
 			{
-				Report(new STFReport("Invalid Json Resource", ErrorSeverity.FATAL_ERROR, (string)JsonResource.GetValue("type"), null, null));
+				var fallbackObject = STF_Data_Fallback_Module.Import(this, JsonResource, STF_Id, ContextObject);
+				State.RegisterImportedResource(STF_Id, fallbackObject, new() {fallbackObject});
+
+				if(JsonResource.ContainsKey("components"))
+				{
+					foreach(var componentId in JsonResource["components"])
+					{
+						var component = ImportResource((string)componentId, "component", fallbackObject);
+						if(component is STF_ScriptableObject resource)
+							((STF_DataResource)fallbackObject).Components.Add(resource);
+						else
+							Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)JsonResource.GetValue("type"), null, null));
+					}
+				}
+				return fallbackObject;
 			}
-			return null;
 		}
 
 		public void AddUnityObject(Object Resource) { State.AddUnityObject(Resource); }

@@ -30,6 +30,7 @@ namespace com.squirrelbite.stf_unity.modules
 			new STFEXP_Humanoid_Armature_Module(),
 			new STFEXP_Instance_Text_Module(),
 			new STFEXP_Text_Module(),
+			new STFEXP_AnimationBlendtree_Module(),
 		};
 
 		public static readonly HashSet<string> DefaultIgnores = new() {
