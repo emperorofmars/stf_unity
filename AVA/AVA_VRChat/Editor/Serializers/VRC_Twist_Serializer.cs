@@ -2,8 +2,8 @@
 #if STF_AVA_VRCSDK3_FOUND
 
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.modules;
-using com.squirrelbite.stf_unity.modules.stfexp;
+using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.handlers.stfexp;
 using com.squirrelbite.stf_unity.serialization;
 using Newtonsoft.Json.Linq;
 using UnityEditor;

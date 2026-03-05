@@ -4,7 +4,7 @@
 using UnityEditor;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity.modules;
+using com.squirrelbite.stf_unity.handlers;
 using VRC.SDK3.Dynamics.PhysBone.Components;
 using UnityEngine;
 

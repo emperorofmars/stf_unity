@@ -1,0 +1,125 @@
+using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json.Linq;
+using UnityEngine;
+
+namespace com.squirrelbite.stf_unity.handlers
+{
+	[AddComponentMenu("STF/Resources/stf/stf.instance.armature")]
+	[HelpURL("https://docs.stfform.at/modules/stf/stf_instance_armature.html")]
+	public class STF_Instance_Armature : STF_InstanceResource
+	{
+		public const string STF_TYPE = "stf.instance.armature";
+		public override string STF_Type => STF_TYPE;
+
+		public STF_Armature Armature;
+
+		// TODO pose & mods
+		[System.Serializable]
+		public class Pose
+		{
+			public string TargetId;
+			public Vector3 Translation = Vector3.zero;
+			public Quaternion Rotation = Quaternion.identity;
+			public Vector3 Scale = Vector3.one;
+		}
+		public List<Pose> Poses = new();
+	}
+
+	public class STF_Instance_Armature_Handler : ISTF_Handler
+	{
+		public string STF_Type => STF_Instance_Armature.STF_TYPE;
+		public string STF_Category => "instance";
+		public int Priority => 0;
+		public List<string> LikeTypes => new(){"instance.armature", "instance"};
+		public List<System.Type> UnderstoodApplicationTypes => new(){typeof(STF_Instance_Armature)};
+		public int CanHandleApplicationObject(ISTF_Resource ApplicationObject) { return 0; }
+		public List<ISTF_Resource> GetComponents(ISTF_Resource ApplicationObject) { return null; }
+
+		public (ISTF_Resource STFResource, List<object> ApplicationObjects) Import(ImportContext Context, JObject JsonResource, string STF_Id, ISTF_Resource ContextObject)
+		{
+			var go = (STF_Node)ContextObject;
+			var ret = go.gameObject.AddComponent<STF_Instance_Armature>();
+			go.Instance = ret;
+			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STF Armature Instance");
+
+			ret.Armature = (STF_Armature)Context.ImportResource((string)JsonResource["armature"], "data");
+
+			var instance = Object.Instantiate(ret.Armature.gameObject);
+
+			if(JsonResource.ContainsKey("pose"))
+			{
+				foreach((string id, var stfPose) in (JObject)JsonResource["pose"])
+				{
+					var bone = instance.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == id);
+					var pose = new STF_Instance_Armature.Pose {
+						TargetId = id,
+						Translation = TRSUtil.ParseLocation((JArray)stfPose[0]),
+						Rotation = TRSUtil.ParseRotation((JArray)stfPose[1]),
+						Scale = TRSUtil.ParseScale((JArray)stfPose[2])
+					};
+					ret.Poses.Add(pose);
+					bone.transform.SetLocalPositionAndRotation(pose.Translation, pose.Rotation);
+					bone.transform.localScale = pose.Scale;
+				}
+			}
+
+			// handle added and modified components
+			if (JsonResource.ContainsKey("modified_components"))
+			{
+				foreach ((string boneId, JToken componentMods) in (JObject)JsonResource["modified_components"])
+				{
+					foreach ((string componentId, JToken componentMod) in (JObject)componentMods)
+					{
+						if (instance.GetComponentsInChildren<STF_NodeComponentResource>().FirstOrDefault(c => c.STF_Id == componentId) is var component && component != null)
+						{
+							Context.ImportInstanceMod(component, componentMod as JObject);
+						}
+					}
+				}
+			}
+			if (JsonResource.ContainsKey("added_components"))
+			{
+				foreach ((string boneId, JToken componentIds) in (JObject)JsonResource["added_components"])
+				{
+					if (instance.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == boneId) is var bone && bone != null)
+					{
+						foreach (string componentId in componentIds)
+						{
+							if(Context.ImportResource(componentId, "component", bone) is STF_NodeComponentResource component && component != null)
+								component.STF_Owner = ret;
+						}
+					}
+				}
+			}
+
+			foreach(var bone in instance.GetComponentsInChildren<STF_Bone>())
+			{
+				bone.STF_Owner = ret;
+			}
+			while(instance.transform.childCount > 0)
+			{
+				instance.transform.GetChild(0).SetParent(go.transform, false);
+			}
+
+			#if UNITY_EDITOR
+				Object.DestroyImmediate(instance);
+			#else
+				Object.Destroy(instance);
+			#endif
+
+			return (ret, null);
+		}
+
+		public (JObject Json, string STF_Id) Export(ExportContext Context, ISTF_Resource ApplicationObject, ISTF_Resource ContextObject)
+		{
+			var PrefabObject = ApplicationObject as STF_Instance_Armature;
+			var ret = new JObject {
+				{"type", STF_Type},
+				{"name", PrefabObject.STF_Name},
+			};
+
+			return (ret, PrefabObject.STF_Id);
+		}
+	}
+}

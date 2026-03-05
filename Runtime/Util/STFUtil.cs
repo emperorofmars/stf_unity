@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using com.squirrelbite.stf_unity.modules;
+using com.squirrelbite.stf_unity.handlers;
 using com.squirrelbite.stf_unity.processors;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -87,7 +87,7 @@ namespace com.squirrelbite.stf_unity
 		public static STF_MonoBehaviour ResolvePath(STF_MonoBehaviour Source, List<string> TargetPath)
 		{
 			if(TargetPath == null || TargetPath.Count == 0) return null;
-			
+
 			var ret = Source.STF_Owner.GetComponentsInChildren<STF_MonoBehaviour>().FirstOrDefault(b => b.STF_Id == TargetPath[0] && b.STF_Owner == Source.STF_Owner);
 			if(ret == null) return null;
 

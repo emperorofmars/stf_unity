@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using com.squirrelbite.stf_unity.modules;
+using com.squirrelbite.stf_unity.handlers;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -32,7 +32,7 @@ namespace com.squirrelbite.stf_unity
 			if(jsonResource == null)
 				Report(new STFReport("Invalid Json Resource", ErrorSeverity.FATAL_ERROR, (string)jsonResource.GetValue("type"), null, null));
 
-			var module = State.DetermineModule(jsonResource, ExpectedKind);
+			var module = State.DetermineHandler(jsonResource, ExpectedKind);
 			if(module == null)
 			{
 				return HandleFallback(jsonResource, STF_Id, ExpectedKind, ContextObject);
@@ -91,7 +91,7 @@ namespace com.squirrelbite.stf_unity
 
 		public void ImportInstanceMod(ISTF_Resource Resource, JObject JsonResource)
 		{
-			if(State.DetermineModule(Resource.STF_Type, "component") is var module)
+			if(State.DetermineHandler(Resource.STF_Type, "component") is var module)
 			{
 				module.ImportInstanceMod(this, Resource, JsonResource);
 			}
@@ -101,7 +101,7 @@ namespace com.squirrelbite.stf_unity
 		{
 			if(ExpectedKind == "node")
 			{
-				var fallbackObject = STF_Node_Fallback_Module.Import(this, JsonResource, STF_Id, ContextObject);
+				var fallbackObject = STF_Node_Fallback_Handler.Import(this, JsonResource, STF_Id, ContextObject);
 				State.RegisterImportedResource(STF_Id, fallbackObject, null);
 
 				if(JsonResource.ContainsKey("components"))
@@ -119,19 +119,19 @@ namespace com.squirrelbite.stf_unity
 			}
 			else if(ContextObject is STF_MonoBehaviour && (ExpectedKind == "component" || ExpectedKind == "instance"))
 			{
-				var fallbackObject = STF_Fallback_MonoBehaviour_Module.Import(this, JsonResource, STF_Id, ContextObject);
+				var fallbackObject = STF_Fallback_MonoBehaviour_Handler.Import(this, JsonResource, STF_Id, ContextObject);
 				State.RegisterImportedResource(STF_Id, fallbackObject, null);
 				return fallbackObject;
 			}
 			else if(ExpectedKind == "component")
 			{
-				var fallbackObject = STF_Fallback_ScriptableObject_Module.Import(this, JsonResource, STF_Id, ContextObject);
+				var fallbackObject = STF_Fallback_ScriptableObject_Handler.Import(this, JsonResource, STF_Id, ContextObject);
 				State.RegisterImportedResource(STF_Id, fallbackObject, new() {fallbackObject});
 				return fallbackObject;
 			}
 			else
 			{
-				var fallbackObject = STF_Data_Fallback_Module.Import(this, JsonResource, STF_Id, ContextObject);
+				var fallbackObject = STF_Data_Fallback_Handler.Import(this, JsonResource, STF_Id, ContextObject);
 				State.RegisterImportedResource(STF_Id, fallbackObject, new() {fallbackObject});
 
 				if(JsonResource.ContainsKey("components"))

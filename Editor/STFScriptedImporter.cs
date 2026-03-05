@@ -3,7 +3,7 @@
 using UnityEngine;
 using UnityEditor.AssetImporters;
 using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity.modules;
+using com.squirrelbite.stf_unity.handlers;
 
 namespace com.squirrelbite.stf_unity.tools
 {
@@ -21,7 +21,7 @@ namespace com.squirrelbite.stf_unity.tools
 			ImportConfig.ResourceImportOptionsConfirm = new();
 
 			var file = new STF_File(ctx.assetPath);
-			var state = new ImportState(file, STF_Module_Registry.Modules, STF_Module_Registry.Ignores, ImportConfig);
+			var state = new ImportState(file, STF_Handler_Registry.Handlers, STF_Handler_Registry.Ignores, ImportConfig);
 			var rootContext = new ImportContext(state);
 
 			rootContext.ImportResource(state.RootID, "data");

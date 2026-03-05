@@ -5,7 +5,7 @@
 using UnityEditor;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity.modules;
+using com.squirrelbite.stf_unity.handlers;
 using UnityEngine;
 using com.squirrelbite.ava_base_setup.vrchat;
 using com.squirrelbite.ava_base_setup;

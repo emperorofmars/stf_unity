@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.modules;
-using com.squirrelbite.stf_unity.modules.stfexp;
+using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.handlers.stfexp;
 using UnityEngine;
 
 #if STF_TEXTMESHPRO_FOUND

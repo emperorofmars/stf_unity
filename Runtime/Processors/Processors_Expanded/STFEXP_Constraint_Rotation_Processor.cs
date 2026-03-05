@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Animations;
-using com.squirrelbite.stf_unity.modules;
-using com.squirrelbite.stf_unity.modules.stfexp;
+using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.handlers.stfexp;
 
 namespace com.squirrelbite.stf_unity.processors.stfexp
 {

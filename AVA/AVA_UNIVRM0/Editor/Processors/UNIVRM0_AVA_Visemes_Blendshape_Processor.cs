@@ -6,7 +6,7 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 using VRM;
-using com.squirrelbite.stf_unity.modules;
+using com.squirrelbite.stf_unity.handlers;
 using com.squirrelbite.stf_unity.processors;
 using System.Linq;
 

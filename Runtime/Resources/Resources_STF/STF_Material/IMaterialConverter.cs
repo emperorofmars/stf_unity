@@ -1,0 +1,11 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace com.squirrelbite.stf_unity.handlers.stf_material
+{
+	public interface IMaterialConverter
+	{
+		string ShaderName {get;}
+		(Material ConvertedMaterial, List<Object> GeneratedObjects) ConvertToUnityMaterial(STF_Material STFMaterial);
+	}
+}

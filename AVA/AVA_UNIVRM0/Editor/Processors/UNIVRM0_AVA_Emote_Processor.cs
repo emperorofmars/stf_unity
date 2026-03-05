@@ -4,7 +4,7 @@
 using UnityEditor;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity.modules;
+using com.squirrelbite.stf_unity.handlers;
 using com.squirrelbite.stf_unity.ava.univrm0;
 using VRM;
 using UnityEngine;

@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using com.squirrelbite.stf_unity.modules;
+using com.squirrelbite.stf_unity.handlers;
 
 namespace com.squirrelbite.stf_unity
 {
 	public class ImportState
 	{
-		public readonly Dictionary<string, ISTF_Module> Modules = new();
+		public readonly Dictionary<string, ISTF_Handler> Handlers = new();
 		public readonly HashSet<string> Ignores = new();
 		public STF_File File;
 		public STF_Meta Meta;
@@ -29,10 +29,10 @@ namespace com.squirrelbite.stf_unity
 		public readonly List<Object> Trash = new();
 		public readonly List<Object> DeleteOnNonAuthoring = new();
 
-		public ImportState(STF_File File, Dictionary<string, ISTF_Module> Modules, HashSet<string> Ignores, ImportOptions ImportConfig = null)
+		public ImportState(STF_File File, Dictionary<string, ISTF_Handler> Handlers, HashSet<string> Ignores, ImportOptions ImportConfig = null)
 		{
 			this.File = File;
-			this.Modules = Modules;
+			this.Handlers = Handlers;
 			this.Ignores = Ignores;
 
 			var json = JObject.Parse(File.Json);
@@ -57,19 +57,19 @@ namespace com.squirrelbite.stf_unity
 				return null;
 		}
 
-		public ISTF_Module DetermineModule(JObject JsonResource, string ExpectedKind)
+		public ISTF_Handler DetermineHandler(JObject JsonResource, string ExpectedKind)
 		{
-			return DetermineModule((string)JsonResource.GetValue("type"), ExpectedKind);
+			return DetermineHandler((string)JsonResource.GetValue("type"), ExpectedKind);
 		}
 
-		public ISTF_Module DetermineModule(string STF_Type, string ExpectedKind)
+		public ISTF_Handler DetermineHandler(string STF_Type, string ExpectedKind)
 		{
 			foreach (var ignore in Ignores)
 				if (STF_Type.StartsWith(ignore)) return null;
 
-			if (Modules.ContainsKey(STF_Type))
+			if (Handlers.ContainsKey(STF_Type))
 			{
-				return Modules[STF_Type];
+				return Handlers[STF_Type];
 			}
 			else
 			{

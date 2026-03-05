@@ -7,7 +7,7 @@ using UnityEditor.Compilation;
 using com.squirrelbite.stf_unity.util;
 using com.squirrelbite.stf_unity.processors;
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.modules.stfexp;
+using com.squirrelbite.stf_unity.handlers.stfexp;
 
 namespace com.squirrelbite.stf_unity.ava.univrm0
 {

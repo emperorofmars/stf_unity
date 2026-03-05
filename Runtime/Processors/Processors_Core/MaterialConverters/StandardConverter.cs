@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.modules.stf_material.util;
+using com.squirrelbite.stf_unity.handlers.stf_material.util;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.modules.stf_material
+namespace com.squirrelbite.stf_unity.handlers.stf_material
 {
 	public class STF_PropertyConverter_Material_Standard : ISTF_PropertyConverter
 	{

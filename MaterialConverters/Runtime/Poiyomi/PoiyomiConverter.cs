@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.modules.stf_material.util;
+using com.squirrelbite.stf_unity.handlers.stf_material.util;
 using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace com.squirrelbite.stf_unity.modules.stf_material
+namespace com.squirrelbite.stf_unity.handlers.stf_material
 {
 	public class STF_PropertyConverter_Material_Poiyomi : ISTF_PropertyConverter
 	{

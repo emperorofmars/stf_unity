@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.modules;
-using com.squirrelbite.stf_unity.modules.stf_material;
+using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.handlers.stf_material;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors
