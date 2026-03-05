@@ -6,7 +6,7 @@ using UnityEngine;
 namespace com.squirrelbite.stf_unity.handlers.stfexp
 {
 	[CreateAssetMenu(menuName = "STF/Resources/stfexp/stfexp.animation_blendtree")]
-	[HelpURL("https://docs.stfform.at/modules/stfexp/stfexp_animation_blendtree.html")]
+	[HelpURL("https://docs.stfform.at/resources/stfexp/stfexp_animation_blendtree.html")]
 	public class STFEXP_AnimationBlendtree : STF_DataResource
 	{
 		public const string _STF_Type = "stfexp.animation_blendtree";

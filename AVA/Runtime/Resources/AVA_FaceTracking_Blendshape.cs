@@ -10,7 +10,7 @@ using UnityEditor;
 namespace com.squirrelbite.stf_unity.ava
 {
 	[AddComponentMenu("STF/Resources/ava/ava.face_tracking.blendshape")]
-	[HelpURL("https://docs.stfform.at/modules/ava/ava_face_tracking_blendshape.html")]
+	[HelpURL("https://docs.stfform.at/resources/ava/ava_face_tracking_blendshape.html")]
 	public class AVA_FaceTracking_Blendshape : STF_DataComponentResource
 	{
 		public const string _STF_Type = "ava.face_tracking.blendshape";

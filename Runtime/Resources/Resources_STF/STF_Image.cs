@@ -5,7 +5,7 @@ using UnityEngine;
 namespace com.squirrelbite.stf_unity.handlers
 {
 	[CreateAssetMenu(menuName = "STF/Resources/stf/stf.image")]
-	[HelpURL("https://docs.stfform.at/modules/stf/stf_image.html")]
+	[HelpURL("https://docs.stfform.at/resources/stf/stf_image.html")]
 	public class STF_Image : STF_DataResource
 	{
 		public const string STF_TYPE = "stf.image";

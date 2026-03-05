@@ -5,7 +5,7 @@ using UnityEngine;
 namespace com.squirrelbite.stf_unity.handlers
 {
 	[AddComponentMenu("STF/Resources/stf/stf.prefab")]
-	[HelpURL("https://docs.stfform.at/modules/stf/stf_prefab.html")]
+	[HelpURL("https://docs.stfform.at/resources/stf/stf_prefab.html")]
 	public class STF_Prefab : STF_PrefabResource
 	{
 		public const string STF_TYPE = "stf.prefab";

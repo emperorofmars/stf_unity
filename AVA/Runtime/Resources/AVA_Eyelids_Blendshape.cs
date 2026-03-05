@@ -10,7 +10,7 @@ using UnityEditor;
 namespace com.squirrelbite.stf_unity.ava
 {
 	[AddComponentMenu("STF/Resources/ava/ava.eyelids.blendshape")]
-	[HelpURL("https://docs.stfform.at/modules/ava/ava_eyelids_blendshape.html")]
+	[HelpURL("https://docs.stfform.at/resources/ava/ava_eyelids_blendshape.html")]
 	public class AVA_Eyelids_Blendshape : STF_DataComponentResource
 	{
 		public const string _STF_Type = "ava.eyelids.blendshape";

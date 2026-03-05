@@ -6,7 +6,7 @@ using UnityEngine;
 namespace com.squirrelbite.stf_unity.handlers
 {
 	[AddComponentMenu("STF/Resources/stf/stf.instance.armature")]
-	[HelpURL("https://docs.stfform.at/modules/stf/stf_instance_armature.html")]
+	[HelpURL("https://docs.stfform.at/resources/stf/stf_instance_armature.html")]
 	public class STF_Instance_Armature : STF_InstanceResource
 	{
 		public const string STF_TYPE = "stf.instance.armature";

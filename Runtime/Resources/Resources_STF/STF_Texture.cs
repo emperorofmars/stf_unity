@@ -5,7 +5,7 @@ using UnityEngine;
 namespace com.squirrelbite.stf_unity.handlers
 {
 	[CreateAssetMenu(menuName = "STF/Resources/stf/stf.texture")]
-	[HelpURL("https://docs.stfform.at/modules/stf/stf_texture.html")]
+	[HelpURL("https://docs.stfform.at/resources/stf/stf_texture.html")]
 	public class STF_Texture : STF_DataComponentResource
 	{
 		public const string _STF_Type = "stf.texture";

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace com.squirrelbite.stf_unity.handlers.stfexp
 {
 	[AddComponentMenu("STF/Resources/stfexp/stfexp.light")]
-	[HelpURL("https://docs.stfform.at/modules/stfexp/stfexp_light.html")]
+	[HelpURL("https://docs.stfform.at/resources/stfexp/stfexp_light.html")]
 	public class STFEXP_Light : STF_InstanceResource
 	{
 		public const string _STF_Type = "stfexp.light";

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace com.squirrelbite.stf_unity.handlers.stfexp
 {
 	[AddComponentMenu("STF/Resources/stfexp/stfexp.lightprobe_anchor")]
-	[HelpURL("https://docs.stfform.at/modules/stfexp/stfexp_lightprobe_anchor.html")]
+	[HelpURL("https://docs.stfform.at/resources/stfexp/stfexp_lightprobe_anchor.html")]
 	public class STFEXP_LightprobeAnchor : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "stfexp.lightprobe_anchor";

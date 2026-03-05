@@ -5,7 +5,7 @@ using UnityEngine;
 namespace com.squirrelbite.stf_unity.handlers.stfexp
 {
 	[AddComponentMenu("STF/Resources/stfexp/stfexp.collider.capsule")]
-	[HelpURL("https://docs.stfform.at/modules/stfexp/stfexp_collider_capsule.html")]
+	[HelpURL("https://docs.stfform.at/resources/stfexp/stfexp_collider_capsule.html")]
 	public class STFEXP_Collider_Capsule : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "stfexp.collider.capsule";

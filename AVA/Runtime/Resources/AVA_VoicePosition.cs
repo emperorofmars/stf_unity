@@ -10,7 +10,7 @@ using UnityEditor;
 namespace com.squirrelbite.stf_unity.ava
 {
 	[AddComponentMenu("STF/Resources/ava/ava.voice_position")]
-	[HelpURL("https://docs.stfform.at/modules/ava/ava_voice_position.html")]
+	[HelpURL("https://docs.stfform.at/resources/ava/ava_voice_position.html")]
 	public class AVA_VoicePosition : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "ava.voice_position";

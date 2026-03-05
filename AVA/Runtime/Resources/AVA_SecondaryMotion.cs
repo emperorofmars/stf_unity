@@ -10,7 +10,7 @@ using UnityEditor;
 namespace com.squirrelbite.stf_unity.ava
 {
 	[AddComponentMenu("STF/Resources/ava/ava.secondary_motion")]
-	[HelpURL("https://docs.stfform.at/modules/ava/ava_secondary_motion.html")]
+	[HelpURL("https://docs.stfform.at/resources/ava/ava_secondary_motion.html")]
 	public class AVA_SecondaryMotion : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "ava.secondary_motion";

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace com.squirrelbite.stf_unity.handlers
 {
 	[AddComponentMenu("STF/Resources/stf/stf.instance.mesh")]
-	[HelpURL("https://docs.stfform.at/modules/stf/stf_instance_mesh.html")]
+	[HelpURL("https://docs.stfform.at/resources/stf/stf_instance_mesh.html")]
 	public class STF_Instance_Mesh : STF_InstanceResource
 	{
 		public class BlendshapeValue { public bool Override = false; public float Value = 0; }

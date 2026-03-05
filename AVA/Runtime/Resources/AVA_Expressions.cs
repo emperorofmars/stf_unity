@@ -10,7 +10,7 @@ using UnityEditor;
 namespace com.squirrelbite.stf_unity.ava
 {
 	[AddComponentMenu("STF/Resources/ava/ava.expressions")]
-	[HelpURL("https://docs.stfform.at/modules/ava/ava_expressions.html")]
+	[HelpURL("https://docs.stfform.at/resources/ava/ava_expressions.html")]
 	public class AVA_Expressions : STF_NodeComponentResource
 	{
 		public const string _STF_Type = "ava.expressions";
