@@ -25,8 +25,9 @@ namespace com.squirrelbite.stf_unity.processors.finalik
 					ScriptDefinesManager.AddDefinesIfMissing(BuildTargetGroup.Standalone, STF_FINALIK_FOUND);
 					CompilationPipeline.RequestScriptCompilation();
 				}
-
+#if STF_FINALIK_FOUND
 				STF_Processor_Registry.RegisterProcessor("default", new FinalIK_STFEXP_Constraint_IK_Processor());
+#endif
 			}
 			else
 			{

@@ -6,7 +6,6 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity.modules;
 using Basis.Scripts.BasisSdk;
 
 namespace com.squirrelbite.stf_unity.ava.basisvr.processors
@@ -20,7 +19,7 @@ namespace com.squirrelbite.stf_unity.ava.basisvr.processors
 
 		public int Priority => 1;
 
-		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
+		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, handlers.ISTF_Resource STFResource)
 		{
 			var avatar = Context.Root.GetComponent<BasisAvatar>();
 			if (!avatar) Context.Report(new STFReport("No Avatar Component created!", ErrorSeverity.FATAL_ERROR, AVA_Visemes_Blendshape._STF_Type));
