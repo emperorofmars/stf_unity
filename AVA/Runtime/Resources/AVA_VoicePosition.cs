@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.resources;
 
 #if UNITY_EDITOR
 using UnityEditor;

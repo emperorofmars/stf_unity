@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace com.squirrelbite.stf_unity.handlers
+namespace com.squirrelbite.stf_unity.resources
 {
 	public abstract class STF_NodeComponentResource : STF_MonoBehaviour, ISTF_ComponentResource
 	{

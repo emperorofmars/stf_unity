@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.handlers
+namespace com.squirrelbite.stf_unity.resources
 {
 	[CreateAssetMenu(menuName = "STF/Resources/Fallback/STF_Data_Fallback")]
 	public class STF_Data_Fallback : STF_DataResource, IJsonFallback

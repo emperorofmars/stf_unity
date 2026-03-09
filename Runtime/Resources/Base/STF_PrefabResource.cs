@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace com.squirrelbite.stf_unity.handlers
+namespace com.squirrelbite.stf_unity.resources
 {
 	/// <summary>
 	/// For resources that need to become a Unity Prefab. They are 'data' resources in STF otherwise.

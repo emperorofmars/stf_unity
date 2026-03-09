@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.ava.vrchat.modules;
-using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.resources;
 using com.squirrelbite.stf_unity.processors;
 using Newtonsoft.Json.Linq;
 using UnityEditor;

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.handlers
+namespace com.squirrelbite.stf_unity.resources
 {
 	[AddComponentMenu("STF/Resources/Fallback/STF_Fallback_MonoBehaviour")]
 	public class STF_Fallback_MonoBehaviour : STF_MonoBehaviour, IJsonFallback

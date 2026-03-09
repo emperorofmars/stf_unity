@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace com.squirrelbite.stf_unity.handlers
+namespace com.squirrelbite.stf_unity.resources
 {
 	/// <summary>
 	/// Unity doesn't support components on ScriptableObjects like on GameObjects, so they have to be implemented differently.

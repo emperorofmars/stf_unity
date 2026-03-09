@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.resources;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 

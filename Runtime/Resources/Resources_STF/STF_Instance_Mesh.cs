@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.handlers
+namespace com.squirrelbite.stf_unity.resources
 {
 	[AddComponentMenu("STF/Resources/stf/stf.instance.mesh")]
 	[HelpURL("https://docs.stfform.at/resources/stf/stf_instance_mesh.html")]

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.resources;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 

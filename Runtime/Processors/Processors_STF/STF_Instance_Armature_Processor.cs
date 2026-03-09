@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.resources;
 using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors

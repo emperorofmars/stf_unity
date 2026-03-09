@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.handlers.stfexp;
+using com.squirrelbite.stf_unity.resources.stfexp;
 
-namespace com.squirrelbite.stf_unity.handlers
+namespace com.squirrelbite.stf_unity.resources
 {
 	public static class STF_Handler_Registry
 	{

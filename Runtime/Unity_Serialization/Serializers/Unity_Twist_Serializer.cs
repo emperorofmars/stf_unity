@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.handlers;
-using com.squirrelbite.stf_unity.handlers.stfexp;
+using com.squirrelbite.stf_unity.resources;
+using com.squirrelbite.stf_unity.resources.stfexp;
 using Newtonsoft.Json.Linq;
 using UnityEngine.Animations;
 

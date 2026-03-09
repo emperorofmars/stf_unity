@@ -3,7 +3,7 @@
 using UnityEditor;
 using UnityEngine;
 using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity.handlers.stfexp;
+using com.squirrelbite.stf_unity.resources.stfexp;
 using System.Collections.Generic;
 
 #if STF_FINALIK_FOUND

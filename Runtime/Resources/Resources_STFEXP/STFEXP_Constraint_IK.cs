@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.handlers.stfexp
+namespace com.squirrelbite.stf_unity.resources.stfexp
 {
 	// TODO implement processors for various Unity IK implementations, like FinalIK
 

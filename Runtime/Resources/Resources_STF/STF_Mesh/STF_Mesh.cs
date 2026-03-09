@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.handlers
+namespace com.squirrelbite.stf_unity.resources
 {
 	[CreateAssetMenu(menuName = "STF/Resources/stf/stf.mesh")]
 	[HelpURL("https://docs.stfform.at/resources/stf/stf_mesh.html")]

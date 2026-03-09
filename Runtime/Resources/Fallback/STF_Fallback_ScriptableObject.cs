@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.handlers
+namespace com.squirrelbite.stf_unity.resources
 {
 	[CreateAssetMenu(menuName = "STF/Resources/Fallback/STF_Fallback_ScriptableObject")]
 	public class STF_Fallback_ScriptableObject : STF_ScriptableObject, IJsonFallback

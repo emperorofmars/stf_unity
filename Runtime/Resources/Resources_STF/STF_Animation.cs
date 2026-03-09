@@ -3,7 +3,7 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.handlers
+namespace com.squirrelbite.stf_unity.resources
 {
 	[CreateAssetMenu(menuName = "STF/Resources/stf/stf.animation")]
 	[HelpURL("https://docs.stfform.at/resources/stf/stf_animation.html")]

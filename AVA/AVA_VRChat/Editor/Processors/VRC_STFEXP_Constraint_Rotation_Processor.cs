@@ -4,8 +4,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Animations;
-using com.squirrelbite.stf_unity.handlers;
-using com.squirrelbite.stf_unity.handlers.stfexp;
+using com.squirrelbite.stf_unity.resources;
+using com.squirrelbite.stf_unity.resources.stfexp;
 using UnityEditor;
 using com.squirrelbite.stf_unity.processors;
 using VRC.SDK3.Dynamics.Constraint.Components;

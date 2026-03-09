@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.handlers.stf_material
+namespace com.squirrelbite.stf_unity.resources.stf_material
 {
 	public static class STF_Material_Converter_Registry
 	{

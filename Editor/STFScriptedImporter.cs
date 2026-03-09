@@ -3,7 +3,7 @@
 using UnityEngine;
 using UnityEditor.AssetImporters;
 using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.resources;
 
 namespace com.squirrelbite.stf_unity.tools
 {

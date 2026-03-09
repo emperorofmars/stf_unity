@@ -3,7 +3,7 @@
 using com.squirrelbite.stf_unity.tools;
 using UnityEngine.UIElements;
 
-namespace com.squirrelbite.stf_unity.handlers.editors
+namespace com.squirrelbite.stf_unity.resources.editors
 {
 	public interface ISTF_Module_Editor
 	{

@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Animations;
 
-namespace com.squirrelbite.stf_unity.handlers.stfexp
+namespace com.squirrelbite.stf_unity.resources.stfexp
 {
 	[AddComponentMenu("STF/Resources/stfexp/stfexp.constraint.rotation")]
 	[HelpURL("https://docs.stfform.at/resources/stfexp/stfexp_constraint_rotation.html")]

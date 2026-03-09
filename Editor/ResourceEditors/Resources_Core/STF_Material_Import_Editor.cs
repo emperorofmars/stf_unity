@@ -1,13 +1,13 @@
 #if UNITY_EDITOR
 
 using System.Linq;
-using com.squirrelbite.stf_unity.handlers.stf_material;
+using com.squirrelbite.stf_unity.resources.stf_material;
 using com.squirrelbite.stf_unity.tools;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEngine.UIElements;
 
-namespace com.squirrelbite.stf_unity.handlers.editors
+namespace com.squirrelbite.stf_unity.resources.editors
 {
 	public class STF_Material_Import_Editor : ISTF_Module_Editor
 	{

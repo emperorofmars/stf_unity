@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.resources;
 using com.squirrelbite.stf_unity.processors;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -130,7 +130,7 @@ namespace com.squirrelbite.stf_unity
 
 		public static ISTF_Resource ImportResource(ImportContext Context, JObject JsonResource, JToken ResourceIDIndex, string ExpectedKind = "data", ISTF_Resource ContextObject = null)
 		{
-			if(GetResourceID(JsonResource, ResourceIDIndex) is string resourceID && !string.IsNullOrWhiteSpace(resourceID))
+			if(ResourceIDIndex != null && ResourceIDIndex.Type == JTokenType.Integer && GetResourceID(JsonResource, ResourceIDIndex) is string resourceID && !string.IsNullOrWhiteSpace(resourceID))
 				return Context.ImportResource(resourceID, ExpectedKind, ContextObject);
 			else
 				return null;

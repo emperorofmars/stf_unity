@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEngine.UIElements;
 
-namespace com.squirrelbite.stf_unity.handlers.editors
+namespace com.squirrelbite.stf_unity.resources.editors
 {
 	public class STF_Animation_Import_Editor : ISTF_Module_Editor
 	{

@@ -4,10 +4,10 @@
 using UnityEditor;
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
-using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.resources;
 using UnityEngine;
 using VRM;
-using com.squirrelbite.stf_unity.handlers.stfexp;
+using com.squirrelbite.stf_unity.resources.stfexp;
 
 namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace com.squirrelbite.stf_unity.handlers
+namespace com.squirrelbite.stf_unity.resources
 {
 	/// <summary>
 	/// For resources like meshes, images, etc..

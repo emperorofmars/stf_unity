@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace com.squirrelbite.stf_unity.handlers.editors
+namespace com.squirrelbite.stf_unity.resources.editors
 {
 	public static class STF_Module_Editor_Registry
 	{

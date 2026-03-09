@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.handlers.stfexp
+namespace com.squirrelbite.stf_unity.resources.stfexp
 {
 	[AddComponentMenu("STF/Resources/stfexp/stfexp.instance.text")]
 	[HelpURL("https://docs.stfform.at/resources/stfexp/stfexp_instance_text.html")]

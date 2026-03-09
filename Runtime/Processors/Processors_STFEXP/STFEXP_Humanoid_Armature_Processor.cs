@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.handlers.stfexp;
-using com.squirrelbite.stf_unity.handlers;
+using com.squirrelbite.stf_unity.resources.stfexp;
+using com.squirrelbite.stf_unity.resources;
 using System.Linq;
 
 namespace com.squirrelbite.stf_unity.processors.stfexp

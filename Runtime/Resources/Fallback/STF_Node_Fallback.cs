@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.handlers
+namespace com.squirrelbite.stf_unity.resources
 {
 	[AddComponentMenu("STF/Resources/Fallback/STF_Node_Fallback")]
 	public class STF_Node_Fallback : STF_NodeResource, IJsonFallback
