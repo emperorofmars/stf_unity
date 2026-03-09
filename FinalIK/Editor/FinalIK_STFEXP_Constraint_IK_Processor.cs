@@ -52,6 +52,24 @@ namespace com.squirrelbite.stf_unity.processors.finalik
 
 				return (new() { ret }, null);
 			}
+			else if(stfConstraint.ChainLength > 0 && stfConstraint.TargetGo)
+			{
+				var ret = stfConstraint.gameObject.AddComponent<FABRIK>();
+				ret.solver.target = stfConstraint.TargetGo.transform;
+
+				var bones = new List<Transform>();
+				var bone = stfConstraint.transform;
+				for(int i = 0; i < stfConstraint.ChainLength; i++)
+				{
+					if(!bone) break; // TODO warn
+					bones.Add(bone);
+					bone = bone.transform.parent;
+				}
+				bones.Reverse();
+				foreach(var b in bones) ret.solver.AddBone(b);
+
+				return (new() { ret }, null);
+			}
 			// TODO many more ways to do IK
 
 			return (null, null);
