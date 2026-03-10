@@ -48,6 +48,11 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 		public List<PersistentPuppet> PersistentPuppetsPre = new();
 		public List<Toggle> Toggles = new();
 		public List<Puppet> Puppets = new();
+
+		public STF_DataResource BreathingNormal;
+		public STF_DataResource BreathingIntense;
+		public STF_DataResource AdditiveIdle;
+		public STF_DataResource AdditiveExcited;
 	}
 
 	public class Squirrelbite_AvatarSetup_Handler : ISTF_Handler
@@ -106,14 +111,20 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 				ret.Puppets.Add(puppet);
 			}
 
-			if(JsonResource.ContainsKey("breathing"))
+			if(JsonResource.ContainsKey("breathing") && JsonResource["breathing"] is JObject breathingJson)
 			{
-
+				if(breathingJson.ContainsKey("normal") && STFUtil.ImportResource(Context, JsonResource, breathingJson["normal"], "data") is STF_DataResource anim_bn)
+					ret.BreathingNormal = anim_bn;
+				if(breathingJson.ContainsKey("intense") && STFUtil.ImportResource(Context, JsonResource, breathingJson["intense"], "data") is STF_DataResource anim_bi)
+					ret.BreathingIntense = anim_bi;
 			}
 
-			if(JsonResource.ContainsKey("additive"))
+			if(JsonResource.ContainsKey("additive") && JsonResource["additive"] is JObject additiveJson)
 			{
-
+				if(additiveJson.ContainsKey("idle") && STFUtil.ImportResource(Context, JsonResource, additiveJson["idle"], "data") is STF_DataResource anim_idle)
+					ret.AdditiveIdle = anim_idle;
+				if(additiveJson.ContainsKey("excited") && STFUtil.ImportResource(Context, JsonResource, additiveJson["excited"], "data") is STF_DataResource anim_add_excited)
+					ret.AdditiveExcited = anim_add_excited;
 			}
 
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
