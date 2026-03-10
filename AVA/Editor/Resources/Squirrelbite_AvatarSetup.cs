@@ -6,6 +6,8 @@ using com.squirrelbite.stf_unity.resources;
 using UnityEditor;
 using UnityEditor.Animations;
 using System.Linq;
+using NUnit.Framework;
+using com.squirrelbite.stf_unity.resources.stfexp;
 
 namespace com.squirrelbite.stf_unity.squirrelbite
 {
@@ -28,16 +30,24 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 		public class PersistentPuppet
 		{
 			public string Name;
+			public string PuppetType;
 			public string ParameterEnabled;
 			public string ParameterX;
 			public string ParameterY;
-			public BlendTree Blendtree;
+			public STF_DataResource Blendtree;
+		}
+
+		[System.Serializable]
+		public class Puppet
+		{
+			public string Name;
+			public STF_DataResource Blendtree;
 		}
 
 		public List<Toggle> TogglesPre = new();
-		public List<BlendTree> PersistentPuppetsPre = new();
+		public List<PersistentPuppet> PersistentPuppetsPre = new();
 		public List<Toggle> Toggles = new();
-		public List<BlendTree> Puppets = new();
+		public List<Puppet> Puppets = new();
 	}
 
 	public class Squirrelbite_AvatarSetup_Handler : ISTF_Handler
@@ -66,6 +76,18 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 				ret.TogglesPre.Add(toggle);
 			}
 
+			if(JsonResource.ContainsKey("puppets_pre")) foreach(JObject puppetJson in JsonResource["puppets_pre"].Cast<JObject>())
+			{
+				var puppet = new Squirrelbite_AvatarSetup.PersistentPuppet { Name = puppetJson.ContainsKey("name") ? puppetJson.Value<string>("name") : "", };
+				if(puppetJson.ContainsKey("puppet_type")) puppet.PuppetType = puppetJson.Value<string>("puppet_type");
+				if(puppetJson.ContainsKey("property_enabled")) puppet.ParameterEnabled = puppetJson.Value<string>("property_enabled");
+				if(puppetJson.ContainsKey("property_x")) puppet.ParameterX = puppetJson.Value<string>("property_x");
+				if(puppetJson.ContainsKey("property_y")) puppet.ParameterY = puppetJson.Value<string>("property_y");
+				if(puppetJson.ContainsKey("blendtree") && STFUtil.ImportResource(Context, JsonResource, puppetJson["blendtree"], "data") is STF_DataResource blendtree)
+					puppet.Blendtree = blendtree;
+				ret.PersistentPuppetsPre.Add(puppet);
+			}
+
 			if(JsonResource.ContainsKey("toggles")) foreach(JObject toggleJson in JsonResource["toggles"].Cast<JObject>())
 			{
 				var toggle = new Squirrelbite_AvatarSetup.Toggle { Name = toggleJson.ContainsKey("name") ? toggleJson.Value<string>("name") : "", };
@@ -74,6 +96,24 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 				if(toggleJson.ContainsKey("off") && STFUtil.ImportResource(Context, JsonResource, toggleJson["off"], "data") is STF_DataResource offClip)
 					toggle.Off = offClip;
 				ret.Toggles.Add(toggle);
+			}
+
+			if(JsonResource.ContainsKey("puppets")) foreach(JObject puppetJson in JsonResource["puppets"].Cast<JObject>())
+			{
+				var puppet = new Squirrelbite_AvatarSetup.Puppet { Name = puppetJson.ContainsKey("name") ? puppetJson.Value<string>("name") : "", };
+				if(puppetJson.ContainsKey("blendtree") && STFUtil.ImportResource(Context, JsonResource, puppetJson["blendtree"], "data") is STF_DataResource blendtree)
+					puppet.Blendtree = blendtree;
+				ret.Puppets.Add(puppet);
+			}
+
+			if(JsonResource.ContainsKey("breathing"))
+			{
+
+			}
+
+			if(JsonResource.ContainsKey("additive"))
+			{
+
 			}
 
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)
