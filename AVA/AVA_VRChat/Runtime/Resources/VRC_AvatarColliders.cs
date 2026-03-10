@@ -15,7 +15,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.modules
 		public const string _STF_Type = "com.vrchat.avatar_colliders";
 		public override string STF_Type => _STF_Type;
 
-		[TextArea(1, 5)]
+		[Multiline(5)]
 		public string Json;
 	}
 

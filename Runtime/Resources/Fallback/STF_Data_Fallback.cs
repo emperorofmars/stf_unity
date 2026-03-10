@@ -13,7 +13,7 @@ namespace com.squirrelbite.stf_unity.resources
 		public string FallbackType => _FallbackType;
 		public override string STF_Type => FallbackType;
 
-		[TextArea(1, 5)]
+		[Multiline(5)]
 		public string _FallbackJson;
 		public string FallbackJson => _FallbackJson;
 
