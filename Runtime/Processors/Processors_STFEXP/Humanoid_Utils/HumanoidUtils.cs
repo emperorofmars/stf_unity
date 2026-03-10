@@ -182,7 +182,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 
 			if (!avatar.isValid)
 			{
-				throw new System.Exception("Invalid humanoid avatar");
+				return null;
 			}
 			return avatar;
 		}

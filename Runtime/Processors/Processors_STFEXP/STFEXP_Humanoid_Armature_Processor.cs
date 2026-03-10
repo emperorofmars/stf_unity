@@ -153,14 +153,15 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 				};
 
 				avatar = AvatarBuilder.BuildHumanAvatar(Context.Root, humanDescription);
-				avatar.name = humanoid.transform.name + "Avatar";
 
 				if (!avatar.isValid)
-					throw new System.Exception("Invalid humanoid avatar");
+					return (null, null);
 			}
 			else
 			{
 				avatar = UnityHumanoidMappingUtil.GenerateAvatar(Context, humanoid.transform, humanoid.locomotion_type, humanoid.no_jaw);
+				if (!avatar || !avatar.isValid)
+					return (null, null);
 			}
 
 			avatar.name = "Unity Avatar";
