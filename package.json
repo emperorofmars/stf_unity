@@ -23,7 +23,7 @@
 	"url": "",
 	"gitDependencies": {},
 	"vpmDependencies": {
-		"com.squirrelbite.ava_base_setup": "^0.1.0"
+		"com.squirrelbite.ava_base_setup": "^0.2.0"
 	},
 	"legacyFolders": {
 		"Assets\\stf_unity": ""

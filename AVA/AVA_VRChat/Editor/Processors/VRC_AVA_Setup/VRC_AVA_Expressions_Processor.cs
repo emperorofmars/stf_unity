@@ -9,6 +9,7 @@ using com.squirrelbite.stf_unity.resources;
 using UnityEngine;
 using com.squirrelbite.ava_base_setup.vrchat;
 using com.squirrelbite.ava_base_setup;
+using VRC.SDK3.Avatars.Components;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
@@ -24,15 +25,13 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var avaExpressions = STFResource as AVA_Expressions;
-			var baseSetup = Context.Root.GetComponent<AVABaseSetupVRC>();
-			if(!baseSetup)
-			{
-				baseSetup = Context.Root.AddComponent<AVABaseSetupVRC>();
-				while(UnityEditorInternal.ComponentUtility.MoveComponentUp(baseSetup));
-			}
+			var baseSetup = InitAvatarBaseSetupVRChat.Init(Context.Root.GetComponent<VRCAvatarDescriptor>());
 
-			var expressionsSetup = Context.Root.AddComponent<AVAExpressionsVRC>();
-			var bindingsSetup = Context.Root.AddComponent<AVAExpressionBindingsProducerVRC>();
+			var expressionsGo = new GameObject("Expressions");
+			expressionsGo.transform.SetParent(baseSetup.transform);
+
+			var expressionsSetup = expressionsGo.AddComponent<AVAExpressionsVRC>();
+			var bindingsSetup = expressionsGo.AddComponent<AVAExpressionBindingsProducerVRC>();
 
 			baseSetup.LayerManualExpressions.Add(new() { ProducerComponent = bindingsSetup });
 
@@ -40,7 +39,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			{
 				if (expression.animation.ProcessedObjects.Count == 1 && expression.animation.ProcessedObjects[0] is AnimationClip animationClip)
 				{
-					expressionsSetup.Expressions.Add(new AvatarExpression() {
+					expressionsSetup.Expressions.Add(new AvatarExpressionOld() {
 						Expression = expression.meaning,
 						Animation = animationClip,
 					});

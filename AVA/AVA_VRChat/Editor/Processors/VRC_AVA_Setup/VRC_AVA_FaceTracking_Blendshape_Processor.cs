@@ -29,14 +29,12 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			var avatar = Context.Root.GetComponent<VRCAvatarDescriptor>();
 			if (!avatar) Context.Report(new STFReport("No Avatar Component created!", ErrorSeverity.FATAL_ERROR, AVA_Eyelids_Blendshape._STF_Type));
 
-			var baseSetup = Context.Root.GetComponent<AVABaseSetupVRC>();
-			if(!baseSetup)
-			{
-				baseSetup = Context.Root.AddComponent<AVABaseSetupVRC>();
-				while(UnityEditorInternal.ComponentUtility.MoveComponentUp(baseSetup));
-			}
+			var baseSetup = InitAvatarBaseSetupVRChat.Init(avatar);
 
-			var FTSetup = Context.Root.AddComponent<AVAFaceTrackingProducerVRC>();
+			var faceTrackingGo = new GameObject("Face Tracking");
+			faceTrackingGo.transform.SetParent(baseSetup.transform);
+
+			var FTSetup = faceTrackingGo.AddComponent<AVAFaceTrackingProducerVRC>();
 
 			FTSetup.FTMesh = (Context as AVAContext).PrimaryMeshInstance.ProcessedObjects.Find(po => po is SkinnedMeshRenderer) as SkinnedMeshRenderer;
 			FTSetup.FTType = avaFT.ft_type switch
@@ -46,8 +44,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				"sranipal" => FT_Type.SRanipal,
 				_ => FT_Type.Unknown,
 			};
-			baseSetup.LayerFT.Add(new () { ProducerComponent = FTSetup });
-			baseSetup.FaceTrackingSetupType = FT_Setup.Automatic;
+			//baseSetup.LayerFT.Add(new () { ProducerComponent = FTSetup });
+			//baseSetup.FaceTrackingSetupType = FT_Setup.Automatic;
 
 			var stfMeshInstance = (Context as AVAContext).PrimaryMeshInstance;
 
