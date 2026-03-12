@@ -34,7 +34,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			var faceTrackingGo = new GameObject("Face Tracking");
 			faceTrackingGo.transform.SetParent(baseSetup.transform);
 
-			var FTSetup = faceTrackingGo.AddComponent<AVAFaceTrackingProducerVRC>();
+			var FTSetup = faceTrackingGo.AddComponent<FaceTrackingVRC>();
 
 			FTSetup.FTMesh = (Context as AVAContext).PrimaryMeshInstance.ProcessedObjects.Find(po => po is SkinnedMeshRenderer) as SkinnedMeshRenderer;
 			FTSetup.FTType = avaFT.ft_type switch
@@ -44,8 +44,6 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				"sranipal" => FT_Type.SRanipal,
 				_ => FT_Type.Unknown,
 			};
-			//baseSetup.LayerFT.Add(new () { ProducerComponent = FTSetup });
-			//baseSetup.FaceTrackingSetupType = FT_Setup.Automatic;
 
 			var stfMeshInstance = (Context as AVAContext).PrimaryMeshInstance;
 
