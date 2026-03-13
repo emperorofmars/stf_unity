@@ -11,6 +11,7 @@ using com.squirrelbite.ava_base_setup.vrchat;
 using com.squirrelbite.ava_base_setup;
 using VRC.SDK3.Avatars.Components;
 using com.squirrelbite.stf_unity.squirrelbite;
+using System.Linq;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
@@ -28,6 +29,30 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			var avatarSetup = STFResource as Squirrelbite_AvatarSetup;
 			var baseSetup = InitAvatarBaseSetupVRChat.Init(Context.Root.GetComponent<VRCAvatarDescriptor>());
 
+			var controlsGo = new GameObject("Controls");
+			controlsGo.transform.SetParent(baseSetup.transform);
+
+			foreach(var toggle in avatarSetup.TogglesPre)
+			{
+				var behaviour = controlsGo.AddComponent<AnimationToggleVRC>();
+				behaviour.Name = toggle.Name;
+				behaviour.IsOverridable = true;
+				if(toggle.On && toggle.On.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip clipOn)
+					behaviour.On = clipOn;
+				if(toggle.Off && toggle.Off.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip clipOff)
+					behaviour.On = clipOff;
+			}
+
+			foreach(var toggle in avatarSetup.Toggles)
+			{
+				var behaviour = controlsGo.AddComponent<AnimationToggleVRC>();
+				behaviour.Name = toggle.Name;
+				behaviour.IsOverridable = false;
+				if(toggle.On && toggle.On.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip clipOn)
+					behaviour.On = clipOn;
+				if(toggle.Off && toggle.Off.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip clipOff)
+					behaviour.On = clipOff;
+			}
 
 			return (new() { baseSetup }, null);
 		}
