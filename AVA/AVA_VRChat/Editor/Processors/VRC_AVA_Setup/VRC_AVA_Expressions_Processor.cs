@@ -30,17 +30,15 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			var expressionsGo = new GameObject("Expressions");
 			expressionsGo.transform.SetParent(baseSetup.transform);
 
-			var expressionsSetup = expressionsGo.AddComponent<AVAExpressionsVRC>();
-			var bindingsSetup = expressionsGo.AddComponent<AVAExpressionBindingsProducerVRC>();
-
-			baseSetup.LayerManualExpressions.Add(new() { ProducerComponent = bindingsSetup });
+			var expressionsSetup = expressionsGo.AddComponent<AvatarExpressionsVRC>();
+			var bindingsSetup = expressionsGo.AddComponent<AvatarExpressionBindingsVRC>();
 
 			foreach (var expression in avaExpressions.expressions)
 			{
 				if (expression.animation.ProcessedObjects.Count == 1 && expression.animation.ProcessedObjects[0] is AnimationClip animationClip)
 				{
-					expressionsSetup.Expressions.Add(new AvatarExpressionOld() {
-						Expression = expression.meaning,
+					expressionsSetup.Expressions.Add(new AvatarExpressions.Expression() {
+						Mapping = expression.meaning,
 						Animation = animationClip,
 					});
 				}
