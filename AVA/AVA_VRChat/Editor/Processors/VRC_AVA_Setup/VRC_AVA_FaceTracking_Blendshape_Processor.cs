@@ -44,6 +44,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				"sranipal" => FT_Type.SRanipal,
 				_ => FT_Type.Unknown,
 			};
+			FTSetup.FTSetup = FT_Setup.Manual;
 
 			var stfMeshInstance = (Context as AVAContext).PrimaryMeshInstance;
 
