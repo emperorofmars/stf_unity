@@ -90,6 +90,14 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				}
 			}
 
+			if(avatarSetup.AdditiveIdle && avatarSetup.AdditiveIdle.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip idleAnim)
+			{
+				var behaviour = controlsGo.AddComponent<IdleVRC>();
+				behaviour.Name = idleAnim.name;
+				behaviour.IsAdditive = true;
+				behaviour.IdleAnimation = idleAnim;
+			}
+
 			return (new() { baseSetup }, null);
 		}
 	}
