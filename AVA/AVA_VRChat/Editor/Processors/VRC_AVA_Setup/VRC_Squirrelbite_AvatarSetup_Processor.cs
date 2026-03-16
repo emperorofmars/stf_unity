@@ -47,6 +47,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			foreach(var puppet in avatarSetup.PersistentPuppetsPre)
 			{
 				var behaviour = controlsGo.AddComponent<PuppetVRC>();
+				behaviour.Type = puppet.PuppetType == "1d" ? Puppet.PuppetType.D1 : Puppet.PuppetType.D2;
 				behaviour.Name = puppet.Name;
 				behaviour.IsOverridable = true;
 				behaviour.IsPersistent = true;
@@ -81,6 +82,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				behaviour.IsPersistent = false;
 				if(puppet.Blendtree && puppet.Blendtree.ProcessedObjects.Find(o => o is BlendTree) is BlendTree blendtree)
 				{
+					behaviour.Type = blendtree.blendType == BlendTreeType.Simple1D ? Puppet.PuppetType.D1 : Puppet.PuppetType.D2;
 					foreach(var mapping in blendtree.children)
 					{
 						behaviour.Blendtree.Add(new () { Animation = (AnimationClip)mapping.motion, Position = mapping.position });
