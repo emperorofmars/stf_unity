@@ -50,6 +50,9 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				behaviour.Name = puppet.Name;
 				behaviour.IsOverridable = true;
 				behaviour.IsPersistent = true;
+				if(!string.IsNullOrWhiteSpace(puppet.ParameterEnabled)) behaviour.ForceParameterEnabledName = puppet.ParameterEnabled;
+				if(!string.IsNullOrWhiteSpace(puppet.ParameterX)) behaviour.ForceParameterXName = puppet.ParameterX;
+				if(!string.IsNullOrWhiteSpace(puppet.ParameterY)) behaviour.ForceParameterYName = puppet.ParameterY;
 				if(puppet.Blendtree && puppet.Blendtree.ProcessedObjects.Find(o => o is BlendTree) is BlendTree blendtree)
 				{
 					foreach(var mapping in blendtree.children)
