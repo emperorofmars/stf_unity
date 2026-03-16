@@ -12,6 +12,7 @@ using com.squirrelbite.ava_base_setup;
 using VRC.SDK3.Avatars.Components;
 using com.squirrelbite.stf_unity.squirrelbite;
 using System.Linq;
+using UnityEditor.Animations;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
@@ -43,6 +44,21 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 					behaviour.On = clipOff;
 			}
 
+			foreach(var puppet in avatarSetup.PersistentPuppetsPre)
+			{
+				var behaviour = controlsGo.AddComponent<PuppetVRC>();
+				behaviour.Name = puppet.Name;
+				behaviour.IsOverridable = true;
+				behaviour.IsPersistent = true;
+				if(puppet.Blendtree && puppet.Blendtree.ProcessedObjects.Find(o => o is BlendTree) is BlendTree blendtree)
+				{
+					foreach(var mapping in blendtree.children)
+					{
+						behaviour.Blendtree.Add(new () { Animation = (AnimationClip)mapping.motion, Position = mapping.position });
+					}
+				}
+			}
+
 			foreach(var toggle in avatarSetup.Toggles)
 			{
 				var behaviour = controlsGo.AddComponent<AnimationToggleVRC>();
@@ -52,6 +68,21 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 					behaviour.On = clipOn;
 				if(toggle.Off && toggle.Off.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip clipOff)
 					behaviour.On = clipOff;
+			}
+
+			foreach(var puppet in avatarSetup.Puppets)
+			{
+				var behaviour = controlsGo.AddComponent<PuppetVRC>();
+				behaviour.Name = puppet.Name;
+				behaviour.IsOverridable = false;
+				behaviour.IsPersistent = false;
+				if(puppet.Blendtree && puppet.Blendtree.ProcessedObjects.Find(o => o is BlendTree) is BlendTree blendtree)
+				{
+					foreach(var mapping in blendtree.children)
+					{
+						behaviour.Blendtree.Add(new () { Animation = (AnimationClip)mapping.motion, Position = mapping.position });
+					}
+				}
 			}
 
 			return (new() { baseSetup }, null);
