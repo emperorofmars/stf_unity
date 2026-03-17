@@ -68,7 +68,12 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 						stfSource.SourceGo = STFUtil.ResolveBinding(Context, stfConstraint, stfSource.SourcePath);
 					if (stfSource.SourceGo)
 					{
-						ret.Sources.Add(new VRC.Dynamics.VRCConstraintSource(stfSource.SourceGo.transform, stfSource.Weight, Vector3.zero, (Quaternion.Inverse(stfSource.SourceGo.transform.rotation) * ret.transform.rotation).eulerAngles));
+						ret.Sources.Add(new VRC.Dynamics.VRCConstraintSource(
+							stfSource.SourceGo.transform,
+							stfSource.Weight,
+							Quaternion.Inverse(stfSource.SourceGo.transform.rotation) * (ret.transform.position - stfSource.SourceGo.transform.position),
+							(Quaternion.Inverse(stfSource.SourceGo.transform.rotation) * ret.transform.rotation).eulerAngles)
+						);
 					}
 				}
 				ret.PositionAtRest = ret.transform.localPosition;

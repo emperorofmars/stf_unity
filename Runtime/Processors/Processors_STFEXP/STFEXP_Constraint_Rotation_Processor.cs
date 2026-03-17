@@ -57,10 +57,13 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 					if (stfSource.SourceGo)
 					{
 						ret.AddSource(new ConstraintSource { weight = stfSource.Weight, sourceTransform = stfSource.SourceGo.transform });
+						ret.SetTranslationOffset(sourceIndex, Quaternion.Inverse(stfSource.SourceGo.transform.rotation) * (ret.transform.position - stfSource.SourceGo.transform.position));
 						ret.SetRotationOffset(sourceIndex, (Quaternion.Inverse(stfSource.SourceGo.transform.rotation) * ret.transform.rotation).eulerAngles);
 						sourceIndex++;
 					}
 				}
+				ret.translationAtRest = ret.transform.localPosition;
+				ret.rotationAtRest = ret.transform.rotation.eulerAngles;
 
 				ret.locked = true;
 				ret.constraintActive = true;
