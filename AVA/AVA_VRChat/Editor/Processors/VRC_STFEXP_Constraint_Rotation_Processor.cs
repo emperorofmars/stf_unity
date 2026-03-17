@@ -21,27 +21,63 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		public (List<UnityEngine.Object>, List<UnityEngine.Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var stfConstraint = STFResource as STFEXP_Constraint_Rotation;
-			var ret = stfConstraint.gameObject.AddComponent<VRCRotationConstraint>();
 
-			ret.GlobalWeight = stfConstraint.Weight;
-
-			ret.AffectsRotationX = (stfConstraint.Axes & Axis.X) > 0;
-			ret.AffectsRotationY = (stfConstraint.Axes & Axis.Y) > 0;
-			ret.AffectsRotationZ = (stfConstraint.Axes & Axis.Z) > 0;
-
-			foreach(var stfSource in stfConstraint.Sources)
+			if(false && stfConstraint.Sources.Count == 1)
 			{
+				var ret = stfConstraint.gameObject.AddComponent<VRCRotationConstraint>();
+
+				ret.GlobalWeight = stfConstraint.Weight;
+
+				ret.AffectsRotationX = (stfConstraint.Axes & Axis.X) > 0;
+				ret.AffectsRotationY = (stfConstraint.Axes & Axis.Y) > 0;
+				ret.AffectsRotationZ = (stfConstraint.Axes & Axis.Z) > 0;
+
+				var stfSource = stfConstraint.Sources[0];
+
 				if (stfSource.SourcePath.Count > 0)
 					stfSource.SourceGo = STFUtil.ResolveBinding(Context, stfConstraint, stfSource.SourcePath);
 				if (stfSource.SourceGo)
 				{
-					ret.Sources.Add(new VRC.Dynamics.VRCConstraintSource(stfSource.SourceGo.transform, stfSource.Weight, Vector3.zero, (Quaternion.Inverse(stfSource.SourceGo.transform.rotation) * ret.transform.rotation).eulerAngles));
+					var source = new VRC.Dynamics.VRCConstraintSource(stfSource.SourceGo.transform, stfSource.Weight);
+					ret.Sources.Add(source);
+					ret.RotationAtRest = ret.transform.rotation.eulerAngles;
+					ret.RotationOffset = (Quaternion.Inverse(source.SourceTransform.rotation) * ret.transform.rotation).eulerAngles;
 				}
-			}
-			ret.Locked = true;
-			ret.IsActive = true;
 
-			return (new() { ret }, null);
+				ret.Locked = true;
+				ret.IsActive = true;
+
+				return (new() { ret }, null);
+			}
+			else
+			{
+				var ret = stfConstraint.gameObject.AddComponent<VRCParentConstraint>();
+
+				ret.GlobalWeight = stfConstraint.Weight;
+
+				ret.AffectsRotationX = (stfConstraint.Axes & Axis.X) > 0;
+				ret.AffectsRotationY = (stfConstraint.Axes & Axis.Y) > 0;
+				ret.AffectsRotationZ = (stfConstraint.Axes & Axis.Z) > 0;
+				ret.AffectsPositionX = false;
+				ret.AffectsPositionY = false;
+				ret.AffectsPositionZ = false;
+
+				foreach(var stfSource in stfConstraint.Sources)
+				{
+					if (stfSource.SourcePath.Count > 0)
+						stfSource.SourceGo = STFUtil.ResolveBinding(Context, stfConstraint, stfSource.SourcePath);
+					if (stfSource.SourceGo)
+					{
+						ret.Sources.Add(new VRC.Dynamics.VRCConstraintSource(stfSource.SourceGo.transform, stfSource.Weight, Vector3.zero, (Quaternion.Inverse(stfSource.SourceGo.transform.rotation) * ret.transform.rotation).eulerAngles));
+					}
+				}
+				ret.PositionAtRest = ret.transform.localPosition;
+				ret.RotationAtRest = ret.transform.rotation.eulerAngles;
+				ret.Locked = true;
+				ret.IsActive = true;
+
+				return (new() { ret }, null);
+			}
 		}
 	}
 

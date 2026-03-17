@@ -42,11 +42,13 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 					ret.Sources.Add(new VRC.Dynamics.VRCConstraintSource(
 						stfSource.SourceGo.transform,
 						stfSource.Weight,
-						ret.transform.position - stfSource.SourceGo.transform.position,
+						Quaternion.Inverse(stfSource.SourceGo.transform.rotation) * (ret.transform.position - stfSource.SourceGo.transform.position),
 						(Quaternion.Inverse(stfSource.SourceGo.transform.rotation) * ret.transform.rotation).eulerAngles)
 					);
 				}
 			}
+			ret.PositionAtRest = ret.transform.localPosition;
+			ret.RotationAtRest = ret.transform.rotation.eulerAngles;
 			ret.Locked = true;
 			ret.IsActive = true;
 
