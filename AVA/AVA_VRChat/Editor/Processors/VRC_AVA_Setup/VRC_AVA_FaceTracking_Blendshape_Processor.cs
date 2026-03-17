@@ -37,9 +37,11 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			var FTSetup = faceTrackingGo.AddComponent<FaceTrackingVRC>();
 
 			FTSetup.FTMesh = (Context as AVAContext).PrimaryMeshInstance.ProcessedObjects.Find(po => po is SkinnedMeshRenderer) as SkinnedMeshRenderer;
+			var hasTongueSteps = FTSetup.FTMesh && FTSetup.FTMesh.sharedMesh && FTSetup.FTMesh.sharedMesh.GetBlendShapeIndex("TongueOutStep1") >= 0 && FTSetup.FTMesh.sharedMesh.GetBlendShapeIndex("TongueOutStep2") >= 0;
+
 			FTSetup.FTType = avaFT.ft_type switch
 			{
-				"unified_expressions" => FT_Type.UnifiedExpressions,
+				"unified_expressions" => hasTongueSteps ? FT_Type.UnifiedExpressionsTongueSteps :FT_Type.UnifiedExpressions,
 				"arkit" => FT_Type.ARKit,
 				"sranipal" => FT_Type.SRanipal,
 				_ => FT_Type.Unknown,
