@@ -20,7 +20,7 @@ Human made contributions via pull-requests are welcome.
 ### Guidelines
 * Any form of LLM contribution is prohibited, this also includes issues and PRs.
 * Please open an issue first for larger changes.
-* For changes to the format itself, please open an issue first in the [STF Documentation](https://codeberg.org/emperorofmars/stf_documentation) repository.
+* For changes to the format itself, please open an issue first in the [STF Documentation](https://codeberg.org/stf_format/stf_documentation) repository.
 
 ### Development
 * Clone the repository into the `Packages` directory of a Unity 2022.3+ project.
