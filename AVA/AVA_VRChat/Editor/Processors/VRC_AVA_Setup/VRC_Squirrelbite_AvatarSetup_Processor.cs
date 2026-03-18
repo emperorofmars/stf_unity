@@ -30,12 +30,13 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			var avatarSetup = STFResource as Squirrelbite_AvatarSetup;
 			var baseSetup = InitAvatarBaseSetupVRChat.Init(Context.Root.GetComponent<VRCAvatarDescriptor>());
 
-			var controlsGo = new GameObject("Controls");
-			controlsGo.transform.SetParent(baseSetup.transform);
+			//var controlsGo = new GameObject("Controls");
+			//controlsGo.transform.SetParent(baseSetup.transform);
 
 			foreach(var toggle in avatarSetup.TogglesPre)
 			{
-				var behaviour = controlsGo.AddComponent<AnimationToggleVRC>();
+				var targetGo = AVA_BaseSetup_Util.EnsureObjectSetup(baseSetup, "Toggles/" + toggle.Name);
+				var behaviour = targetGo.AddComponent<AnimationToggleVRC>();
 				behaviour.Name = toggle.Name;
 				behaviour.IsOverridable = true;
 				if(toggle.On && toggle.On.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip clipOn)
@@ -46,7 +47,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 
 			foreach(var puppet in avatarSetup.PersistentPuppetsPre)
 			{
-				var behaviour = controlsGo.AddComponent<PuppetVRC>();
+				var targetGo = AVA_BaseSetup_Util.EnsureObjectSetup(baseSetup, "Puppets/" + puppet.Name);
+				var behaviour = targetGo.AddComponent<PuppetVRC>();
 				behaviour.Type = puppet.PuppetType == "1d" ? Puppet.PuppetType.D1 : Puppet.PuppetType.D2;
 				behaviour.Name = puppet.Name;
 				behaviour.IsOverridable = true;
@@ -65,7 +67,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 
 			foreach(var toggle in avatarSetup.Toggles)
 			{
-				var behaviour = controlsGo.AddComponent<AnimationToggleVRC>();
+				var targetGo = AVA_BaseSetup_Util.EnsureObjectSetup(baseSetup, "Toggles/" + toggle.Name);
+				var behaviour = targetGo.AddComponent<AnimationToggleVRC>();
 				behaviour.Name = toggle.Name;
 				behaviour.IsOverridable = false;
 				if(toggle.On && toggle.On.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip clipOn)
@@ -76,7 +79,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 
 			foreach(var puppet in avatarSetup.Puppets)
 			{
-				var behaviour = controlsGo.AddComponent<PuppetVRC>();
+				var targetGo = AVA_BaseSetup_Util.EnsureObjectSetup(baseSetup, "Puppets/" + puppet.Name);
+				var behaviour = targetGo.AddComponent<PuppetVRC>();
 				behaviour.Name = puppet.Name;
 				behaviour.IsOverridable = false;
 				behaviour.IsPersistent = false;
@@ -92,7 +96,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 
 			if(avatarSetup.AdditiveIdle && avatarSetup.AdditiveIdle.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip idleAnim)
 			{
-				var behaviour = controlsGo.AddComponent<IdleVRC>();
+				var targetGo = AVA_BaseSetup_Util.EnsureObjectSetup(baseSetup, "Idles");
+				var behaviour = targetGo.AddComponent<IdleVRC>();
 				behaviour.Name = idleAnim.name;
 				behaviour.IsAdditive = true;
 				behaviour.IdleAnimation = idleAnim;

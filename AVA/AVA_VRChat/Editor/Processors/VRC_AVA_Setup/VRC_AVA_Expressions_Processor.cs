@@ -27,8 +27,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			var avaExpressions = STFResource as AVA_Expressions;
 			var baseSetup = InitAvatarBaseSetupVRChat.Init(Context.Root.GetComponent<VRCAvatarDescriptor>());
 
-			var expressionsGo = new GameObject("Expressions");
-			expressionsGo.transform.SetParent(baseSetup.transform);
+			var expressionsGo = AVA_BaseSetup_Util.EnsureObjectSetup(baseSetup, "Face Tracking");
 
 			var expressionsSetup = expressionsGo.AddComponent<AvatarExpressionsVRC>();
 			var bindingsSetup = expressionsGo.AddComponent<AvatarExpressionBindingsVRC>();

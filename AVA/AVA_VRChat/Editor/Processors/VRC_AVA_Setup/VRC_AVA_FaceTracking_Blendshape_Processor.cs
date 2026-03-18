@@ -30,10 +30,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			if (!avatar) Context.Report(new STFReport("No Avatar Component created!", ErrorSeverity.FATAL_ERROR, AVA_Eyelids_Blendshape._STF_Type));
 
 			var baseSetup = InitAvatarBaseSetupVRChat.Init(avatar);
-
-			var faceTrackingGo = new GameObject("Face Tracking");
-			faceTrackingGo.transform.SetParent(baseSetup.transform);
-
+			var faceTrackingGo = AVA_BaseSetup_Util.EnsureObjectSetup(baseSetup, "Face Tracking");
 			var FTSetup = faceTrackingGo.AddComponent<FaceTrackingVRC>();
 
 			FTSetup.FTMesh = (Context as AVAContext).PrimaryMeshInstance.ProcessedObjects.Find(po => po is SkinnedMeshRenderer) as SkinnedMeshRenderer;
