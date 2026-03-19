@@ -74,6 +74,17 @@ namespace com.squirrelbite.stf_unity.tools
 			ret.Add(createInfoField("Binary Version", $"{asset.BinaryVersionMajor}.{asset.BinaryVersionMinor}"));
 			ret.Add(createInfoField("Definition Version", $"{asset.Meta?.DefinitionVersionMajor}.{asset.Meta?.DefinitionVersionMinor}"));
 
+			if(asset.Meta.STFAssetInfo.CustomProperties != null && asset.Meta.STFAssetInfo.CustomProperties.Count > 0)
+			{
+				var foldout = new Foldout { text = $"{asset.Meta.STFAssetInfo.CustomProperties.Count} Custom Propert{(asset.Meta.STFAssetInfo.CustomProperties.Count > 1 ? "ies" : "y")}", value = true, viewDataKey = $"stf_import_custom_properties_{asset.name}" };
+				foldout.style.marginTop = 10;
+				ret.Add(foldout);
+				foreach(var property in asset.Meta.STFAssetInfo.CustomProperties)
+				{
+					foldout.Add(createInfoField(property.Name, property.Value, true));
+				}
+			}
+
 			if(asset.Reports != null && asset.Reports.Count > 0)
 			{
 				var severeReports = asset.Reports.FindAll(r => r.Severity >= ErrorSeverity.ERROR);
