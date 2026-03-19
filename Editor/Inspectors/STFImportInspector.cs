@@ -99,8 +99,8 @@ namespace com.squirrelbite.stf_unity.tools
 					var ret = new Box();
 					ret.style.paddingTop = ret.style.paddingBottom = ret.style.paddingLeft = 4;
 					ret.Add(createInfoField($"<font-weight=700>{Report.Severity}</font-weight>", $"{Report.Message}", true, false, 0));
-					ret.Add(createInfoField("Resource Type", !string.IsNullOrWhiteSpace(Report.ResourceType) ? Report.ResourceType : "Unknown", true, true, 0));
-					ret.Add(createInfoField("Resource ID", !string.IsNullOrWhiteSpace(Report.ResourceID) ? Report.ResourceID : "Unknown", true, true, 0));
+					ret.Add(createInfoField("Resource Type", !string.IsNullOrWhiteSpace(Report.ResourceType) ? Report.ResourceType : "Unknown", true, !string.IsNullOrWhiteSpace(Report.ResourceType), 0));
+					ret.Add(createInfoField("Resource ID", !string.IsNullOrWhiteSpace(Report.ResourceID) ? Report.ResourceID : "Unknown", true, !string.IsNullOrWhiteSpace(Report.ResourceID), 0));
 					return ret;
 				}
 
