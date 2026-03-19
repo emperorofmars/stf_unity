@@ -6,9 +6,6 @@ namespace com.squirrelbite.stf_unity
 	[System.Serializable]
 	public class AssetInfo
 	{
-		[System.Serializable]
-		public class AssetInfoProperty {public string Name; public string Value;}
-
 		public string AssetName;
 		public string Version;
 		public string URL;
@@ -17,7 +14,6 @@ namespace com.squirrelbite.stf_unity
 		public string LicenseURL;
 		public string DocumentationURL;
 
-		public List<AssetInfoProperty> CustomProperties = new();
 
 		public AssetInfo() {}
 
@@ -34,7 +30,6 @@ namespace com.squirrelbite.stf_unity
 					case "license": License = (string)value; break;
 					case "license_url": LicenseURL = (string)value; break;
 					case "documentation_url": DocumentationURL = (string)value; break;
-					default: CustomProperties.Add(new AssetInfoProperty {Name=key, Value=(string)value}); break;
 				}
 			}
 		}
@@ -49,10 +44,6 @@ namespace com.squirrelbite.stf_unity
 			if(!string.IsNullOrWhiteSpace(License)) ret.Add("license", License);
 			if(!string.IsNullOrWhiteSpace(LicenseURL)) ret.Add("license_url", LicenseURL);
 			if(!string.IsNullOrWhiteSpace(DocumentationURL)) ret.Add("documentation_url", DocumentationURL);
-			foreach(var customProperty in CustomProperties)
-				if(!string.IsNullOrWhiteSpace(customProperty.Name))
-					ret.Add(customProperty.Name, customProperty.Value);
-
 			return ret;
 		}
 	}

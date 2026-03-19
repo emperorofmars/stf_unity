@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
@@ -20,6 +22,10 @@ namespace com.squirrelbite.stf_unity
 		public double MetricMultiplier = 1;
 		public AssetInfo STFAssetInfo = new();
 
+		[System.Serializable]
+		public class AssetInfoProperty {public string Name; public string Value;}
+		public List<AssetInfoProperty> AssetProperties = new();
+
 
 		public STF_Meta() {}
 
@@ -35,10 +41,16 @@ namespace com.squirrelbite.stf_unity
 
 			if(JsonMeta.GetValue("asset_info") is JObject assetInfo)
 				STFAssetInfo = new AssetInfo(assetInfo);
+
+			Debug.Log(JsonMeta.GetValue("asset_properties"));
+			if(JsonMeta.GetValue("asset_properties") is JObject assetProperties)
+				foreach((var key, var value) in assetProperties)
+					AssetProperties.Add(new AssetInfoProperty {Name=key, Value=(string)value});
 		}
 
 		public JObject ToJson()
 		{
+			var assetProperties = new JObject();
 			var ret = new JObject {
 				{"version_major", _DefinitionVersionMajor},
 				{"version_minor", _DefinitionVersionMinor},
@@ -48,7 +60,12 @@ namespace com.squirrelbite.stf_unity
 				{"root", Root},
 				{"metric_multiplier", MetricMultiplier},
 				{"asset_info", STFAssetInfo.ToJson()},
+				{"asset_properties", assetProperties},
 			};
+
+			foreach(var customProperty in AssetProperties)
+				if(!string.IsNullOrWhiteSpace(customProperty.Name))
+					assetProperties.Add(customProperty.Name, customProperty.Value);
 
 			return ret;
 		}

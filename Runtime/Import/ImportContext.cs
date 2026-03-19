@@ -179,7 +179,7 @@ namespace com.squirrelbite.stf_unity
 		}
 		public string GetMetaCustomValue(string Key)
 		{
-			return State.Meta.STFAssetInfo.CustomProperties.FirstOrDefault(e => e.Name == Key)?.Value;
+			return State.Meta.AssetProperties.FirstOrDefault(e => e.Name == Key)?.Value;
 		}
 
 		public void Report(STFReport Report)
