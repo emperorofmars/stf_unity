@@ -33,7 +33,7 @@ namespace com.squirrelbite.stf_unity.resources
 
 			ret.format = JsonResource.Value<string>("format");
 			if(JsonResource.ContainsKey("buffer"))
-				ret.buffer = Context.ImportBuffer(JsonResource.Value<string>("buffer"));
+				ret.buffer = Context.ImportBuffer(JsonResource, JsonResource["buffer"]);
 
 			if (JsonResource.ContainsKey("data_type"))
 				ret.data_type = JsonResource.Value<string>("data_type");

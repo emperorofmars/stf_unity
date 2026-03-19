@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -25,79 +26,79 @@ namespace com.squirrelbite.stf_unity.resources
 			ret.bone_indices_width = JsonResource.Value<int>("bone_indices_width");
 			ret.weight_lens_width = JsonResource.Value<int>("weight_lens_width");
 
-			ret.vertices = Context.ImportBuffer(JsonResource.Value<string>("vertices"));
+			ret.vertices = Context.ImportBuffer(JsonResource, JsonResource["vertices"]);
 
-			if(JsonResource.ContainsKey("splits")) ret.splits = Context.ImportBuffer(JsonResource.Value<string>("splits"));
-			if(JsonResource.ContainsKey("face_corners")) ret.face_corners = Context.ImportBuffer(JsonResource.Value<string>("face_corners"));
-			if(JsonResource.ContainsKey("split_normals")) ret.split_normals = Context.ImportBuffer(JsonResource.Value<string>("split_normals"));
+			if(JsonResource.ContainsKey("splits")) ret.splits = Context.ImportBuffer(JsonResource, JsonResource["splits"]);
+			if(JsonResource.ContainsKey("face_corners")) ret.face_corners = Context.ImportBuffer(JsonResource, JsonResource["face_corners"]);
+			if(JsonResource.ContainsKey("split_normals")) ret.split_normals = Context.ImportBuffer(JsonResource, JsonResource["split_normals"]);
 			if(JsonResource.ContainsKey("uvs"))
 				foreach(JObject uv in (JArray)JsonResource["uvs"])
-					ret.uvs.Add(new () {name = uv.Value<string>("name"), uv = Context.ImportBuffer(uv.Value<string>("uv"))});
-			if(JsonResource.ContainsKey("split_colors") && JsonResource["split_colors"].Type == JTokenType.String) ret.split_colors = Context.ImportBuffer(JsonResource.Value<string>("split_colors"));
+					ret.uvs.Add(new () {name = uv.Value<string>("name"), uv = Context.ImportBuffer(JsonResource, uv["uv"])});
+			if(JsonResource.ContainsKey("split_colors") && JsonResource["split_colors"].Type == JTokenType.String) ret.split_colors = Context.ImportBuffer(JsonResource, JsonResource["split_colors"]);
 
-			if (JsonResource.ContainsKey("tris")) ret.tris = Context.ImportBuffer(JsonResource.Value<string>("tris"));
-			if(JsonResource.ContainsKey("faces")) ret.faces = Context.ImportBuffer(JsonResource.Value<string>("faces"));
-			if(JsonResource.ContainsKey("material_indices")) ret.material_indices = Context.ImportBuffer(JsonResource.Value<string>("material_indices"));
+			if (JsonResource.ContainsKey("tris")) ret.tris = Context.ImportBuffer(JsonResource, JsonResource["tris"]);
+			if(JsonResource.ContainsKey("faces")) ret.faces = Context.ImportBuffer(JsonResource, JsonResource["faces"]);
+			if(JsonResource.ContainsKey("material_indices")) ret.material_indices = Context.ImportBuffer(JsonResource, JsonResource["material_indices"]);
 
 			if(JsonResource.ContainsKey("material_slots"))
 				foreach(var slot in JsonResource["material_slots"])
-					ret.material_slots.Add((STF_DataResource)Context.ImportResource(slot.Value<string>(), "data"));
+					ret.material_slots.Add((STF_DataResource)Context.ImportResource(JsonResource, slot, "data"));
 
-			if(JsonResource.ContainsKey("lines")) ret.lines = Context.ImportBuffer(JsonResource.Value<string>("lines"));
+			if(JsonResource.ContainsKey("lines")) ret.lines = Context.ImportBuffer(JsonResource, JsonResource["lines"]);
 
 			if(JsonResource.ContainsKey("armature"))
-				ret.armature = (STF_Armature)Context.ImportResource(JsonResource.Value<string>("armature"), "data");
+				ret.armature = (STF_Armature)Context.ImportResource(JsonResource, JsonResource["armature"], "data");
 
 			if(JsonResource.ContainsKey("bones") && JsonResource.ContainsKey("weights"))
 			{
 				foreach(var bone in JsonResource["bones"])
 					ret.bones.Add(bone.Value<string>());
 
-				ret.weight_lens = Context.ImportBuffer(JsonResource.Value<string>("weight_lens"));
-				ret.bone_indices = Context.ImportBuffer(JsonResource.Value<string>("bone_indices"));
-				ret.weights = Context.ImportBuffer(JsonResource.Value<string>("weights"));
+				ret.weight_lens = Context.ImportBuffer(JsonResource, JsonResource["weight_lens"]);
+				ret.bone_indices = Context.ImportBuffer(JsonResource, JsonResource["bone_indices"]);
+				ret.weights = Context.ImportBuffer(JsonResource, JsonResource["weights"]);
 			}
 
 			if(JsonResource.ContainsKey("blendshapes"))
 			{
-				foreach(var jsonBlendshape in JsonResource["blendshapes"])
+				foreach(JObject jsonBlendshape in JsonResource["blendshapes"].Cast<JObject>())
 				{
 					var blendshape = new STF_Mesh.Blendshape {
 						default_value = jsonBlendshape.Value<float>("default_value"),
 						limit_lower = jsonBlendshape.Value<float>("limit_lower"),
 						limit_upper = jsonBlendshape.Value<float>("limit_upper"),
 						name = jsonBlendshape.Value<string>("name"),
-						position_offsets = Context.ImportBuffer(jsonBlendshape.Value<string>("position_offsets")),
+						position_offsets = Context.ImportBuffer(JsonResource, jsonBlendshape["position_offsets"]),
 					};
-					if (jsonBlendshape.Value<string>("indices") is var indicesBufferId && !string.IsNullOrEmpty(indicesBufferId))
-						blendshape.indices = Context.ImportBuffer(indicesBufferId);
-					if (jsonBlendshape.Value<string>("split_indices") is var splitIndicesBufferId && !string.IsNullOrEmpty(splitIndicesBufferId))
-						blendshape.split_indices = Context.ImportBuffer(splitIndicesBufferId);
-					if (jsonBlendshape.Value<string>("split_normals") is var splitNormalsBufferId && !string.IsNullOrEmpty(splitNormalsBufferId))
-						blendshape.split_normals = Context.ImportBuffer(splitNormalsBufferId);
+					if (jsonBlendshape.ContainsKey("indices"))
+						blendshape.indices = Context.ImportBuffer(JsonResource, jsonBlendshape["indices"]);
+					if (jsonBlendshape.ContainsKey("split_indices"))
+						blendshape.split_indices = Context.ImportBuffer(JsonResource, jsonBlendshape["split_indices"]);
+					if (jsonBlendshape.ContainsKey("split_normals"))
+						blendshape.split_normals = Context.ImportBuffer(JsonResource, jsonBlendshape["split_normals"]);
 					ret.blendshapes.Add(blendshape);
 				}
 			}
 
 			if(JsonResource.ContainsKey("sharp_face_indices"))
-				ret.sharp_face_indices = Context.ImportBuffer(JsonResource.Value<string>("sharp_face_indices"));
+				ret.sharp_face_indices = Context.ImportBuffer(JsonResource, JsonResource["sharp_face_indices"]);
 
 			if(JsonResource.ContainsKey("sharp_edges"))
-				ret.sharp_edges = Context.ImportBuffer(JsonResource.Value<string>("sharp_edges"));
+				ret.sharp_edges = Context.ImportBuffer(JsonResource, JsonResource["sharp_edges"]);
 
 			if(JsonResource.ContainsKey("sharp_vertices"))
-				ret.sharp_vertices = Context.ImportBuffer(JsonResource.Value<string>("sharp_vertices"));
+				ret.sharp_vertices = Context.ImportBuffer(JsonResource, JsonResource["sharp_vertices"]);
 
 			if (JsonResource.ContainsKey("vertex_groups"))
 			{
-				foreach (var JsonVertexgroup in JsonResource["vertex_groups"])
+				foreach (JObject JsonVertexgroup in JsonResource["vertex_groups"].Cast<JObject>())
 				{
 					var vertexGroup = new STF_Mesh.VertexGroup {
 						name = JsonVertexgroup.Value<string>("name"),
-						weights = Context.ImportBuffer(JsonVertexgroup.Value<string>("weights")),
+						weights = Context.ImportBuffer(JsonResource, JsonVertexgroup["weights"]),
 					};
-					if (JsonVertexgroup.Value<string>("indices") is var indicesBufferId && !string.IsNullOrWhiteSpace(indicesBufferId))
-						vertexGroup.indices = Context.ImportBuffer(indicesBufferId);
+					if (JsonVertexgroup.ContainsKey("indices"))
+						vertexGroup.indices = Context.ImportBuffer(JsonResource, JsonVertexgroup["indices"]);
 					ret.vertex_groups.Add(vertexGroup);
 				}
 			}

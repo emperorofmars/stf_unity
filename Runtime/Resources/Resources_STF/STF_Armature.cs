@@ -32,13 +32,13 @@ namespace com.squirrelbite.stf_unity.resources
 
 			foreach(var nodeID in JsonResource["root_bones"])
 			{
-				if(Context.ImportResource((string)nodeID, "node", ret) is STF_Bone nodeGo)
+				if(Context.ImportResource(JsonResource, nodeID, "node", ret) is STF_Bone nodeGo)
 				{
 					nodeGo.transform.SetParent(go.transform);
 				}
 				else
 				{
-					Context.Report(new STFReport("Invalid Node: " + nodeID, ErrorSeverity.FATAL_ERROR, STF_Type, go, null));
+					Context.Report(new STFReport("Invalid Node: " + nodeID, ErrorSeverity.FATAL_ERROR, STF_Type, STF_Id, go, null));
 				}
 			}
 

@@ -91,7 +91,7 @@ namespace com.squirrelbite.stf_unity.resources
 							track.subtracks.Add(subTrack);
 
 							if(subtrackJson.ContainsKey("baked"))
-								subTrack.baked_values = Context.ImportBuffer(subtrackJson.Value<string>("baked"));
+								subTrack.baked_values = Context.ImportBuffer(JsonResource, subtrackJson["baked"]);
 
 							for(int keyframeIndex = 0; keyframeIndex < track.timepoints.Count; keyframeIndex++)
 							{

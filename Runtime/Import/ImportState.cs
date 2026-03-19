@@ -214,7 +214,7 @@ namespace com.squirrelbite.stf_unity
 				}
 				else
 				{
-					Report(new STFReport(e.Message, ErrorSeverity.FATAL_ERROR, null, null, e));
+					Report(new STFReport(e.Message, ErrorSeverity.FATAL_ERROR, null, null, null, e));
 				}
 			}
 		}

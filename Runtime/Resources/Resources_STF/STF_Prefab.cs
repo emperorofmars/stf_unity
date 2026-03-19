@@ -32,19 +32,19 @@ namespace com.squirrelbite.stf_unity.resources
 
 			foreach(var nodeID in JsonResource["root_nodes"])
 			{
-				if(Context.ImportResource((string)nodeID, "node", ret) is STF_Node nodeGo)
+				if(Context.ImportResource(JsonResource, nodeID, "node", ret) is STF_Node nodeGo)
 				{
 					nodeGo.transform.SetParent(go.transform);
 				}
 				else
 				{
-					Context.Report(new STFReport("Invalid Node: " + nodeID, ErrorSeverity.FATAL_ERROR, STF_Type, go, null));
+					Context.Report(new STFReport("Invalid Node: " + nodeID, ErrorSeverity.FATAL_ERROR, STF_Type, STF_Id, go, null));
 				}
 			}
 
 			if(JsonResource.ContainsKey("animations")) foreach(var animationId in JsonResource["animations"])
 			{
-				if(Context.ImportResource((string)animationId, "data", ret) is STF_Animation animation)
+				if(Context.ImportResource(JsonResource, animationId, "data", ret) is STF_Animation animation)
 				{
 					ret.Animations.Add(animation);
 				}

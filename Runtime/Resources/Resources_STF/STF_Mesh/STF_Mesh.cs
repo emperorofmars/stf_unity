@@ -83,7 +83,7 @@ namespace com.squirrelbite.stf_unity.resources
 		public List<Blendshape> blendshapes = new();
 
 		[Space]
-		[Header("Additional Mesh Properies")]
+		[Header("Additional Mesh Properties")]
 		public STF_Buffer sharp_face_indices;
 		public STF_Buffer sharp_edges;
 		public STF_Buffer sharp_vertices;

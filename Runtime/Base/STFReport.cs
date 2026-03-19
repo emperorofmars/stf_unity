@@ -4,7 +4,7 @@ namespace com.squirrelbite.stf_unity
 {
 	public enum ErrorSeverity
 	{
-		INFO, WARNING, ERROR, FATAL_ERROR
+		INFO = 0, WARNING = 1, ERROR = 2, FATAL_ERROR = 3
 	}
 
 	[System.Serializable]
@@ -12,22 +12,24 @@ namespace com.squirrelbite.stf_unity
 	{
 		public string Message;
 		public ErrorSeverity Severity;
-		public string ModuleType;
+		public string ResourceType;
+		public string ResourceID;
 		public Object Node;
 		public System.Exception Exception;
 
-		public STFReport(string Message, ErrorSeverity Severity = ErrorSeverity.ERROR, string ModuleType = null, UnityEngine.Object Node = null, System.Exception Exception = null)
+		public STFReport(string Message, ErrorSeverity Severity = ErrorSeverity.ERROR, string ModuleType = null, string ResourceID = null, UnityEngine.Object Node = null, System.Exception Exception = null)
 		{
 			this.Message = Message;
 			this.Severity = Severity;
-			this.ModuleType = ModuleType;
+			this.ResourceType = ModuleType;
+			this.ResourceID = ResourceID;
 			this.Node = Node;
 			this.Exception = Exception;
 		}
 
 		public override string ToString()
 		{
-			return $"STF {Severity}\n{Message}\nType: {ModuleType}\nNode: {Node}\nException: {Exception?.Message}";
+			return $"STF {Severity}\n{Message}\nType: {ResourceType}\nNode: {Node}\nException: {Exception?.Message}";
 		}
 	}
 
@@ -38,10 +40,10 @@ namespace com.squirrelbite.stf_unity
 		{
 			this.Report = Report;
 		}
-		public STFException(string Message, ErrorSeverity Severity = ErrorSeverity.ERROR, string ModuleType = null, UnityEngine.Object Node = null, System.Exception Exception = null)
+		public STFException(string Message, ErrorSeverity Severity = ErrorSeverity.ERROR, string ModuleType = null, string ResourceID = null, UnityEngine.Object Node = null, System.Exception Exception = null)
 			 : base(Message, Exception)
 		{
-			this.Report = new STFReport(Message, Severity, ModuleType, Node, Exception);
+			this.Report = new STFReport(Message, Severity, ModuleType, ResourceID, Node, Exception);
 		}
 
 		public readonly STFReport Report;

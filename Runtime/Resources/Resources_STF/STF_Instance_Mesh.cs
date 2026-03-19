@@ -40,7 +40,7 @@ namespace com.squirrelbite.stf_unity.resources
 
 			if (JsonResource.ContainsKey("materials"))
 				for (int matIdx = 0; matIdx < JsonResource["materials"].Count(); matIdx++)
-					if (JsonResource["materials"][matIdx].Type == JTokenType.String && Context.ImportResource((string)JsonResource["materials"][matIdx], "data") is var stfMaterial && stfMaterial != null)
+					if (JsonResource["materials"][matIdx].Type == JTokenType.String && Context.ImportResource(JsonResource, JsonResource["materials"][matIdx], "data") is var stfMaterial && stfMaterial != null)
 						ret.Materials.Add(stfMaterial as STF_Material);
 					else
 						ret.Materials.Add(null);
@@ -56,10 +56,10 @@ namespace com.squirrelbite.stf_unity.resources
 			{
 				if (JsonResource.ContainsKey("armature_instance"))
 				{
-					ret.ArmatureInstance = ((STF_MonoBehaviour)Context.ImportResource((string)JsonResource["armature_instance"], "instance")).gameObject;
+					ret.ArmatureInstance = ((STF_MonoBehaviour)Context.ImportResource(JsonResource, JsonResource["armature_instance"], "instance")).gameObject;
 				}
 
-				ret.Mesh = (STF_Mesh)Context.ImportResource((string)JsonResource["mesh"], "data");
+				ret.Mesh = (STF_Mesh)Context.ImportResource(JsonResource, JsonResource["mesh"], "data");
 			}));
 
 			return (ret, null);

@@ -43,7 +43,7 @@ namespace com.squirrelbite.stf_unity.resources
 
 			if(JsonResource.ContainsKey("children")) foreach(var childID in (JArray)JsonResource["children"])
 			{
-				if(Context.ImportResource((string)childID, "node", ContextObject) is STF_Bone childObject)
+				if(Context.ImportResource(JsonResource, childID, "node", ContextObject) is STF_Bone childObject)
 				{
 					childObject.transform.SetParent(go.transform, true);
 				}

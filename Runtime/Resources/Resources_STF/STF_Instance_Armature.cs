@@ -43,7 +43,7 @@ namespace com.squirrelbite.stf_unity.resources
 			go.Instance = ret;
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "STF Armature Instance");
 
-			ret.Armature = (STF_Armature)Context.ImportResource((string)JsonResource["armature"], "data");
+			ret.Armature = (STF_Armature)Context.ImportResource(JsonResource, JsonResource["armature"], "data");
 
 			var instance = Object.Instantiate(ret.Armature.gameObject);
 
@@ -84,9 +84,9 @@ namespace com.squirrelbite.stf_unity.resources
 				{
 					if (instance.GetComponentsInChildren<STF_Bone>().FirstOrDefault(b => b.STF_Id == boneId) is var bone && bone != null)
 					{
-						foreach (string componentId in componentIds)
+						foreach (var componentId in componentIds)
 						{
-							if(Context.ImportResource(componentId, "component", bone) is STF_NodeComponentResource component && component != null)
+							if(Context.ImportResource(JsonResource, componentId, "component", bone) is STF_NodeComponentResource component && component != null)
 								component.STF_Owner = ret;
 						}
 					}

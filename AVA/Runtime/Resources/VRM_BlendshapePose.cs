@@ -41,9 +41,9 @@ namespace com.squirrelbite.stf_unity.ava
 
 			if (JsonResource.ContainsKey("targets") && JsonResource["targets"] is JObject targets)
 			{
-				foreach((var meshInstanceId, var values) in targets)
+				foreach((var resourceIndexStr, var values) in targets)
 				{
-					var retTarget = new VRM_BlendshapePose.Target() {mesh_instance = STFUtil.ImportResource(Context, JsonResource, meshInstanceId, "node") as STF_NodeResource};
+					var retTarget = new VRM_BlendshapePose.Target() {mesh_instance = STFUtil.ImportResource(Context, JsonResource, int.Parse(resourceIndexStr), "node") as STF_NodeResource};
 					foreach((string blendshapeName, var blendshapeValue) in values as JObject)
 						retTarget.values.Add(new () { Name = blendshapeName, Value = blendshapeValue.Value<float>() });
 					ret.targets.Add(retTarget);

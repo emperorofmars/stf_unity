@@ -36,10 +36,10 @@ namespace com.squirrelbite.stf_unity.resources
 
 			if(JsonResource.ContainsKey("children"))
 				foreach(var childID in (JArray)JsonResource["children"])
-					if(Context.ImportResource((string)childID, "node", ContextObject) is STF_Node childObject && childObject != null)
+					if(Context.ImportResource(JsonResource, childID, "node", ContextObject) is STF_Node childObject && childObject != null)
 						childObject.transform.SetParent(ret.transform, false);
 
-			if(JsonResource.ContainsKey("instance") && Context.ImportResource((string)JsonResource["instance"], "instance", ret) is STF_InstanceResource instanceResource && instanceResource != null)
+			if(JsonResource.ContainsKey("instance") && Context.ImportResource(JsonResource, JsonResource["instance"], "instance", ret) is STF_InstanceResource instanceResource && instanceResource != null)
 				ret.Instance = instanceResource;
 
 			if(JsonResource.ContainsKey("parent_binding"))

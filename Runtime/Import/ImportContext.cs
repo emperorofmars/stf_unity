@@ -21,6 +21,16 @@ namespace com.squirrelbite.stf_unity
 			return State.GetJsonResource(STF_Id);
 		}
 
+		public ISTF_Resource ImportResource(JObject JsonParent, JToken ResourceID, string ExpectedKind, ISTF_Resource ContextObject = null)
+		{
+			if(ResourceID != null && ResourceID.Type == JTokenType.Integer && STFUtil.GetResourceID(JsonParent, ResourceID) is string resourceID && !string.IsNullOrWhiteSpace(resourceID))
+				return ImportResource(resourceID, ExpectedKind, ContextObject);
+			else if(ResourceID != null && ResourceID.Type == JTokenType.String && !string.IsNullOrWhiteSpace((string)ResourceID))
+				return ImportResource((string)ResourceID, ExpectedKind, ContextObject);
+			else
+				return null;
+		}
+
 		public ISTF_Resource ImportResource(string STF_Id, string ExpectedKind, ISTF_Resource ContextObject = null)
 		{
 			if(State.GetImportedResource(STF_Id) is ISTF_Resource @importedObject)
@@ -30,7 +40,7 @@ namespace com.squirrelbite.stf_unity
 
 			//Debug.Log($"Importing ID {STF_Id} - {jsonResource.GetValue("type")}");
 			if(jsonResource == null)
-				Report(new STFReport("Invalid Json Resource", ErrorSeverity.FATAL_ERROR, (string)jsonResource.GetValue("type"), null, null));
+				Report(new STFReport("Invalid Json Resource", ErrorSeverity.FATAL_ERROR, (string)jsonResource.GetValue("type"), STF_Id, null));
 
 			var module = State.DetermineHandler(jsonResource, ExpectedKind);
 			if(module == null)
@@ -55,7 +65,7 @@ namespace com.squirrelbite.stf_unity
 					else if (component is STF_Fallback_ScriptableObject fallbackResource)
 						dataResource.Components.Add(fallbackResource);
 					else
-						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), null, null));
+						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), (string)componentId, null));
 				}
 			}
 			else if(STFResource is STF_PrefabResource prefabResource && jsonResource.ContainsKey("components"))
@@ -66,7 +76,7 @@ namespace com.squirrelbite.stf_unity
 					if(component is STF_MonoBehaviour resource)
 						prefabResource.Components.Add(resource);
 					else
-						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), null, null));
+						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), (string)componentId, null));
 				}
 			}
 			else if(STFResource is STF_NodeResource nodeResource && jsonResource.ContainsKey("components"))
@@ -77,11 +87,21 @@ namespace com.squirrelbite.stf_unity
 					if(component is STF_MonoBehaviour resource)
 						nodeResource.Components.Add(resource);
 					else
-						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), null, null));
+						Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)jsonResource.GetValue("type"), (string)componentId, null));
 				}
 			}
 
 			return STFResource;
+		}
+
+		public STF_Buffer ImportBuffer(JObject JsonParent, JToken BufferIDIndex)
+		{
+			if(JsonParent.ContainsKey("referenced_buffers") && JsonParent["referenced_buffers"].Type == JTokenType.Array && BufferIDIndex != null && BufferIDIndex.Type == JTokenType.Integer)
+				return State.ImportBuffer(JsonParent["referenced_buffers"][BufferIDIndex.Value<int>()].Value<string>());
+			else if(BufferIDIndex != null && BufferIDIndex.Type == JTokenType.String)
+				return State.ImportBuffer((string)BufferIDIndex);
+			else
+				return null;
 		}
 
 		public STF_Buffer ImportBuffer(string STF_Id)
@@ -112,7 +132,7 @@ namespace com.squirrelbite.stf_unity
 						if(component is STF_MonoBehaviour resource)
 							((STF_NodeResource)fallbackObject).Components.Add(resource);
 						else
-							Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)JsonResource.GetValue("type"), null, null));
+							Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)JsonResource.GetValue("type"), (string)componentId, null));
 					}
 				}
 				return fallbackObject;
@@ -142,7 +162,7 @@ namespace com.squirrelbite.stf_unity
 						if(component is STF_ScriptableObject resource)
 							((STF_DataResource)fallbackObject).Components.Add(resource);
 						else
-							Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)JsonResource.GetValue("type"), null, null));
+							Report(new STFReport("Invalid Component", ErrorSeverity.ERROR, (string)JsonResource.GetValue("type"), (string)componentId, null));
 					}
 				}
 				return fallbackObject;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using com.squirrelbite.stf_unity.resources.stf_material;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -73,17 +74,17 @@ namespace com.squirrelbite.stf_unity.resources
 								});
 						break;
 					case "color":
-						foreach(JArray value in jsonProperty.Value["values"])
+						foreach(JArray value in jsonProperty.Value["values"].Cast<JArray>())
 							if(value.Type == JTokenType.Array)
 								prop.ColorValues.Add(new () {
 									Value = new Color((float)value[0], (float)value[1], (float)value[2], (float)value[3])
 								});
 						break;
 					case "image":
-						foreach(JObject value in jsonProperty.Value["values"])
-							if(value.ContainsKey("image") && value["image"].Type == JTokenType.String)
+						foreach(JObject value in jsonProperty.Value["values"].Cast<JObject>())
+							if(value.ContainsKey("image"))
 								prop.ImageValues.Add(new () {
-									Image = (STF_Image)Context.ImportResource((string)value["image"], "data")
+									Image = (STF_Image)Context.ImportResource(JsonResource, value["image"], "data")
 								});
 						break;
 					default:

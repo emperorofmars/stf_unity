@@ -142,7 +142,7 @@ namespace com.squirrelbite.stf_unity.processors
 				if(e is STFException nnaError)
 					State.Report(nnaError.Report);
 				else
-					State.Report(new STFReport(e.Message, ErrorSeverity.FATAL_ERROR, null, null, e));
+					State.Report(new STFReport(e.Message, ErrorSeverity.FATAL_ERROR, null, null, null, e));
 		}
 
 		public Material GetDefaultMaterial()

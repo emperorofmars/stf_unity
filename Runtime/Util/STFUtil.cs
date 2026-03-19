@@ -117,7 +117,7 @@ namespace com.squirrelbite.stf_unity
 			if(ResourceIDIndex.Type == JTokenType.Integer)
 				index = ResourceIDIndex.Value<int>();
 			else if(ResourceIDIndex.Type == JTokenType.String) // In case the ResourceIDIndex was the key in an Json object, it will be a string, because Json
-				index = int.Parse(ResourceIDIndex.Value<string>());
+				return (string)ResourceIDIndex;
 			else
 				return null;
 
@@ -134,15 +134,6 @@ namespace com.squirrelbite.stf_unity
 				return Context.ImportResource(resourceID, ExpectedKind, ContextObject);
 			else
 				return null;
-		}
-
-		public static string GetBufferID(JObject JsonResource, JToken BufferIDIndex)
-		{
-			if(JsonResource.ContainsKey("referenced_buffers") && JsonResource["referenced_buffers"].Type == JTokenType.Array && BufferIDIndex != null && BufferIDIndex.Type == JTokenType.Integer)
-			{
-				return JsonResource["referenced_buffers"][BufferIDIndex.Value<int>()].Value<string>();
-			}
-			return null;
 		}
 
 		public static List<string> ConvertResourcePath(JObject JsonResource, JToken JsonTargetToken)
