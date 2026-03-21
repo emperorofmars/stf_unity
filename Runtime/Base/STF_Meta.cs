@@ -42,7 +42,6 @@ namespace com.squirrelbite.stf_unity
 			if(JsonMeta.GetValue("asset_info") is JObject assetInfo)
 				STFAssetInfo = new AssetInfo(assetInfo);
 
-			Debug.Log(JsonMeta.GetValue("asset_properties"));
 			if(JsonMeta.GetValue("asset_properties") is JObject assetProperties)
 				foreach((var key, var value) in assetProperties)
 					AssetProperties.Add(new AssetInfoProperty {Name=key, Value=(string)value});

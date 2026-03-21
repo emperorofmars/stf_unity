@@ -74,9 +74,9 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 			if(JsonResource.ContainsKey("toggles_pre")) foreach(JObject toggleJson in JsonResource["toggles_pre"].Cast<JObject>())
 			{
 				var toggle = new Squirrelbite_AvatarSetup.Toggle { Name = toggleJson.ContainsKey("name") ? toggleJson.Value<string>("name") : "", };
-				if(toggleJson.ContainsKey("on") && STFUtil.ImportResource(Context, JsonResource, toggleJson["on"], "data") is STF_DataResource onClip)
+				if(toggleJson.ContainsKey("on") && Context.ImportResource(JsonResource, toggleJson["on"], "data") is STF_DataResource onClip)
 					toggle.On = onClip;
-				if(toggleJson.ContainsKey("off") && STFUtil.ImportResource(Context, JsonResource, toggleJson["off"], "data") is STF_DataResource offClip)
+				if(toggleJson.ContainsKey("off") && Context.ImportResource(JsonResource, toggleJson["off"], "data") is STF_DataResource offClip)
 					toggle.Off = offClip;
 				ret.TogglesPre.Add(toggle);
 			}
@@ -88,7 +88,7 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 				if(puppetJson.ContainsKey("property_enabled")) puppet.ParameterEnabled = puppetJson.Value<string>("property_enabled");
 				if(puppetJson.ContainsKey("property_x")) puppet.ParameterX = puppetJson.Value<string>("property_x");
 				if(puppetJson.ContainsKey("property_y")) puppet.ParameterY = puppetJson.Value<string>("property_y");
-				if(puppetJson.ContainsKey("blendtree") && STFUtil.ImportResource(Context, JsonResource, puppetJson["blendtree"], "data") is STF_DataResource blendtree)
+				if(puppetJson.ContainsKey("blendtree") && Context.ImportResource(JsonResource, puppetJson["blendtree"], "data") is STF_DataResource blendtree)
 					puppet.Blendtree = blendtree;
 				ret.PersistentPuppetsPre.Add(puppet);
 			}
@@ -96,9 +96,9 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 			if(JsonResource.ContainsKey("toggles")) foreach(JObject toggleJson in JsonResource["toggles"].Cast<JObject>())
 			{
 				var toggle = new Squirrelbite_AvatarSetup.Toggle { Name = toggleJson.ContainsKey("name") ? toggleJson.Value<string>("name") : "", };
-				if(toggleJson.ContainsKey("on") && STFUtil.ImportResource(Context, JsonResource, toggleJson["on"], "data") is STF_DataResource onClip)
+				if(toggleJson.ContainsKey("on") && Context.ImportResource(JsonResource, toggleJson["on"], "data") is STF_DataResource onClip)
 					toggle.On = onClip;
-				if(toggleJson.ContainsKey("off") && STFUtil.ImportResource(Context, JsonResource, toggleJson["off"], "data") is STF_DataResource offClip)
+				if(toggleJson.ContainsKey("off") && Context.ImportResource(JsonResource, toggleJson["off"], "data") is STF_DataResource offClip)
 					toggle.Off = offClip;
 				ret.Toggles.Add(toggle);
 			}
@@ -106,24 +106,24 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 			if(JsonResource.ContainsKey("puppets")) foreach(JObject puppetJson in JsonResource["puppets"].Cast<JObject>())
 			{
 				var puppet = new Squirrelbite_AvatarSetup.Puppet { Name = puppetJson.ContainsKey("name") ? puppetJson.Value<string>("name") : "", };
-				if(puppetJson.ContainsKey("blendtree") && STFUtil.ImportResource(Context, JsonResource, puppetJson["blendtree"], "data") is STF_DataResource blendtree)
+				if(puppetJson.ContainsKey("blendtree") && Context.ImportResource(JsonResource, puppetJson["blendtree"], "data") is STF_DataResource blendtree)
 					puppet.Blendtree = blendtree;
 				ret.Puppets.Add(puppet);
 			}
 
 			if(JsonResource.ContainsKey("breathing") && JsonResource["breathing"] is JObject breathingJson)
 			{
-				if(breathingJson.ContainsKey("normal") && STFUtil.ImportResource(Context, JsonResource, breathingJson["normal"], "data") is STF_DataResource anim_bn)
+				if(breathingJson.ContainsKey("normal") && Context.ImportResource(JsonResource, breathingJson["normal"], "data") is STF_DataResource anim_bn)
 					ret.BreathingNormal = anim_bn;
-				if(breathingJson.ContainsKey("intense") && STFUtil.ImportResource(Context, JsonResource, breathingJson["intense"], "data") is STF_DataResource anim_bi)
+				if(breathingJson.ContainsKey("intense") && Context.ImportResource(JsonResource, breathingJson["intense"], "data") is STF_DataResource anim_bi)
 					ret.BreathingIntense = anim_bi;
 			}
 
 			if(JsonResource.ContainsKey("additive") && JsonResource["additive"] is JObject additiveJson)
 			{
-				if(additiveJson.ContainsKey("idle") && STFUtil.ImportResource(Context, JsonResource, additiveJson["idle"], "data") is STF_DataResource anim_idle)
+				if(additiveJson.ContainsKey("idle") && Context.ImportResource(JsonResource, additiveJson["idle"], "data") is STF_DataResource anim_idle)
 					ret.AdditiveIdle = anim_idle;
-				if(additiveJson.ContainsKey("excited") && STFUtil.ImportResource(Context, JsonResource, additiveJson["excited"], "data") is STF_DataResource anim_add_excited)
+				if(additiveJson.ContainsKey("excited") && Context.ImportResource(JsonResource, additiveJson["excited"], "data") is STF_DataResource anim_add_excited)
 					ret.AdditiveExcited = anim_add_excited;
 			}
 

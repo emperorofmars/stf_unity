@@ -32,7 +32,7 @@ namespace com.squirrelbite.stf_unity.resources.stfexp
 
 			if(JsonResource.ContainsKey("text"))
 			{
-				if(STFUtil.ImportResource(Context, JsonResource, JsonResource.Value<int>("text")) is STFEXP_Text text && text != null)
+				if(Context.ImportResource(JsonResource, JsonResource["text"], "data") is STFEXP_Text text && text != null)
 					ret.Text = text;
 			}
 

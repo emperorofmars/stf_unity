@@ -35,7 +35,7 @@ namespace com.squirrelbite.stf_unity.ava
 			var ret = go.gameObject.AddComponent<AVA_VoicePosition>();
 			ret.SetFromJson(JsonResource, STF_Id, ContextObject, "AVA VoicePosition");
 
-			if (JsonResource.ContainsKey("voice_position") && STFUtil.ImportResource(Context, JsonResource, JsonResource["voice_position"], "node") is STF_MonoBehaviour voice_position && voice_position != null)
+			if (JsonResource.ContainsKey("voice_position") && Context.ImportResource(JsonResource, JsonResource["voice_position"], "node") is STF_MonoBehaviour voice_position && voice_position != null)
 				ret.VoicePosition = voice_position.gameObject;
 
 			if (JsonResource.ContainsKey("enabled") && JsonResource.Value<bool>("enabled") == false)

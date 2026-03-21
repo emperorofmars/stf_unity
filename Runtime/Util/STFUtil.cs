@@ -128,14 +128,6 @@ namespace com.squirrelbite.stf_unity
 			return null;
 		}
 
-		public static ISTF_Resource ImportResource(ImportContext Context, JObject JsonResource, JToken ResourceIDIndex, string ExpectedKind = "data", ISTF_Resource ContextObject = null)
-		{
-			if(ResourceIDIndex != null && ResourceIDIndex.Type == JTokenType.Integer && GetResourceID(JsonResource, ResourceIDIndex) is string resourceID && !string.IsNullOrWhiteSpace(resourceID))
-				return Context.ImportResource(resourceID, ExpectedKind, ContextObject);
-			else
-				return null;
-		}
-
 		public static List<string> ConvertResourcePath(JObject JsonResource, JToken JsonTargetToken)
 		{
 			var ret = new List<string>();

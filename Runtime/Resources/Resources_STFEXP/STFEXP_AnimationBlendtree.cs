@@ -45,7 +45,7 @@ namespace com.squirrelbite.stf_unity.resources.stfexp
 				var position = new Vector2((float)jsonAnimation["position"][0], ret.blendtree_type == "2d" ? (float)jsonAnimation["position"][1] : 0f);
 				ret.Animations.Add(new STFEXP_AnimationBlendtree.AnimationMapping {
 					Position = position,
-					Animation = STFUtil.ImportResource(Context, JsonResource, jsonAnimation.Value<int>("animation")) as STF_Animation,
+					Animation = Context.ImportResource(JsonResource, jsonAnimation["animation"], "data") as STF_Animation,
 				});
 			}
 
