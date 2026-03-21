@@ -5,12 +5,12 @@ Intended for (not only) games-development use-cases.
 
 **WIP implementation for Unity 2022.3+. Do not use productively!**
 
-🌰 **[Read the User Guide!](https://docs.stfform.at/guide/unity.html)**  🌰 **[Report Issues](https://codeberg.org/emperorofmars/stf_unity/issues)** 🌰 **[STF Website](https://docs.stfform.at/)**
+🌰 **[Read the User Guide!](https://docs.stfform.at/guide/unity.html)**  🌰 **[Report Issues](https://codeberg.org/stf_format/stf_unity/issues)** 🌰 **[STF Website](https://docs.stfform.at/)**
 
 ## Installation
 * VRChat Creator Companion: https://vpm.squirrelbite.com/
 * Unity Package Manager: `Window` → `Package Manager` → `+` → `Add package from git URL...`
-Add the following URL: `https://codeberg.org/emperorofmars/stf_unity.git#upm`
+Add the following URL: `https://codeberg.org/stf_format/stf_unity.git#upm`
 
 Please open issues for any bugs or misbehavior you notice. Feel free to open issues for feature requests.
 
