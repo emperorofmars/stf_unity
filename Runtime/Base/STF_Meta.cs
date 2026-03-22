@@ -9,7 +9,7 @@ namespace com.squirrelbite.stf_unity
 	public class STF_Meta
 	{
 		public const uint _DefinitionVersionMajor = 0;
-		public const uint _DefinitionVersionMinor = 0;
+		public const uint _DefinitionVersionMinor = 1;
 		public const string _Generator = "stf_unity";
 		public const string _GeneratorVersion = "0.0.0";
 
@@ -31,8 +31,16 @@ namespace com.squirrelbite.stf_unity
 
 		public STF_Meta(JObject JsonMeta)
 		{
-			DefinitionVersionMajor = (uint)JsonMeta.GetValue("version_major");
-			DefinitionVersionMinor = (uint)JsonMeta.GetValue("version_minor");
+			if(JsonMeta.ContainsKey("version"))
+			{
+				DefinitionVersionMajor = (uint)JsonMeta["version"][0];
+				DefinitionVersionMinor = (uint)JsonMeta["version"][1];
+			}
+			else
+			{
+				DefinitionVersionMajor = (uint)JsonMeta.GetValue("version_major");
+				DefinitionVersionMinor = (uint)JsonMeta.GetValue("version_minor");
+			}
 			Timestamp = (string)JsonMeta.GetValue("timestamp");
 			Generator = (string)JsonMeta.GetValue("generator");
 			GeneratorVersion = (string)JsonMeta.GetValue("generator_version");
