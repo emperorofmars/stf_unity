@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+#if STF_AVA_VRCSDK3_FOUND
+#if AVA_BASE_SETUP_FOUND
 
 using com.squirrelbite.ava_base_setup.vrchat;
 using UnityEngine;
@@ -31,5 +34,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			return current.gameObject;
 		}
 	}
-
 }
+
+#endif
+#endif
+#endif
