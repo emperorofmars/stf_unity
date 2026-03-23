@@ -1,13 +1,11 @@
-#if UNITY_EDITOR
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using com.squirrelbite.stf_unity.resources;
-using UnityEditor;
-using UnityEditor.Animations;
 using System.Linq;
-using NUnit.Framework;
-using com.squirrelbite.stf_unity.resources.stfexp;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace com.squirrelbite.stf_unity.squirrelbite
 {
@@ -139,6 +137,7 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 		}
 	}
 
+#if UNITY_EDITOR
 	[InitializeOnLoad]
 	class Register_Squirrelbite_AvatarSetup_Handler
 	{
@@ -147,6 +146,5 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 			STF_Handler_Registry.RegisterHandler(new Squirrelbite_AvatarSetup_Handler());
 		}
 	}
-}
-
 #endif
+}
