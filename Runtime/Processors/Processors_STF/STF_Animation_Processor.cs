@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using com.squirrelbite.stf_unity.resources;
 using UnityEngine;
 
@@ -44,7 +45,7 @@ namespace com.squirrelbite.stf_unity.processors
 					var pathRet = STFAnimation.AnimationRoot.PropertyConverter.ConvertPropertyPath(STFAnimation.AnimationRoot, track.target);
 					if (pathRet == null || !pathRet.IsValid())
 					{
-						Context.Report(new ($"Invalid converted animation path: {pathRet?.RelativePath}", ErrorSeverity.WARNING, STF_Animation.STF_TYPE, STFAnimation.STF_Id));
+						Context.Report(new ($"Invalid converted animation path: {track.target?.Aggregate((a, b) => a + ", " + b)} :: {pathRet?.ToString()}", ErrorSeverity.WARNING, STF_Animation.STF_TYPE, STFAnimation.STF_Id));
 						continue;
 					}
 					if(handledTracks.Contains(pathRet.ToString()))

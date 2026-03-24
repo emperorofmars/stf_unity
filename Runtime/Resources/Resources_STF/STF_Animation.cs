@@ -122,6 +122,8 @@ namespace com.squirrelbite.stf_unity.resources
 											if(keyframeJson.Count() > 3)
 												keyframe.in_tangent = new Vector2((float)keyframeJson[3][0], (float)keyframeJson[3][1]);
 											break;
+										case "baked":
+											break; // nothing to do
 										default:
 											Context.Report(new ($"Unsupported keyframe interpolation type: {keyframe.interpolation_type}", ErrorSeverity.WARNING, STF_Animation.STF_TYPE, ret.STF_Id));
 											break;
