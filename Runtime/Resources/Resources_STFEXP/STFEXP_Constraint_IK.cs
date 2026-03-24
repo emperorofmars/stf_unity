@@ -5,8 +5,6 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.resources.stfexp
 {
-	// TODO implement processors for various Unity IK implementations, like FinalIK
-
 	[AddComponentMenu("STF/Resources/stfexp/stfexp.constraint.ik")]
 	[HelpURL("https://docs.stfform.at/resources/stfexp/stfexp_constraint_ik.html")]
 	public class STFEXP_Constraint_IK : STF_NodeComponentResource

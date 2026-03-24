@@ -61,7 +61,7 @@ namespace com.squirrelbite.stf_unity.resources
 				//{"trs", TRSUtil.SerializeTRS(node.transform)}
 			};
 
-			// TODO stuff
+			// TODO everything
 
 			return (ret, node.STF_Id);
 		}

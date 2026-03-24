@@ -28,7 +28,8 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 				var ret = stfConstraint.gameObject.AddComponent<RotationConstraint>();
 				if(!ret)
 				{
-					return (null, null); //TODO Report Warning
+					Context.Report(new ("Could not add RotationConstraint", ErrorSeverity.ERROR, stfConstraint.STF_Type, stfConstraint.STF_Id, stfConstraint.gameObject));
+					return (null, null);
 				}
 
 				ret.weight = stfConstraint.Weight;

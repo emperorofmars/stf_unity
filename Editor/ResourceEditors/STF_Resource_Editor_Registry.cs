@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.tools;
 using UnityEditor;
@@ -6,7 +8,7 @@ using UnityEngine.UIElements;
 
 namespace com.squirrelbite.stf_unity.resources.editors
 {
-	public static class STF_Module_Editor_Registry
+	public static class STF_Resource_Editor_Registry
 	{
 		public static readonly List<ISTF_Module_Editor> DefaultModules = new()
 		{
@@ -43,7 +45,7 @@ namespace com.squirrelbite.stf_unity.resources.editors
 			var ret = new VisualElement();
 			foreach(var module in Modules)
 			{
-				// todo general module settings
+				// todo general handler settings
 				var moduleOptions = Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key);
 				if(moduleOptions.Count > 0 && module.Value.HasHeroSettings)
 				{
@@ -73,7 +75,7 @@ namespace com.squirrelbite.stf_unity.resources.editors
 			var ret = new VisualElement();
 			foreach(var module in Modules)
 			{
-				// todo general module settings
+				// todo general handler settings
 				var moduleOptions = Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.Module == module.Key);
 				if(moduleOptions.Count > 0 && module.Value.HasAdvancedSettings)
 				{
@@ -113,3 +115,5 @@ namespace com.squirrelbite.stf_unity.resources.editors
 		}
 	}
 }
+
+#endif

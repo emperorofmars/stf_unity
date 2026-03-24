@@ -40,8 +40,6 @@ namespace com.squirrelbite.stf_unity.resources
 			public STF_Buffer split_normals;
 		}
 
-		// TODO material slots
-
 		[Header("Meta")]
 		public int float_width = 4;
 		public int indices_width = 4;

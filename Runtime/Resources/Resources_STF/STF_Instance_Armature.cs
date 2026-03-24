@@ -14,7 +14,6 @@ namespace com.squirrelbite.stf_unity.resources
 
 		public STF_Armature Armature;
 
-		// TODO pose & mods
 		[System.Serializable]
 		public class Pose
 		{

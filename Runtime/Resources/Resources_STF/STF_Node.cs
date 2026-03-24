@@ -47,7 +47,6 @@ namespace com.squirrelbite.stf_unity.resources
 				Context.AddTask(new Task(() => {
 					ret.ParentBinding = JsonResource["parent_binding"].ToObject<List<string>>();
 
-					// TODO make more legit
 					var parent = ret.transform.parent.gameObject.GetComponent<STF_InstanceResource>();
 
 					var target = parent.gameObject.GetComponentsInChildren<STF_Bone>().FirstOrDefault(c => c.STF_Owner == parent && c.STF_Id ==  ret.ParentBinding[2]);
@@ -70,7 +69,7 @@ namespace com.squirrelbite.stf_unity.resources
 				{"trs", TRSUtil.SerializeTRS(node.transform)}
 			};
 
-			// TODO stuff
+			// TODO everything
 
 			return (ret, node.STF_Id);
 		}

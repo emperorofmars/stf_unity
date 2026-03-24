@@ -61,7 +61,11 @@ namespace com.squirrelbite.stf_unity.processors.finalik
 				var bone = stfConstraint.transform;
 				for(int i = 0; i < stfConstraint.ChainLength; i++)
 				{
-					if(!bone) break; // TODO warn
+					if(!bone)
+					{
+						Context.Report(new STFReport("Invalid bone-chain length", ErrorSeverity.WARNING, STFEXP_Constraint_IK._STF_Type, stfConstraint.STF_Id, stfConstraint.gameObject));
+						break;
+					}
 					bones.Add(bone);
 					bone = bone.transform.parent;
 				}

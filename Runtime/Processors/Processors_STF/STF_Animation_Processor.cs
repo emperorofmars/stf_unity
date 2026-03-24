@@ -16,7 +16,8 @@ namespace com.squirrelbite.stf_unity.processors
 			var STFAnimation = STFResource as STF_Animation;
 			if (STFAnimation.AnimationRoot.PropertyConverter == null)
 			{
-				return (null, null); //TODO Report Warning
+				Context.Report(new ("No root PropertyConverter present", ErrorSeverity.WARNING, STFAnimation.AnimationRoot.STF_Type, STFAnimation.STF_Id));
+				return (null, null);
 			}
 
 			var ret = new AnimationClip
@@ -43,7 +44,8 @@ namespace com.squirrelbite.stf_unity.processors
 					var pathRet = STFAnimation.AnimationRoot.PropertyConverter.ConvertPropertyPath(STFAnimation.AnimationRoot, track.target);
 					if (pathRet == null || !pathRet.IsValid())
 					{
-						continue; //TODO Report Warning
+						Context.Report(new ($"Invalid converted animation path: {pathRet?.RelativePath}", ErrorSeverity.WARNING, STF_Animation.STF_TYPE, STFAnimation.STF_Id));
+						continue;
 					}
 					if(handledTracks.Contains(pathRet.ToString()))
 					{

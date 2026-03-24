@@ -17,7 +17,7 @@ namespace com.squirrelbite.stf_unity.tools
 		private bool DebugExport = true;
 
 
-		// TODO unsomment when STF export works
+		// TODO uncomment when STF export becomes ready
 		//[MenuItem("STF Tools/Export (TBD)")]
 		public static void Init()
 		{

@@ -17,11 +17,11 @@ namespace com.squirrelbite.stf_unity
 		public Object Node;
 		public System.Exception Exception;
 
-		public STFReport(string Message, ErrorSeverity Severity = ErrorSeverity.ERROR, string ModuleType = null, string ResourceID = null, UnityEngine.Object Node = null, System.Exception Exception = null)
+		public STFReport(string Message, ErrorSeverity Severity = ErrorSeverity.ERROR, string ResourceType = null, string ResourceID = null, UnityEngine.Object Node = null, System.Exception Exception = null)
 		{
 			this.Message = Message;
 			this.Severity = Severity;
-			this.ResourceType = ModuleType;
+			this.ResourceType = ResourceType;
 			this.ResourceID = ResourceID;
 			this.Node = Node;
 			this.Exception = Exception;
@@ -40,10 +40,10 @@ namespace com.squirrelbite.stf_unity
 		{
 			this.Report = Report;
 		}
-		public STFException(string Message, ErrorSeverity Severity = ErrorSeverity.ERROR, string ModuleType = null, string ResourceID = null, UnityEngine.Object Node = null, System.Exception Exception = null)
+		public STFException(string Message, ErrorSeverity Severity = ErrorSeverity.ERROR, string ResourceType = null, string ResourceID = null, UnityEngine.Object Node = null, System.Exception Exception = null)
 			 : base(Message, Exception)
 		{
-			this.Report = new STFReport(Message, Severity, ModuleType, ResourceID, Node, Exception);
+			this.Report = new STFReport(Message, Severity, ResourceType, ResourceID, Node, Exception);
 		}
 
 		public readonly STFReport Report;

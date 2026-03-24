@@ -123,7 +123,7 @@ namespace com.squirrelbite.stf_unity.resources
 												keyframe.in_tangent = new Vector2((float)keyframeJson[3][0], (float)keyframeJson[3][1]);
 											break;
 										default:
-											// todo warn
+											Context.Report(new ($"Unsupported keyframe interpolation type: {keyframe.interpolation_type}", ErrorSeverity.WARNING, STF_Animation.STF_TYPE, ret.STF_Id));
 											break;
 									}
 								}
