@@ -68,6 +68,8 @@ namespace com.squirrelbite.stf_unity.resources.stf_material.util
 					var input = new TextureInput();
 					if (channelSource.Source is ImageValue value)
 					{
+						if(!value.Image) throw new System.Exception("Invalid Image");
+
 						input.texture = STFUtil.GetProcessed<Texture2D>(value.Image);
 						input.SetChannelInput(ChannelIdxToEnum(i), new TextureChannelInput
 						{

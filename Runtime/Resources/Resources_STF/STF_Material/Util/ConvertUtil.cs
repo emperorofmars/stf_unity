@@ -85,11 +85,18 @@ namespace com.squirrelbite.stf_unity.resources.stf_material
 			}
 			else
 			{*/
+			try
+			{
 				var finalTexture = ImageUtil.AssembleTextureChannels(Channels);
 				finalTexture.name = UnityMaterial.name + "_" + UnityPropertyName;
 				GeneratedObjects.Add(finalTexture);
 				UnityMaterial.SetTexture(UnityPropertyName, finalTexture);
 				return true;
+			}
+			catch
+			{
+				return false;
+			}
 			//}
 		}
 	}

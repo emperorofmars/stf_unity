@@ -46,10 +46,9 @@ namespace com.squirrelbite.stf_unity.resources
 			{
 				Context.AddTask(new Task(() => {
 					ret.ParentBinding = JsonResource["parent_binding"].ToObject<List<string>>();
-
 					var parent = ret.transform.parent.gameObject.GetComponent<STF_InstanceResource>();
-
-					var target = parent.gameObject.GetComponentsInChildren<STF_Bone>().FirstOrDefault(c => c.STF_Owner == parent && c.STF_Id ==  ret.ParentBinding[2]);
+					var boneId = STFUtil.GetResourceID(JsonResource, JsonResource["parent_binding"][2]);
+					var target = parent.gameObject.GetComponentsInChildren<STF_Bone>().FirstOrDefault(c => c.STF_Owner == parent && c.STF_Id == boneId);
 					if(target) ret.transform.SetParent(target.transform, false);
 				}));
 			}
