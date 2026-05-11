@@ -63,6 +63,8 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 		public STF_DataResource BreathingIntense;
 		public STF_DataResource AdditiveIdle;
 		public STF_DataResource AdditiveExcited;
+
+		public List<STF_DataResource> ShowcaseStates;
 	}
 
 	public class Squirrelbite_AvatarSetup_Handler : ISTF_Handler

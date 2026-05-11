@@ -87,13 +87,21 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				if(toggle.Off && toggle.Off.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip clipOff)
 					behaviour.On = clipOff;
 
+
 				var collider = STFUtil.ResolvePath(avatarSetup.STF_Owner, toggle.Collider) as STF_NodeComponentResource;
-				if(collider.ProcessedObjects.Find(o => o is VRCContactReceiver) is VRCContactReceiver contactRec)
-					behaviour.Contact = contactRec;
-				else if(collider.ProcessedObjects.Find(o => o is VRCPhysBoneCollider) is VRCPhysBoneCollider vrcCollider)
+				if(collider.ProcessedObjects.Find(o => o is VRCContactReceiver) is VRCContactReceiver vrcContact)
+				{
+					behaviour.Contact = vrcContact;
+				}
+				else if(collider.ProcessedObjects.Find(o => o is VRCPhysBoneCollider) is VRCPhysBoneCollider vrcCollider) // Will create a new contact receiver and use the colliders values
+				{
 					behaviour.Collider = vrcCollider;
+					behaviour.Hand = toggle.Hand;
+				}
 				else
+				{
 					Context.Report(new ("Invalid grab-toggle collider!", ErrorSeverity.WARNING, Squirrelbite_AvatarSetup._STF_Type, avatarSetup.STF_Id, avatarSetup));
+				}
 			}
 
 			foreach(var puppet in avatarSetup.Puppets)
