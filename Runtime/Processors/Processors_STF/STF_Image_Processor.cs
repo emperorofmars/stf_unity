@@ -7,51 +7,33 @@ namespace com.squirrelbite.stf_unity.processors
 	public class STF_Image_Processor : ISTF_Processor
 	{
 		public System.Type TargetType => typeof(STF_Image);
-		public uint Order => 0;
+		public uint Order => 5;
 		public int Priority => 1;
 
 		public (List<Object>, List<Object>) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var Image = STFResource as STF_Image;
-			Texture2D ret;
+			Texture2D ret = null;
 
 			var nonColor = Image.data_type != "color";
 
-			// TODO make this vastly more legit
-			if (Image.Components.Find(c => c.GetType() == typeof(STF_Texture)) is STF_Texture texture)
+			// Try to get processed texture from components
+			foreach(var c in Image.Components)
 			{
-				ret = new Texture2D(8, 8, TextureFormat.RGBA32, texture.mipmaps, nonColor, true);
-				ImageConversion.LoadImage(ret, Image.buffer.Data);
-
-				if (texture.height != ret.height || texture.width != ret.width)
+				if(c.ProcessedObjects.Find(t => t is Texture2D) is Texture2D texture)
 				{
-					ret = Resize(ret, (int)texture.width, (int)texture.height, TextureFormat.RGBA32, texture.mipmaps, nonColor);
+					ret = texture;
+					break;
 				}
-
-				if (texture.quality <= 0.5)
-					ret.Compress(false);
-				else if (texture.quality <= 0.75)
-					ret.Compress(true);
 			}
-			else
+			if(!ret) // Otherwise create a basic uncompressed texture
 			{
 				ret = new Texture2D(8, 8, TextureFormat.RGBA32, true, nonColor, true);
 				ImageConversion.LoadImage(ret, Image.buffer.Data);
+				ret.name = Image.STF_Name;
 			}
 
-			ret.name = Image.STF_Name;
 			return (new() { ret }, new() { ret });
-		}
-
-		private Texture2D Resize(Texture2D Texture, int TargetWidth, int TargetHeight, TextureFormat Format, bool Mipmaps = true, bool Linear = false)
-		{
-			var tmp = new RenderTexture(TargetWidth, TargetHeight, Format == TextureFormat.RGBA32 ? 32 : 24);
-			RenderTexture.active = tmp;
-			Graphics.Blit(Texture, tmp);
-			var ret = new Texture2D(TargetWidth, TargetHeight, Format, Mipmaps, Linear);
-			ret.ReadPixels(new Rect(0, 0, TargetWidth, TargetHeight), 0, 0);
-			ret.Apply();
-			return ret;
 		}
 	}
 }

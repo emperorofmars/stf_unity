@@ -13,6 +13,8 @@ using VRC.SDK3.Avatars.Components;
 using com.squirrelbite.stf_unity.squirrelbite;
 using System.Linq;
 using UnityEditor.Animations;
+using VRC.SDK3.Dynamics.Contact.Components;
+using VRC.SDK3.Dynamics.PhysBone.Components;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
@@ -29,9 +31,6 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		{
 			var avatarSetup = STFResource as Squirrelbite_AvatarSetup;
 			var baseSetup = InitAvatarBaseSetupVRChat.Init(Context.Root.GetComponent<VRCAvatarDescriptor>());
-
-			//var controlsGo = new GameObject("Controls");
-			//controlsGo.transform.SetParent(baseSetup.transform);
 
 			foreach(var toggle in avatarSetup.TogglesPre)
 			{
@@ -75,6 +74,26 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 					behaviour.On = clipOn;
 				if(toggle.Off && toggle.Off.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip clipOff)
 					behaviour.On = clipOff;
+			}
+
+			foreach(var toggle in avatarSetup.GrabToggles)
+			{
+				var targetGo = AVA_BaseSetup_Util.EnsureObjectSetup(baseSetup, "Toggles/" + toggle.Name);
+				var behaviour = targetGo.AddComponent<AnimationGrabToggleVRC>();
+				behaviour.Name = toggle.Name;
+				behaviour.IsOverridable = false;
+				if(toggle.On && toggle.On.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip clipOn)
+					behaviour.On = clipOn;
+				if(toggle.Off && toggle.Off.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip clipOff)
+					behaviour.On = clipOff;
+
+				var collider = STFUtil.ResolvePath(avatarSetup.STF_Owner, toggle.Collider) as STF_NodeComponentResource;
+				if(collider.ProcessedObjects.Find(o => o is VRCContactReceiver) is VRCContactReceiver contactRec)
+					behaviour.Contact = contactRec;
+				else if(collider.ProcessedObjects.Find(o => o is VRCPhysBoneCollider) is VRCPhysBoneCollider vrcCollider)
+					behaviour.Collider = vrcCollider;
+				else
+					Context.Report(new ("Invalid grab-toggle collider!", ErrorSeverity.WARNING, Squirrelbite_AvatarSetup._STF_Type, avatarSetup.STF_Id, avatarSetup));
 			}
 
 			foreach(var puppet in avatarSetup.Puppets)

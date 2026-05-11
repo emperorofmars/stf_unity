@@ -26,11 +26,14 @@ namespace com.squirrelbite.stf_unity.tools
 				field.style.flexDirection = FlexDirection.Row;
 				field.style.alignItems = Align.Center;
 				field.style.marginTop = field.style.marginBottom = margin;
+				field.style.textOverflow = TextOverflow.Ellipsis;
+				field.style.overflow = Overflow.Hidden;
 
 				var labelField = new Label(label);
-				labelField.style.flexBasis = 100;
-				labelField.style.flexGrow = 100;
-				labelField.style.minWidth = 120;
+				labelField.style.width = 120;
+				//labelField.style.flexBasis = 100;
+				//labelField.style.flexGrow = 100;
+				//labelField.style.minWidth = 120;
 				field.Add(labelField);
 
 				var valueField = new VisualElement();
@@ -38,11 +41,9 @@ namespace com.squirrelbite.stf_unity.tools
 				valueField.style.alignItems = Align.Center;
 				valueField.style.flexBasis = 180;
 				valueField.style.flexGrow = 180;
+				valueField.style.textOverflow = TextOverflow.Ellipsis;
+				valueField.style.overflow = Overflow.Hidden;
 				field.Add(valueField);
-
-				var valueLabel = new Label(text);
-				valueLabel.selection.isSelectable = selectable;
-				valueField.Add(valueLabel);
 
 				if(copyButton)
 				{
@@ -52,6 +53,13 @@ namespace com.squirrelbite.stf_unity.tools
 					button.style.marginTop = button.style.marginBottom = 0;
 					valueField.Add(button);
 				}
+
+				var valueLabel = new Label(text);
+				valueLabel.selection.isSelectable = selectable;
+				valueLabel.style.marginLeft = copyButton ? 0 : 30;
+				valueLabel.style.textOverflow = TextOverflow.Ellipsis;
+				valueLabel.style.overflow = Overflow.Hidden;
+				valueField.Add(valueLabel);
 				return field;
 			}
 
@@ -94,11 +102,19 @@ namespace com.squirrelbite.stf_unity.tools
 				foldout.style.marginTop = 10;
 				ret.Add(foldout);
 
+				var scroll = new ScrollView(ScrollViewMode.Vertical);
+				scroll.style.maxHeight = 400;
+				scroll.style.overflow = Overflow.Hidden;
+				scroll.style.textOverflow = TextOverflow.Ellipsis;
+				foldout.Add(scroll);
+
 				VisualElement createReportField(STFReport Report)
 				{
 					var ret = new Box();
 					ret.style.paddingTop = ret.style.paddingBottom = ret.style.paddingLeft = 4;
-					ret.Add(createInfoField($"<font-weight=700>{Report.Severity}</font-weight>", $"{Report.Message}", true, false, 0));
+					ret.style.overflow = Overflow.Hidden;
+					ret.style.textOverflow = TextOverflow.Ellipsis;
+					ret.Add(createInfoField($"<font-weight=700>{Report.Severity}</font-weight>", $"{Report.Message}", true, true, 0));
 					ret.Add(createInfoField("Resource Type", !string.IsNullOrWhiteSpace(Report.ResourceType) ? Report.ResourceType : "Unknown", true, !string.IsNullOrWhiteSpace(Report.ResourceType), 0));
 					ret.Add(createInfoField("Resource ID", !string.IsNullOrWhiteSpace(Report.ResourceID) ? Report.ResourceID : "Unknown", true, !string.IsNullOrWhiteSpace(Report.ResourceID), 0));
 					return ret;
@@ -106,7 +122,7 @@ namespace com.squirrelbite.stf_unity.tools
 
 				foreach(var report in asset.Reports)
 				{
-					foldout.Add(createReportField(report));
+					scroll.Add(createReportField(report));
 				}
 			}
 

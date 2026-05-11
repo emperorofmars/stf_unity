@@ -18,6 +18,7 @@ namespace com.squirrelbite.stf_unity
 					new STF_Instance_Armature_Processor(),
 					new STF_Material_Processor(),
 					new STF_Image_Processor(),
+					new STF_Texture_Processor(),
 					new STF_Animation_Processor(),
 					new STFEXP_Camera_Processor(),
 					new STFEXP_Light_Processor(),

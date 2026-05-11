@@ -16,6 +16,8 @@ namespace com.squirrelbite.stf_unity.resources
 		public uint downscale_priority = 0;
 		public float quality = 1;
 		public bool mipmaps = true;
+
+		public ISTF_Resource Image;
 	}
 
 	public class STF_Texture_Handler : ISTF_Handler
@@ -38,6 +40,8 @@ namespace com.squirrelbite.stf_unity.resources
 			if (JsonResource.ContainsKey("downscale_priority")) ret.downscale_priority = JsonResource.Value<uint>("downscale_priority");
 			if (JsonResource.ContainsKey("quality")) ret.quality = JsonResource.Value<float>("quality");
 			if (JsonResource.ContainsKey("mipmaps")) ret.mipmaps = JsonResource.Value<bool>("mipmaps");
+
+			ret.Image = ContextObject;
 
 			return (ret, new() { ret });
 		}

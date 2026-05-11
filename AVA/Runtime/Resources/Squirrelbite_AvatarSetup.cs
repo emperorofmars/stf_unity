@@ -25,6 +25,16 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 		}
 
 		[System.Serializable]
+		public class GrabToggle
+		{
+			public string Name;
+			public string Hand = "both";
+			public List<string> Collider;
+			public STF_DataResource On;
+			public STF_DataResource Off;
+		}
+
+		[System.Serializable]
 		public class PersistentPuppet
 		{
 			public string Name;
@@ -46,6 +56,8 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 		public List<PersistentPuppet> PersistentPuppetsPre = new();
 		public List<Toggle> Toggles = new();
 		public List<Puppet> Puppets = new();
+
+		public List<GrabToggle> GrabToggles = new ();
 
 		public STF_DataResource BreathingNormal;
 		public STF_DataResource BreathingIntense;
@@ -99,6 +111,20 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 				if(toggleJson.ContainsKey("off") && Context.ImportResource(JsonResource, toggleJson["off"], "data") is STF_DataResource offClip)
 					toggle.Off = offClip;
 				ret.Toggles.Add(toggle);
+			}
+
+			if(JsonResource.ContainsKey("grab_toggles")) foreach(JObject toggleJson in JsonResource["grab_toggles"].Cast<JObject>())
+			{
+				var toggle = new Squirrelbite_AvatarSetup.GrabToggle { Name = toggleJson.ContainsKey("name") ? toggleJson.Value<string>("name") : "", };
+				if(toggleJson.ContainsKey("on") && Context.ImportResource(JsonResource, toggleJson["on"], "data") is STF_DataResource onClip)
+					toggle.On = onClip;
+				if(toggleJson.ContainsKey("off") && Context.ImportResource(JsonResource, toggleJson["off"], "data") is STF_DataResource offClip)
+					toggle.Off = offClip;
+
+				if(toggleJson.ContainsKey("hand")) toggle.Hand = toggleJson.Value<string>("hand");
+				if(toggleJson.ContainsKey("collider")) toggle.Collider = STFUtil.ConvertResourcePath(JsonResource, toggleJson["collider"]);
+
+				ret.GrabToggles.Add(toggle);
 			}
 
 			if(JsonResource.ContainsKey("puppets")) foreach(JObject puppetJson in JsonResource["puppets"].Cast<JObject>())

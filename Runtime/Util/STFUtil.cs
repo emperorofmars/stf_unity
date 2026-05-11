@@ -88,7 +88,16 @@ namespace com.squirrelbite.stf_unity
 		{
 			if(TargetPath == null || TargetPath.Count == 0) return null;
 
-			var ret = Source.STF_Owner.GetComponentsInChildren<STF_MonoBehaviour>().FirstOrDefault(b => b.STF_Id == TargetPath[0] && b.STF_Owner == Source.STF_Owner);
+			var origin = Source;
+			if(Source is STF_NodeResource)
+				origin = Source.STF_Owner; // Search from the Prefab / Armature root
+			else if(Source is STF_NodeComponentResource)
+				if(Source.STF_Owner is STF_NodeComponentResource)
+					origin = Source.STF_Owner.STF_Owner; // Component -> Node -> Prefab / Armature root
+				else
+					origin = Source.STF_Owner; // Component -> Prefab / Armature root
+
+			var ret = origin.GetComponentsInChildren<STF_MonoBehaviour>().FirstOrDefault(b => b.STF_Id == TargetPath[0] && b.STF_Owner == origin);
 			if(ret == null) return null;
 
 			if(TargetPath.Count == 1)
