@@ -5,7 +5,7 @@ Intended for (not only) games-development use-cases.
 
 **WIP implementation for Unity 2022.3+. Do not use productively!**
 
-🌰 **[Read the User Guide!](https://docs.stfform.at/guide/unity.html)**  🌰 **[Report Issues](https://codeberg.org/stf_format/stf_unity/issues)** 🌰 **[STF Website](https://docs.stfform.at/)**
+🌰 **[Read the User Guide!](https://docs.stfform.at/guide/unity.html)**  🌰 **[Report Issues](https://codeberg.org/stf_format/stf_unity/issues)** 🌰 **[STF Documentation](https://docs.stfform.at/)**
 
 ## Installation
 * VRChat Creator Companion: https://vpm.squirrelbite.com/
@@ -14,20 +14,17 @@ Add the following URL: `https://codeberg.org/stf_format/stf_unity.git#upm`
 
 Please open issues for any bugs or misbehavior you notice. Feel free to open issues for feature requests.
 
-## Contributing
-Human made contributions via pull-requests are welcome.
-
-### Guidelines
-* Any form of LLM contribution is prohibited, this also includes issues and PRs.
-* Please open an issue first for larger changes.
-* For changes to the format itself, please open an issue first in the [STF Documentation](https://codeberg.org/stf_format/stf_documentation) repository.
-
-### Development
+## Development Setup
 * Clone the repository into the `Packages` directory of a Unity 2022.3+ project.
 * Preferably setup Unity to use VSCode with the [recommended extensions](./.vscode/extensions.json).
 * Use Unity to open the C# project.
 
 Optionally install the appropriate SDKs for VRChat, VRM or Basis to work on their respective parts of the codebase.
+
+## Contributing
+Human made contributions via pull-requests are very welcome.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ## License
 All source-code in this repository, except when noted in individual files and/or directories, is licensed under either:
