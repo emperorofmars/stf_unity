@@ -31,8 +31,6 @@ namespace com.squirrelbite.stf_unity.ava.basisvr.processors
 			{
 				avatar.AvatarMouthPosition.x = (avaVoice.VoicePosition.transform.position - Context.Root.transform.position).y;
 				avatar.AvatarMouthPosition.y = (avaVoice.VoicePosition.transform.position - Context.Root.transform.position).z;
-				if (!Context.ImportConfig.AuthoringImport)
-					Context.AddTrash(avaVoice.VoicePosition);
 			}
 
 			return (new() { avatar }, null);

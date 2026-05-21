@@ -49,8 +49,6 @@ namespace com.squirrelbite.stf_unity.ava.basisvr.processors
 			{
 				avatar.AvatarEyePosition.x = (avaAvatar.Viewport.transform.position - Context.Root.transform.position).y;
 				avatar.AvatarEyePosition.y = (avaAvatar.Viewport.transform.position - Context.Root.transform.position).z;
-				if (!Context.ImportConfig.AuthoringImport)
-					Context.AddTrash(avaAvatar.Viewport);
 			}
 
 			if(avaAvatar.PrimaryMeshInstance)

@@ -23,6 +23,16 @@ namespace com.squirrelbite.stf_unity.ava.resonite
 
 			var avatar = Context.Root.AddComponent<BipedAvatarDescriptor>();
 
+			if (avaAvatar.Viewport)
+			{
+				// TODO figure out however the viewport position works in resonite
+
+				// TODO preserve possibly ethereal node if needed??
+				if(avaAvatar.Viewport.GetComponent<STFEXP_Node_Ethereal>() is STFEXP_Node_Ethereal ethereal)
+				{
+					ethereal.Preserve = true;
+				}
+			}
 
 			avatar.enabled = avaAvatar.enabled;
 

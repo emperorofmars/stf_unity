@@ -28,7 +28,7 @@ namespace com.squirrelbite.stf_unity.squirrelbite
 		public class GrabToggle
 		{
 			public string Name;
-			public string Hand = "both";
+			public string Hand = "right";
 			public List<string> Collider;
 			public STF_DataResource On;
 			public STF_DataResource Off;

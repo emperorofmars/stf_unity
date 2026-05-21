@@ -86,9 +86,6 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 						vrmLookAt.enabled = avaAvatar.enabled;
 					}
 				}
-
-				if (!Context.ImportConfig.AuthoringImport)
-					Context.AddTrash(avaAvatar.Viewport);
 			}
 
 			vrmMetaComponent.enabled = avaAvatar.enabled;

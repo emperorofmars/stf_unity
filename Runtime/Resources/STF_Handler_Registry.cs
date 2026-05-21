@@ -31,6 +31,7 @@ namespace com.squirrelbite.stf_unity.resources
 			new STFEXP_Instance_Text_Handler(),
 			new STFEXP_Text_Handler(),
 			new STFEXP_AnimationBlendtree_Handler(),
+			new STFEXP_Node_Ethereal_Handler(),
 		};
 
 		public static readonly HashSet<string> DefaultIgnores = new() {

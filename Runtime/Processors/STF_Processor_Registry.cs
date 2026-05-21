@@ -31,6 +31,7 @@ namespace com.squirrelbite.stf_unity
 					new STFEXP_Humanoid_Armature_Processor(),
 					new STFEXP_Instance_Text_Processor(),
 					new STFEXP_AnimationBlendtree_Processor(),
+					new STFEXP_Node_Ethereal_Processor(),
 				}
 			},
 		};

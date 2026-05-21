@@ -87,7 +87,6 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 				if(toggle.Off && toggle.Off.ProcessedObjects.Find(o => o is AnimationClip) is AnimationClip clipOff)
 					behaviour.On = clipOff;
 
-
 				var collider = STFUtil.ResolvePath(avatarSetup.STF_Owner, toggle.Collider) as STF_NodeComponentResource;
 				if(collider.ProcessedObjects.Find(o => o is VRCContactReceiver) is VRCContactReceiver vrcContact)
 				{
