@@ -52,9 +52,9 @@ namespace com.squirrelbite.stf_unity.ava.univrm0
 			}
 			else
 			{
-				if (ScriptDefinesManager.IsDefined(STF_UNIVRM0_AVATAR_CONTEXT))
+				if (ScriptDefinesManager.IsDefined(STF_AVA_UNIVRM0_FOUND))
 				{
-					ScriptDefinesManager.RemoveDefines(STF_UNIVRM0_AVATAR_CONTEXT);
+					ScriptDefinesManager.RemoveDefines(STF_AVA_UNIVRM0_FOUND);
 					CompilationPipeline.RequestScriptCompilation();
 				}
 			}

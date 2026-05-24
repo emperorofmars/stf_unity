@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.resources;
-using com.squirrelbite.stf_unity.resources.stfexp;
 using UnityEditor;
 
 namespace com.squirrelbite.stf_unity.ava.resonite
