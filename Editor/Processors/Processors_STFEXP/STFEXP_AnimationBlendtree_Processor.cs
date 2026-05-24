@@ -1,6 +1,9 @@
+#if UNITY_EDITOR
+
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.resources;
 using com.squirrelbite.stf_unity.resources.stfexp;
+using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 
@@ -27,4 +30,15 @@ namespace com.squirrelbite.stf_unity.processors
 			return (new() { ret }, new() { ret });
 		}
 	}
+
+	[InitializeOnLoad]
+	public class Register_STFEXP_AnimationBlendtree_Processor
+	{
+		static Register_STFEXP_AnimationBlendtree_Processor()
+		{
+			STF_Processor_Registry.RegisterProcessor("default", new STFEXP_AnimationBlendtree_Processor());
+		}
+	}
 }
+
+#endif
