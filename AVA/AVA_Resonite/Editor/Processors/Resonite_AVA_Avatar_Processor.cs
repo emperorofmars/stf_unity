@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.resources;
+using com.squirrelbite.stf_unity.resources.stfexp;
 using UnityEditor;
 
 namespace com.squirrelbite.stf_unity.ava.resonite
@@ -21,18 +22,10 @@ namespace com.squirrelbite.stf_unity.ava.resonite
 		{
 			var avaAvatar = STFResource as AVA_Avatar;
 
-			var avatar = Context.Root.AddComponent<BipedAvatarDescriptor>();
+			var avatar = Context.Root.AddComponent<ResoniteBipedAvatarDescriptor>();
 
-			if (avaAvatar.Viewport)
-			{
-				// TODO figure out however the viewport position works in resonite
-
-				// TODO preserve possibly ethereal node if needed??
-				if(avaAvatar.Viewport.GetComponent<STFEXP_Node_Ethereal>() is STFEXP_Node_Ethereal ethereal)
-				{
-					ethereal.Preserve = true;
-				}
-			}
+			if (avaAvatar.Viewport && avatar.ViewpointReference)
+				avatar.ViewpointReference.transform.position = avaAvatar.Viewport.transform.position;
 
 			avatar.enabled = avaAvatar.enabled;
 

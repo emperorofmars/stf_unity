@@ -32,7 +32,7 @@ namespace com.squirrelbite.stf_unity.ava.resonite
 
 		static DetectorResonite()
 		{
-			if(Directory.GetFiles(Path.GetDirectoryName(Application.dataPath), "BipedAvatarDescriptor.cs", SearchOption.AllDirectories).Length > 0)
+			if(Directory.GetFiles(Path.GetDirectoryName(Application.dataPath), "ResoniteBipedAvatarDescriptor.cs", SearchOption.AllDirectories).Length > 0)
 			{
 				Debug.Log("AVA: Found Resonite SDK");
 				if (!ScriptDefinesManager.IsDefined(STF_AVA_RESONITE_FOUND))
