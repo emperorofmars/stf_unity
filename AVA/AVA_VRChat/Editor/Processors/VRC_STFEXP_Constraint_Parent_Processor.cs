@@ -52,6 +52,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			ret.Locked = true;
 			ret.IsActive = true;
 
+			stfConstraint.PropertyConverter = new ComponentAnimationConverterBase<VRCParentConstraint>();
 			return (new() { ret }, null);
 		}
 	}

@@ -6,6 +6,17 @@ using com.squirrelbite.stf_unity.resources.stfexp;
 
 namespace com.squirrelbite.stf_unity.processors.stfexp
 {
+	public class STFEXP_Constraint_Twist_Converter : ComponentAnimationConverterBase<ParentConstraint>
+	{
+		override public ImportPropertyPathPart ConvertComponentPropertyPath(ISTF_Resource STFResource, List<string> STFPath)
+		{
+			var stfConstraint = STFResource as STFEXP_Constraint_Twist;
+			if (STFPath.Count == 1 && STFPath[0] == "weight")
+				return new ImportPropertyPathPart(typeof(ParentConstraint), new() { "m_Sources.Array.data[0].weight" });
+			return null;
+		}
+	}
+
 	public class STFEXP_Constraint_Twist_Processor : ISTF_Processor
 	{
 		public System.Type TargetType => typeof(STFEXP_Constraint_Twist);
@@ -49,6 +60,8 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 				ret.constraintActive = true;
 
 				ret.enabled = stfConstraint.enabled;
+
+				stfConstraint.PropertyConverter = new STFEXP_Constraint_Twist_Converter();
 				return (new() { ret }, null);
 			}
 			else

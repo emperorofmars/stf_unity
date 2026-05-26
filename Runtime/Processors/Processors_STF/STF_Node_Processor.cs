@@ -42,7 +42,7 @@ namespace com.squirrelbite.stf_unity.processors
 						return instance.PropertyConverter.ConvertPropertyPath(instance, STFPath.GetRange(1, STFPath.Count - 1));
 					}
 				}
-				else if (STFPath[0] == "component")
+				else if (STFPath[0] == "component" || STFPath[0] == "component_mods")
 				{
 					var component = resource.gameObject.GetComponents<STF_MonoBehaviour>().FirstOrDefault(c => c.STF_Owner == resource && c.STF_Id == STFPath[1]);
 					if (component && component.PropertyConverter != null)

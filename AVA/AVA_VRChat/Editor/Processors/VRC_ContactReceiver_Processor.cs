@@ -11,6 +11,20 @@ using VRC.SDK3.Dynamics.Contact.Components;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
+	public class VRC_ContactReceiver_Converter : ISTF_PropertyConverter
+	{
+		public ImportPropertyPathPart ConvertPropertyPath(ISTF_Resource STFResource, List<string> STFPath)
+		{
+			var stfConstraint = STFResource as VRC_ContactReceiver;
+
+			if (STFPath.Count == 1 && STFPath[0] == "enabled")
+			{
+				return new ImportPropertyPathPart(typeof(VRCContactReceiver), new() { "enabled" });
+			}
+			return null;
+		}
+	}
+
 	public class VRC_ContactReceiver_Processor : ISTF_Processor
 	{
 		public System.Type TargetType => typeof(VRC_ContactReceiver);
@@ -48,6 +62,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 
 			receiver.enabled = stfReceiver.enabled;
 
+			stfReceiver.PropertyConverter = new VRC_ContactReceiver_Converter();
 			return (new() { receiver }, null);
 		}
 	}

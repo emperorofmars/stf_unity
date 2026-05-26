@@ -11,6 +11,16 @@ using com.squirrelbite.stf_unity.resources.stfexp;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
+	public class VRC_STFEXP_Constraint_Twist_Converter : ComponentAnimationConverterBase<VRCRotationConstraint>
+	{
+		public override ImportPropertyPathPart ConvertComponentPropertyPath(ISTF_Resource STFResource, List<string> STFPath)
+		{
+			var stfConstraint = STFResource as STFEXP_Constraint_Twist;
+			if (STFPath.Count == 1 && STFPath[0] == "weight")
+				return new ImportPropertyPathPart(typeof(VRCRotationConstraint), new() { "Sources.source0.Weight" });
+			return null;
+		}
+	}
 	public class VRC_STFEXP_Constraint_Twist_Processor : ISTF_Processor
 	{
 		public System.Type TargetType => typeof(STFEXP_Constraint_Twist);
@@ -32,6 +42,8 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			{
 				var ret = CreateConstraint(stfConstraint.gameObject, stfConstraint.SourceGo.transform, stfConstraint.Weight);
 				ret.enabled = stfConstraint.enabled;
+
+				stfConstraint.PropertyConverter = new VRC_STFEXP_Constraint_Twist_Converter();
 				return (new() { ret }, null);
 			}
 			else

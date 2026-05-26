@@ -42,6 +42,7 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			ret.locked = true;
 			ret.constraintActive = true;
 
+			stfConstraint.PropertyConverter = new ComponentAnimationConverterBase<ParentConstraint>();
 			return (new() { ret }, null);
 		}
 	}

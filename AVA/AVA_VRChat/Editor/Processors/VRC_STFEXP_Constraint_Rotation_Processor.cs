@@ -25,6 +25,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			if(false && stfConstraint.Sources.Count == 1)
 			{
 				var ret = stfConstraint.gameObject.AddComponent<VRCRotationConstraint>();
+				stfConstraint.PropertyConverter = new ComponentAnimationConverterBase<VRCRotationConstraint>();
 
 				ret.GlobalWeight = stfConstraint.Weight;
 
@@ -52,6 +53,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			else
 			{
 				var ret = stfConstraint.gameObject.AddComponent<VRCParentConstraint>();
+				stfConstraint.PropertyConverter = new ComponentAnimationConverterBase<VRCParentConstraint>();
 
 				ret.GlobalWeight = stfConstraint.Weight;
 
