@@ -14,14 +14,13 @@ namespace com.squirrelbite.stf_unity
 	{
 		public const string _MAGIC = "STF0";
 
-		public uint VersionMajor = 0;
-		public uint VersionMinor = 0;
+		public uint Version = 0;
+		public uint PaddingFutureUse = 0;
 		public string Json;
 
 		[HideInInspector, SerializeField]
 		public List<byte[]> Buffers = new();
-		public int BufferCount = 0;
-		public int BufferCountFooo => Buffers.Count;
+		public int BufferCount => Buffers.Count;
 		public string OriginalFileName;
 
 		public STF_File(string Json, List<byte[]> Buffers)
@@ -44,9 +43,11 @@ namespace com.squirrelbite.stf_unity
 				throw new System.Exception("Not an STF file, invalid magic number.");
 
 			// Version
-			VersionMajor = BinaryPrimitives.ReadUInt32LittleEndian(bufferReader.UnreadSpan);
+			Version = BinaryPrimitives.ReadUInt32LittleEndian(bufferReader.UnreadSpan);
 			bufferReader.Advance(4);
-			VersionMinor = BinaryPrimitives.ReadUInt32LittleEndian(bufferReader.UnreadSpan);
+			if(Version != 0)
+				throw new System.Exception("Unsupported STF version!");
+			PaddingFutureUse = BinaryPrimitives.ReadUInt32LittleEndian(bufferReader.UnreadSpan);
 			bufferReader.Advance(4);
 
 			// Number of all buffers, including the Json definition
@@ -71,7 +72,7 @@ namespace com.squirrelbite.stf_unity
 				Buffers.Add(ReadBytes(bufferReader, buffer_lengths[i])); bufferReader.Advance((long)buffer_lengths[i]);
 			}
 
-			BufferCount = Buffers.Count();
+			//BufferCount = Buffers.Count();
 		}
 
 		private byte[] ReadBytes(SequenceReader<byte> Reader, ulong Length)
@@ -93,9 +94,9 @@ namespace com.squirrelbite.stf_unity
 			bufferWriter.Write(Encoding.UTF8.GetBytes(_MAGIC));
 
 			// Version
-			BinaryPrimitives.WriteUInt32LittleEndian(bufferWriter.GetSpan(4), VersionMajor);
+			BinaryPrimitives.WriteUInt32LittleEndian(bufferWriter.GetSpan(4), Version);
 			bufferWriter.Advance(4);
-			BinaryPrimitives.WriteUInt32LittleEndian(bufferWriter.GetSpan(4), VersionMinor);
+			BinaryPrimitives.WriteUInt32LittleEndian(bufferWriter.GetSpan(4), PaddingFutureUse);
 			bufferWriter.Advance(4);
 
 			// Number of all buffers, including the Json definition

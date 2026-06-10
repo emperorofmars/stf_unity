@@ -79,7 +79,7 @@ namespace com.squirrelbite.stf_unity.tools
 				ret.Add(createInfoField("License Documentation", $"<a href=\"{asset.Meta?.STFAssetInfo?.DocumentationURL}\">{asset.Meta?.STFAssetInfo?.DocumentationURL}</a>"));
 			else
 				ret.Add(createInfoField("License Documentation", asset.Meta?.STFAssetInfo?.DocumentationURL));
-			ret.Add(createInfoField("Binary Version", $"{asset.BinaryVersionMajor}.{asset.BinaryVersionMinor}"));
+			ret.Add(createInfoField("Binary Version", $"{asset.BinaryVersion}"));
 			ret.Add(createInfoField("Definition Version", $"{asset.Meta?.DefinitionVersionMajor}.{asset.Meta?.DefinitionVersionMinor}"));
 
 			if(asset.Meta.AssetProperties != null && asset.Meta.AssetProperties.Count > 0)

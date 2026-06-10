@@ -6,8 +6,7 @@ namespace com.squirrelbite.stf_unity
 {
 	public class STF_Import : ScriptableObject
 	{
-		public uint BinaryVersionMajor;
-		public uint BinaryVersionMinor;
+		public uint BinaryVersion;
 		public string OriginalFileName;
 		public STF_Meta Meta;
 		public GameObject Root;
@@ -17,8 +16,7 @@ namespace com.squirrelbite.stf_unity
 		public void Init(ImportState State)
 		{
 			name = "STF_Import";
-			BinaryVersionMajor = State.File.VersionMajor;
-			BinaryVersionMinor = State.File.VersionMinor;
+			BinaryVersion = State.File.Version;
 			Meta = State.Meta;
 			OriginalFileName = State.File.OriginalFileName;
 			if(State.ImportedObjects.GetValueOrDefault(State.RootID) is STF_Prefab @rootObject)
