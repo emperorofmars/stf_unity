@@ -6,9 +6,6 @@ using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.resources.stfexp;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
-using Newtonsoft.Json.Linq;
-
-
 
 #if STF_FINALIK_FOUND
 using com.squirrelbite.stf_unity.processors.finalik;
@@ -30,11 +27,11 @@ namespace com.squirrelbite.stf_unity.ava.vrchat
 		public VisualElement CreateSettingsGUI(ImportOptions Options, System.Action EmitChange) {
 			var ret = new VisualElement();
 			var option = Options.GetContextImportOptions(this.ContextId);
-			var value = option.ContainsKey("interactables_separatre") ? option.Value<bool>("interactables_separatre") : false;
-			var toggle = new Toggle("Separate Placement of Physics Objects") { value = value };
+			var value = option.ContainsKey("physics_separate") ? option.Value<bool>("physics_separate") : true;
+			var toggle = new Toggle("Place Physics Under Root") { value = value };
 			toggle.RegisterValueChangedCallback(e => {
 				var option = Options.GetContextImportOptions(this.ContextId);
-				option["interactables_separatre"] = e.newValue;
+				option["physics_separate"] = e.newValue;
 				Options.SetContextImportOptions(this.ContextId, option);
 				EmitChange();
 			});
