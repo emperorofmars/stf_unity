@@ -1,11 +1,14 @@
+![](https://codeberg.org/stf_format/stf_unity/badges/release.svg)
+![](https://codeberg.org/stf_format/stf_unity/badges/stars.svg)
+
 # STF Unity
 
-**Squirrel Transfer Format - Modular 3D File-Format**
+**Squirrel Transfer Format - Modular 3D Interchange-Format**
 Intended for (not only) games-development use-cases.
 
 **WIP implementation for Unity 2022.3+. Do not use productively!**
 
-🌰 **[Read the User Guide!](https://docs.stfform.at/guide/unity.html)**  🌰 **[Report Issues](https://codeberg.org/stf_format/stf_unity/issues)** 🌰 **[STF Documentation](https://docs.stfform.at/)**
+🌰 **[User Guide](https://docs.stfform.at/guide/unity.html)**  🌰 **[Report Issues](https://codeberg.org/stf_format/stf_unity/issues)** 🌰 **[STF Documentation](https://docs.stfform.at/)**
 
 ## Installation
 * VRChat Creator Companion: https://vpm.squirrelbite.com/

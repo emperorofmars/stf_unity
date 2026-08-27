@@ -16,17 +16,17 @@ namespace com.squirrelbite.stf_unity
 		[System.Serializable]
 		public class ContextImportOption
 		{
-			public string Context;
+			public string ContextID;
 			public string Json;
 		}
 		public List<ContextImportOption> ContextImportOptions = new();
 
-		public JObject GetContextImportOptions(string Context)
+		public JObject GetContextImportOptions(string ContextID)
 		{
 			foreach(var opt in ContextImportOptions)
 			{
 				try {
-					if(opt.Context == Context) return JObject.Parse(opt.Json);
+					if(opt.ContextID == ContextID) return JObject.Parse(opt.Json);
 				}
 				catch
 				{
@@ -36,21 +36,21 @@ namespace com.squirrelbite.stf_unity
 			return new JObject();
 		}
 
-		public void SetContextImportOptions(string Context, JObject Options)
+		public void SetContextImportOptions(string ContextID, JObject Options)
 		{
 			foreach(var opt in ContextImportOptions)
 			{
-				if(opt.Context == Context)
+				if(opt.ContextID == ContextID)
 				{
 					opt.Json = Options.ToString();
 					return;
 				}
 			}
-			ContextImportOptions.Add(new () { Context = Context, Json = Options.ToString() });
+			ContextImportOptions.Add(new () { ContextID = ContextID, Json = Options.ToString() });
 		}
 
 
-		[System.Serializable]
+		/*[System.Serializable]
 		public class HandlerImportOption
 		{
 			public string STF_Type;
@@ -84,7 +84,7 @@ namespace com.squirrelbite.stf_unity
 				}
 			}
 			HandlerImportOptions.Add(new () { STF_Type = STF_Type, Json = Options.ToString() });
-		}
+		}*/
 
 		[System.Serializable]
 		public class ResourceImportOption
