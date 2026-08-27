@@ -5,14 +5,14 @@ using UnityEngine.UIElements;
 
 namespace com.squirrelbite.stf_unity.resources.editors
 {
-	public interface ISTF_Module_Editor
+	public interface ISTF_Resource_Editor
 	{
 		string STF_Type {get;}
 		string HeroSettingsLabel {get;}
 		bool HasHeroSettings {get;}
 		bool HasAdvancedSettings {get;}
-		VisualElement CreateHeroSettingsGUI(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option);
-		VisualElement CreateAdvancedSettingsGUI(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option);
+		VisualElement CreateHeroSettingsGUI(ImportOptions.ResourceImportOption Option, System.Action EmitChange);
+		VisualElement CreateAdvancedSettingsGUI(ImportOptions.ResourceImportOption Option, System.Action EmitChange);
 	}
 }
 

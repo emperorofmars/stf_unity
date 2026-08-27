@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
@@ -15,19 +14,19 @@ namespace com.squirrelbite.stf_unity
 
 
 		[System.Serializable]
-		public class ModuleImportOption
+		public class ContextImportOption
 		{
-			public string Module;
+			public string Context;
 			public string Json;
 		}
-		public List<ModuleImportOption> ModuleImportOptions = new();
+		public List<ContextImportOption> ContextImportOptions = new();
 
-		public JObject GetModuleImportOptions(string Module)
+		public JObject GetContextImportOptions(string Context)
 		{
-			foreach(var opt in ModuleImportOptions)
+			foreach(var opt in ContextImportOptions)
 			{
 				try {
-					if(opt.Module == Module) return JObject.Parse(opt.Json);
+					if(opt.Context == Context) return JObject.Parse(opt.Json);
 				}
 				catch
 				{
@@ -37,23 +36,60 @@ namespace com.squirrelbite.stf_unity
 			return new JObject();
 		}
 
-		public void SetModuleImportOptions(string Module, JObject Options)
+		public void SetContextImportOptions(string Context, JObject Options)
 		{
-			foreach(var opt in ModuleImportOptions)
+			foreach(var opt in ContextImportOptions)
 			{
-				if(opt.Module == Module)
+				if(opt.Context == Context)
 				{
 					opt.Json = Options.ToString();
 					return;
 				}
 			}
-			ModuleImportOptions.Add(new () { Module = Module, Json = Options.ToString() });
+			ContextImportOptions.Add(new () { Context = Context, Json = Options.ToString() });
+		}
+
+
+		[System.Serializable]
+		public class HandlerImportOption
+		{
+			public string STF_Type;
+			public string Json;
+		}
+		public List<HandlerImportOption> HandlerImportOptions = new();
+
+		public JObject GetHandlerImportOptions(string STF_Type)
+		{
+			foreach(var opt in HandlerImportOptions)
+			{
+				try {
+					if(opt.STF_Type == STF_Type) return JObject.Parse(opt.Json);
+				}
+				catch
+				{
+					break;
+				}
+			}
+			return new JObject();
+		}
+
+		public void SetHandlerImportOptions(string STF_Type, JObject Options)
+		{
+			foreach(var opt in HandlerImportOptions)
+			{
+				if(opt.STF_Type == STF_Type)
+				{
+					opt.Json = Options.ToString();
+					return;
+				}
+			}
+			HandlerImportOptions.Add(new () { STF_Type = STF_Type, Json = Options.ToString() });
 		}
 
 		[System.Serializable]
 		public class ResourceImportOption
 		{
-			public string Module;
+			public string STF_Type;
 			public string STF_Id;
 			public string DisplayName;
 			public string Json;
@@ -61,19 +97,19 @@ namespace com.squirrelbite.stf_unity
 		public List<ResourceImportOption> ResourceImportOptions = new();
 		public List<ResourceImportOption> ResourceImportOptionsConfirm = null;
 
-		public T GetAndConfirmImportOption<T>(string Module, string STF_Id, string DisplayName, string Option, T Default = default)
+		public T GetAndConfirmImportOption<T>(string STF_Type, string STF_Id, string DisplayName, string Option, T Default = default)
 		{
-			var ret = GetImportOption(Module, STF_Id, Option, Default);
-			ConfirmImportOption(Module, STF_Id, DisplayName, Option, ret);
+			var ret = GetImportOption(STF_Type, STF_Id, Option, Default);
+			ConfirmImportOption(STF_Type, STF_Id, DisplayName, Option, ret);
 			return ret;
 		}
 
-		public T GetImportOption<T>(string Module, string STF_Id, string Option, T Default = default)
+		public T GetImportOption<T>(string STF_Type, string STF_Id, string Option, T Default = default)
 		{
 			foreach(var opt in ResourceImportOptions)
 			{
 				try {
-					if(opt.Module == Module && opt.STF_Id == STF_Id)
+					if(opt.STF_Type == STF_Type && opt.STF_Id == STF_Id)
 					{
 						var settings = JObject.Parse(opt.Json);
 						if(settings.ContainsKey(Option))
@@ -89,14 +125,14 @@ namespace com.squirrelbite.stf_unity
 			}
 			return Default;
 		}
-		public void ConfirmImportOption<T>(string Module, string STF_Id, string DisplayName, string Option, T Value)
+		public void ConfirmImportOption<T>(string STF_Type, string STF_Id, string DisplayName, string Option, T Value)
 		{
 			try {
 				foreach(var opt in ResourceImportOptionsConfirm)
 				{
 					if(opt.STF_Id == STF_Id)
 					{
-						opt.Module = Module;
+						opt.STF_Type = STF_Type;
 						opt.DisplayName = DisplayName;
 						var settings = JObject.Parse(opt.Json);
 						settings[Option] = JToken.FromObject(Value);
@@ -104,7 +140,7 @@ namespace com.squirrelbite.stf_unity
 						return;
 					}
 				}
-				ResourceImportOptionsConfirm.Add(new () { Module = Module, STF_Id = STF_Id, DisplayName = DisplayName, Json = new JObject() {{ Option, JToken.FromObject(Value) }}.ToString()});
+				ResourceImportOptionsConfirm.Add(new () { STF_Type = STF_Type, STF_Id = STF_Id, DisplayName = DisplayName, Json = new JObject() {{ Option, JToken.FromObject(Value) }}.ToString()});
 			}
 			catch
 			{

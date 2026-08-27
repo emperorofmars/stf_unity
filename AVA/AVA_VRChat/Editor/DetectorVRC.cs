@@ -5,6 +5,8 @@ using UnityEngine;
 using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.resources.stfexp;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
+
 
 #if STF_FINALIK_FOUND
 using com.squirrelbite.stf_unity.processors.finalik;
@@ -21,6 +23,10 @@ namespace com.squirrelbite.stf_unity.ava.vrchat
 		public ProcessorContextBase Create(ProcessorState State)
 		{
 			return new AVAContext(State);
+		}
+
+		public VisualElement CreateSettingsGUI(ImportOptions Options) {
+			return new Label("Foooo");
 		}
 	}
 

@@ -1,25 +1,23 @@
 #if UNITY_EDITOR
 
-using com.squirrelbite.stf_unity.tools;
 using Newtonsoft.Json.Linq;
-using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace com.squirrelbite.stf_unity.resources.editors
 {
-	public class STF_Animation_Import_Editor : ISTF_Module_Editor
+	public class STF_Animation_Import_Editor : ISTF_Resource_Editor
 	{
 		public string STF_Type => STF_Animation.STF_TYPE;
 		public string HeroSettingsLabel => null;
 		public bool HasHeroSettings => false;
 		public bool HasAdvancedSettings => true;
 
-		public VisualElement CreateHeroSettingsGUI(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
+		public VisualElement CreateHeroSettingsGUI(ImportOptions.ResourceImportOption Option, System.Action EmitChange)
 		{
 			return null;
 		}
 
-		public VisualElement CreateAdvancedSettingsGUI(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
+		public VisualElement CreateAdvancedSettingsGUI(ImportOptions.ResourceImportOption Option, System.Action EmitChange)
 		{
 			var ret = new VisualElement();
 			var options = JObject.Parse(Option.Json);
@@ -32,7 +30,7 @@ namespace com.squirrelbite.stf_unity.resources.editors
 						var options = JObject.Parse(Option.Json);
 						options["prefer_baked"] = e.newValue;
 						Option.Json = options.ToString();
-						EditorUtility.SetDirty(Importer);
+						EmitChange();
 					});
 					ret.Add(toggle);
 				}
@@ -45,7 +43,7 @@ namespace com.squirrelbite.stf_unity.resources.editors
 						var options = JObject.Parse(Option.Json);
 						options["import_baked"] = e.newValue;
 						Option.Json = options.ToString();
-						EditorUtility.SetDirty(Importer);
+						EmitChange();
 					});
 					ret.Add(toggle);
 				}

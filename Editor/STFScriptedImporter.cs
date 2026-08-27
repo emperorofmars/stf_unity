@@ -21,29 +21,29 @@ namespace com.squirrelbite.stf_unity.tools
 			ImportConfig.ResourceImportOptionsConfirm = new();
 
 			var file = new STF_File(ctx.assetPath);
-			var state = new ImportState(file, STF_Handler_Registry.Handlers, STF_Handler_Registry.Ignores, ImportConfig);
-			var rootContext = new ImportContext(state);
 
-			rootContext.ImportResource(state.RootID, "data");
-			state.FinalizeImport();
+			var importState = new ImportState(file, STF_Handler_Registry.Handlers, STF_Handler_Registry.Ignores, ImportConfig);
+			var importContext = new ImportContext(importState);
+			importContext.ImportResource(importState.RootID, "data");
+			importState.FinalizeImport();
 
 			var import = ScriptableObject.CreateInstance<STF_Import>();
-			import.Init(state);
+			import.Init(importState);
 			ctx.AddObjectToAsset("main", import);
 
-			var processorState = new ProcessorState(state, import.Root);
+			var processorState = new ProcessorState(importState, import.Root);
 			var processorContext = STF_Processor_Registry.CreateApplicationContext(ImportConfig.SelectedApplication, processorState);
 			processorContext.Run();
-			state.Cleanup();
+			importState.Cleanup();
 
-			foreach (var importedObject in state.ObjectToRegister)
+			foreach (var importedObject in importState.ObjectToRegister)
 				if (importedObject != null && (importedObject is not ISTF_Resource || ImportConfig.AuthoringImport))
 					ctx.AddObjectToAsset(DetermineImportAssetName(importedObject), importedObject);
 
 			if (import.Root)
 			{
 				if (ImportConfig.AuthoringImport)
-					import.Root.AddComponent<STF_Meta_Info>().Meta = state.Meta;
+					import.Root.AddComponent<STF_Meta_Info>().Meta = importState.Meta;
 
 				ctx.SetMainObject(import.Root);
 

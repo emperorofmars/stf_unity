@@ -9,14 +9,14 @@ using UnityEngine.UIElements;
 
 namespace com.squirrelbite.stf_unity.resources.editors
 {
-	public class STF_Material_Import_Editor : ISTF_Module_Editor
+	public class STF_Material_Import_Editor : ISTF_Resource_Editor
 	{
 		public string STF_Type => STF_Material.STF_TYPE;
 		public string HeroSettingsLabel => "Material Selection";
 		public bool HasHeroSettings => true;
 		public bool HasAdvancedSettings => false;
 
-		public VisualElement CreateHeroSettingsGUI(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
+		public VisualElement CreateHeroSettingsGUI(ImportOptions.ResourceImportOption Option, System.Action EmitChange)
 		{
 			var availableConverters = STF_Material_Converter_Registry.Converters.Select(c => c.Key).ToList();
 			var options = JObject.Parse(Option.Json);
@@ -30,14 +30,14 @@ namespace com.squirrelbite.stf_unity.resources.editors
 					var options = JObject.Parse(Option.Json);
 					options["target_shader"] = e.newValue;
 					Option.Json = options.ToString();
-					EditorUtility.SetDirty(Importer);
+					EmitChange();
 				});
 				return ret;
 			}
 			else return new VisualElement();
 		}
 
-		public VisualElement CreateAdvancedSettingsGUI(STFScriptedImporter Importer, ImportOptions.ResourceImportOption Option)
+		public VisualElement CreateAdvancedSettingsGUI(ImportOptions.ResourceImportOption Option, System.Action EmitChange)
 		{
 			return null;
 		}
