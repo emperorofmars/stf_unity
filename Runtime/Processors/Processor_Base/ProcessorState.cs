@@ -158,6 +158,8 @@ namespace com.squirrelbite.stf_unity.processors
 				return null;
 		}
 
+		public ImportOptions ImportConfig => State.ImportConfig;
+
 		public void AddProcessorTask(uint Order, Task Task)
 		{
 			if (ProcessOrderMap.ContainsKey(Order)) ProcessOrderMap[Order].Add(Task);

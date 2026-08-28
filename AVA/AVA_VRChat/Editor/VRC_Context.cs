@@ -13,6 +13,24 @@ using com.squirrelbite.stf_unity.processors.finalik;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat
 {
+	public class VRCContext : AVAContext
+	{
+		public readonly bool physics_separate = true;
+		public readonly GameObject physics_parent = null;
+
+		public VRCContext(ProcessorState State) : base(State)
+		{
+			var options = State.ImportConfig.GetContextImportOptions(DetectorVRC.STF_VRC_AVATAR_CONTEXT);
+			this.physics_separate = options.ContainsKey("physics_separate") ? options.Value<bool>("physics_separate") : true;
+
+			if(this.physics_separate)
+			{
+				this.physics_parent = new GameObject("Physics");
+				this.physics_parent.transform.parent = State.Root.transform;
+			}
+		}
+	}
+
 	public class VRCContextFactory : STF_ApplicationContextDefinition
 	{
 		public string ContextId => DetectorVRC.STF_VRC_AVATAR_CONTEXT;
@@ -21,7 +39,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat
 
 		public ProcessorContextBase Create(ProcessorState State)
 		{
-			return new AVAContext(State);
+			return new VRCContext(State);
 		}
 
 		public VisualElement CreateSettingsGUI(ImportOptions Options, System.Action EmitChange) {

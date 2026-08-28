@@ -17,7 +17,7 @@ namespace com.squirrelbite.stf_unity.processors
 			this.State = State;
 		}
 
-		public ImportOptions ImportConfig => State.State.ImportConfig;
+		public ImportOptions ImportConfig => State.ImportConfig;
 
 		public void RegisterProcessedResult(ISTF_Resource STFResource, object Result, bool AddAsUnityObject = true)
 		{
