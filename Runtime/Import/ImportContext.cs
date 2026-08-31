@@ -7,6 +7,11 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
+	/// <summary>
+	/// A context that is passed to every STF resource handler on import.
+	///
+	/// Holds imported data in its `ImportState`.
+	/// </summary>
 	public class ImportContext
 	{
 		protected readonly ImportState State;

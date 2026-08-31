@@ -3,8 +3,11 @@ using System.Collections.Generic;
 namespace com.squirrelbite.stf_unity.resources
 {
 	/// <summary>
-	/// Resources get imported & exported by ISTF_Module.
-	/// Each ISTF_Module implementation has one corresponding ISTF_Resource implementation.
+	/// Resources get imported & exported by ISTF_Handler.
+	///
+	/// This resource directly represents the STF resources data, and doesn't have to be understandable by Unity.
+	///
+	/// Each ISTF_Handler implementation has one corresponding ISTF_Resource implementation.
 	/// </summary>
 	public interface ISTF_Resource
 	{

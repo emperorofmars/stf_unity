@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
+	/// <summary>
+	/// Holds meta information of an imported STF file.
+	/// </summary>
 	public class STF_Import : ScriptableObject
 	{
 		public uint BinaryVersion;

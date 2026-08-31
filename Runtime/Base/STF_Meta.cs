@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
+	/// <summary>
+	/// Represents an STF JSON definitions `stf` object.
+	/// </summary>
 	[System.Serializable]
 	public class STF_Meta
 	{

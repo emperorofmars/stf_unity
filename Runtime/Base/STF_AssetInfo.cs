@@ -1,8 +1,10 @@
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 namespace com.squirrelbite.stf_unity
 {
+	/// <summary>
+	/// Representation of the `asset_info` object in the STF JSON definitions' `stf` object.
+	/// </summary>
 	[System.Serializable]
 	public class AssetInfo
 	{
@@ -13,7 +15,6 @@ namespace com.squirrelbite.stf_unity
 		public string License;
 		public string LicenseURL;
 		public string DocumentationURL;
-
 
 		public AssetInfo() {}
 

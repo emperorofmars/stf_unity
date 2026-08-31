@@ -23,7 +23,11 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		public (List<Object> ProcessedObjects, List<Object> ObjectsToRegister) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var stfSender = STFResource as VRC_ContactSender;
-			var sender = stfSender.gameObject.AddComponent<VRCContactSender>();
+			var vrcContext = Context as VRCContext;
+
+			var sender = vrcContext.GetPhysicsObject<VRCContactSender>(stfSender.gameObject, string.IsNullOrWhiteSpace(stfSender.STF_Name) ? stfSender.name : stfSender.STF_Name, "ContactSender");
+			if(vrcContext.physics_separate) sender.rootTransform = stfSender.transform;
+
 			sender.shapeType = stfSender.shape == "capsule" ? VRC.Dynamics.ContactBase.ShapeType.Capsule : VRC.Dynamics.ContactBase.ShapeType.Sphere;
 			sender.radius = stfSender.radius;
 			sender.height = stfSender.height;

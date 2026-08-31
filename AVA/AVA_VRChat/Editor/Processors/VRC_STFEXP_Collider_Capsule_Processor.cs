@@ -23,7 +23,11 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 		public (List<Object> ProcessedObjects, List<Object> ObjectsToRegister) Process(ProcessorContextBase Context, ISTF_Resource STFResource)
 		{
 			var stfCollider = STFResource as STFEXP_Collider_Capsule;
-			var collider = stfCollider.gameObject.AddComponent<VRCPhysBoneCollider>();
+			var vrcContext = Context as VRCContext;
+
+			var collider = vrcContext.GetPhysicsObject<VRCPhysBoneCollider>(stfCollider.gameObject, string.IsNullOrWhiteSpace(stfCollider.STF_Name) ? stfCollider.name : stfCollider.STF_Name, "Collider");
+			if(vrcContext.physics_separate) collider.rootTransform = stfCollider.transform;
+
 			collider.shapeType = VRC.Dynamics.VRCPhysBoneColliderBase.ShapeType.Capsule;
 			collider.radius = stfCollider.radius;
 			collider.height = stfCollider.height;

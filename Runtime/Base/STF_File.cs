@@ -8,7 +8,10 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity
 {
-	// Read and write binary STF files
+	/// <summary>
+	/// Holds the raw data from an STF file.
+	/// Provides methods to read and write STF files.
+	/// </summary>
 	[System.Serializable]
 	public class STF_File
 	{
@@ -34,6 +37,10 @@ namespace com.squirrelbite.stf_unity
 		public STF_File(byte[] ByteArray, string OriginalFileName = null)
 		{
 			this.OriginalFileName = OriginalFileName;
+
+			// Minimal file size = minimal binary header size (20) + length of minimal JSON definition
+			if(ByteArray.Length < (20 + "{\"stf\"{\"version\":[0,1],\"root\":\"\"}}".Length))
+				throw new System.Exception("Invalid buffer!");
 
 			var bufferReader = new SequenceReader<byte>(new ReadOnlySequence<byte>(ByteArray));
 

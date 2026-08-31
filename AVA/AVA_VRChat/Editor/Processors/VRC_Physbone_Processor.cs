@@ -27,13 +27,7 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 			var stfPhysbone = STFResource as VRC_Physbone;
 			var vrcContext = Context as VRCContext;
 
-			var target = stfPhysbone.gameObject;
-			if(vrcContext.physics_separate)
-			{
-				target = new GameObject("PhysBone " + (string.IsNullOrWhiteSpace(stfPhysbone.STF_Name) ? stfPhysbone.name : stfPhysbone.STF_Name));
-				target.transform.parent = vrcContext.physics_parent.transform;
-			}
-			var physbone = target.AddComponent<VRCPhysBone>();
+			var physbone = vrcContext.GetPhysicsObject<VRCPhysBone>(stfPhysbone.gameObject, string.IsNullOrWhiteSpace(stfPhysbone.STF_Name) ? stfPhysbone.name : stfPhysbone.STF_Name, "PhysBone");
 			if(vrcContext.physics_separate) physbone.rootTransform = stfPhysbone.transform;
 
 			JsonUtility.FromJsonOverwrite(stfPhysbone.Json.ToString(), physbone);

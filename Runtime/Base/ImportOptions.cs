@@ -3,6 +3,9 @@ using Newtonsoft.Json.Linq;
 
 namespace com.squirrelbite.stf_unity
 {
+	/// <summary>
+	/// Per file import options
+	/// </summary>
 	[System.Serializable]
 	public class ImportOptions
 	{
@@ -12,7 +15,9 @@ namespace com.squirrelbite.stf_unity
 
 		public bool IsFirstImport = true;
 
-
+		/// <summary>
+		/// Import options for each application context stored as a JSON string.
+		/// </summary>
 		[System.Serializable]
 		public class ContextImportOption
 		{
@@ -50,42 +55,11 @@ namespace com.squirrelbite.stf_unity
 		}
 
 
-		/*[System.Serializable]
-		public class HandlerImportOption
-		{
-			public string STF_Type;
-			public string Json;
-		}
-		public List<HandlerImportOption> HandlerImportOptions = new();
-
-		public JObject GetHandlerImportOptions(string STF_Type)
-		{
-			foreach(var opt in HandlerImportOptions)
-			{
-				try {
-					if(opt.STF_Type == STF_Type) return JObject.Parse(opt.Json);
-				}
-				catch
-				{
-					break;
-				}
-			}
-			return new JObject();
-		}
-
-		public void SetHandlerImportOptions(string STF_Type, JObject Options)
-		{
-			foreach(var opt in HandlerImportOptions)
-			{
-				if(opt.STF_Type == STF_Type)
-				{
-					opt.Json = Options.ToString();
-					return;
-				}
-			}
-			HandlerImportOptions.Add(new () { STF_Type = STF_Type, Json = Options.ToString() });
-		}*/
-
+		/// <summary>
+		/// Import options for each imported resource, stored as a JSON string.
+		///
+		/// Options are set by resource handlers during import. Each option must be 'confirmed', otherwise it will be removed after the import process concludes.
+		/// </summary>
 		[System.Serializable]
 		public class ResourceImportOption
 		{

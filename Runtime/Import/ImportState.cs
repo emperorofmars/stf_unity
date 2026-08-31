@@ -6,6 +6,9 @@ using com.squirrelbite.stf_unity.resources;
 
 namespace com.squirrelbite.stf_unity
 {
+	/// <summary>
+	/// Holds the imported STF files data. Is accessed internally by the ImportContext.
+	/// </summary>
 	public class ImportState
 	{
 		public readonly Dictionary<string, ISTF_Handler> Handlers = new();

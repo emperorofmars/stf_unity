@@ -21,13 +21,24 @@ namespace com.squirrelbite.stf_unity.ava.vrchat
 		public VRCContext(ProcessorState State) : base(State)
 		{
 			var options = State.ImportConfig.GetContextImportOptions(DetectorVRC.STF_VRC_AVATAR_CONTEXT);
-			this.physics_separate = options.ContainsKey("physics_separate") ? options.Value<bool>("physics_separate") : true;
+			physics_separate = options.ContainsKey("physics_separate") ? options.Value<bool>("physics_separate") : true;
 
-			if(this.physics_separate)
+			if(physics_separate)
 			{
-				this.physics_parent = new GameObject("Physics");
-				this.physics_parent.transform.parent = State.Root.transform;
+				physics_parent = new GameObject("Physics");
+				physics_parent.transform.parent = State.Root.transform;
 			}
+		}
+
+		public T GetPhysicsObject<T>(GameObject Target, string Name, string Category = "Generic") where T : Component
+		{
+			if(physics_separate)
+			{
+				Target = new GameObject(Category + " " + Name);
+				Target.transform.parent = physics_parent.transform;
+			}
+			var ret = Target.AddComponent<T>();
+			return ret;
 		}
 	}
 

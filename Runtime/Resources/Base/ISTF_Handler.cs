@@ -5,7 +5,9 @@ namespace com.squirrelbite.stf_unity.resources
 {
 	// TODO make this a static interface, once that language feature is available in Unity
 	/// <summary>
-	/// Base interface for all implementations of STF modules.
+	/// Base interface for all implementations of STF resource handlers.
+	///
+	/// A handler imports the JSON and corresponding buffers into a corresponding `ISTF_Resource` implementation, but doesn't have to convert it into Unity native constructs. That is handled by `ISTF_Processor` in the second stage of the import process.
 	/// </summary>
 	public interface ISTF_Handler
 	{

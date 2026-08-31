@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors
 {
+	/// <summary>
+	/// Interface for a processor that converts an imported ISTF_Resource into a Unity native construct.
+	/// </summary>
 	public interface ISTF_Processor
 	{
 		abstract System.Type TargetType { get; }
