@@ -1,46 +1,16 @@
 #if UNITY_EDITOR
 
 using System.Collections.Generic;
+using com.squirrelbite.stf_unity.processors;
 using com.squirrelbite.stf_unity.tools;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace com.squirrelbite.stf_unity.resources.editors
+namespace com.squirrelbite.stf_unity.tools
 {
-	public static class STF_Resource_Editor_Registry
+	public static class STF_ImportSettingsEditor
 	{
-		public static readonly List<ISTF_Resource_Editor> DefaultEditors = new()
-		{
-			new STF_Material_Import_Editor(),
-			new STF_Mesh_Import_Editor(),
-			new STF_Animation_Import_Editor(),
-			new STF_Instance_Mesh_Import_Editor(),
-			new STFEXP_Node_Ethereal_Import_Editor(),
-		};
-
-		private static readonly Dictionary<string, ISTF_Resource_Editor> RegisteredEditors = new();
-
-		public static void RegisterEditor(ISTF_Resource_Editor Editor)
-		{
-			if (!RegisteredEditors.ContainsKey(Editor.STF_Type))
-				RegisteredEditors.Add(Editor.STF_Type, Editor);
-		}
-
-		public static Dictionary<string, ISTF_Resource_Editor> ResourceEditors
-		{
-			get
-			{
-				var ret = new Dictionary<string, ISTF_Resource_Editor>(RegisteredEditors);
-				foreach(var editor in DefaultEditors)
-				{
-					if(!ret.ContainsKey(editor.STF_Type))
-						ret.Add(editor.STF_Type, editor);
-				}
-				return ret;
-			}
-		}
-
 		public static VisualElement CreateHeroSettingsGUI(STFScriptedImporter Importer)
 		{
 			var handleChange = new System.Action(() => { EditorUtility.SetDirty(Importer); });
@@ -66,17 +36,30 @@ namespace com.squirrelbite.stf_unity.resources.editors
 
 					ret.Add(ContextPanel);
 				}
+
+				// Processor settings for each processor in the context
 			}
 
+			var resourceEditors = new List<ISTF_ProcessorBase>();
+			foreach(var p in STF_Processor_Registry.GetProcessors(Importer.ImportConfig.SelectedApplication))
+				if(!string.IsNullOrWhiteSpace(p.Value.SettingsKey) && p.Value.HasHeroSettings)
+					resourceEditors.Add(p.Value);
+			foreach(var p in STF_Processor_Registry.GetGlobalProcessors(Importer.ImportConfig.SelectedApplication))
+				if(!string.IsNullOrWhiteSpace(p.Value.SettingsKey) && p.Value.HasHeroSettings)
+					resourceEditors.Add(p.Value);
+
+			foreach(var r in resourceEditors)
+				Debug.Log(r);
+
 			// Handler settings
-			foreach(var editor in ResourceEditors)
+			foreach(var editor in resourceEditors)
 			{
 				// todo general handler settings
-				var resourceOptions = Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.STF_Type == editor.Key);
-				if(resourceOptions.Count > 0 && editor.Value.HasHeroSettings)
+				var resourceOptions = Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.STF_Type == editor.SettingsKey);
+				if(resourceOptions.Count > 0 && editor.HasHeroSettings)
 				{
 					var modulePanel = new Box();
-					modulePanel.Add(new Label($"<size=+2><font-weight=700>{(!string.IsNullOrWhiteSpace(editor.Value.HeroSettingsLabel) ? editor.Value.HeroSettingsLabel : editor.Value.STF_Type)}</font-weight></size>"));
+					modulePanel.Add(new Label($"<size=+2><font-weight=700>{(!string.IsNullOrWhiteSpace(editor.HeroSettingsLabel) ? editor.HeroSettingsLabel : editor.SettingsKey)}</font-weight></size>"));
 					ApplyPanelStyle(modulePanel);
 					ret.Add(modulePanel);
 
@@ -85,9 +68,9 @@ namespace com.squirrelbite.stf_unity.resources.editors
 					moduleSettingsPanel.style.marginTop = moduleSettingsPanel.style.marginBottom = 3;
 					modulePanel.Add(moduleSettingsPanel);
 
-					foreach(var option in Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.STF_Type == editor.Key))
+					foreach(var option in Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.STF_Type == editor.SettingsKey))
 					{
-						var resourceSettingsPanel = editor.Value.CreateHeroSettingsGUI(option, handleChange);
+						var resourceSettingsPanel = editor.CreateHeroSettingsGUI(option, handleChange);
 						resourceSettingsPanel.style.marginTop = resourceSettingsPanel.style.marginBottom = 3;
 						moduleSettingsPanel.Add(resourceSettingsPanel);
 					}
@@ -98,16 +81,25 @@ namespace com.squirrelbite.stf_unity.resources.editors
 
 		public static VisualElement CreateAdvancedSettingsGUI(STFScriptedImporter Importer)
 		{
+			// Processor settings for each processor in the context
 			var handleChange = new System.Action(() => { EditorUtility.SetDirty(Importer); });
 
 			var ret = new VisualElement();
-			foreach(var editor in ResourceEditors)
+
+			var resourceEditors = new List<ISTF_ProcessorBase>();
+			foreach(var p in STF_Processor_Registry.GetProcessors(Importer.ImportConfig.SelectedApplication))
+				if(!string.IsNullOrWhiteSpace(p.Value.SettingsKey) && p.Value.HasAdvancedSettings)
+					resourceEditors.Add(p.Value);
+			foreach(var p in STF_Processor_Registry.GetGlobalProcessors(Importer.ImportConfig.SelectedApplication))
+				if(!string.IsNullOrWhiteSpace(p.Value.SettingsKey) && p.Value.HasAdvancedSettings)
+					resourceEditors.Add(p.Value);
+
+			foreach(var editor in resourceEditors)
 			{
-				// todo general handler settings
-				var resourceOptions = Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.STF_Type == editor.Key);
-				if(resourceOptions.Count > 0 && editor.Value.HasAdvancedSettings)
+				var resourceOptions = Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.STF_Type == editor.SettingsKey);
+				if(resourceOptions.Count > 0 && editor.HasAdvancedSettings)
 				{
-					var foldout = new Foldout { text = $"<size=+1><font-weight=700>{editor.Key}</font-weight></size>", value = false, viewDataKey = $"{editor.Key}_advanced_settings" };
+					var foldout = new Foldout { text = $"<size=+1><font-weight=700>{editor.SettingsKey}</font-weight></size>", value = false, viewDataKey = $"{editor.SettingsKey}_advanced_settings" };
 					foldout.style.marginTop = foldout.style.marginBottom = 3;
 					foldout.style.marginLeft = 10;
 					foldout.contentContainer.style.marginLeft = 0;
@@ -122,10 +114,10 @@ namespace com.squirrelbite.stf_unity.resources.editors
 					resourceSettingsPanel.style.marginTop = resourceSettingsPanel.style.marginBottom = 3;
 					resourcePanel.Add(resourceSettingsPanel);
 
-					foreach(var option in Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.STF_Type == editor.Key))
+					foreach(var option in Importer.ImportConfig.ResourceImportOptions.FindAll(o => o.STF_Type == editor.SettingsKey))
 					{
 						resourceSettingsPanel.Add(new Label($"<font-weight=700>{option.DisplayName}</font-weight>"));
-						var resourceSettingsGUI = editor.Value.CreateAdvancedSettingsGUI(option, handleChange);
+						var resourceSettingsGUI = editor.CreateAdvancedSettingsGUI(option, handleChange);
 						resourceSettingsGUI.style.marginLeft = 10;
 						resourceSettingsGUI.style.marginTop = resourceSettingsGUI.style.marginBottom = 3;
 						resourceSettingsPanel.Add(resourceSettingsGUI);

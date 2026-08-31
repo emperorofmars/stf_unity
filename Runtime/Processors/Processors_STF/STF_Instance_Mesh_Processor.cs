@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using com.squirrelbite.stf_unity.resources;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace com.squirrelbite.stf_unity.processors
 {
@@ -107,6 +109,28 @@ namespace com.squirrelbite.stf_unity.processors
 				return (new List<Object>() { renderer }, null);
 			}
 			return (null, null);
+		}
+
+		public string SettingsKey => STF_Instance_Mesh.STF_TYPE;
+		public bool HasAdvancedSettings => true;
+
+		public VisualElement CreateAdvancedSettingsGUI(ImportOptions.ResourceImportOption Option, System.Action EmitChange)
+		{
+			var ret = new VisualElement();
+			var options = JObject.Parse(Option.Json);
+
+			if(options.ContainsKey("reparent_skinned") && options.Value<bool>("reparent_skinned") is bool reparentSkinned)
+			{
+				var toggleReparentSkinned = new Toggle("Reparent besides Armature") { value = reparentSkinned };
+				toggleReparentSkinned.RegisterValueChangedCallback(e => {
+					var options = JObject.Parse(Option.Json);
+					options["reparent_skinned"] = e.newValue;
+					Option.Json = options.ToString();
+					EmitChange();
+				});
+				ret.Add(toggleReparentSkinned);
+			}
+			return ret;
 		}
 	}
 }

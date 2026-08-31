@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using com.squirrelbite.stf_unity.resources;
 using com.squirrelbite.stf_unity.resources.stfexp;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace com.squirrelbite.stf_unity.processors.stfexp
 {
@@ -28,6 +30,29 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 			}
 
 			return (null, null);
+		}
+
+		public string SettingsKey => STFEXP_Node_Ethereal._STF_Type;
+		public bool HasAdvancedSettings => true;
+
+		public VisualElement CreateAdvancedSettingsGUI(ImportOptions.ResourceImportOption Option, System.Action EmitChange)
+		{
+			var ret = new VisualElement();
+			var options = JObject.Parse(Option.Json);
+
+			if(options.ContainsKey("preserve") && options.Value<bool>("preserve") is bool preserveEthereal)
+			{
+				var togglePreserveEthereal = new Toggle("Preserve ethereal node") { value = preserveEthereal };
+				togglePreserveEthereal.RegisterValueChangedCallback(e => {
+					var options = JObject.Parse(Option.Json);
+					options["preserve"] = e.newValue;
+					Option.Json = options.ToString();
+					EmitChange();
+				});
+				ret.Add(togglePreserveEthereal);
+			}
+
+			return ret;
 		}
 	}
 }

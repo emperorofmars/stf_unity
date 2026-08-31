@@ -1,15 +1,13 @@
 
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.processors
 {
-	public interface ISTF_GlobalProcessor
+	/// <summary>
+	/// Interface for a processor that runs regardless whether zero, one or more resources of it s target type exist. Converts all imported ISTF_Resources of its target type into Unity native constructs.
+	/// </summary>
+	public interface ISTF_GlobalProcessor: ISTF_ProcessorBase
 	{
-		abstract System.Type TargetType { get; }
-		abstract uint Order { get; }
-		abstract int Priority { get; }
-
-		List<Object> Process(ProcessorContextBase Context);
+		List<UnityEngine.Object> Process(ProcessorContextBase Context);
 	}
 }

@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using com.squirrelbite.stf_unity.resources.editors;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEditor.UIElements;
@@ -105,11 +104,11 @@ namespace com.squirrelbite.stf_unity.tools
 				currentTab = setupLabel("Info", CreateAssetInfoGUI(), -1);
 				currentTab.style.backgroundColor = new StyleColor(UIConstants.ColorActive);
 
-				var mainTab = STF_Resource_Editor_Registry.CreateHeroSettingsGUI(importer);
+				var mainTab = STF_ImportSettingsEditor.CreateHeroSettingsGUI(importer);
 				mainTab.style.display = DisplayStyle.None;
 				setupLabel("Main Settings", mainTab);
 
-				var advancedTab = STF_Resource_Editor_Registry.CreateAdvancedSettingsGUI(importer);
+				var advancedTab = STF_ImportSettingsEditor.CreateAdvancedSettingsGUI(importer);
 				setupLabel("Advanced", advancedTab, 1);
 				advancedTab.style.display = DisplayStyle.None;
 			}

@@ -77,12 +77,7 @@ namespace com.squirrelbite.stf_unity
 
 		public static Dictionary<System.Type, ISTF_GlobalProcessor> GetGlobalProcessors(string Context)
 		{
-			var ret = new Dictionary<System.Type, ISTF_GlobalProcessor>(RegisteredGlobalProcessors.ContainsKey(Context) ? RegisteredGlobalProcessors[Context] : new Dictionary<System.Type, ISTF_GlobalProcessor>());
-			/*if(DefaultGlobalProcessors.ContainsKey(Context))
-				foreach(var processor in DefaultGlobalProcessors[Context])
-					if(!ret.ContainsKey(processor.TargetType))
-						ret.Add(processor.TargetType, processor);*/
-			return ret;
+			return new Dictionary<System.Type, ISTF_GlobalProcessor>(RegisteredGlobalProcessors.ContainsKey(Context) ? RegisteredGlobalProcessors[Context] : new Dictionary<System.Type, ISTF_GlobalProcessor>());
 		}
 
 		public static STF_ApplicationContextDefinition GetApplicationContextDefinition(string Context)

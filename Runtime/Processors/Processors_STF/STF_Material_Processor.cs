@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using com.squirrelbite.stf_unity.resources;
 using com.squirrelbite.stf_unity.resources.stf_material;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace com.squirrelbite.stf_unity.processors
 {
@@ -24,6 +27,36 @@ namespace com.squirrelbite.stf_unity.processors
 			var ret = new List<Object>() { ConvertedMaterial };
 			if (GeneratedObjects != null) ret.AddRange(GeneratedObjects);
 			return (ret, ret);
+		}
+
+		public string SettingsKey => STF_Material.STF_TYPE;
+		public string HeroSettingsLabel => "Material Selection";
+		public bool HasHeroSettings => true;
+
+		public VisualElement CreateHeroSettingsGUI(ImportOptions.ResourceImportOption Option, System.Action EmitChange)
+		{
+			var availableConverters = STF_Material_Converter_Registry.Converters.Select(c => c.Key).ToList();
+			var options = JObject.Parse(Option.Json);
+			if(options.ContainsKey("target_shader") && options.Value<string>("target_shader") is string targetShader && !string.IsNullOrWhiteSpace(targetShader))
+			{
+				int selectedIndex = availableConverters.FindIndex(c => c == targetShader);
+				if (selectedIndex < 0)
+					selectedIndex = 0; // Default Shader
+				var ret = new PopupField<string>(availableConverters, selectedIndex) { label = Option.DisplayName };
+				ret.RegisterValueChangedCallback(e => {
+					var options = JObject.Parse(Option.Json);
+					options["target_shader"] = e.newValue;
+					Option.Json = options.ToString();
+					EmitChange();
+				});
+				return ret;
+			}
+			else return new VisualElement();
+		}
+
+		public VisualElement CreateAdvancedSettingsGUI(ImportOptions.ResourceImportOption Option, System.Action EmitChange)
+		{
+			return null;
 		}
 	}
 }
