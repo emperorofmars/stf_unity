@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using com.squirrelbite.stf_unity.processors.stf_material;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -89,6 +88,8 @@ namespace com.squirrelbite.stf_unity.resources.stf_material
 				ret.SetKeyword(new UnityEngine.Rendering.LocalKeyword(shader, "USE_SPECULAR"), true);
 			if(MaterialConverterUtil.SetFloatProperty(STFMaterial, ret, "metallic.value", 0, "_MetallicStrength"))
 				ret.SetKeyword(new UnityEngine.Rendering.LocalKeyword(shader, "USE_SPECULAR"), true);
+
+			// TODO so much more
 
 			return (ret, generatedObjects);
 		}
