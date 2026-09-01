@@ -2,8 +2,8 @@
 
 ## v0.1.4
 * Added application context import settings.
-* Implemented VRChat context import option to place all physics components separately under a "Physics" GameObject.
-* Moved resource import settings from their own interface into processors.
+* Added VRChat context import option to place all physics components separately under a "Physics" GameObject.
+* Moved resource import settings from their own interface into their processors.
 * Code documentation improvements.
 
 ## v0.1.3
