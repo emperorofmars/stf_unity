@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.resources.stf_material.util;
+using com.squirrelbite.stf_unity.resources;
+using com.squirrelbite.stf_unity.resources.stf_material;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.resources.stf_material
+namespace com.squirrelbite.stf_unity.processors.stf_material
 {
 	public class STF_PropertyConverter_Material_Standard : ISTF_PropertyConverter
 	{
@@ -45,17 +46,17 @@ namespace com.squirrelbite.stf_unity.resources.stf_material
 
 				var channelMetallic = metallicValue != null ? new ImageChannelSetup.ImageChannel(metallicValue, false) : ImageChannelSetup.ImageChannel.Empty();
 
-				var channelSmoothnes = ImageChannelSetup.ImageChannel.Empty();
-				if(smoothnessValue != null) channelSmoothnes = new ImageChannelSetup.ImageChannel(smoothnessValue, false);
-				else if(roughnessValue != null) channelSmoothnes = new ImageChannelSetup.ImageChannel(roughnessValue, true);
+				var channelSmoothness = ImageChannelSetup.ImageChannel.Empty();
+				if(smoothnessValue != null) channelSmoothness = new ImageChannelSetup.ImageChannel(smoothnessValue, false);
+				else if(roughnessValue != null) channelSmoothness = new ImageChannelSetup.ImageChannel(roughnessValue, true);
 
-				if(channelMetallic.Source != null || channelSmoothnes.Source != null)
+				if(channelMetallic.Source != null || channelSmoothness.Source != null)
 				{
 					var imageChannels = new ImageChannelSetup(
 						channelMetallic,
 						ImageChannelSetup.ImageChannel.Empty(),
 						ImageChannelSetup.ImageChannel.Empty(),
-						channelSmoothnes
+						channelSmoothness
 					);
 					MaterialConverterUtil.AssembleTextureChannels(imageChannels, ret, "_MetallicGlossMap", generatedObjects);
 				}

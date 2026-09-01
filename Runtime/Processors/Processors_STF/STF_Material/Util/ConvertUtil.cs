@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using com.squirrelbite.stf_unity.resources.stf_material.util;
+using com.squirrelbite.stf_unity.resources;
+using com.squirrelbite.stf_unity.resources.stf_material;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.resources.stf_material
+namespace com.squirrelbite.stf_unity.processors.stf_material
 {
 	public static class MaterialConverterUtil
 	{
@@ -64,6 +65,21 @@ namespace com.squirrelbite.stf_unity.resources.stf_material
 				return true;
 			}
 			return false;
+		}
+
+		public static Texture2D CreateTextureFromChannels(ImageChannelSetup Channels, string TextureName, List<UnityEngine.Object> GeneratedObjects)
+		{
+			try
+			{
+				var finalTexture = ImageUtil.AssembleTextureChannels(Channels);
+				finalTexture.name = TextureName;
+				GeneratedObjects.Add(finalTexture);
+				return finalTexture;
+			}
+			catch
+			{
+				return null;
+			}
 		}
 
 		public static bool AssembleTextureChannels(ImageChannelSetup Channels, Material UnityMaterial, string UnityPropertyName, List<UnityEngine.Object> GeneratedObjects)

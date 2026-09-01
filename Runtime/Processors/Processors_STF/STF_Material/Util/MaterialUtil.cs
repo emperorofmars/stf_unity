@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using com.squirrelbite.stf_unity.resources;
+using com.squirrelbite.stf_unity.resources.stf_material;
 using TexPacker;
 using UnityEngine;
 
-namespace com.squirrelbite.stf_unity.resources.stf_material.util
+namespace com.squirrelbite.stf_unity.processors.stf_material
 {
 	public class ImageChannelSetup
 	{

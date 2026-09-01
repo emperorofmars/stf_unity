@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using com.squirrelbite.stf_unity.processors.stf_material;
 using com.squirrelbite.stf_unity.resources;
-using com.squirrelbite.stf_unity.resources.stf_material;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
