@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 {
-	public class UNIVRM0_AVA_Emote_Processor : ISTF_Processor
+	public class UNIVRM0_AVA_Expressions_Processor : ISTF_Processor
 	{
 		public System.Type TargetType => typeof(AVA_Expressions);
 
@@ -64,11 +64,11 @@ namespace com.squirrelbite.stf_unity.ava.vrchat.processors
 	}
 
 	[InitializeOnLoad]
-	public class Register_UNIVRM0_AVA_Emote_Processor
+	public class Register_UNIVRM0_AVA_Expressions_Processor
 	{
-		static Register_UNIVRM0_AVA_Emote_Processor()
+		static Register_UNIVRM0_AVA_Expressions_Processor()
 		{
-			STF_Processor_Registry.RegisterProcessor(DetectorUNIVRM0.STF_UNIVRM0_AVATAR_CONTEXT, new UNIVRM0_AVA_Emote_Processor());
+			STF_Processor_Registry.RegisterProcessor(DetectorUNIVRM0.STF_UNIVRM0_AVATAR_CONTEXT, new UNIVRM0_AVA_Expressions_Processor());
 		}
 	}
 }
