@@ -39,7 +39,12 @@ namespace com.squirrelbite.stf_unity.resources
 			if(JsonResource.ContainsKey("deform")) ret.IsDeformBone = JsonResource.Value<bool>("deform");
 			if(JsonResource.ContainsKey("non_deform_use")) ret.NonDeformUse = JsonResource.Value<string>("non_deform_use");
 
-			go.transform.SetLocalPositionAndRotation(TRSUtil.ParseLocation((JArray)JsonResource["translation"]), TRSUtil.ParseRotation((JArray)JsonResource["rotation"]));
+			/*if(JsonResource.ContainsKey("tr"))
+				go.transform.SetLocalPositionAndRotation(TRSUtil.ParseLocation((JArray)JsonResource["tr_armature"][0]), TRSUtil.ParseRotation((JArray)JsonResource["tr_armature"][1]));
+			else */if(JsonResource.ContainsKey("tr_armature"))
+				go.transform.SetLocalPositionAndRotation(TRSUtil.ParseLocation((JArray)JsonResource["tr_armature"][0]), TRSUtil.ParseRotation((JArray)JsonResource["tr_armature"][1]));
+			else if(JsonResource.ContainsKey("translation") && JsonResource.ContainsKey("rotation"))
+				go.transform.SetLocalPositionAndRotation(TRSUtil.ParseLocation((JArray)JsonResource["translation"]), TRSUtil.ParseRotation((JArray)JsonResource["rotation"]));
 
 			if(JsonResource.ContainsKey("children")) foreach(var childID in (JArray)JsonResource["children"])
 			{
