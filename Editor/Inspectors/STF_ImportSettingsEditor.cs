@@ -48,9 +48,6 @@ namespace com.squirrelbite.stf_unity.tools
 				if(!string.IsNullOrWhiteSpace(p.Value.SettingsKey) && p.Value.HasHeroSettings)
 					resourceEditors.Add(p.Value);
 
-			foreach(var r in resourceEditors)
-				Debug.Log(r);
-
 			// Handler settings
 			foreach(var editor in resourceEditors)
 			{

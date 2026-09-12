@@ -39,18 +39,27 @@ namespace com.squirrelbite.stf_unity.resources
 			if(JsonResource.ContainsKey("deform")) ret.IsDeformBone = JsonResource.Value<bool>("deform");
 			if(JsonResource.ContainsKey("non_deform_use")) ret.NonDeformUse = JsonResource.Value<string>("non_deform_use");
 
-			/*if(JsonResource.ContainsKey("tr"))
+			var parentRelative = true;
+			if(JsonResource.ContainsKey("tr"))
+			{
 				go.transform.SetLocalPositionAndRotation(TRSUtil.ParseLocation((JArray)JsonResource["tr_armature"][0]), TRSUtil.ParseRotation((JArray)JsonResource["tr_armature"][1]));
-			else */if(JsonResource.ContainsKey("tr_armature"))
+			}
+			else if(JsonResource.ContainsKey("tr_armature"))
+			{
 				go.transform.SetLocalPositionAndRotation(TRSUtil.ParseLocation((JArray)JsonResource["tr_armature"][0]), TRSUtil.ParseRotation((JArray)JsonResource["tr_armature"][1]));
+				parentRelative = false;
+			}
 			else if(JsonResource.ContainsKey("translation") && JsonResource.ContainsKey("rotation"))
+			{
 				go.transform.SetLocalPositionAndRotation(TRSUtil.ParseLocation((JArray)JsonResource["translation"]), TRSUtil.ParseRotation((JArray)JsonResource["rotation"]));
+				parentRelative = false;
+			}
 
 			if(JsonResource.ContainsKey("children")) foreach(var childID in (JArray)JsonResource["children"])
 			{
 				if(Context.ImportResource(JsonResource, childID, "node", ContextObject) is STF_Bone childObject)
 				{
-					childObject.transform.SetParent(go.transform, true);
+					childObject.transform.SetParent(go.transform, parentRelative);
 				}
 			}
 
