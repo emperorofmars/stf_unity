@@ -20,41 +20,29 @@ namespace com.squirrelbite.stf_unity.ava.vrm1
 			};
 		}
 
-		public static VRM10Expression CreateEmpty(ExpressionPreset BlendshapePreset)
-		{
-			var clip = ScriptableObject.CreateInstance<VRM10Expression>();
-			clip.name = "VRM_Clip_" + BlendshapePreset.ToString();
-			/*clip.BlendShapeName = BlendshapePreset.ToString();
-			clip.Preset = BlendshapePreset;
-			clip.Values = new MorphTargetBinding[] {};*/
-			return clip;
-		}
-
-		public static VRM10Expression CreateSimple(ProcessorContextBase Context, ExpressionKey BlendshapePreset, SkinnedMeshRenderer Renderer, string BlendshapeName)
-		{
-			var clip = ScriptableObject.CreateInstance<VRM10Expression>();
-			clip.name = "VRM_Clip_" + BlendshapePreset.ToString();
-			/*clip.BlendShapeName = BlendshapePreset.ToString();
-			clip.Preset = BlendshapePreset;*/
-
-			var bindingsList = new MorphTargetBinding[] {CreateBinding(Context, Renderer, BlendshapeName, 100)};
-			clip.MorphTargetBindings = bindingsList;
-
-			return clip;
-		}
-
-		public static VRM10Expression Create(ProcessorContextBase Context, ExpressionKey BlendshapePreset, string ClipName, List<(SkinnedMeshRenderer Renderer, List<(string Name, float Weight)> Blendshapes)> Blendshapes)
+		public static VRM10Expression CreateEmpty(string ClipName)
 		{
 			var clip = ScriptableObject.CreateInstance<VRM10Expression>();
 			clip.name = "VRM_Clip_" + ClipName;
-			/*clip.BlendShapeName = ClipName;
-			clip.Preset = BlendshapePreset;*/
+			return clip;
+		}
 
+		public static VRM10Expression CreateSimple(ProcessorContextBase Context, string ClipName, SkinnedMeshRenderer Renderer, string BlendshapeName)
+		{
+			var clip = ScriptableObject.CreateInstance<VRM10Expression>();
+			clip.name = "VRM_Clip_" + ClipName;
+			var bindingsList = new MorphTargetBinding[] {CreateBinding(Context, Renderer, BlendshapeName, 100)};
+			clip.MorphTargetBindings = bindingsList;
+			return clip;
+		}
+
+		public static VRM10Expression Create(ProcessorContextBase Context, string ClipName, List<(SkinnedMeshRenderer Renderer, List<(string Name, float Weight)> Blendshapes)> Blendshapes)
+		{
+			var clip = ScriptableObject.CreateInstance<VRM10Expression>();
+			clip.name = "VRM_Clip_" + ClipName;
 			var bindingList = new List<MorphTargetBinding>();
 			foreach(var renderer in Blendshapes) foreach(var blendshape in renderer.Blendshapes)
-			{
 				bindingList.Add(CreateBinding(Context, renderer.Renderer, blendshape.Name, blendshape.Weight));
-			}
 			clip.MorphTargetBindings = bindingList.ToArray();
 			return clip;
 		}

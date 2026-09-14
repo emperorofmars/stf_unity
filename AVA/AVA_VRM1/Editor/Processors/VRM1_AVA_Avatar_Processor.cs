@@ -52,7 +52,7 @@ namespace com.squirrelbite.stf_unity.ava.vrm1
 				vrmMeta.Meta.Version = "0.0.1";
 			}
 
-			var neutralClip = BlendshapeClipUtil.CreateEmpty(ExpressionPreset.neutral);
+			var neutralClip = BlendshapeClipUtil.CreateEmpty(ExpressionPreset.neutral.ToString());
 			vrmMeta.Expression.Neutral = neutralClip;
 
 			var secondary = new GameObject {name = "VRM_secondary"};
