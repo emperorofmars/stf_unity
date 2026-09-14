@@ -1,6 +1,10 @@
 # Changelog
 
 ## v0.1.5
+* `stf.bone`: added `tr` & `tr_armature` properties. They store transforms relative to the parent and armature respectively. `translation` and `rotation` are deprecated.
+* `stf.instance.armature`: Deprecated animation path part `component_mods`, replaced with `components`.
+* AVA UNIVRM0 detection uses assembly version define.
+* Started implementing a VRM1 context.
 
 ## v0.1.4
 * Added application context import settings.

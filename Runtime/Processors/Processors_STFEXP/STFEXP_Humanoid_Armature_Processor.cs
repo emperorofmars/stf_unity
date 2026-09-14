@@ -152,16 +152,20 @@ namespace com.squirrelbite.stf_unity.processors.stfexp
 					}).ToArray(),
 				};
 
-				avatar = AvatarBuilder.BuildHumanAvatar(Context.Root, humanDescription);
+				avatar = AvatarBuilder.BuildHumanAvatar(humanoid.gameObject, humanDescription);
 
-				if (!avatar.isValid)
+				if (!avatar.isValid) {
+					Context.Report(new STFReport("Invalid humanoid avatar", ErrorSeverity.ERROR, STFEXP_Humanoid_Armature._STF_Type, STFResource.STF_Id, humanoid));
 					return (null, null);
+				}
 			}
 			else
 			{
 				avatar = UnityHumanoidMappingUtil.GenerateAvatar(Context, humanoid.transform, humanoid.locomotion_type, humanoid.no_jaw);
-				if (!avatar || !avatar.isValid)
+				if (!avatar || !avatar.isValid) {
+					Context.Report(new STFReport("Could not create humanoid avatar", ErrorSeverity.ERROR, STFEXP_Humanoid_Armature._STF_Type, STFResource.STF_Id, humanoid));
 					return (null, null);
+				}
 			}
 
 			avatar.name = "Unity Avatar";

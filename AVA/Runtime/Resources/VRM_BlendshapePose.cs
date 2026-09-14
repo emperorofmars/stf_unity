@@ -24,7 +24,7 @@ namespace com.squirrelbite.stf_unity.ava
 		public List<Target> targets = new();
 	}
 
-	public class VRM_BlendshapePose_Module : ISTF_Handler
+	public class VRM_BlendshapePose_Handler : ISTF_Handler
 	{
 		public string STF_Type => VRM_BlendshapePose._STF_Type;
 		public string STF_Category => "data";
@@ -61,11 +61,11 @@ namespace com.squirrelbite.stf_unity.ava
 
 #if UNITY_EDITOR
 	[InitializeOnLoad]
-	class Register_VRM_BlendshapePose_Module
+	class Register_VRM_BlendshapePose_Handler
 	{
-		static Register_VRM_BlendshapePose_Module()
+		static Register_VRM_BlendshapePose_Handler()
 		{
-			STF_Handler_Registry.RegisterHandler(new VRM_BlendshapePose_Module());
+			STF_Handler_Registry.RegisterHandler(new VRM_BlendshapePose_Handler());
 		}
 	}
 #endif

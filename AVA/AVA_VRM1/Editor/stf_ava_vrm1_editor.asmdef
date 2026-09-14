@@ -1,12 +1,13 @@
 {
-    "name": "stf_ava_univrm0_editor",
-    "rootNamespace": "com.squirrelbite.stf_unity.processors.ava.stf_ava_univrm0",
+    "name": "stf_ava_vrm1_editor",
+    "rootNamespace": "com.squirrelbite.stf_unity.processors.ava.vrm1",
     "references": [
         "GUID:8a88ca90357a74942a1113aeb6ad32c6",
         "GUID:7a6619954e39edb4a87be61d250e97b0",
         "GUID:3b9f661eb63cdd24eac0fa805a1e17aa",
         "GUID:915b0571b66d8f545801d82ff1007498",
-        "GUID:05dd262a0c0a2f841b8252c8c3815582"
+        "GUID:e47c917724578cc43b5506c17a27e9a0",
+        "GUID:6aae90b2207f6fe4fa38ba53e3ab92ef"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -17,9 +18,9 @@
     "defineConstraints": [],
     "versionDefines": [
         {
-            "name": "com.vrmc.univrm",
+            "name": "com.vrmc.vrm",
             "expression": "",
-            "define": "STF_UNIVRM0_AVATAR_CONTEXT"
+            "define": "STF_AVA_VRM1_FOUND"
         }
     ],
     "noEngineReferences": false
