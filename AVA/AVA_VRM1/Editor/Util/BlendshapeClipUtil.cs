@@ -1,5 +1,5 @@
 #if UNITY_EDITOR
-#if STF_AVA_UNIVRM0_FOUND
+#if STF_AVA_VRM1_FOUND
 
 using System.Collections.Generic;
 using UnityEngine;

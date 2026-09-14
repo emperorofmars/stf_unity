@@ -54,10 +54,10 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 				vrmLookat.RightEye.Transform = eyeR;
 
 				// This implementation could be wrong. The VRM documentation on this is effectively non existent: https://vrm.dev/en/univrm/lookat/lookat_bone/
-				vrmLookat.VerticalUp.CurveYRangeDegree = eyeRotation.limits_up;
-				vrmLookat.VerticalDown.CurveYRangeDegree = eyeRotation.limits_down;
-				vrmLookat.HorizontalInner.CurveYRangeDegree = eyeRotation.limits_in;
-				vrmLookat.HorizontalOuter.CurveYRangeDegree = eyeRotation.limits_out;
+				vrmLookat.VerticalUp.CurveYRangeDegree = eyeRotation.limits_up * Mathf.Rad2Deg;;
+				vrmLookat.VerticalDown.CurveYRangeDegree = eyeRotation.limits_down * Mathf.Rad2Deg;;
+				vrmLookat.HorizontalInner.CurveYRangeDegree = eyeRotation.limits_in * Mathf.Rad2Deg;;
+				vrmLookat.HorizontalOuter.CurveYRangeDegree = eyeRotation.limits_out * Mathf.Rad2Deg;;
 
 				eyeRotation.ProcessedObjects.Add(vrmLookat);
 			}
