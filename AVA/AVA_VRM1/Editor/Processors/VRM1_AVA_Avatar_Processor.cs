@@ -52,15 +52,8 @@ namespace com.squirrelbite.stf_unity.ava.vrm1
 				vrmMeta.Meta.Version = "0.0.1";
 			}
 
-			/*var vrmBlendshapeProxy = Context.Root.AddComponent<VRMBlendShapeProxy>();
-			var vrmBlendShapeAvatar = ScriptableObject.CreateInstance<BlendShapeAvatar>();
-			vrmBlendShapeAvatar.name = "VRM_BlendshapeAvatar";
-
-			vrmBlendshapeProxy.BlendShapeAvatar = vrmBlendShapeAvatar;
-
-			var neutralClip = BlendshapeClipUtil.CreateEmpty(BlendShapePreset.Neutral);
-			vrmBlendShapeAvatar.Clips.Add(neutralClip);
-			*/
+			var neutralClip = BlendshapeClipUtil.CreateEmpty(ExpressionPreset.neutral);
+			vrmMeta.Expression.Neutral = neutralClip;
 
 			var secondary = new GameObject {name = "VRM_secondary"};
 			secondary.transform.SetParent(Context.Root.transform, false);
@@ -68,27 +61,21 @@ namespace com.squirrelbite.stf_unity.ava.vrm1
 
 			if (avaAvatar.Viewport)
 			{
-				vrmMeta.FirstPerson.SetDefault(avaAvatar.Viewport.transform.parent);
 				vrmMeta.LookAt.OffsetFromHead = avaAvatar.Viewport.transform.localPosition;
-			}
-			else if (animator && animator.isHuman)
-			{
-				var headHumanoid = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.Head.ToString());
-				if (headHumanoid.boneName != null)
+				if (animator && animator.isHuman)
 				{
-					vrmMeta.FirstPerson.SetDefault(Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == headHumanoid.boneName));
+					var headHumanoid = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.Head.ToString());
+					if (headHumanoid.boneName != null)
+					{
+						var headBone = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == headHumanoid.boneName);
+						if(headBone)
+							vrmMeta.LookAt.OffsetFromHead = avaAvatar.Viewport.transform.position - headBone.transform.position;
+					}
 				}
 			}
 
 			vrmMetaComponent.enabled = avaAvatar.enabled;
-
-			/*
-			vrmBlendshapeProxy.enabled = avaAvatar.enabled;
-
-			return (new() { vrmMetaComponent, vrmBlendshapeProxy, vrmFirstPerson, vrmLookAt, vrmMeta, vrmBlendShapeAvatar, neutralClip }, new() { vrmMeta, vrmBlendShapeAvatar, neutralClip });
-			*/
-
-			return (new() { vrmMetaComponent, vrmMeta }, new() { vrmMeta });
+			return (new() { vrmMetaComponent, vrmMeta, neutralClip }, new() { vrmMeta, neutralClip });
 		}
 	}
 

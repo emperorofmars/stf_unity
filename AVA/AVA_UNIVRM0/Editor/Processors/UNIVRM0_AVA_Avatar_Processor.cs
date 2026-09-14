@@ -58,7 +58,7 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 			secondary.transform.SetParent(Context.Root.transform, false);
 			(Context as AVAContext).AddMessage("VRM_secondary", secondary);
 
-			if (!Context.Root.TryGetComponent<Animator>(out var animator))
+			if(!Context.Root.TryGetComponent<Animator>(out var animator))
 			{
 				animator = Context.Root.AddComponent<Animator>();
 			}
@@ -68,21 +68,27 @@ namespace com.squirrelbite.stf_unity.ava.univrm0.processors
 
 			VRMFirstPerson vrmFirstPerson = null;
 			VRMLookAtHead vrmLookAt = null;
-			if (avaAvatar.Viewport)
+			if(avaAvatar.Viewport)
 			{
 				vrmFirstPerson = Context.Root.AddComponent<VRMFirstPerson>();
-				vrmFirstPerson.FirstPersonBone = avaAvatar.Viewport.transform.parent;
-				vrmFirstPerson.FirstPersonOffset = avaAvatar.Viewport.transform.localPosition;
 				vrmFirstPerson.enabled = avaAvatar.enabled;
+				vrmFirstPerson.FirstPersonOffset = avaAvatar.Viewport.transform.localPosition;
 
-				if (animator && animator.isHuman)
+				if(animator && animator.isHuman)
 				{
 					var headHumanoid = animator.avatar.humanDescription.human.FirstOrDefault(hb => hb.humanName == HumanBodyBones.Head.ToString());
-					if (headHumanoid.boneName != null)
+					if(headHumanoid.boneName != null)
 					{
-						vrmLookAt = Context.Root.AddComponent<VRMLookAtHead>();
-						vrmLookAt.Head = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == headHumanoid.boneName);
-						vrmLookAt.enabled = avaAvatar.enabled;
+						var headBone = Context.Root.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == headHumanoid.boneName);
+						if(headBone)
+						{
+							vrmLookAt = Context.Root.AddComponent<VRMLookAtHead>();
+							vrmLookAt.Head = headBone;
+							vrmLookAt.enabled = avaAvatar.enabled;
+
+							vrmFirstPerson.FirstPersonBone = headBone;
+							vrmFirstPerson.FirstPersonOffset = avaAvatar.Viewport.transform.position - headBone.transform.position;
+						}
 					}
 				}
 			}
